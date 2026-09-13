@@ -1,0 +1,23 @@
+---
+import { NAV_IC } from '../data/nav';
+import Icon from './Icon.astro';
+interface Props {
+  eyebrow?: string; heading?: string; lede?: string;
+  tone?: 'plain' | 'tint' | 'dark'; wide?: boolean;
+  navKey?: string; h1?: boolean;
+}
+const { eyebrow, heading, lede, tone = 'plain', wide = false, navKey, h1 = false } = Astro.props;
+const cls = tone === 'dark' ? 'dark' : tone === 'tint' ? 'tint' : '';
+const wrap = wide ? 'wrap-w' : 'wrap';
+const mark = navKey ? NAV_IC[navKey] : undefined;
+---
+<section class={cls}><div class={wrap}>
+  {(eyebrow || heading || lede) && (
+    <div class="sh">
+      {eyebrow && <span class="lab">{mark && <Icon name={mark} sm />}{eyebrow}</span>}
+      {heading && (h1 ? <h1 set:html={heading} /> : <h2 set:html={heading} />)}
+      {lede && <p class="lede" set:html={lede} />}
+    </div>
+  )}
+  <slot />
+</div></section>

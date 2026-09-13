@@ -1,0 +1,41 @@
+---
+/**
+ * 比較表。2〜3列で1列目が行見出しなら、狭い画面では横に引かず縦に開く（.stack）。
+ * data-h は、縦に開いたときに各セルの頭へ出す列名。
+ */
+interface Props {
+  headers: string[]; rows: (string[] | string)[];
+  caption?: string; foot?: string; minw?: number;
+}
+const { headers, rows, caption, foot, minw } = Astro.props;
+const bare = (s: string) => s.replace(/<[^>]+>/g, '').replace(/^#/, '').trim();
+const showHead = headers.some((h) => h.trim() !== '');
+const stack = headers.length >= 2 && headers.length <= 3 && !headers[0]!.startsWith('#');
+const notes = [foot, caption].filter(Boolean) as string[];
+---
+<div class={`tblwrap${stack ? ' stack' : ''}`}>
+  <div class="tbl">
+    <table style={minw ? `min-width:${minw}px` : undefined}>
+      {showHead && (
+        <thead><tr>{headers.map((h) => (
+          <th scope="col" class={h.startsWith('#') ? 'n' : undefined} set:html={h.replace(/^#/, '')} />
+        ))}</tr></thead>
+      )}
+      <tbody>
+        {rows.map((r) =>
+          typeof r === 'string'
+            ? <tr><td class="grp" colspan={headers.length} set:html={r} /></tr>
+            : <tr>{r.map((c, i) => {
+                const num = headers[i]!.startsWith('#');
+                const lab = bare(headers[i]!);
+                return i === 0 && !num
+                  ? <th scope="row" set:html={c} />
+                  : <td class={num ? 'n' : undefined} data-h={lab || undefined} set:html={c} />;
+              })}</tr>,
+        )}
+      </tbody>
+    </table>
+  </div>
+  {!stack && <p class="tbl-hint" aria-hidden="true">指でヨコに動かせます</p>}
+  {notes.map((n) => <p class="tbl-note" set:html={n} />)}
+</div>

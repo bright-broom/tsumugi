@@ -1,0 +1,22 @@
+---
+import { NAV_IC } from '../data/nav';
+import Icon from './Icon.astro';
+export interface Card {
+  title: string; desc: string;
+  link?: [label: string, href: string];
+}
+interface Props { items: Card[]; cls?: string }
+const { items, cls = 'g3' } = Astro.props;
+---
+<div class="cards"><div class={`g ${cls}`}>
+  {items.map((it) => {
+    const mark = it.link && NAV_IC[it.link[1]];
+    return (
+      <div class="card">
+        <h3>{mark && <Icon name={mark} sm />}<Fragment set:html={it.title} /></h3>
+        <p class="meta" set:html={it.desc} />
+        {it.link && <a class="more" href={it.link[1]}>{it.link[0]}</a>}
+      </div>
+    );
+  })}
+</div></div>

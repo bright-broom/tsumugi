@@ -1,0 +1,17 @@
+---
+import { rnd } from '../lib/diagrams';
+/** 比較バー。いちばん高い行を100%として横幅を取る */
+export interface VsRow { name: string; sub: string; amount: number; ours?: boolean }
+interface Props { rows: VsRow[]; max: number }
+const { rows, max } = Astro.props;
+---
+<div class="vs">{rows.map((r) => {
+  const w = Math.max(4, rnd((r.amount / max) * 100));
+  return (
+    <div class={`row${r.ours ? ' ours' : ''}`}>
+      <span class="nm"><span>{r.name}<em>　{r.sub}</em></span></span>
+      <span class="amtv">{r.amount.toLocaleString('en-US')}円</span>
+      <span class="bar"><i style={`width:${w}%`}></i></span>
+    </div>
+  );
+})}</div>

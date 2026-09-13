@@ -1,0 +1,36 @@
+---
+import * as P from '../data/prices';
+import Icon from './Icon.astro';
+/** 入口の1ページ商品。3プランの上に置く別の器 */
+interface Props { full?: boolean }
+const { full = false } = Astro.props;
+const sg = P.SINGLE;
+const sub = P.SUBS_MARKET[0];
+const items = full ? sg.includes : sg.includes.slice(0, 4);
+const rest = sg.includes.length - 4;
+---
+<div class="entry">
+  <div>
+    <span class="lab"><Icon name="key" sm />まず1枚から</span>
+    <div class="pn">{sg.name}　{sg.pages}ページ</div>
+    <span class="amt tnum">{sg.price.toLocaleString('en-US')}<span class="u">円</span></span>
+    <span class="sub2">買い切り・税別／約{sg.weeks}週間でお渡し<br />
+      運用をつける場合は月{P.run('run_light').price.toLocaleString('en-US')}円から（いつでもやめられます）</span>
+  </div>
+  <div>
+    <p style="margin-bottom:12px">{sg.lede}</p>
+    <ul class="plain">{items.map((i) => <li><Icon name="check" sm /><span>{i}</span></li>)}</ul>
+    {full && (
+      <p class="dim" style="margin:-6px 0 16px">含まれないもの：{sg.notIncludes.join('／')}</p>
+    )}
+    {!full && <a class="more" href="price.html">ほか{rest}項目</a>}
+    <div class="btns">
+      <a class="btn btn-2" href="contact.html">1ページで相談する</a>
+      <a class="btn btn-2" href="owned.html">なぜ買い切りなのか</a>
+    </div>
+  </div>
+</div>
+<p class="fine-note">月額制の1ページは月{sub.monthly.toLocaleString('en-US')}円。
+  {P.COMPARE_MONTHS}か月で{P.subsTotal(sub).toLocaleString('en-US')}円になり、
+  <strong>{P.SUBS_TRANSFER_MONTHS}か月未満でやめるとサイトは非公開</strong>になります
+  （{P.SUBS_SOURCE}）。</p>

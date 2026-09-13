@@ -1,0 +1,24 @@
+{
+  "name": "tsumugi-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "css": "node scripts/build-css.mjs",
+    "build": "npm run css && npm run prices && astro build",
+    "dev": "npm run css && astro dev",
+    "check": "astro check",
+    "prices": "node scripts/dump-prices.mjs"
+  },
+  "dependencies": {
+    "astro": "5.14.1",
+    "@astrojs/react": "4.4.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.2",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
+    "@astrojs/check": "0.9.4"
+  }
+}

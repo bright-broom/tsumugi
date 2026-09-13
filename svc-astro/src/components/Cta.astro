@@ -1,0 +1,10 @@
+---
+import * as C from '../data/config';
+import Icon from './Icon.astro';
+interface Props { primary?: string; where?: string }
+const { primary = 'まず話を聞いてみる', where = 'contact.html' } = Astro.props;
+---
+<div class="btns">
+  <a class="btn btn-1" href={`tel:${C.TEL_LINK}`}><Icon name="phone" />電話する　{C.TEL}</a>
+  <a class="btn btn-2" href={where}>{primary}</a>
+</div>

@@ -1,0 +1,229 @@
+/* ══════════════════════════════════════════════════════════════════
+   画面層。768px でページを切り替える（07 寸法とレイアウト）。
+   一度しか使わないページ固有の余白はここに置き、トークンには上げない。
+   ══════════════════════════════════════════════════════════════════ */
+@layer screens {
+
+  /* ── ヒーロー。PCは 45/67.5px、モバイルは 24/36px（06 文字と書体） */
+  @media (max-width: 768px) {
+    .hero { padding-block: 44px 40px; }
+    /* 日本語の改行を再構成する（C03）。PC用の強制改行は外し、文節で折る */
+    .hero h1 { font-size: var(--nah-font-size-hero-mb); }
+    .hero h1 br { display: none; }
+    /* 前置きは手に持つ画面でいちばん飛ばされる。大きくして、白に寄せて、改行は外す */
+    /* 新しい色は足さない。白と墨紺を混ぜて作る（トークンから導出する） */
+    .hero .sub { font-size: 16px;
+                 color: color-mix(in oklab, var(--nah-color-white) 86%, var(--nah-color-ink)); }
+    .hero .sub br { display: none; }
+    .amt { font-size: 42px; }
+    .amt .u { font-size: 16px; }
+    .pricebox { padding: 20px; gap: 20px; }
+    .pricebox .alt { min-width: 0; }
+  }
+
+  /* ── ヘッダー。PC 62px → モバイル 54px、外側余白 48px → 20px */
+  @media (max-width: 1080px) {
+    .nav ul { gap: 14px; }
+    .nav a { font-size: 12.5px; }
+    .tel-hours { display: none !important; }
+  }
+  @media (min-width: 1200px) { .tel-hours { display: inline-flex; } }
+  @media (max-width: 900px) {
+    .nav { display: none; }
+    .menu { display: block; }
+  }
+  @media (max-width: 768px) {
+    .hdr-in { height: var(--nah-size-header-mb); padding-inline: var(--nah-size-pad-mb-head); gap: 12px; }
+    .logo .s { display: none; }
+    .logo.one .s2 { display: block; }
+    .draft { padding-inline: var(--nah-size-pad-mb-head); }
+    .tel { padding: 4px 12px 4px 10px; }
+    .tel .lbl { display: none; }
+    .tel .num { font-size: 15px; }
+  }
+  /* 電話CTAは 480px 未満だと横幅を食うので、下部の固定CTAに任せる */
+  @media (max-width: 479px) {
+    .hdr .tel { display: none; }
+  }
+
+  /* ── 主要CTA。PC 315×57 → モバイル 260×48 */
+  @media (max-width: 768px) {
+    .btn { min-height: var(--nah-size-cta-h-mb); padding-inline: 20px; font-size: 15px; }
+    .btn-1 { min-width: min(var(--nah-size-cta-w-mb), 100%); }
+    .btns { gap: 10px; }
+  }
+  /* 幅いっぱいに伸ばすのは、横に2つ並べられない画面だけにする */
+  @media (max-width: 479px) {
+    .btns .btn { flex: 1 1 100%; }
+  }
+
+  /* ── 章の余白を業務寄りに圧縮する（原則B） */
+  @media (max-width: 768px) {
+    .sh { margin-bottom: 26px; }
+    .card, .plan { padding: 20px; }
+    .alert { padding: 18px; }
+    .acc > summary { padding: 13px 16px; font-size: 15px; }
+    .acc .bd { padding: 0 16px 16px 16px; }
+    .calc .r { padding: 13px 16px; }
+    .calc .r .v { font-size: 17px; }
+    .calc .r.net .v { font-size: 27px; }
+    .ctapanel { padding: 24px; }
+    .ftr { padding-block: 44px 32px; }
+  }
+
+  /* ── 固定CTA。C18：本文・キーボード・フッターを覆わない */
+  @media (max-width: 768px) {
+    body, .nah-app { padding-bottom: 68px; }
+    .fixbar {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+      padding: 10px var(--nah-size-pad-mb) calc(10px + env(safe-area-inset-bottom));
+      background: rgba(255,255,255,.94);
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+      border-top: 1px solid var(--nah-color-line);
+    }
+    .fixbar a {
+      display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+      min-height: var(--nah-size-cta-h-mb); border-radius: var(--nah-radius-pill);
+      font-size: 15px; font-weight: var(--nah-font-weight-bold); text-decoration: none;
+    }
+    .fixbar a:first-child { background: var(--nah-color-ink); color: var(--nah-color-white); }
+    .fixbar a:last-child { background: var(--accent); color: var(--accent-ink); }
+  }
+
+  /* ── 図。狭い画面では縮小せず横に動かす（縮小すると本文が読めなくなる） */
+  @media (max-width: 900px) {
+    .fig { padding: 16px; }
+    .fig > svg { min-width: 480px; }
+    /* 組み直した図があるなら、縮小も横スクロールもせずそちらを出す。
+       その場合は左右の余白も外して、文字を1pxでも大きく描く */
+    .fig.has-narrow { padding: 18px 0 0; }
+    .fig.has-narrow > .fw { display: none; }
+    .fig.has-narrow > .fn { display: block; min-width: 0; }
+    .fig-hint {
+      display: block; position: sticky; left: 0; margin: 12px 0 0;
+      font-size: 12px; font-weight: var(--nah-font-weight-semi); color: var(--nah-color-muted);
+    }
+    .fig-hint::before { content: "↔ "; }
+    section.dark .fig-hint { color: var(--nah-color-muted-on-ink); }
+  }
+
+  /* ── 表。横スクロールは領域内に閉じる（14 品質）。
+        動かせることを見せ、行見出しは固定したまま残す */
+  @media (max-width: 768px) {
+    .tbl th, .tbl td { padding: 11px 14px; font-size: 14px; }
+    .tbl tbody th, .tbl thead th:first-child { min-width: 7.5em; }
+    .tbl-hint {
+      display: block; margin: 10px 0 0;
+      font-size: 12px; font-weight: var(--nah-font-weight-semi);
+      color: var(--nah-color-muted);
+    }
+    .tbl-hint::before { content: "↔ "; }
+    section.dark .tbl-hint { color: var(--nah-color-muted-on-ink); }
+    .tbl-hint + .tbl-note { margin-top: 6px; }
+  }
+
+  /* ── 2〜3列の表は、狭い画面では横に引かせず1行ずつ縦に開く。
+        指で引かないと右の列が見えない、という状態を作らないのが目的。
+        列名は各セルの頭に data-h から出すので、見出し行は畳んでよい。 */
+  @media (max-width: 768px) {
+    .tblwrap.stack .tbl { overflow-x: visible; scroll-snap-type: none; }
+    .tblwrap.stack table { display: block; min-width: 0 !important; }
+    .tblwrap.stack thead { display: none; }
+    .tblwrap.stack tbody { display: block; }
+    .tblwrap.stack tbody tr {
+      display: block; padding: 15px 16px;
+      border-bottom: 1px solid var(--nah-color-line);
+    }
+    .tblwrap.stack tbody tr:last-child { border-bottom: 0; }
+    .tblwrap.stack tbody th {
+      display: block; position: static; box-shadow: none; background: none;
+      min-width: 0; padding: 0 0 8px; font-size: 15.5px; line-height: 1.6;
+    }
+    .tblwrap.stack tbody th .dim { font-size: 13px; }
+    /* セルは block のまま。grid にすると中のリンクが grid item になって
+       ブロック化し、「本文中のリンク」ではなくなってタップ領域の検査に引っかかる。 */
+    .tblwrap.stack tbody td {
+      display: block; padding: 8px 0 0; font-size: 14.5px; line-height: 1.75; border: 0;
+    }
+    .tblwrap.stack tbody td[data-h]::before {
+      content: attr(data-h); display: block;
+      font-size: 12.5px; font-weight: var(--nah-font-weight-semi); line-height: 1.7;
+      color: var(--nah-color-muted);
+    }
+    .tblwrap.stack tbody td.grp { padding: 0; }
+    section.dark .tblwrap.stack tbody tr { border-color: rgba(255,255,255,.14); }
+    section.dark .tblwrap.stack tbody td[data-h]::before { color: var(--nah-color-muted-on-ink); }
+  }
+
+  /* ── 小さすぎる文字の底上げ。
+        390px で測ったところ 10〜13px の文字が 300 箇所以上あった。
+        ガイド06の寸法はPC向けなので、手に持つ画面では下限を引き上げる。
+        色を濃くするのではなく大きくする（#626873 は白地で 5.8:1 あり、
+        読みにくさの原因は明度差ではなく字面の小ささだった）。 */
+  @media (max-width: 768px) {
+    .sh .lab { font-size: 13.5px; }
+    .tel .lbl { font-size: 11.5px; }
+    .logo.one .rd { font-size: 12px; }
+    .logo.one .s, .logo.one .s2 { font-size: 12px; }
+    .menu-panel .hd { font-size: 13px; }
+    .menu-panel a { font-size: 16px; }
+    .stat .k { font-size: 13.5px; }
+    .tbl-hint, .fig-hint { font-size: 13px; }
+    .ftr .meta { font-size: 14px; }
+    .ftr .fine { font-size: 13px; line-height: 2; }
+    .ftr-legal a { font-size: 14px; }
+    .pmeta, .sub2 { font-size: 13.5px; }
+    .calc .r.net .k { font-size: 15px; }
+    .calc .r .k em { font-size: 13px; }
+    .field .req, .field .opt { font-size: 12.5px; }
+    .tbl tbody th .dim { font-size: 12.5px; }
+    /* 比較バーは、名前と補足と金額が1行に詰まると読みにくい。
+       名前の行と金額の行を分け、補足はその下に落とす */
+    .vs { gap: 18px; margin-top: 20px; }
+    .vs .row { grid-template-columns: 1fr; gap: 2px; }
+    .vs .nm { font-size: 15.5px; }
+    .vs .nm em { display: block; font-size: 13px; }
+    .vs .nm > span { display: block; }
+    .vs .amtv { font-size: 19px; }
+    .vs .bar { grid-column: 1; }
+  }
+
+  /* ── 指の下でのふるまい。
+        overscroll-behavior がないと、表を横に引き切ったところで
+        その勢いがページに渡り、iOS では「戻る」のスワイプに化ける。 */
+  .tbl, .fig, .menu-panel, .cq { overscroll-behavior: contain; }
+  .tbl { -webkit-overflow-scrolling: touch; }
+
+  /* ── 読み進みの目安。ヘッダーの下端に1本。
+        スクロール駆動アニメーションなので JavaScript は要らない。
+        対応していないブラウザでは @supports ごと無視される＝ただ出ないだけ。 */
+  @supports (animation-timeline: scroll()) {
+    .hdr::after {
+      content: ""; position: absolute; left: 0; bottom: -1px; height: 2px;
+      width: 100%; transform-origin: 0 50%; transform: scaleX(0);
+      background: var(--accent);
+      animation: nah-read linear both;
+      animation-timeline: scroll(root block);
+    }
+    @media (prefers-reduced-motion: reduce) { .hdr::after { display: none; } }
+  }
+  @keyframes nah-read { to { transform: scaleX(1); } }
+
+  /* ── ページ間の遷移で、固定されているものは動かさない。
+        ヘッダーと下部CTAが毎回かぶさり直すと、紙芝居に見える。 */
+  .hdr { view-transition-name: hdr; }
+  .fixbar { view-transition-name: fixbar; }
+  ::view-transition-group(hdr), ::view-transition-group(fixbar) { animation: none; }
+  ::view-transition-old(root) { animation-duration: 120ms; }
+  ::view-transition-new(root) { animation-duration: 160ms; }
+}
+
+@layer overrides {
+  /* 印刷時は固定要素を外す */
+  @media print {
+    .hdr, .fixbar, .skip, .menu { display: none !important; }
+    body, .nah-app { padding-bottom: 0; }
+    section { padding-block: 24px; }
+  }
+}

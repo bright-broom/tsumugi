@@ -1,0 +1,7 @@
+---
+/** 詳しい説明は畳んでおく。details なので JavaScript は要らない */
+interface Props { summary: string }
+const { summary } = Astro.props;
+---
+<details class="acc"><summary><span set:html={summary} /></summary>
+  <div class="bd"><slot /></div></details>

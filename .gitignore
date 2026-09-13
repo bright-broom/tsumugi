@@ -1,0 +1,7 @@
+node_modules/
+dist/
+dist-lib/
+dist-artifact/
+.astro/
+__pycache__/
+.DS_Store
