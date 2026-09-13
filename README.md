@@ -11,8 +11,6 @@
 | `site/verify/` | **検査。製品の一部。** 581項目。1つでも落ちたら納品しない |
 | `site/styles/` | **CSS とデザイントークンの正本** |
 | `site/DESIGN.md` | 設計の記録（主張・値付け・検査項目・デザインの出所・移行の記録） |
-| `svc/` `svc-astro/` | 旧版（Python / Astro）。Next.js 版との一致は確認済み（`site/DESIGN.md`「移行の記録」）。**削除待ち。編集しない** |
-
 ## 動かす
 
 ```bash
