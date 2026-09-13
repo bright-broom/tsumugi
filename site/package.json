@@ -1,0 +1,29 @@
+{
+  "name": "tsumugi-site",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "tsx scripts/build-public.ts && next dev",
+    "build": "tsx scripts/build-tokens.ts --check && tsx scripts/build-public.ts && next build && tsx scripts/postbuild.ts",
+    "check": "tsc --noEmit",
+    "verify": "tsx verify/verify.ts",
+    "tokens": "tsx scripts/build-tokens.ts",
+    "og": "tsx scripts/og.ts"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.4",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "playwright": "1.60.0",
+    "tsx": "4.23.13",
+    "typescript": "5.9.3"
+  }
+}

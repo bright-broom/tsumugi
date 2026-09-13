@@ -1,0 +1,119 @@
+{
+  "$description": "NOT A HOTEL デザインガイドライン v2.0 準拠のトークン正本。DTCG Format Module 2025.10。native/tokens.css はここから生成する（手で編集しない）。",
+  "color": {
+    "$type": "color",
+    "white":   { "$value": "#FFFFFF", "$description": "白い面。標準の読む面" },
+    "ink":     { "$value": "#0B0B0D", "$description": "暗い章。没入・章切り替え" },
+    "panel":   { "$value": "#1C1C1C", "$description": "CTAパネル。主要行動のまとまり" },
+    "black":   { "$value": "#000000", "$description": "フッター等。終端の面" },
+    "surface": { "$value": "#F4F5F7", "$description": "補助面。カード内部、補足情報" },
+    "field":   { "$value": "#F7F7F7", "$description": "入力面。フォームの編集領域" },
+    "paper":   { "$value": "#FFF8EF", "$description": "記事の柔らかい読書面。全面共通色にはしない" },
+    "line":    { "$value": "#E9E9EB", "$description": "非操作の区切り" },
+    "line-strong": { "$value": "#C8CAD0", "$description": "入力枠・フォーカス。線より濃い色を使う" },
+    "green":   { "$value": "#42D083", "$description": "LPの緑。キャンペーンテーマ。白文字と組まない（1.98:1）" },
+    "green-deep": { "$value": "#0E7A45", "$description": "緑の上に置けない場面のための濃い緑。白文字可" },
+    "blue":    { "$value": "#0171E3", "$description": "本体の青。プロダクトテーマ、リンク系列" },
+    "muted":   { "$value": "#626873", "$description": "補助文字の推奨値。観測の #858A95 は使わない" },
+    "muted-on-ink": { "$value": "#A8AEB8", "$description": "暗い面の補助文字" },
+    "alert":   { "$value": "#B3261E", "$description": "業務状態の注意。ブランド色と意味を分離する" },
+    "alert-bg": { "$value": "#FDECEA", "$description": "注意の面" },
+    "ok":      { "$value": "#0E7A45", "$description": "業務状態の良。文字・アイコンを必ず併用する" },
+    "ok-bg":   { "$value": "#E8F5EE", "$description": "良の面" },
+    "warn":    { "$value": "#7A5B00", "$description": "業務状態の要確認" },
+    "warn-bg": { "$value": "#FBF3DE", "$description": "要確認の面" }
+  },
+  "theme": {
+    "$type": "color",
+    "campaign": {
+      "accent":     { "$value": "{color.green}" },
+      "accent-ink": { "$value": "{color.ink}",  "$description": "緑の上は暗い文字。白文字にしない" },
+      "accent-text":{ "$value": "{color.green-deep}", "$description": "白地に置く強調文字・リンク" }
+    },
+    "main": {
+      "accent":     { "$value": "{color.blue}" },
+      "accent-ink": { "$value": "{color.white}" },
+      "accent-text":{ "$value": "{color.blue}" }
+    }
+  },
+  "size": {
+    "$type": "dimension",
+    "header-pc":   { "$value": "62px" },
+    "header-mb":   { "$value": "54px" },
+    "pad-pc":      { "$value": "48px",  "$description": "PC 外側の余白" },
+    "pad-hero":    { "$value": "80px",  "$description": "ヒーローの外側" },
+    "pad-mb":      { "$value": "24px",  "$description": "モバイル本文" },
+    "pad-mb-head": { "$value": "20px",  "$description": "モバイルヘッダー" },
+    "container":   { "$value": "1104px", "$description": "3列 × 間隔32px の器" },
+    "measure-wide":{ "$value": "1048px" },
+    "measure-read":{ "$value": "720px",  "$description": "本文の読み幅の上限" },
+    "gap":         { "$value": "32px" },
+    "gap-near":    { "$value": "12px",  "$description": "関係の近い情報 8–16px" },
+    "gap-group":   { "$value": "28px",  "$description": "同じカードのまとまり 24–32px" },
+    "section-pc":  { "$value": "104px", "$description": "章の切り替え 64–120px" },
+    "section-mb":  { "$value": "56px" },
+    "cta-w-pc":    { "$value": "315px" },
+    "cta-h-pc":    { "$value": "57px" },
+    "cta-w-mb":    { "$value": "260px" },
+    "cta-h-mb":    { "$value": "48px" },
+    "tap":         { "$value": "44px",  "$description": "本ガイドの推奨。WCAG AA の必須値ではない" },
+    "field-h":     { "$value": "48px" },
+    "card-w":      { "$value": "318px" },
+    "card-media-h":{ "$value": "369px" },
+    "bp":          { "$value": "768px" },
+    "cq-4":        { "$value": "960px", "$description": "配置領域がこれ以上なら4列" },
+    "cq-2":        { "$value": "520px", "$description": "これ以上なら2列、未満は1列" }
+  },
+  "radius": {
+    "$type": "dimension",
+    "media": { "$value": "8px" },
+    "card":  { "$value": "12px" },
+    "panel": { "$value": "16px" },
+    "pill":  { "$value": "999px" }
+  },
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "ja":      { "$value": ["YakuHanJP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"] },
+      "display": { "$value": ["League Gothic", "Haettenschweiler", "Arial Narrow", "sans-serif"], "$description": "短い欧文のみ。日本語本文・長い項目名には使わない" },
+      "mono":    { "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"] }
+    },
+    "size": {
+      "$type": "dimension",
+      "display-pc": { "$value": "145px" },
+      "display-mb": { "$value": "90px" },
+      "hero-pc":    { "$value": "45px" },
+      "hero-mb":    { "$value": "24px" },
+      "page-pc":    { "$value": "42px", "$description": "ページ見出し 28–42px" },
+      "page-mb":    { "$value": "28px" },
+      "h2":         { "$value": "28px" },
+      "h3":         { "$value": "20px" },
+      "label":      { "$value": "14px", "$description": "セクションラベル 14–20px" },
+      "body":       { "$value": "16px", "$description": "業務本文と入力は 16px" },
+      "meta":       { "$value": "13px" }
+    },
+    "leading": {
+      "$type": "number",
+      "hero":    { "$value": 1.5 },
+      "heading": { "$value": 1.5 },
+      "body":    { "$value": 1.8 }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": { "$value": 400 },
+      "medium":  { "$value": 500 },
+      "semi":    { "$value": 600 },
+      "bold":    { "$value": 700 }
+    }
+  },
+  "motion": {
+    "$type": "duration",
+    "fast":   { "$value": "160ms", "$description": "操作への反応" },
+    "panel":  { "$value": "280ms", "$description": "パネル・切り替え" },
+    "reveal": { "$value": "600ms", "$description": "説明ページの初回出現" }
+  },
+  "ratio": {
+    "$type": "number",
+    "display-correction": { "$value": 0.9643, "$description": "無料代替書体の幅補正。契約済みの原書体に変えるときは 1 に戻して再計測する" }
+  }
+}

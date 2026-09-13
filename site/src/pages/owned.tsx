@@ -1,0 +1,203 @@
+/**
+ * このサイトでいちばん強く言うこと。他のページはここを支える材料として並べる。
+ * 喩えで終わらせないために、所有を「4つが手元にあること」に分解して、
+ * それぞれ検証できる形（名義・納品物・置き場所・元データ）に落としてある。
+ */
+import * as C from '../data/config';
+import * as P from '../data/prices';
+import * as D from '../lib/diagrams';
+import Base from '../layouts/Base';
+import Section from '../components/Section';
+import Table from '../components/Table';
+import Note from '../components/Note';
+import Acc from '../components/Acc';
+import Cards from '../components/Cards';
+import Calc from '../components/Calc';
+import Figure from '../components/Figure';
+import Icon from '../components/Icon';
+import Cta from '../components/Cta';
+
+export const config = { unstable_runtimeJS: false };
+
+const file = 'owned.html';
+const title = `借地と所有｜そのホームページ、借りた土地に建っていませんか｜${C.BRAND_T}`;
+const desc =
+  '月額制のホームページは、借地に建てた家と同じです。やめた日に更地にして返します。' +
+  '紬は土地ごとお渡しします。ドメイン・ソースコード・置き場所・写真の元データ、' +
+  '4つとも手元に残ります。';
+const n = (v: number) => v.toLocaleString('en-US');
+
+export default function OwnedPage() {
+  return (
+    <Base file={file} title={title} desc={desc}>
+      <section className="hero"><div className="wrap">
+        <p className="kick"><Icon name="key" sm />いちばんお伝えしたいこと</p>
+        <h1>そのホームページ、<br />借りた土地に建っていませんか。</h1>
+        <p className="sub">月額制のホームページは、借地に建てた家と同じです。
+          <strong style={{ color: '#fff' }}>やめた日に、更地にして返します。</strong>
+          紬がつくるのは、土地ごとお客様のものになるホームページです。</p>
+        <Cta />
+      </div></section>
+
+      <Section tone="tint" navKey={file} eyebrow="たとえ話ではなく、契約の話です"
+        heading="建てるものは同じ。違うのは土地の名義です"
+        lede="借地は、土地を借りて<strong>自分のお金で家を建てる</strong>仕組みです。地代を払い続けるあいだは住めますが、契約が終われば<strong>家を壊して更地にして返します。</strong>月額制のホームページで起きているのは、これと同じことです。">
+        <Figure svg={D.landVsOwn()} />
+        <Table headers={['借地で起きること', 'ホームページで起きること']} rows={[
+          ['土地を借りる', 'ドメインとサーバーが、制作会社の中にある'],
+          ['地代を毎月払う', '月額を毎月払う'],
+          ['家は自分のお金で建てる', 'ページ・写真・原稿の費用は、お客様が出している'],
+          ['契約が終われば更地にして返す', '解約するとサイトが非公開になる／削除か買い取りかを選ばされる'],
+          ['建てた家は持ち出せない', '中身もURLも持ち出せない'],
+        ]} foot="すべての制作会社がこうだという意味ではありません。そうでない会社もあります。<strong>確かめ方はこのページの下に書きました。</strong>" />
+      </Section>
+
+      <Section eyebrow="正確に言うと" heading="借地のほうが、まだ守られています"
+        lede="ここは正直に書きます。<strong>本物の借地のほうが、いまのホームページの契約よりずっと守られています。</strong>">
+        <Table headers={['', '契約の更新', '終わったときに手元に残るもの']} rows={[
+          ['普通借地権',
+            '地主は<strong>正当な事由がなければ拒めません</strong>（借地借家法6条）',
+            "<span class='yes'>建物を時価で買い取らせられます</span>（同13条）"],
+          ['定期借地権', '更新はありません（同22〜24条）',
+            "<span class='no'>買取の請求はできません</span>。更地にして返します"],
+          ['月額制のホームページ', '契約書しだい',
+            "<span class='no'>買取の規定がないことが多い</span>。<strong>公開が止まります</strong>"],
+        ]} foot="いまのホームページの契約は、いちばん下の行です。定期借地に近く、場合によってはそれより弱い条件になっています。" />
+        <Note heading="法律の話は、喩えとして書いています" kind="warn">
+          <p>当方は弁護士ではありません。ここに書いた条文は仕組みを説明するためのもので、
+            個別のご契約の効力を判断するものではありません。
+            <strong>実際の条件は、必ずお手元の契約書でご確認ください。</strong>
+            読み方が分からない場合は、一緒に読みます。</p>
+        </Note>
+      </Section>
+
+      <Section tone="dark" eyebrow="所有権の中身" heading="所有しているとは、この4つが手元にあることです"
+        lede="「所有」を気分の話にしないために、<strong>4つに分けて、それぞれ確かめられる形</strong>にしています。">
+        <Cards cls="g2" items={[
+          { title: '① 住所 ── ドメイン',
+            desc: '初日からお客様の名義で取得します。登録簿でお名前を確認できます。',
+            link: ['名義のお約束', 'terms.html'] },
+          { title: '② 建物 ── ソースコード',
+            desc: 'HTML・CSS・画像・設定の一式をお渡しします。他社がそのまま引き継げます。',
+            link: ['納品の中身を見る', 'source.html'] },
+          { title: '③ 地盤 ── 置き場所',
+            desc: '実行時のプログラムが0バイトなので、どのサーバーにも置けます。',
+            link: ['仕様を見る', 'spec.html'] },
+          { title: '④ 家具 ── 写真と原稿',
+            desc: '撮影した元データをお渡しします。チラシにもSNSにも使えます。',
+            link: ['権利の扱い', 'terms.html'] },
+        ]} />
+        <Table headers={['', '借地のとき', `${C.BRAND}（所有）`]} rows={[
+          ['ドメイン（住所）',
+            '<span class="no">制作会社の名義。解約するとURLが死にます</span>',
+            '<span class="yes">初日からお客様の名義で取得します</span>'],
+          ['ソースコード（建物）',
+            '<span class="no">渡されない。中を見ることもできない</span>',
+            '<span class="yes">一式お渡し。GitHubにご招待します</span>'],
+          ['置き場所（地盤）',
+            '<span class="no">その会社のサーバーにしか置けない</span>',
+            '<span class="yes">どのサーバーにも置ける形で作ります</span>'],
+          ['写真と原稿（家具）',
+            '<span class="no">そのサイトの中でしか使えない</span>',
+            '<span class="yes">元データをお渡し。用途の制限は付けません</span>'],
+        ]} foot="③は技術の話ですが、意味は単純です。実行時に動くプログラムを使っていないので、<strong>置き場所を選びません。</strong>特定のサーバーでしか動かないサイトは、そのサーバーを離れられません。" />
+      </Section>
+
+      <Section eyebrow="もうひとつの落とし穴" heading="「譲渡します」にも、2種類あります"
+        lede="「◯か月使えば無償譲渡します」と書いている会社があります。良心的に見えますが、<strong>渡されるものが2種類ある</strong>ので、そこだけ確かめてください。">
+        <Table headers={['渡されるもの', 'できること', 'できないこと']} rows={[
+          ["<strong>建物ごと</strong><br><span class='dim'>ソースコード一式</span>",
+            "<span class='yes'>どのサーバーにも置ける。他社がそのまま引き継げる</span>", '—'],
+          ["<strong>借地権だけ</strong><br><span class='dim'>作成ツールのアカウント</span>",
+            "<span class='yes'>そのツールの中では、自分の名義で使い続けられる</span>",
+            "<span class='no'>ツールの外へは持ち出せない。以後もそのツールに毎月払い続ける</span>"],
+        ]}
+          caption="サイト作成ツールで作られたページは、書き出せる形のプログラムになっていません。「譲渡」はアカウントの移し替えで、地主が変わるわけではありません。"
+          foot="<strong>ツールが悪いという話ではありません。</strong>そのまま使い続けるなら、よくできた仕組みです。困るのは<strong>「移せると思っていたのに移せなかった」</strong>ときだけです。" />
+        <Note heading="確かめ方は1つだけです" kind="good">
+          <p><strong>「譲渡されたあと、別の会社に引き継げますか」</strong>と聞いてください。</p>
+          <p>「はい」なら建物ごと。「そのツールを使い続けていただく形になります」なら借地権だけです。
+            どちらも嘘ではないので、聞かないと分かりません。</p>
+        </Note>
+        <Note heading="当方がお渡しするのは、建物ごとです">
+          <p>実行時に動くプログラムを使っていないので、
+            <strong>HTMLとCSSと画像のまま、どのサーバーにも置けます。</strong>
+            作成ツールのアカウントに縛られる形にはしていません
+            （<a href="spec.html">この点は機械で検証しています</a>）。</p>
+        </Note>
+      </Section>
+
+      <Section tone="tint" eyebrow="正直に書きます" heading="所有にも、維持費はかかります"
+        lede="所有すれば無料になる、とは申し上げません。<strong>土地を持っていても、固定資産税はかかります。</strong>">
+        <Calc title="持ち続けるのにかかるもの" rows={[
+          { label: 'ドメインの更新料', value: '年 1,500円前後', cls: 'small', sub: '「.jp」「.com」など種類によります' },
+          { label: 'サーバー代', value: '月 0〜1,500円前後', cls: 'small',
+            sub: '実行時のプログラムがないので、無料の範囲に収まることもあります' },
+          { label: '運用をお任せいただく場合', value: `月 ${n(P.run('run_light').price)}円〜`, cls: 'small',
+            sub: 'ご自身で更新される場合は不要です' },
+        ]} />
+        <Note heading="違うのは、払うのをやめたときです" kind="good">
+          <p>借地は、地代を止めた時点で家ごと失います。所有なら、
+            <strong>運用をやめてもサイトは動き続けます。</strong></p>
+          <p>運用をやめられる場合は、<strong>サーバーとドメインの契約をお客様に引き継ぎます。
+            手数料はいただきません。</strong>
+            引き継ぎの手順書は納品時に同梱しているので、その日から使えます。</p>
+        </Note>
+      </Section>
+
+      <Section eyebrow="確かめ方" heading="いまのサイトが借地かどうか、5つの質問"
+        lede="いまお使いのサイトが借地かどうかは、<strong>制作会社に5つ聞けば分かります。</strong>聞きにくければ、代わりに聞きます。">
+        <Acc summary="① ドメインの契約者名は、どなたの名前になっていますか？">
+          <p>ドメインには公開の登録簿があるので、<strong>その場で確認できます。</strong>
+            制作会社の名義だった場合、解約するとURLごと使えなくなります。
+            名刺・チラシ・看板・車体に刷ったURLが、すべて死にます。</p>
+        </Acc>
+        <Acc summary="② 解約したら、いまのページはどうなりますか？">
+          <p>「非公開になります」「データはお渡しできません」「買い取りになります」。
+            どれも契約書に書いてあれば違法ではありません。
+            <strong>書いてある場所を、一緒に探します。</strong></p>
+        </Acc>
+        <Acc summary="③ ソースコードは、もらえますか？">
+          <p>「システムなのでお渡しできません」という答えが多いです。
+            その場合、別の会社に移るには<strong>ゼロから作り直しになります。</strong>
+            見積もりを取るときに、この一言があるかどうかで金額が変わります。</p>
+        </Acc>
+        <Acc summary="④ サイトの写真の元データは、手元にありますか？">
+          <p>撮影費を払ったのに、サイト用に圧縮された小さい画像しか手元にない、はよくあります。
+            <strong>チラシにもメニューにも使えません。</strong>元データの所在を確認してください。</p>
+        </Acc>
+        <Acc summary="⑤ 別の会社に引き継ぐとき、いくらかかりますか？">
+          <p>移管手数料が決まっていることがあります。金額を聞いておくと、
+            <strong>いまの契約がどちらの性質か</strong>がはっきりします。</p>
+        </Acc>
+        <Acc summary="⑥ 「譲渡」されたあと、別の会社に引き継げますか？">
+          <p>「◯か月で無償譲渡」と書いてある場合の、いちばん大事な確認です。
+            <strong>サイト作成ツールのアカウントを渡されるだけ</strong>のことがあります。
+            その場合、譲渡されても<strong>そのツールの外へは持ち出せません。</strong></p>
+        </Acc>
+        <Note heading="5つとも「わからない」で構いません" kind="good">
+          <p>いちばん多い答えです。契約書をお持ちいただければ、一緒に読みます。無料です。</p>
+          <p>読んだ結果<strong>「いまのままで問題ありません」</strong>になることもあります。
+            そのときは、そう申し上げます。</p>
+        </Note>
+      </Section>
+
+      <Section eyebrow="いまのサイトがある方へ" heading="借地から、所有に移せます"
+        lede="いまのサイトがある方も、移せます。<strong>移せないのは、ドメインが相手の名義のときだけ</strong>です。">
+        <Table headers={['順番', 'やること', 'だれが']} rows={[
+          ['1', 'いまの契約書を読んで、解約条件と名義を確かめる', '一緒に'],
+          ['2', 'ドメインをお客様の名義に移す（移管）', '当方が手続き'],
+          ['3', '新しいサイトを作る。この間、いまのサイトは生かしたまま', '当方'],
+          ['4', '公開を切り替える。URLは変わりません', '当方'],
+          ['5', 'いまの契約を解約する', 'お客様（文面は用意します）'],
+        ]} foot="切り替えの順番を間違えると、数日間サイトが消えます。<strong>3と4を先に済ませてから5に進みます。</strong>" />
+        <div className="btns"><a className="btn btn-2" href="flow.html">制作の流れを見る</a></div>
+      </Section>
+
+      <Section tone="dark" heading="まず、いまの契約書を見せてください"
+        lede="聞くのは3つだけです。契約書があれば、一緒に読みます。">
+        <Cta primary="フォームで相談する" />
+      </Section>
+    </Base>
+  );
+}

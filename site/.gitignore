@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+.DS_Store
+
+# 生成物（scripts/build-public.ts / verify が作る）
+public/theme.css
+public/robots.txt
+public/sitemap.xml
+verify-report.json
+shot-*.png

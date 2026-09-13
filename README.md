@@ -7,45 +7,47 @@
 
 | | |
 |---|---|
-| `svc-astro/` | **本体。** Astro 5 + React 19 + TypeScript。21ページ |
-| `svc/native/*.css` | **CSSの正本。** Astro 側はここを読んでビルドする（コピーを作らない） |
-| `svc/verify.py` | **検査。製品の一部。** 581項目。1つでも落ちたら納品しない |
-| `svc/build.py` ほか | 旧 Python 版。移植が正しいことの証拠として残してある |
+| `site/` | **本体。** Next.js 16（Pages Router）+ React 19 + TypeScript。21ページを静的HTMLに書き出す |
+| `site/verify/` | **検査。製品の一部。** 581項目。1つでも落ちたら納品しない |
+| `site/styles/` | **CSS とデザイントークンの正本** |
+| `site/DESIGN.md` | 設計の記録（主張・値付け・検査項目・デザインの出所・移行の記録） |
+| `svc/` `svc-astro/` | 旧版（Python / Astro）。Next.js 版との一致は確認済み（`site/DESIGN.md`「移行の記録」）。**削除待ち。編集しない** |
 
 ## 動かす
 
 ```bash
-cd svc-astro
+cd site
 npm install
-npm run dev      # http://localhost:4321
-npm run build    # css → prices.json → astro build → dist/
+npm run dev      # http://localhost:3000
+npm run build    # トークン同期の検査 → public/ の生成 → next build → postbuild → out/
 ```
 
 ## 検査する（ビルドのあと）
 
 ```bash
-cd svc
-pip install playwright        # 初回だけ
-playwright install chromium   # 初回だけ
-python verify.py --dist ../svc-astro/dist
+cd site
+npx playwright install chromium   # 初回だけ
+npm run verify
 # → PASS 581 / WARN 1 / FAIL 0 なら納品可
 ```
 
-WARN 1 は `PLACEHOLDER=True`（電話番号・住所が仮）。公開前に潰す既知の1件。
+WARN 1 は `PLACEHOLDER=true`（電話番号・住所が仮）。公開前に潰す既知の1件。
 
-| 旗 | |
+| 旗（`npm run verify -- <旗>`） | |
 |---|---|
-| `--dist <path>` | 検査するディレクトリを差し替える |
-| `--write` | LCP実測値を、検査した dist を作った側の設定に書き戻す |
-| `--lcp` | ブラウザ計測を含める |
+| `--dist <path>` | 検査するディレクトリを差し替える（既定は `out/`） |
+| `--static` | 静的検査のみ（ブラウザ不要・CI向け） |
+| `--write` | LCP実測値を `src/data/config.ts` に書き戻す |
 
 ## 触るときの注意
 
-- **金額の正本は `svc-astro/src/data/prices.ts`。** ここを直すと全ページの数字が動く。
-  `npm run build` が `prices.json` を書き、`verify.py` がそれとページを突き合わせる。
+- **金額の正本は `site/src/data/prices.ts`。** ここを直すと全ページの数字が動く。
+  `verify` は同じファイルを読んで、ページに出ている金額と突き合わせる。
 - **`RUN` や `BUILD` を添字で引かない。** 必ず `run('run_standard')` のように key で引く。
   プランを1つ足したときに、添字で引いていた箇所が静かにずれて全ページの月額が下振れした事故がある。
-- **`astro.config.mjs` の `build.format: 'file'` は必須。**
-  既定の `'directory'` だと `dist/terms/index.html` になり、内部リンクと検査が両方壊れる。
-- **アイランド（`client:load` など）を足すと実行時JSが載る。** 主張が崩れるので、足す前に検査を通すこと。
-- **CSSは `svc/native/` を直す。** `svc-astro/public/theme.css` はビルドの生成物。
+- **全ページに `export const config = { unstable_runtimeJS: false }` が要る。**
+  忘れると実行時JSが載る。`postbuild` がビルドを落とすので気づけるが、足すときは必ず `npm run build` を通すこと。
+- **App Router に移さない。** 静的書き出しでも全ページに約173KBのJSが載り、主張が崩れる（`site/README.md`）。
+- **値を混ぜる文字列はテンプレートリテラルで1つにする。** `ほか{n}項目` は `<!-- -->` が挟まり、検査の照合がずれる。
+- **ページ名はフラットな `.html`。** 内部リンクも `href="terms.html"` のまま。クリーンURLはホスト側の設定でやる。
+- **CSSは `site/styles/` を直す。** `site/public/theme.css` はビルドの生成物。

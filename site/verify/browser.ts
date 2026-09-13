@@ -1,0 +1,185 @@
+/**
+ * ブラウザ検証（Playwright + Chromium）。LCP・コントラスト・横スクロール・タップ領域・文字の下限・アイコン比。
+ */
+import { createReadStream, existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { createServer, type Server } from 'node:http';
+import type { AddressInfo } from 'node:net';
+import { extname, join, resolve, sep } from 'node:path';
+import type { Page, Route } from 'playwright';
+import * as JS from './in-page';
+import { rec } from './results';
+import { pages } from './static';
+import {
+  CONTRAST_BODY, CONTRAST_LARGE, IC_RATIO_MAX, IC_RATIO_MIN, LCP_BUDGET_MS, MIN_FONT_MB, MOBILE_W, TAP_MIN,
+} from './thresholds';
+
+const MIME: Record<string, string> = {
+  '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json', '.xml': 'application/xml', '.txt': 'text/plain; charset=utf-8',
+  '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp', '.avif': 'image/avif', '.ico': 'image/x-icon', '.woff2': 'font/woff2',
+};
+
+/** dist をそのまま配る小さな静的サーバー。ポートは空いているものを使う */
+function serve(dist: string): Promise<{ server: Server; base: string }> {
+  const root = resolve(dist);
+  const server = createServer((req, res) => {
+    let p = join(root, decodeURIComponent(new URL(req.url ?? '/', 'http://localhost').pathname));
+    if (p !== root && !p.startsWith(root + sep)) return void res.writeHead(403).end();
+    if (existsSync(p) && statSync(p).isDirectory()) p = join(p, 'index.html');
+    if (!existsSync(p) || !statSync(p).isFile()) return void res.writeHead(404).end();
+    res.writeHead(200, { 'content-type': MIME[extname(p)] ?? 'application/octet-stream' });
+    createReadStream(p).pipe(res);
+  });
+  return new Promise((ok) => {
+    server.listen(0, '127.0.0.1', () => {
+      ok({ server, base: `http://127.0.0.1:${(server.address() as AddressInfo).port}` });
+    });
+  });
+}
+
+/** in-page.ts の関数（文字列）を、引数をつけてページの中で呼ぶ */
+function run<T>(page: Page, fn: string, arg?: unknown): Promise<T> {
+  return page.evaluate(`(${fn})(${arg === undefined ? '' : JSON.stringify(arg)})`) as Promise<T>;
+}
+
+const need = (large: boolean) => (large ? CONTRAST_LARGE : CONTRAST_BODY);
+
+export async function checkBrowser(dist: string, root: string, writeBack: boolean): Promise<number | null> {
+  let chromium: typeof import('playwright').chromium;
+  try {
+    ({ chromium } = await import('playwright'));
+  } catch {
+    rec('WARN', 'ブラウザ検証', '-', 'playwright が入っていません。--static で実行してください');
+    return null;
+  }
+
+  const { server, base } = await serve(dist);
+  const lcps = new Map<string, number>();
+  const blocked: string[] = [];
+
+  /** 検証環境は外部に出られないので、サードパーティは遮断して自前のバイトだけを測る。
+      font-display:swap を指定しているため、本番でも文字はフォールバックで即描画され、
+      LCPはフォント取得を待たない。この測定値は本番の下限として扱う。 */
+  const blockExternal = (route: Route) => {
+    const u = route.request().url();
+    if (u.startsWith(base)) return route.continue();
+    blocked.push(u.split('/')[2] ?? u);
+    return route.abort();
+  };
+
+  try {
+    const br = await chromium.launch({ args: ['--no-sandbox'] });
+    try {
+      // ── デスクトップ：LCP・コントラスト・コンソール
+      const pg = await br.newPage({ viewport: { width: 1280, height: 900 } });
+      await pg.route('**/*', blockExternal);
+      const errs: string[] = [];
+      pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
+      pg.on('pageerror', (x) => errs.push(String(x)));
+
+      for (const f of pages(dist)) {
+        await pg.goto(`${base}/${f}`, { waitUntil: 'domcontentloaded' });
+        const r = await run<{ lcp: number; el: string }>(pg, JS.LCP);
+        lcps.set(f, r.lcp);
+        rec(r.lcp <= LCP_BUDGET_MS ? 'PASS' : 'FAIL', '13 LCP 2.5秒以内', f, `${r.lcp.toFixed(0)}ms / 要素=${r.el}`);
+
+        const w = await run<{ ratio: number; size: number; bold: boolean; text: string } | null>(pg, JS.FIG_CONTRAST);
+        if (w) {
+          const req = need(w.size >= 24 || (w.bold && w.size >= 18.66));
+          rec(w.ratio >= req ? 'PASS' : 'FAIL', '図のコントラスト比 AA', f,
+            `最悪 ${w.ratio}:1 (必要 ${req.toFixed(1)}, ${w.size}px) 「${w.text}」`);
+        }
+      }
+
+      const have = pages(dist);
+      const preferred = ['index.html', 'price.html', 'owned.html', 'flow.html'].filter((c) => have.includes(c));
+      for (const cf of preferred.length ? preferred : [have[0]!]) {
+        await pg.goto(`${base}/${cf}`, { waitUntil: 'domcontentloaded' });
+        for (const c of await run<{ sel: string; ratio: number; size: number; large: boolean }[]>(pg, JS.CONTRAST)) {
+          const req = need(c.large);
+          rec(c.ratio >= req ? 'PASS' : 'FAIL', 'コントラスト比 AA', cf,
+            `${c.sel} = ${c.ratio}:1 (必要 ${req.toFixed(1)}, ${c.size}px)`);
+        }
+      }
+
+      // 自前で遮断した外部通信の ERR_FAILED は検証上のノイズなので除外する
+      const real = errs.filter((x) => !x.includes('net::ERR_FAILED'));
+      rec(real.length ? 'FAIL' : 'PASS', 'コンソールエラー', '-',
+        real.length ? `${real.length}件: ${JSON.stringify(real.slice(0, 3))}` : `自前の遮断による ${errs.length - real.length}件を除外`);
+      await pg.close();
+
+      // ── モバイル：横スクロール・タップ領域・文字の下限・アイコン比
+      const mp = await br.newPage({
+        viewport: { width: MOBILE_W, height: 780 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
+      });
+      await mp.route('**/*', blockExternal);
+      for (const f of pages(dist)) {
+        await mp.goto(`${base}/${f}`, { waitUntil: 'domcontentloaded' });
+        await mp.waitForFunction(`(${JS.STYLES_READY})()`, undefined, { timeout: 5000 });
+
+        const ov = await run<{ doc: number; view: number; offenders: unknown[] }>(mp, JS.OVERFLOW);
+        const clean = !ov.offenders.length;
+        rec(clean ? 'PASS' : 'FAIL', `横スクロールなし(${MOBILE_W}px)`, f,
+          clean ? '' : `doc=${ov.doc} > view=${ov.view} / ${JSON.stringify(ov.offenders)}`);
+
+        const bad = await run<unknown[]>(mp, JS.TAP, TAP_MIN);
+        rec(bad.length ? 'FAIL' : 'PASS', `16 タップ領域 ${TAP_MIN}px`, f,
+          bad.length ? `${bad.length}件: ${JSON.stringify(bad.slice(0, 3))}` : '');
+
+        // 27 手に持つ画面での文字の下限。
+        // ガイド06の寸法はPC向けなので、スマホでは別に測る。読み手が50〜60代
+        // である前提はタップ領域44pxと同じで、文字にも同じ根拠で効かせる。
+        const small = await run<unknown[]>(mp, JS.SMALL_TEXT, MIN_FONT_MB);
+        rec(small.length ? 'FAIL' : 'PASS', `27 文字の下限 ${MIN_FONT_MB}px`, f,
+          small.length ? `${small.length}件: ${JSON.stringify(small.slice(0, 3))}` : '');
+
+        // 28 アイコンと文字の大きさの比。
+        // px で固定すると置き場所ごとに 0.88〜1.20 倍とばらつき、行の中で浮く。
+        // em で決めているので、比は常に一定になるはず。崩れたら気づけるようにする。
+        const ir = await run<{ key: string; ratio: number }[]>(mp, JS.ICON_RATIO);
+        const off = ir.filter((x) => !(IC_RATIO_MIN <= x.ratio && x.ratio <= IC_RATIO_MAX));
+        rec(off.length ? 'FAIL' : 'PASS', '28 アイコンと文字の比', f,
+          off.length ? `外れ ${off.length}件: ${JSON.stringify(off.slice(0, 3))}`
+            : `${ir.length}種すべて ${IC_RATIO_MIN}〜${IC_RATIO_MAX} 倍`);
+      }
+
+      const shot = existsSync(join(dist, 'index.html')) ? 'index.html' : pages(dist)[0]!;
+      await mp.goto(`${base}/${shot}`, { waitUntil: 'domcontentloaded' });
+      writeFileSync(join(root, 'shot-mobile.png'), await mp.screenshot({ fullPage: false }));
+      await mp.close();
+
+      const dp = await br.newPage({ viewport: { width: 1280, height: 900 } });
+      await dp.route('**/*', blockExternal);
+      await dp.goto(`${base}/${shot}`, { waitUntil: 'domcontentloaded' });
+      writeFileSync(join(root, 'shot-desktop.png'), await dp.screenshot({ fullPage: false }));
+      if (existsSync(join(dist, 'price.html'))) {
+        await dp.goto(`${base}/price.html`, { waitUntil: 'domcontentloaded' });
+        writeFileSync(join(root, 'shot-price.png'), await dp.screenshot({ fullPage: false }));
+      }
+      await dp.close();
+    } finally {
+      await br.close();
+    }
+  } finally {
+    server.closeAllConnections();
+    server.close();
+  }
+
+  if (blocked.length) {
+    rec('WARN', '測定条件', '-',
+      `サードパーティ遮断下で測定: ${JSON.stringify([...new Set(blocked)].sort())}。` +
+      'font-display:swap のため本番でも文字はフォールバックで即描画されるが、' +
+      '確定値は公開後にフィールドデータで再測定すること');
+  }
+  const worst = lcps.size ? Math.max(...lcps.values()) : 0;
+  if (writeBack && lcps.size) {
+    // サイトに出る数字（/spec の LCP）を、いま測った値に揃える
+    const txt = `${(worst / 1000).toFixed(2)}秒（全${lcps.size}ページの最大値・実測）`;
+    const cfg = join(root, 'src', 'data', 'config.ts');
+    writeFileSync(cfg, readFileSync(cfg, 'utf8')
+      .replace(/^export const LCP_MEASURED = .*$/m, `export const LCP_MEASURED = '${txt}';`));
+    console.log(`\nconfig.ts の LCP_MEASURED を ${txt} に更新しました。再ビルドしてください。`);
+  }
+  return worst;
+}
