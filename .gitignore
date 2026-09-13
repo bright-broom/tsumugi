@@ -5,3 +5,4 @@ dist-artifact/
 .astro/
 __pycache__/
 .DS_Store
+.venv/
