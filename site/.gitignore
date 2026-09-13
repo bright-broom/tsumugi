@@ -9,5 +9,5 @@ next-env.d.ts
 public/theme.css
 public/robots.txt
 public/sitemap.xml
-verify-report.json
+verify-report*.json
 shot-*.png

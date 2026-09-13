@@ -51,7 +51,7 @@ npm run verify -- --write    # LCP実測値を src/data/config.ts に書き戻�
 | `public/og/` | 生成物。ビルドはこれをそのまま `out/og/` に出すだけ |
 | `verify/` | **標準仕様の自動検証。これが仕様の実体** |
 | `out/` | 出力（静的HTML・CSS・robots.txt・sitemap.xml） |
-| `verify-report.json` | 検証結果。CIで読む |
+| `verify-report.json` | 検証結果（全項目）。ページに出す件数はここから取る。`--static` の結果は `verify-report.static.json` に分けて書く（CIで読む） |
 
 ---
 

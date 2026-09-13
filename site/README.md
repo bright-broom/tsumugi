@@ -8,7 +8,7 @@ npm install
 npm run dev              # http://localhost:3000 （href="terms.html" のままのリンクも踏める）
 npm run build            # トークン同期の検査 → public/ の生成 → next build → postbuild → out/
 npm run verify           # 標準仕様の検査（ブラウザ実測を含む）。FAIL 0 で納品可
-npm run verify -- --static   # 静的検査のみ（ブラウザ不要・CI向け）
+npm run verify -- --static   # 静的検査のみ（ブラウザ不要・CI向け。結果は verify-report.static.json）
 npm run verify -- --write    # LCP実測値を src/data/config.ts に書き戻す
 npm run tokens           # styles/design.tokens.json → styles/tokens.css（--check で同期検査）
 npm run og               # OGP画像とファビコン（文面を変えたときだけ。差分をコミットする）

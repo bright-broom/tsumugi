@@ -8,6 +8,8 @@
  *   npm run verify -- --dist <path>     検査するディレクトリを差し替える
  *
  * 出力: 標準出力のレポート ＋ <dist>/../verify-report.json
+ *       （--static のときは verify-report.static.json。ページに出す件数は全項目の結果からだけ取るので、
+ *         簡易版を回しても works.html の「581項目」が「359項目」に落ちない）
  */
 import { writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -22,6 +24,8 @@ const arg = (flag: string, fallback: string) => {
   return i >= 0 && i + 1 < argv.length ? argv[i + 1]! : fallback;
 };
 const DIST = resolve(arg('--dist', join(ROOT, 'out')));
+const STATIC_ONLY = argv.includes('--static');
+const REPORT = STATIC_ONLY ? 'verify-report.static.json' : 'verify-report.json';
 
 function report(): number {
   const count = (level: Result['level']) => R.filter((r) => r.level === level).length;
@@ -64,7 +68,7 @@ function report(): number {
   if (fails) console.log('  FAIL が1件でもあれば納品しません。上の指摘を直してから再実行してください。');
   console.log(rule('=') + '\n');
 
-  writeFileSync(join(dirname(DIST), 'verify-report.json'), JSON.stringify({
+  writeFileSync(join(dirname(DIST), REPORT), JSON.stringify({
     verdict, pass: passes, warn: warns, fail: fails,
     results: R.map(({ level, check, page, detail }) => ({ level, check, page, detail })),
   }, null, 2));
@@ -72,5 +76,5 @@ function report(): number {
 }
 
 checkStatic(DIST);
-if (!argv.includes('--static')) await checkBrowser(DIST, ROOT, argv.includes('--write'));
+if (!STATIC_ONLY) await checkBrowser(DIST, ROOT, argv.includes('--write'));
 process.exit(report());
