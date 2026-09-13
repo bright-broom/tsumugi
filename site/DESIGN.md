@@ -528,7 +528,7 @@ npm install && npm run build && npm run verify
 ## 移行の記録（2026年9月・Python／Astro → Next.js）
 
 Python のジェネレータ（`svc/`）→ Astro（`svc-astro/`）→ **Next.js（`site/`）** の順に移した。
-旧版はコミット `cfb3616` に残っている（`git show cfb3616:svc/verify.py` のように読める）。
+旧版はコミット `01f39d4`（`main`）に残っている（`git show 01f39d4:svc/verify.py` のように読める）。
 
 移植が正しいかは、見た目ではなく**同じ入力に対する出力の一致**で確かめた。
 
