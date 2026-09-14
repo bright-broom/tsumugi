@@ -11,7 +11,7 @@ import { HTML_BUDGET_KB } from './thresholds';
 
 const read = (p: string) => readFileSync(p, 'utf8');
 const readIf = (p: string) => (existsSync(p) ? read(p) : '');
-/** 3桁区切り（28,000） */
+/** 3桁区切り（9,800） */
 const comma = (v: number) => v.toLocaleString('en-US');
 const list = (xs: Iterable<unknown>) =>
   `[${[...xs].map((x) => (typeof x === 'string' ? `'${x}'` : String(x))).join(', ')}]`;
@@ -127,14 +127,14 @@ export function checkStatic(dist: string): void {
   //    全ページの月額が下振れした。同じ事故を二度やらないための検査。
   const first = P.compareRows()[0]!;
   const PRICE_FACTS: [string, string, string][] = [
-    [`${comma(P.monthlyAllIn('standard', 'run_standard'))}円／月`, 'price.html', 'スタンダードの毎月の合計'],
+    [`${comma(P.run('run_basic').price)}円／月`, 'price.html', '整えるの月額'],
     [comma(P.SINGLE.price), 'index.html', 'シングルの価格'],
     [comma(P.SINGLE.price), 'price.html', 'シングルの価格'],
     [`${comma(first.sub_total)}円`, 'price.html', '月額制1ページの36か月総額'],
     [`${comma(first.our_total)}円`, 'price.html', '当方1ページの36か月総額'],
   ];
   for (const [txt, fname, what] of PRICE_FACTS) {
-    // 「28,000<span class="u">円／月」のようにタグで割れているので、外してから探す
+    // 「9,800<span class="u">円／月」のようにタグで割れているので、外してから探す
     const flat = readIf(join(dist, fname)).replace(/<[^>]+>/g, '');
     const found = flat.includes(txt);
     rec(found ? 'PASS' : 'FAIL', '29 価格の一致', fname,

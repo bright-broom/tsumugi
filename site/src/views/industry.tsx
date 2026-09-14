@@ -18,8 +18,8 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
   const file = ROUTES[route].file;
   const d = IND_DATA[file]!;
   const plan = P.build(d.plan);
-  const run = P.RUN.find((r) => 'recommended' in r && r.recommended)!;
-  const ins = P.INSTALLMENT[d.plan as keyof typeof P.INSTALLMENT];
+  const run = P.run('run_basic');
+  const payment = P.paymentSchedule(plan.price);
   const others = INDUSTRIES.filter(([u]) => u !== file);
 
   const title = format(copy.title, { dH1: d.h1, cBRANDT: C.BRAND_T });
@@ -105,11 +105,11 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
           </div>
           <div className="row">
             <span>{copy.span2}</span>
-            <span className="v tnum">{P.yen(ins.initial)}</span>
+            <span className="v tnum">{P.yen(payment.deposit)}</span>
           </div>
           <div className="row">
-            <span>{format(copy.span3, { pINSTALLMENTCOUNT: P.INSTALLMENT_COUNT })}</span>
-            <span className="v tnum">{P.yen(ins.monthly)}</span>
+            <span>{copy.span3}</span>
+            <span className="v tnum">{P.yen(payment.acceptance)}</span>
           </div>
           <div className="row">
             <span>{copy.span4}</span>
@@ -117,7 +117,7 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
           </div>
           <div className="row net">
             <span>{copy.span5}</span>
-            <span className="v tnum">{P.yen(ins.monthly + run.price)}</span>
+            <span className="v tnum">{P.yen(P.supportMonthlyTotal('run_basic'))}</span>
           </div>
         </div>
         <p className="dim">{copy.dim}</p>

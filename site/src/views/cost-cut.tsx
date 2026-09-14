@@ -15,7 +15,7 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
   const file = ROUTES[route].file;
   const title = format(copy.title, { cBRANDT: C.BRAND_T });
   const desc = copy.desc + copy.desc2;
-  const runStd = P.run('run_standard').price;
+  const runStd = P.withTax(P.supportMonthlyTotal('run_basic'));
   const n = (v: number) => v.toLocaleString('en-US');
   const rows = P.PORTAL_TABELOG.map(([name, amount], i) => {
     const cut = i > 0 ? P.PORTAL_TABELOG[i - 1]![1] - amount : null;
@@ -26,7 +26,7 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
       cut === null ? '—' : cut >= runStd ? copy.rows : copy.rows2,
     ];
   }).reverse();
-  const people = Math.floor(runStd / P.PORTAL_FEE_DINNER) + 1;
+  const people = Math.ceil(runStd / P.PORTAL_FEE_DINNER);
 
   return (
     <Base file={file} title={title} desc={desc}>

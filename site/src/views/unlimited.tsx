@@ -19,23 +19,20 @@ export default function UnlimitedPage({ copy, route }: PageProps<'unlimited'>) {
       <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 navKey={file} lede={copy.lede} />
 
       <Section>
-        <Table
-          headers={[copy.headers]}
-          rows={P.UNLIMITED_IN.map((x) => [`<strong>${x}</strong>`])}
-        />
+        <Table headers={[copy.headers]} rows={P.UPDATE_IN.map((x) => [`<strong>${x}</strong>`])} />
         <Table
           headers={[copy.headers2, copy.headers3, copy.headers4]}
-          rows={P.UNLIMITED_OUT.map(([n, d, p]) => [`<strong>${n}</strong>`, d, p])}
+          rows={P.UPDATE_OUT.map(([n, d, p]) => [`<strong>${n}</strong>`, d, p])}
         />
         <Note heading={copy.heading2} kind="warn">
-          <p>{P.UNLIMITED_NOTE}</p>
+          <p>{P.UPDATE_NOTE}</p>
         </Note>
       </Section>
 
       <Section tone="tint" heading={copy.heading3}>
         <Table
           headers={[copy.headers5, copy.headers6]}
-          rows={P.MARKET_SPOT.map((m) => [m.name, m.price])}
+          rows={P.RUN.map((r) => [r.name, r.lede])}
           caption={copy.caption}
         />
         <p>{copy.p}</p>

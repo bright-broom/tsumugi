@@ -1,16 +1,11 @@
 /** Japanese copy: plans. Keep keys stable; placeholders are named runtime values. */
 export default {
-  ariaLabel: 'お支払い方法の表示切り替え',
-  label: '毎月払う',
-  label2: 'まとめて払う',
-  nM: '制作費{pINSTALLMENTCOUNT}回＋運用費の合計です。手数料0円なので総額は同じ。',
-  nB: '制作費を一度で払う場合。このあと運用費が毎月かかります。',
-  tag: '迷ったらこれです',
-  pmeta: '{pPages}ページ・約{pWeeks}週間でお渡し',
-  u: '円／月',
-  sub2: '初回 {insInitial}円 ＋ 毎月 {insMonthly}円×{pINSTALLMENTCOUNT}回 ＋ 運用 {rnPrice}円／月',
+  nB: '制作は買い切り。着手50%・検収50%。継続支援は任意、外部費は別途です。',
+  tag: '基本の構成',
+  pmeta: '最大{pPages}ページ・約{pWeeks}週間が目安',
   u2: '円',
-  sub22: '一度だけ。このあと運用 {rnPrice}円／月',
+  sub22: '制作費のみ。支援・外部費は別途。',
   more: 'ほか{pIncludesLengthFeat}項目',
-  a: 'このプランで相談する',
+  a: '提供範囲を相談する',
+  preparing: '受付準備中',
 } as const;

@@ -28,12 +28,11 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
   const n = (v: number) => v.toLocaleString('en-US');
   const sd = P.subsidyCalc();
   const std = P.build('standard');
-  const mStd = P.monthlyAllIn('standard', 'run_standard');
+  const mStd = P.run('run_basic').price;
   const tabelogBasic = 27_500;
   const cmp = P.compareRows();
   const one = cmp[0]!;
-  const big = cmp[2]!;
-  const totalSpot = 3_000 + 5_000 * 3 + 3_000 + 3_000 + 3_000;
+
   const title = format(copy.title, { pSINGLEPrice: n(P.SINGLE.price), cBRANDT: C.BRAND_T });
   const desc = format(copy.desc, { pSINGLEPrice: n(P.SINGLE.price) }) + copy.desc2;
 
@@ -202,12 +201,21 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
             rows={[
               { name: copy.rowsName, sub: copy.rowsSub, amount: 55_000 },
               { name: copy.rowsName2, sub: copy.rowsSub, amount: 27_500 },
-              { name: copy.rowsName3, sub: copy.rowsSub2, amount: mStd, ours: true },
+              {
+                name: copy.rowsName3,
+                sub: copy.rowsSub2,
+                amount: P.withTax(P.supportMonthlyTotal('run_basic')),
+                ours: true,
+              },
               { name: copy.rowsName4, sub: copy.rowsSub3, amount: 11_000 },
             ]}
           />
           <Figure
-            svg={D.rentVsOwn(tabelogBasic, P.PORTAL_FEE_DINNER, P.run('run_standard').price)}
+            svg={D.rentVsOwn(
+              tabelogBasic,
+              P.PORTAL_FEE_DINNER,
+              P.withTax(P.supportMonthlyTotal('run_basic')),
+            )}
           />
           <Note heading={copy.heading4} kind="good">
             <p>
@@ -249,7 +257,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                 { icon: 'clock', label: copy.rowsLabel5, value: copy.rowsValue, cls: 'small' },
                 {
                   label: copy.rowsLabel6,
-                  value: format(copy.rowsValue3, { totalSpot: n(totalSpot) }),
+                  value: copy.rowsValue3,
                   cls: 'sum',
                 },
                 { label: copy.rowsLabel7, value: copy.rowsValue4, cls: 'net', sub: copy.rowsSub4 },
@@ -300,7 +308,10 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           className="home-section home-pricing"
           id="pricing"
           eyebrow={copy.eyebrow5}
-          heading={copy.heading8}
+          heading={format(copy.heading8, {
+            singlePrice: n(P.SINGLE.price),
+            standardPrice: n(std.price),
+          })}
           lede={copy.lede4}
         >
           <Entry />
@@ -360,7 +371,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               one.sub_monthly,
               one.sub_total,
               one.our_price,
-              one.our_run,
+              one.our_run + one.our_external,
               P.COMPARE_MONTHS,
             )}
           />
@@ -378,19 +389,17 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               },
               {
                 label: format(copy.rowsLabel12, { cBRAND: C.BRAND }),
-                value: format(copy.rowsValue8, { pSINGLEPrice: n(P.SINGLE.price) }),
+                value: format(copy.rowsValue8, { ourTotal: n(one.our_total) }),
                 cls: 'sum',
                 sub: copy.rowsSub7,
               },
               {
                 label: copy.rowsLabel13,
                 value: format(copy.rowsValue9, {
-                  oneSubTotalPSINGLEPrice: n(one.sub_total - P.SINGLE.price),
+                  difference: n(one.diff),
                 }),
                 cls: 'net',
-                sub: format(copy.rowsSub8, {
-                  mathRoundPSingleVsSubsMonths: Math.round(P.singleVsSubsMonths()),
-                }),
+                sub: copy.rowsSub8,
               },
             ]}
           />
@@ -407,21 +416,19 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                 rOurPrice: n(r.our_price),
                 rOurRun: n(r.our_run),
                 rOurTotal: n(r.our_total),
+                external: n(r.our_external),
               }) + copy.rows5,
             ])}
             foot={format(copy.foot, {
               pSUBSSOURCE: P.SUBS_SOURCE,
-              bigSubPages: big.sub_pages,
-              bigDiff: n(big.diff),
             })}
           />
           <Note heading={copy.heading12} kind="good">
             <p>
-              {format(copy.p7, { bigSubPages: big.sub_pages, pCOMPAREMONTHS: P.COMPARE_MONTHS })}
+              {format(copy.p7, { pCOMPAREMONTHS: P.COMPARE_MONTHS })}
               <strong>
                 {format(copy.strong5, {
-                  bigDiff: n(big.diff),
-                  mathFloorBigDiffPCOMPAREMONTHS: n(Math.floor(big.diff / P.COMPARE_MONTHS)),
+                  difference: n(one.diff),
                 })}
               </strong>
               {copy.p8}
@@ -429,7 +436,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
             <p>
               {copy.p9}
               <strong>{copy.strong6}</strong>
-              {format(copy.p10, { pOPTIONS1Price: n(P.OPTIONS[1].price) })}
+              {copy.p10}
             </p>
           </Note>
         </Section>
@@ -438,7 +445,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           navKey={href('subsidy')}
           className="home-section home-subsidy"
           eyebrow={copy.eyebrow8}
-          heading={format(copy.heading13, { sdTotal: P.yen(sd.total), sdNet: P.yen(sd.net) })}
+          heading={copy.heading13}
           lede={format(copy.lede7, { pSUBSIDYName: P.SUBSIDY.name, sdNet: P.yen(sd.net) })}
         >
           <Figure svg={D.subsidyBar(sd.total, sd.web, sd.pr, sd.grant, sd.net)} />

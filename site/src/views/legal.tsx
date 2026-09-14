@@ -11,8 +11,8 @@ export default function LegalPage({ copy, route }: PageProps<'legal'>) {
   const file = ROUTES[route].file;
   const title = format(copy.title, { cBRANDT: C.BRAND_T });
   const desc = copy.desc + copy.desc2;
-  const basic = P.build('basic');
-  const pro = P.build('pro');
+  const basic = P.SINGLE;
+  const pro = P.build('standard');
   const yen = (n: number) => n.toLocaleString('en-US');
   const rows: [string, string][] = [
     [copy.rows, C.LEGAL_NAME],
@@ -33,16 +33,13 @@ export default function LegalPage({ copy, route }: PageProps<'legal'>) {
       format(copy.rows9, { yenBasicPrice: yen(basic.price), yenProPrice: yen(pro.price) }) +
         format(copy.rows10, {
           yenPRunRunLightPrice: yen(P.run('run_light').price),
-          yenPRunRunGrowthPrice: yen(P.run('run_growth').price),
+          yenPRunRunGrowthPrice: yen(P.run('run_standard').price),
         }) +
         copy.rows11,
     ],
     [copy.rows12, copy.rows13 + copy.rows14],
     [copy.rows15, copy.rows16],
-    [
-      copy.rows17,
-      copy.rows18 + format(copy.rows19, { pINSTALLMENTCOUNT: P.INSTALLMENT_COUNT }) + copy.rows20,
-    ],
+    [copy.rows17, copy.rows18 + copy.rows19 + copy.rows20],
     [
       copy.rows21,
       format(copy.rows22, { basicWeeks: basic.weeks, proWeeks: pro.weeks }) + copy.rows23,

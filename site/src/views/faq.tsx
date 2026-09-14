@@ -12,9 +12,8 @@ export default function FaqPage({ copy, route }: PageProps<'faq'>) {
   const file = ROUTES[route].file;
   const title = format(copy.title, { cBRANDT: C.BRAND_T });
   const desc = copy.desc + copy.desc2;
-  const mStd = P.monthlyAllIn('standard', 'run_standard');
+  const mStd = P.run('run_basic').price;
   const stdPrice = P.build('standard').price;
-  const rows = P.compareRows();
   const n = (v: number) => v.toLocaleString('en-US');
   const GROUPS: [string, [string, string][]][] = [
     [
@@ -24,7 +23,7 @@ export default function FaqPage({ copy, route }: PageProps<'faq'>) {
         [
           copy.group4,
           format(copy.group5, {
-            pINSTALLMENTStandardInitial: n(P.INSTALLMENT.standard.initial),
+            deposit: n(P.paymentSchedule(stdPrice).deposit),
             stdPrice: n(stdPrice),
           }),
         ],
@@ -33,9 +32,6 @@ export default function FaqPage({ copy, route }: PageProps<'faq'>) {
           copy.group8,
           format(copy.group9, {
             pCOMPAREMONTHS: P.COMPARE_MONTHS,
-            rows0Diff: n(-rows[0]!.diff),
-            rows2SubPages: rows[2]!.sub_pages,
-            rows2Diff: n(rows[2]!.diff),
           }),
         ],
         [copy.group10, `<p>${copy.group11}<strong>${copy.group12}</strong>${copy.group13}</p>`],
@@ -56,10 +52,7 @@ export default function FaqPage({ copy, route }: PageProps<'faq'>) {
             `<p>${copy.group30}</p>` +
             `<p>${copy.group31}<strong>${copy.group32}</strong>${copy.group33}<a href='owned.html'>${copy.group34}</a>${copy.group23}</p>`,
         ],
-        [
-          copy.group35,
-          format(copy.group36, { pINSTALLMENTCOUNT: P.INSTALLMENT_COUNT, pRUNTERM: P.RUN_TERM }),
-        ],
+        [copy.group35, format(copy.group36, { pRUNTERM: P.RUN_TERM })],
         [
           copy.group37,
           `<p>${copy.group38}<a href='source.html'>${copy.group39}</a>${copy.group23}</p>`,

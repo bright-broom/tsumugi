@@ -31,7 +31,7 @@ export const IND_DATA: Record<string, Industry> = {
     ],
     skip: [[copy.restaurantHtmlSkip, copy.restaurantHtmlSkip2]],
     cost: copy.restaurantHtmlCost,
-    plan: 'standard',
+    plan: 'basic',
   },
   [ROUTES['koumuten'].file]: {
     name: copy.koumutenHtmlName,
@@ -49,7 +49,7 @@ export const IND_DATA: Record<string, Industry> = {
       [copy.koumutenHtmlSkip3, copy.koumutenHtmlSkip4],
     ],
     cost: copy.koumutenHtmlCost,
-    plan: 'pro',
+    plan: 'standard',
   },
   [ROUTES['salon'].file]: {
     name: copy.salonHtmlName,
@@ -64,7 +64,7 @@ export const IND_DATA: Record<string, Industry> = {
     ],
     skip: [[copy.salonHtmlSkip, copy.salonHtmlSkip2]],
     cost: copy.salonHtmlCost,
-    plan: 'standard',
+    plan: 'basic',
   },
   [ROUTES['shigyo'].file]: {
     name: copy.shigyoHtmlName,
@@ -79,6 +79,6 @@ export const IND_DATA: Record<string, Industry> = {
     ],
     skip: [[copy.shigyoHtmlSkip, copy.shigyoHtmlSkip2]],
     cost: copy.shigyoHtmlCost,
-    plan: 'pro',
+    plan: 'standard',
   },
 };
