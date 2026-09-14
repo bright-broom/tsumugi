@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "tsx scripts/build-public.ts && next dev",
     "build": "tsx scripts/build-tokens.ts --check && tsx scripts/build-public.ts && next build && tsx scripts/postbuild.ts",
-    "check": "tsc --noEmit && tsx scripts/check-structure.ts",
+    "check": "tsc --noEmit && tsx scripts/check-structure.ts && tsx scripts/check-content.ts",
     "verify": "tsx verify/verify.ts",
     "tokens": "tsx scripts/build-tokens.ts",
     "og": "tsx scripts/og.ts",

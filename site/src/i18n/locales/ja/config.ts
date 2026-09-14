@@ -1,0 +1,24 @@
+/** Japanese copy: config. Keep keys stable; placeholders are named runtime values. */
+export default {
+  brand: '紬',
+  legalName: '紬',
+  partnerName: '（名前）',
+  brandReading: 'つむぎ',
+  area: '全国',
+  serviceNote: '打ち合わせはオンラインと電話。全国どこでもお受けします。',
+  phoneHours: '平日 9:00〜18:00',
+  addressRegion: '（都道府県）',
+  addressCity: '（市区町村）',
+  addressStreet: '（番地）',
+  responsePromise: '1営業日以内',
+  memberRole: '設計・実装',
+  memberName: '（名前）',
+  memberBio:
+    'フリーランスのエンジニア。医療・建設・製造・クリエイター領域でのシステム開発とDX支援。',
+  memberBio2: 'Microsoft Azure のエンタープライズ窓口で法人サポートの経験。AZ-900 / PL-900。',
+  memberRole2: '撮影・取材・集客支援',
+  memberBio3:
+    '（役割に合わせて書き換える。撮影／原稿の聞き取り／広告運用のどれを担うかを明記する）',
+  brandWithReading: '{brand}（{brandReading}）',
+  lcpMeasured: '{seconds}秒（全{pages}ページの最大値・実測）',
+} as const;

@@ -176,10 +176,11 @@ export async function checkBrowser(dist: string, root: string, writeBack: boolea
   if (writeBack && lcps.size) {
     // サイトに出る数字（/spec の LCP）を、いま測った値に揃える
     const txt = `${(worst / 1000).toFixed(2)}秒（全${lcps.size}ページの最大値・実測）`;
-    const cfg = join(root, 'src', 'content', 'config.ts');
+    const cfg = join(root, 'src', 'content', 'measurements.ts');
     writeFileSync(cfg, readFileSync(cfg, 'utf8')
-      .replace(/^export const LCP_MEASURED = .*$/m, `export const LCP_MEASURED = '${txt}';`));
-    console.log(`\nconfig.ts の LCP_MEASURED を ${txt} に更新しました。再ビルドしてください。`);
+      .replace(/^export const LCP_SECONDS = .*$/m, `export const LCP_SECONDS = ${(worst / 1000).toFixed(2)};`)
+      .replace(/^export const LCP_PAGE_COUNT = .*$/m, `export const LCP_PAGE_COUNT = ${lcps.size};`));
+    console.log(`\nmeasurements.ts の実測値 を ${txt} に更新しました。再ビルドしてください。`);
   }
   return worst;
 }

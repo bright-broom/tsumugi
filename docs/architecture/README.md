@@ -10,6 +10,7 @@
 | [0001](0001-pages-router.md) | Next.js は Pages Router で書き、静的HTMLに書き出す（実行時JS 0バイト） |
 | [0002](0002-directory-layers.md) | `src/` を層に分け、案件ごとに差し替える中身を `content/` に集める |
 | [0003](0003-modern-stack.md) | JavaScript 0 バイトを維持し、TypeScript 7・開発ライブラリ・CI・Vercel を整備する |
+| [0004](0004-content-and-routing.md) | 文言・ルートの正本、静的ページ入力と表示テンプレートを分離する |
 
 新しい決定は `NNNN-短い名前.md` で足す。決定を覆すときは古い記録を消さず、状態を「置き換え（NNNN）」にして新しい番号を足す。
 

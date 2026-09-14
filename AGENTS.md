@@ -34,7 +34,7 @@ Codex・Cursor・GitHub Copilot などはこのファイルを、Claude Code は
 | App Router に移さない | 静的書き出しでも全ページに約173KB（gzip）の JS が載る | [ADR 0001](docs/architecture/0001-pages-router.md) |
 | `verify` に FAIL が1件でもあれば納品しない | 仕様の正本は検査コード（`site/verify/`） | `npm run verify` の終了コード |
 | 金額は `site/src/content/prices.ts` からだけ引く。`RUN` や `BUILD` を添字で引かない | 添字で引いていて、プランを足したときに全ページの月額が静かに下振れした事故がある。`docs/business/紬_事業の中身.xlsx` は写しで、Excel を直してもサイトは変わらない | `verify`「29 価格の一致」 |
-| 依存は `pages → layouts → components → content → lib` の一方向。`src/` の中は `@/` で import する | 案件ごとに差し替える範囲を `content/` に閉じる | `npm run check`（[ADR 0002](docs/architecture/0002-directory-layers.md)） |
+| 依存は `pages → application → views → layouts → components → content → i18n → routing → lib` の一方向。`src/` の中は `@/` で import する | 文言・事業データ・ルート・表示の責務を分ける | `npm run check`（[ADR 0004](docs/architecture/0004-content-and-routing.md)） |
 | 測っていない数字をページに書かない | 事業の規範 | `works.html` の件数は `verify-report.json` から読む |
 | 他社名をサイトに書かない。負けている比較の行も消さない | 事業の規範 | [docs/product/messaging-and-pricing.md](docs/product/messaging-and-pricing.md) |
 
@@ -56,8 +56,8 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 
 1. `npm run check`・`npm run lint`・`npm test` が通る
 2. `npm run build` が通る（postbuild が「実行時の script 0件・区切りコメント 0件」を出す）
-3. `npm run verify` が **PASS 581 / WARN 1 / FAIL 0**（WARN 1 は `PLACEHOLDER=true` による既知の1件）
-   - 検査項目やページを増減すると 581 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
+3. `npm run verify` が **PASS 577 / WARN 1 / FAIL 0**（WARN 1 は `PLACEHOLDER=true` による既知の1件）
+   - 検査項目やページを増減すると 577 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
 4. 見た目を変えないはずの変更（リファクタリング）では、`site/out/` の全ファイルのハッシュが変更前と同じ
 
 ## 5. 進め方

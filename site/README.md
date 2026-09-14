@@ -9,11 +9,11 @@ npm run dev              # http://localhost:3000 （href="terms.html" のまま�
 npm run build            # トークン同期の検査 → public/ の生成 → next build → postbuild → out/
 npm run verify           # 標準仕様の検査（ブラウザ実測を含む）。FAIL 0 で納品可
 npm run verify -- --static   # 静的検査のみ（ブラウザ不要・CI向け。結果は verify-report.static.json）
-npm run verify -- --write    # LCP実測値を src/content/config.ts に書き戻す
+npm run verify -- --write    # LCP実測値を src/content/measurements.ts に書き戻す
 npm run verify -- --dist <path>  # 検査するディレクトリを差し替える（既定は out/）
 npm run tokens           # styles/design.tokens.json → styles/tokens.css（--check で同期検査）
 npm run og               # OGP画像とファビコン（文面を変えたときだけ。差分をコミットする）
-npm run check            # 型検査 ＋ ディレクトリの依存の向きの検査
+npm run check            # 型・依存方向・循環・文言とルートの検査
 ```
 
 ---
@@ -59,12 +59,12 @@ flowchart LR
 ```mermaid
 flowchart TD
   out[("out/")] --> st["静的検査<br/>PASS 359"]
-  out --> br["ブラウザ実測<br/>PASS 222"]
+  out --> br["ブラウザ実測<br/>PASS 218"]
   content["src/content/<br/>config・prices"] -.->|突き合わせる| st
-  st --> full["verify-report.json<br/>PASS 581<br/>WARN 1 / FAIL 0"]
+  st --> full["verify-report.json<br/>PASS 577<br/>WARN 1 / FAIL 0"]
   br --> full
   st -.->|簡易版のとき| static["verify-report<br/>.static.json"]
-  full -.->|次のビルドで| works["works.html の<br/>「581項目」"]
+  full -.->|次のビルドで| works["works.html の<br/>「577項目」"]
 ```
 
 - **静的検査**：電話番号・JSON-LD・実行時JSなし・内部リンク・CSS変数・価格・トークンの同期・OGP画像など。**ブラウザ実測**：LCP・横スクロール・タップ領域・コントラスト・図の色・コンソールエラー
@@ -84,83 +84,56 @@ App Router は静的書き出しでも全ページに約173KB（gzip）の JS �
 
 ---
 
-## 書き方の決まり
+## 編集する場所と書き方
 
-| 決まり | 理由 |
+| 変更 | 正本 |
 |---|---|
-| **全ページに `export const config = { unstable_runtimeJS: false }`** | 忘れると postbuild で落ちる |
-| **値を混ぜる文字列はテンプレートリテラルで1つにする**（`` {`ほか${n}項目`} ``） | `ほか{n}項目` と書くと React が `ほか<!-- -->5<!-- -->項目` を出し、検査の文字列照合がずれる。postbuild で落ちる |
-| HTML 文字列（`<strong>` 入りの本文）は `dangerouslySetInnerHTML={raw(…)}` | 本文は Python 版から HTML 文字列のまま移した。自前のデータだけを渡す |
-| 図は `<Figure svg={D.landVsOwn()} />` | `content/diagrams.ts` は `<figure>` ごと文字列で返す。外側だけ要素にして中身を流し込む |
-| `node:fs` は `getStaticProps` の中だけ | ページ本体から使うとクライアント用の束の作成で落ちる |
-| `next/link` と `next/image` は使わない | どちらも実行時JSか画像サーバーを前提にしている。静的HTMLには不要 |
-| ページ名はフラットな `.html`、内部リンクも `href="terms.html"` | どのホスティングでも確実に動く。クリーンURLはホスト側の設定でやる |
+| 本文・見出し・SEO・共通文言・図のラベル | `src/i18n/locales/ja/`。ページ名・用途別の名前空間 |
+| OGP画像の文面 | `src/i18n/locales/ja/og.ts`。金額は `content/og.ts` が価格データから差し込む |
+| 連絡先・公開前設定 | `src/content/config.ts`。表示用プロフィールは `i18n/locales/ja/config.ts` |
+| 金額・計算 | `src/content/prices.ts`。BUILD・RUNは安定したキーで引く |
+| 実測値 | `src/content/measurements.ts`。`verify --write` が数値だけを更新する |
+| ページ追加・URL・アイコン・ナビ分類 | `src/routing/registry.ts` |
+| ページの構造 | `src/views/`。`PageProps<'home'>` など、当該ページ用の文言だけを描画する |
+| 静的生成の入口 | `src/pages/index.tsx`・`404.tsx`・`[page].tsx`。全入口に `unstable_runtimeJS: false` |
+| props の用意とテンプレート選択 | `src/application/`。ファイルシステムは `getStaticProps` からだけ読む |
+| 共通表示 | `src/layouts/`・`src/components/`。文言は `ContentProvider` で配布 |
+| SVGの座標・色・図形 | `src/content/diagrams.ts`。文字はカタログ |
+| CSS | `styles/`。トークンは `design.tokens.json` が正本 |
+| 配布ファイル | `out/`。手で編集しない |
 
----
+`pages → application → views → layouts → components → content → i18n → routing → lib`
 
-## 構成
-
-| | |
-|---|---|
-| `src/pages/*.tsx` | 1ファイル＝1ページ。業種4枚は `[industry].tsx` から出る |
-| `src/pages/_document.tsx` | ページに依らない head（テーマ色・アイコン・CSS）と `<html lang="ja">` |
-| `src/layouts/Base.tsx` | **器の本体。**ページごとの head / OGP / JSON-LD / ヘッダー / フッター / 固定CTA |
-| `src/components/*.tsx` | Section / Table / Note / Calc / Flow / Stats / Acc / Cta / Entry / Plans / Cards / Vs / Figure / Icon |
-| `src/content/config.ts` | **屋号・エリア・連絡先・テーマ。別ブランドに振り替えるときはここだけ編集する** |
-| `src/content/prices.ts` | **価格の単一の出所。**全ページがここを参照するので、値を変えると表記が一斉に変わる。`as const` で値から型が付く。添字ではなく `build(key)` / `run(key)` で引く |
-| `src/lib/icons.ts` | Lucide React の明示的な import。**使うアイコンはここに登録する** |
-| `src/content/nav.ts` / `industries.ts` / `spec.ts` | ナビ・業種・仕様の並び |
-| `src/content/diagrams.ts` | **図。手書きのインラインSVG** |
-| `styles/design.tokens.json` | **色・寸法・書体の正本（DTCG 2025.10 形式・80トークン）** |
-| `styles/tokens.css` | **生成物（`npm run tokens`）。手で編集しない** |
-| `styles/index.css` | 基礎層（`@layer base`）。面・文字・余白の土台とテーマの割り当て |
-| `styles/components.css` | 部品層（`@layer components`）。C01–C24 に対応 |
-| `styles/guide.css` | 画面層（`@layer screens` / `overrides`）。768px の切り替えとページ固有の余白 |
-| `public/fonts/` | League Gothic（OFL・latinサブセット 10KB）。**外部フォントは読み込まない** |
-| `public/og/` | `npm run og` の生成物（コミットする）。ビルドはそのまま `out/og/` に出す |
-| `public/theme.css` `robots.txt` `sitemap.xml` | `scripts/build-public.ts` の生成物（コミットしない）。CSS の正本は `styles/` |
-| `scripts/` | `build-public.ts`（theme.css / robots.txt / sitemap.xml）・`postbuild.ts`（0バイトの番人）・`build-tokens.ts`・`og.ts`・`check-structure.ts`（依存の向き） |
-| `verify/` | **標準仕様の自動検査。これが仕様の実体**（項目の一覧は [docs/spec.md](../docs/spec.md)） |
-| `out/` | 出力（静的HTML・CSS・robots.txt・sitemap.xml）。これを置けば公開できる |
-| `verify-report.json` | 検査結果（全項目）。ページに出す件数はここから取る。`--static` の結果は `verify-report.static.json` |
-
-### 置き場所の決まり
-
-依存は一方向。**矢印の向きにだけ import してよい。**`npm run check`（`scripts/check-structure.ts`）が検査する。
-
-```
-pages → layouts → components → content → lib
-```
+右側から左側への import と循環は禁止。`src/` の import は `@/` を使う。ビルド・検査ツールは content・i18n・routing・lib を利用できる。
 
 ```mermaid
 flowchart LR
-  pages["pages/<br/>ルートと本文"] --> layouts["layouts/<br/>器"]
-  layouts --> components["components/<br/>部品"]
-  components --> content["content/<br/>このサイト<br/>固有の中身"]
-  content --> lib["lib/<br/>小道具"]
-  tools["scripts/<br/>verify/"] --> content
-  tools --> lib
-
-  classDef swap fill:#fff4d6,stroke:#b58900,color:#3d2e00
-  classDef keep fill:#e6f4ea,stroke:#2e7d32,color:#12351a
-  class pages,content swap
-  class layouts,components,lib,tools keep
+  routes["routing/registry.ts"] --> paths["pages/<br/>getStaticPaths"]
+  routes --> navigation["ナビ・サイトマップ・OGP"]
+  messages["i18n/locales/ja/"] --> props["application/static-props.ts"]
+  paths --> props
+  props --> render["application/Page.tsx"]
+  render --> views["views/<br/>文言を props で受け取る"]
+  render --> shared["ContentProvider<br/>共通部品の文言"]
+  views --> html["静的HTML・JS 0バイト"]
 ```
 
-黄色は**別の案件で差し替える**もの、緑は**そのまま使う**もの。飛び越える import（`pages` から `lib` など）はしてよい。逆向きは不可。
+- 文言のキーは並べ替えや修正で改番しない。文言の変更はカタログで行う。
+- 値を含む文は `format(copy.heading, { amount, months })`。差し込み名は型検査される。文字列を分割して並べると React の区切りコメントが出るため、1つの文に組み立てる。
+- 本文中のリンクは `@route:terms` などの識別子。コードからは `href('terms')` を使う。深い404からも辿れる `/terms.html` に解決する。
+- 電話リンクは `<PhoneLink className="btn btn-1" />`。表示番号と発信先を別々に書かない。
+- `<strong>` 入りの信頼済み本文だけを `raw()` に渡す。外部入力は対象外。
+- `next/link` のクライアント遷移は使わず、通常のリンクで移動する。
+- 現在は日本語のみ・1ビルド1言語。未対応言語はエラーにする。追加時の条件は [ADR 0004](../docs/architecture/0004-content-and-routing.md) に記載。
 
-| | 何を置くか | 別の案件では |
-|---|---|---|
-| `src/content/` | 屋号・料金・ナビ・業種・仕様・図。**このサイトに固有の中身** | **差し替える**（同じ形の export を保つ） |
-| `src/pages/` | ルートと本文 | 差し替える |
-| `src/components/` `src/layouts/` | 部品と器 | そのまま使う |
-| `src/lib/` | 何にも依存しない小道具（HTML の流し込み・アイコン・丸め・検査結果の読み込み） | そのまま使う |
-| `styles/` `scripts/` `verify/` | CSS・ビルド・検査 | そのまま使う（`scripts/og.ts` の文面だけ差し替える） |
+### ページを追加するとき
 
-- `src/` の中は **`@/…` で import する**（例：`@/content/prices`）。置き場所を変えても import を書き換えずに済む
-- 部品と器が `content/` を読むのは `config`・`nav`・`prices` の3つだけ。別の案件ではこの3つの形を保てば、部品はそのまま動く
-- 層を分けた理由と、検討してやめた選択肢は [ADR 0002](../docs/architecture/0002-directory-layers.md)
+1. `routing/registry.ts` に ID・アイコン・ナビの分類を追加する。
+2. 日本語カタログと `views/` のテンプレートを作り、`application/Page.tsx` の分岐に登録する。
+3. `og.ts` の文言を追加し、定めた書体環境で共有カードを用意する。
+4. `npm run validate` と `npm run verify` を通す。URLとOGPの登録漏れ、文字の直接記述、循環、JS混入は検査で止まる。
 
+ルート・文言・レイアウトを別々に追える構成にした理由と互換性の条件は [ADR 0004](../docs/architecture/0004-content-and-routing.md)。
 
 ## 開発ライブラリと実行環境
 

@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from 'next/document';
+import { LOCALE } from '@/i18n/catalog';
 
 /**
  * ページに依らない head。ページごとの head は layouts/Base.tsx（next/head）。
@@ -8,14 +9,17 @@ import { Html, Head, Main, NextScript } from 'next/document';
  */
 export default function Document() {
   return (
-    <Html lang="ja">
+    <Html lang={LOCALE.language}>
       <Head>
         <meta name="theme-color" content="#0B0B0D" />
-        <link rel="icon" href="og/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="og/apple-touch-icon.png" />
-        <link rel="stylesheet" href="theme.css" />
+        <link rel="icon" href="/og/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/og/apple-touch-icon.png" />
+        <link rel="stylesheet" href="/theme.css" />
       </Head>
-      <body><Main /><NextScript /></body>
+      <body>
+        <Main />
+        <NextScript />
+      </body>
     </Html>
   );
 }
