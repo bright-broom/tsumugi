@@ -56,8 +56,8 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 
 1. `npm run check`・`npm run lint`・`npm test` が通る
 2. `npm run build` が通る（postbuild が「実行時の script 0件・区切りコメント 0件」を出す）
-3. `npm run verify` が **PASS 577 / WARN 1 / FAIL 0**（WARN 1 は `PLACEHOLDER=true` による既知の1件）
-   - 検査項目やページを増減すると 577 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
+3. `npm run verify` が **PASS 610 / WARN 1 / FAIL 0**（WARN 1 は `PLACEHOLDER=true` による既知の1件）
+   - 検査項目やページを増減すると 610 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
 4. 見た目を変えないはずの変更（リファクタリング）では、`site/out/` の全ファイルのハッシュが変更前と同じ
 
 ## 5. 進め方

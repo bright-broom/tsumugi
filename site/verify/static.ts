@@ -60,8 +60,8 @@ export function checkStatic(dist: string): void {
 
   // ガイドの数値がそのまま出ているか。書き換えたら気づけるようにする
   const GUIDE: [string, string][] = [
-    ['--nah-size-header-pc: 62px', 'ヘッダー高 PC 62px'],
-    ['--nah-size-header-mb: 54px', 'ヘッダー高 モバイル 54px'],
+    ['--nah-size-header-pc: 88px', 'ヘッダー高 PC 88px'],
+    ['--nah-size-header-mb: 72px', 'ヘッダー高 モバイル 72px'],
     ['--nah-size-cta-w-pc: 315px', '主要CTA幅 PC 315px'],
     ['--nah-size-cta-h-pc: 57px', '主要CTA高 PC 57px'],
     ['--nah-size-cta-w-mb: 260px', '主要CTA幅 モバイル 260px'],
@@ -226,8 +226,9 @@ export function checkStatic(dist: string): void {
     rec(noAlt.length ? 'FAIL' : 'PASS', '07 imgのalt', n,
       noAlt.length ? `alt無し ${noAlt.length}枚` : `${imgs.length}枚すべてalt有り`);
     if (imgs.length) {
-      const lazy = imgs[0]!.includes('loading="lazy"');
-      const prio = imgs[0]!.includes('fetchpriority="high"');
+      // HTML 属性名は大小文字を区別しない。React は fetchPriority と出力する。
+      const lazy = /\sloading\s*=\s*["']lazy["']/i.test(imgs[0]!);
+      const prio = /\sfetchpriority\s*=\s*["']high["']/i.test(imgs[0]!);
       rec(lazy ? 'FAIL' : 'PASS', '14 先頭画像にlazyを付けない', n, lazy ? 'lazy が付いています' : '');
       rec(prio ? 'PASS' : 'WARN', '14 先頭画像に fetchpriority', n, prio ? '' : 'fetchpriority="high" 推奨');
     } else {

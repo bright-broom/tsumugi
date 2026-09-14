@@ -1,5 +1,20 @@
 /** Japanese copy: home. Keep keys stable; placeholders are named runtime values. */
 export default {
+  navigation: {
+    label: 'このページのご案内',
+    ownership: '紬の考え方',
+    pricing: '料金・プラン',
+    industries: '業種別のご案内',
+    contact: 'ご相談の流れ',
+  },
+  hero: {
+    heading: '変わらない志に、',
+    heading2: '変えていく力を。',
+    message: '受け継いだ想いと、新しい知恵を結び、',
+    message2: '事業の次のはじまりを、ともにつくる。',
+    artworkAlt:
+      'イザナギとイザナミ、矛先の雫から生まれるおのころ島を描いた、藍色と金の日本画風イラスト。',
+  },
   title: '所有できるホームページ制作｜1ページ{pSINGLEPrice}円から・買い切り｜{cBRANDT}',
   desc: '月額制のホームページは借りた土地に建てた家と同じです。@brand:nameは1ページ{pSINGLEPrice}円の買い切りから。',
   desc2:

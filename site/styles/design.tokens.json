@@ -1,6 +1,9 @@
 {
   "$description": "NOT A HOTEL デザインガイドライン v2.0 準拠のトークン正本。DTCG Format Module 2025.10。native/tokens.css はここから生成する（手で編集しない）。",
   "color": {
+    "header-paper": { "$value": "#F7F5F0", "$description": "紬のヘッダー。生成りの面" },
+    "header-ink": { "$value": "#19343D", "$description": "紬のヘッダー。藍墨の文字と導線" },
+    "header-brass": { "$value": "#85704B", "$description": "紬のヘッダー。糸を思わせる細い真鍮色の罫線" },
     "$type": "color",
     "white":   { "$value": "#FFFFFF", "$description": "白い面。標準の読む面" },
     "ink":     { "$value": "#0B0B0D", "$description": "暗い章。没入・章切り替え" },
@@ -38,8 +41,9 @@
   },
   "size": {
     "$type": "dimension",
-    "header-pc":   { "$value": "62px" },
-    "header-mb":   { "$value": "54px" },
+    "home-container": { "$value": "1280px", "$description": "ホーム本文。図解と比較のための広い器" },
+    "header-pc":   { "$value": "88px" },
+    "header-mb":   { "$value": "72px" },
     "pad-pc":      { "$value": "48px",  "$description": "PC 外側の余白" },
     "pad-hero":    { "$value": "80px",  "$description": "ヒーローの外側" },
     "pad-mb":      { "$value": "24px",  "$description": "モバイル本文" },
@@ -74,6 +78,7 @@
   "font": {
     "family": {
       "$type": "fontFamily",
+      "brand": { "$value": ["Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif CJK JP", "serif"], "$description": "ヘッダーの屋号だけに使う端末の明朝。外部フォント不要" },
       "ja":      { "$value": ["YakuHanJP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"] },
       "display": { "$value": ["League Gothic", "Haettenschweiler", "Arial Narrow", "sans-serif"], "$description": "短い欧文のみ。日本語本文・長い項目名には使わない" },
       "mono":    { "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"] }

@@ -134,7 +134,10 @@ export const CONTRAST = String.raw`
     const hi = Math.max(L1,L2), lo = Math.min(L1,L2); return (hi+0.05)/(lo+0.05); };
   const targets = ['.nah-app', '.lede', '.dim', '.nav a', '.tel', '.tel .num', '.tel .lbl',
                    '.btn-1', '.btn-2', '.card .meta', '.plan .why', '.plan .pmeta',
-                   '.hero h1', '.hero .sub', '.hero .kick', '.logo .n', '.logo .s',
+                   '.hero h1, .hero .service-intro-title', '.hero .sub', '.hero .kick', '.logo .n', '.logo .s',
+                   '.brand-hero-copy h1', '.brand-hero-copy p',
+                   '.header-contact', '.logo .roman', '.menu > summary', '.header-phone',
+                   '.footer-contact', '.footer-phone', '.footer-links a', '.footer-industries a', '.ftr-legal a', '.footer-top',
                    '.amt', '.pricebox .alt li', '.amtwrap .pre',
                    'thead th', '.ftr p', '.ftr .fine', '.sh .lab', '.calc .r .k em',
                    '.calc .r.net .v', '.calc .r.net .k', '.stat .k', '.vs .nm em',

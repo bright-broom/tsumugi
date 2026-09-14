@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-14（Dependabot の互換性修正）
+- 最終更新：2026-09-14（アイコンを使った共通フッター刷新）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -16,11 +16,15 @@
 |---|---|
 | 構成 | `site/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
 | 実行時 JS | 全21ページで 0（`postbuild` と `verify` で確認） |
-| 検査 | `npm run verify`：**PASS 577 / WARN 1 / FAIL 0**。WARN は `PLACEHOLDER=true` による1件。`npm run verify -- --static`：PASS 359 / WARN 1 / FAIL 0 |
+| 検査 | `npm run verify`：**PASS 610 / WARN 1 / FAIL 0**。WARN は `PLACEHOLDER=true` による1件。`npm run verify -- --static`：PASS 360 / WARN 1 / FAIL 0 |
 | 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 112 件合格 |
 | 依存の健全性 | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定。Dependabot は ESLint と Node 型定義のメジャー更新だけを除外し、既存の互換性方針を維持（ADR 0003） |
 | 動作を確かめた環境 | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一 |
 | 文言とルート | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004） |
+| 共通フッター | 明るいグレーの面に、相談・連絡先・案内・大きなブランド文字を配置。アイコン32個、20ページへの案内、先頭への移動、現在地を表示（ADR 0008） |
+| ホーム本文 | 白・グレー・チャコールを基調に、広い図解・左右に分けた説明・料金比較・FAQを再構成。元の図解4点と全説明文を保持、本文のLucideアイコンは31→45。CSSは `styles/home.css` に限定（ADR 0007） |
+| 共通ヘッダー | 生成り・藍墨・明朝の屋号。高さ88/72px、問い合わせCTAとネイティブの全体メニュー。追加の実行時JS・外部フォントなし（ADR 0006） |
+| 暫定ヒーロー | ヘッダー直下に国生みの画像を配置。自己完結SVG（WebP内包、約741 KiB）、モバイルの補助コピーと読み上げに対応（ADR 0005） |
 | 旧版 | Python 版（`svc/`）と Astro 版（`svc-astro/`）は削除済み。コミット `01f39d4` で読める。移植が正しいことの確かめ方は [history/2026-09-migration.md](history/2026-09-migration.md) |
 
 ### 中身（公開前の仮の状態）
@@ -71,6 +75,7 @@
 
 | 課題 | やること | 手がかり |
 |---|---|---|
+| ヒーロー画像の本採用 | 暫定SVG内の絵と描き込み文字を分離し、表示コピーをすべてカタログから生成する。現段階で文言を変える場合は元絵も同時に更新する | [ADR 0005](architecture/0005-temporary-hero.md)、`assets/hero/README.md` |
 | OGP画像の字形の正本 | コミット済みの PNG 23枚は別のマシンで作ったもの。この Mac で `npm run og` を実行すると、日本語の書体の違いで全PNGが差分になる（ファビコンの SVG は一致）。どの環境の字形を正本にするか決め、その環境で作ってコミットする | `scripts/og.ts`、[design.md「共有カード」](product/design.md) |
 | マージ済みブランチの削除 | リモートの `feat/nextjs-migration`・`refactor/directory-structure` を消す | `git push origin --delete <ブランチ名>` |
 | Next.js を上げるときの確認 | `unstable_runtimeJS` は将来の版で変わりうる。上げたら合格ラインを全部通す | [ADR 0001](architecture/0001-pages-router.md) |
@@ -92,3 +97,7 @@
 | 2026-09-14 | TypeScript 7、Node 24／npm 12、Lucide React・clsx・Zod・Vitest・ESLint・Prettier・最新 Playwright を導入。GitHub Actions、Dependabot、Vercel の静的配備設定を追加。実行時 JavaScript 0 バイトを維持（ADR 0003） |
 | 2026-09-14 | 文言・ブランド呼称・OGP・ルートの中央管理と電話表示の統一（ADR 0004）。型・lint・単体112件・静的359 PASS・全項目577 PASS／WARN 1／FAIL 0を確認。電話補助ラベルの削除でコントラスト対象が111件から107件に減ったため合計を更新 |
 | 2026-09-14 | Dependabot PR #6 の ESLint 10 による lint 停止を再現し、ESLint 9.39.5・Node 型定義24.13.4へ復旧。両依存のメジャー更新を除外して再発を防止（ADR 0003）。クリーンインストール・型・lint・単体112件・静的359 PASS・全項目577 PASS／WARN 1／FAIL 0を確認 |
+| 2026-09-14 | 利用者指定の国生みの画像を SVG に内包し、ホームのヘッダー直下へ暫定配置。PC・390px・320pxで全景表示と横はみ出しなしを確認。型・lint・単体112件・静的360 PASS・全項目580 PASS／WARN 1／FAIL 0、実行時JS 0バイトを維持（ADR 0005） |
+| 2026-09-14 | 共通ヘッダーを和モダンに刷新し、`Header.tsx` に分離。幅320〜1440px、JS無効でのメニュー開閉・遷移・現在地を確認。型・lint・単体112件・静的360 PASS・全項目592 PASS／WARN 1／FAIL 0（ADR 0006）。ヘッダーのコントラスト検査対象が12件増加 |
+| 2026-09-14 | ホームのヒーロー以下を刷新。元の図解HTML4点と全テキスト保持、アイコン31→45。幅320〜1440pxでレイアウト・アンカー・料金切替・キーボードFAQを確認。型・lint・単体112件・静的360 PASS・全項目593 PASS／WARN 1／FAIL 0（ADR 0007） |
+| 2026-09-14 | 全21ページのフッターを共通部品に分離し、明るい面と32個のアイコンで刷新。幅320〜1440px、44pxの操作領域、キーボードでの先頭移動とナビを確認。型・lint・単体112件・静的360 PASS・全項目610 PASS／WARN 1／FAIL 0（ADR 0008） |

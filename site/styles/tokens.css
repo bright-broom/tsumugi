@@ -1,10 +1,13 @@
 /* 生成物。手で編集しない。
  * 出所: styles/design.tokens.json
  * 生成: npm run tokens
- * トークン数: 80
+ * トークン数: 85
  */
 :root {
   /* color */
+  --nah-color-header-paper: #F7F5F0;  /* 紬のヘッダー。生成りの面 */
+  --nah-color-header-ink: #19343D;  /* 紬のヘッダー。藍墨の文字と導線 */
+  --nah-color-header-brass: #85704B;  /* 紬のヘッダー。糸を思わせる細い真鍮色の罫線 */
   --nah-color-white: #FFFFFF;  /* 白い面。標準の読む面 */
   --nah-color-ink: #0B0B0D;  /* 暗い章。没入・章切り替え */
   --nah-color-panel: #1C1C1C;  /* CTAパネル。主要行動のまとまり */
@@ -35,8 +38,9 @@
   --nah-theme-main-accent-text: #0171E3;
 
   /* size */
-  --nah-size-header-pc: 62px;
-  --nah-size-header-mb: 54px;
+  --nah-size-home-container: 1280px;  /* ホーム本文。図解と比較のための広い器 */
+  --nah-size-header-pc: 88px;
+  --nah-size-header-mb: 72px;
   --nah-size-pad-pc: 48px;  /* PC 外側の余白 */
   --nah-size-pad-hero: 80px;  /* ヒーローの外側 */
   --nah-size-pad-mb: 24px;  /* モバイル本文 */
@@ -68,6 +72,7 @@
   --nah-radius-pill: 999px;
 
   /* font */
+  --nah-font-family-brand: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif CJK JP", serif;  /* ヘッダーの屋号だけに使う端末の明朝。外部フォント不要 */
   --nah-font-family-ja: YakuHanJP, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --nah-font-family-display: "League Gothic", Haettenschweiler, "Arial Narrow", sans-serif;  /* 短い欧文のみ。日本語本文・長い項目名には使わない */
   --nah-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;

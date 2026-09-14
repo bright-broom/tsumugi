@@ -35,7 +35,7 @@ flowchart TD
 | 段階 | やること | 止まる条件 |
 |---|---|---|
 | ① `build-tokens.ts --check` | `styles/design.tokens.json` と `styles/tokens.css` が一致するか | 手で `tokens.css` を直した・`npm run tokens` を忘れた |
-| ② `build-public.ts` | `styles/` の4枚を `public/theme.css` に束ね、`robots.txt`・`sitemap.xml` を書く | — |
+| ② `build-public.ts` | `styles/` の6枚（`home.css` と `footer.css` を含む）を `public/theme.css` に束ね、`robots.txt`・`sitemap.xml` を書く | — |
 | ③ `next build` | 21ページを `out/` に書き出す（型検査を含む） | 型エラー |
 | ④ `postbuild.ts` | `data-next-head` などの印を消し、JSON-LD 以外の `<script>` と `<!-- -->` を数え、`out/_next/` を消す | 1件でもあれば |
 
@@ -58,13 +58,13 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-  out[("out/")] --> st["静的検査<br/>PASS 359"]
-  out --> br["ブラウザ実測<br/>PASS 218"]
+  out[("out/")] --> st["静的検査<br/>PASS 360"]
+  out --> br["ブラウザ実測<br/>PASS 220"]
   content["src/content/<br/>config・prices"] -.->|突き合わせる| st
-  st --> full["verify-report.json<br/>PASS 577<br/>WARN 1 / FAIL 0"]
+  st --> full["verify-report.json<br/>PASS 610<br/>WARN 1 / FAIL 0"]
   br --> full
   st -.->|簡易版のとき| static["verify-report<br/>.static.json"]
-  full -.->|次のビルドで| works["works.html の<br/>「577項目」"]
+  full -.->|次のビルドで| works["works.html の<br/>「610項目」"]
 ```
 
 - **静的検査**：電話番号・JSON-LD・実行時JSなし・内部リンク・CSS変数・価格・トークンの同期・OGP画像など。**ブラウザ実測**：LCP・横スクロール・タップ領域・コントラスト・図の色・コンソールエラー
@@ -95,6 +95,7 @@ App Router は静的書き出しでも全ページに約173KB（gzip）の JS �
 | 実測値 | `src/content/measurements.ts`。`verify --write` が数値だけを更新する |
 | ページ追加・URL・アイコン・ナビ分類 | `src/routing/registry.ts` |
 | ページの構造 | `src/views/`。`PageProps<'home'>` など、当該ページ用の文言だけを描画する |
+| 暫定ヒーロー画像 | `assets/hero/onokoro.webp`。`build-public.ts` が `public/images/onokoro-hero.svg` に内包。コピーと代替説明は `i18n/locales/ja/home.ts` の `hero`（[ADR 0005](../docs/architecture/0005-temporary-hero.md)） |
 | 静的生成の入口 | `src/pages/index.tsx`・`404.tsx`・`[page].tsx`。全入口に `unstable_runtimeJS: false` |
 | props の用意とテンプレート選択 | `src/application/`。ファイルシステムは `getStaticProps` からだけ読む |
 | 共通表示 | `src/layouts/`・`src/components/`。文言は `ContentProvider` で配布 |

@@ -4,12 +4,42 @@
    ══════════════════════════════════════════════════════════════════ */
 @layer screens {
 
+  /* 暫定の承認済み画像は、文字と二柱を切り取らずヘッダー直下に置く。 */
+  .brand-hero {
+    position: relative;
+    padding: 0;
+    background: var(--nah-color-ink);
+    color: var(--nah-color-white);
+  }
+  .brand-hero-artwork { width: 100%; height: auto; border-radius: 0; }
+  .brand-hero-copy { padding: 28px var(--nah-size-pad-mb) 32px; }
+  .brand-hero-copy h1 {
+    font-size: var(--nah-font-size-hero-mb);
+    line-height: var(--nah-font-leading-hero);
+    margin-bottom: 16px;
+  }
+  .brand-hero-copy p { font-size: var(--nah-font-size-body); }
+  @media (min-width: 769px) {
+    /* 画像内のコピーと同じ内容を、読み上げでは見出し・本文として届ける。 */
+    .brand-hero-copy {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+  }
+
   /* ── ヒーロー。PCは 45/67.5px、モバイルは 24/36px（06 文字と書体） */
   @media (max-width: 768px) {
     .hero { padding-block: 44px 40px; }
     /* 日本語の改行を再構成する（C03）。PC用の強制改行は外し、文節で折る */
-    .hero h1 { font-size: var(--nah-font-size-hero-mb); }
-    .hero h1 br { display: none; }
+    .hero h1, .hero .service-intro-title { font-size: var(--nah-font-size-hero-mb); }
+    .hero h1 br, .hero .service-intro-title br { display: none; }
     /* 前置きは手に持つ画面でいちばん飛ばされる。大きくして、白に寄せて、改行は外す */
     /* 新しい色は足さない。白と墨紺を混ぜて作る（トークンから導出する） */
     .hero .sub { font-size: 16px;
@@ -21,29 +51,34 @@
     .pricebox .alt { min-width: 0; }
   }
 
-  /* ── ヘッダー。PC 62px → モバイル 54px、外側余白 48px → 20px */
-  @media (max-width: 1080px) {
-    .nav ul { gap: 14px; }
-    .nav a { font-size: 12.5px; }
-    .tel-hours { display: none !important; }
+  /* ── ヘッダー。ブランドの余白を保ち、狭い画面では主ナビを全体メニューへ集約する */
+  @media (min-width: 1440px) { .header-phone { display: inline-flex; } }
+  @media (max-width: 1199px) {
+    .hdr-in { gap: 20px; }
+    .nav ul { gap: 20px; }
+    .logo .s { display: none; }
+    .header-actions { gap: 16px; }
   }
-  @media (min-width: 1200px) { .tel-hours { display: inline-flex; } }
-  @media (max-width: 900px) {
+  @media (max-width: 999px) {
     .nav { display: none; }
-    .menu { display: block; }
+    .header-actions { margin-left: auto; }
+    .logo .s { display: block; }
   }
   @media (max-width: 768px) {
-    .hdr-in { height: var(--nah-size-header-mb); padding-inline: var(--nah-size-pad-mb-head); gap: 12px; }
+    .hdr-in { height: var(--nah-size-header-mb); padding-inline: var(--nah-size-pad-mb-head); gap: 10px; }
+    .logo { gap: 10px; }
+    .logo .n { font-size: 39px; }
+    .logo .roman { font-size: 12px; letter-spacing: .18em; }
     .logo .s { display: none; }
-    .logo.one .s2 { display: block; }
-    .draft { padding-inline: var(--nah-size-pad-mb-head); }
+    .header-actions { gap: 10px; }
+    .header-contact { min-height: var(--nah-size-tap); gap: 10px; padding: 9px 12px; }
+    .contact-long { display: none; }
+    .contact-short { display: inline; }
+    .menu > summary { min-width: var(--nah-size-tap); }
+    .menu-panel { right: 20px; padding: 18px 12px; max-height: calc(100dvh - var(--nah-size-header-mb) - 80px); }
+    .draft { padding-inline: var(--nah-size-pad-mb-head); font-size: 12px; }
     .tel { padding: 4px 12px 4px 10px; }
-    .tel .lbl { display: none; }
     .tel .num { font-size: 15px; }
-  }
-  /* 電話CTAは 480px 未満だと横幅を食うので、下部の固定CTAに任せる */
-  @media (max-width: 479px) {
-    .hdr .tel { display: none; }
   }
 
   /* ── 主要CTA。PC 315×57 → モバイル 260×48 */
@@ -68,7 +103,6 @@
     .calc .r .v { font-size: 17px; }
     .calc .r.net .v { font-size: 27px; }
     .ctapanel { padding: 24px; }
-    .ftr { padding-block: 44px 32px; }
   }
 
   /* ── 固定CTA。C18：本文・キーボード・フッターを覆わない */
@@ -164,15 +198,10 @@
   @media (max-width: 768px) {
     .sh .lab { font-size: 13.5px; }
     .tel .lbl { font-size: 11.5px; }
-    .logo.one .rd { font-size: 12px; }
-    .logo.one .s, .logo.one .s2 { font-size: 12px; }
     .menu-panel .hd { font-size: 13px; }
-    .menu-panel a { font-size: 16px; }
+    .menu-panel a { font-size: 14px; }
     .stat .k { font-size: 13.5px; }
     .tbl-hint, .fig-hint { font-size: 13px; }
-    .ftr .meta { font-size: 14px; }
-    .ftr .fine { font-size: 13px; line-height: 2; }
-    .ftr-legal a { font-size: 14px; }
     .pmeta, .sub2 { font-size: 13.5px; }
     .calc .r.net .k { font-size: 15px; }
     .calc .r .k em { font-size: 13px; }
@@ -202,7 +231,7 @@
     .hdr::after {
       content: ""; position: absolute; left: 0; bottom: -1px; height: 2px;
       width: 100%; transform-origin: 0 50%; transform: scaleX(0);
-      background: var(--accent);
+      background: var(--nah-color-header-brass);
       animation: nah-read linear both;
       animation-timeline: scroll(root block);
     }
