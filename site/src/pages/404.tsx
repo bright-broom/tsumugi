@@ -1,23 +1,6 @@
-import * as C from '@/content/config';
-import Base from '@/layouts/Base';
-import Section from '@/components/Section';
-import Cta from '@/components/Cta';
-
+import type { GetStaticProps } from 'next';
+import { pageProps } from '@/application/static-props';
+import type { AnyPageProps } from '@/content/page-props';
+export { default } from '@/application/Page';
 export const config = { unstable_runtimeJS: false };
-
-const file = '404.html';
-const title = `ページが見つかりません｜${C.BRAND_T}`;
-const desc =
-  'お探しのページは移動したか、なくなっています。' +
-  'トップページか、お電話からお探しの内容にお進みください。';
-
-export default function NotFoundPage() {
-  return (
-    <Base file={file} title={title} desc={desc}>
-      <Section heading="ページが見つかりません" h1
-        lede="お探しのページは移動したか、なくなっています。<br>お急ぎでしたら、お電話が確実です。">
-        <Cta primary="トップに戻る" where="index.html" />
-      </Section>
-    </Base>
-  );
-}
+export const getStaticProps: GetStaticProps<AnyPageProps> = () => ({ props: pageProps('404') });

@@ -1,3 +1,6 @@
+import { OG_CARDS } from '@/content/og';
+import { getMessages } from '@/i18n/catalog';
+const copy = getMessages().og;
 /**
  * OGP画像を各ページぶん生成する（public/og/*.png）。
  *
@@ -21,37 +24,16 @@ import * as P from '@/content/prices';
 
 const ROOT = join(import.meta.dirname, '..');
 const outArg = process.argv.indexOf('--out');
-const OUT = outArg >= 0 && process.argv[outArg + 1]
-  ? resolve(process.argv[outArg + 1]!)
-  : join(ROOT, 'public', 'og');
+const OUT =
+  outArg >= 0 && process.argv[outArg + 1]
+    ? resolve(process.argv[outArg + 1]!)
+    : join(ROOT, 'public', 'og');
 const W = 1200;
 const H = 630;
 
 // ページごとの見出し。ページの並び（NAV → 業種 → 会社・法務 → 404）と同じ順で持つ。
 // 金額と返信の約束はページと同じ出所から引く（カードにだけ古い数字が残らないように）
-const SHEET: Record<string, [quiet: string, loud: string]> = {
-  'index.html':      [`1ページ${P.yen(P.SINGLE.price)}から。`, '払った日から、あなたのものです'],
-  'owned.html':      ['借地権ではなく、', '所有権のホームページを'],
-  'price.html':      ['月額を止めた日に、', '何が残りますか'],
-  'unlimited.html':  ['「1文字直すのに5,000円」を、', 'やめます'],
-  'source.html':     ['ソースコードごと、', 'お渡しします'],
-  'cost-cut.html':   ['新しい予算をつくる前に、', 'いまの掲載費を見直します'],
-  'subsidy.html':    ['補助金を使うと、', `ご負担は実質${P.yen(P.subsidyCalc().net)}になります`],
-  'spec.html':       ['作るものを、', '先に全部書いています'],
-  'flow.html':       ['ご相談から公開まで、', '約6週間でお渡しします'],
-  'works.html':      ['事例は、', 'これから積みます'],
-  'faq.html':        ['お電話の前に、', '確かめたいことへの答え'],
-  'restaurant.html': ['飲食店の', 'ホームページ'],
-  'koumuten.html':   ['工務店・建設業の', 'ホームページ'],
-  'salon.html':      ['美容室・サロンの', 'ホームページ'],
-  'shigyo.html':     ['士業・専門事務所の', 'ホームページ'],
-  'about.html':      ['2人で、', 'やっています'],
-  'contact.html':    ['ご相談は無料。', `${C.RESPONSE_PROMISE}にご返信します`],
-  'terms.html':      ['書いたことは、', '契約書にも書きます'],
-  'privacy.html':    ['お預かりするのは、', 'ご返信に必要なものだけです'],
-  'legal.html':      ['特定商取引法に', '基づく表記'],
-  '404.html':        ['お探しのページは、', '見つかりませんでした'],
-};
+const SHEET = OG_CARDS;
 
 const css = (hs: number) => `
 *{margin:0;padding:0;box-sizing:border-box}
@@ -86,17 +68,17 @@ function pageHtml(quiet: string, loud: string): string {
 <body>
   <div class="top">
     <span class="mark">${C.BRAND}</span><span class="rd">${C.BRAND_READING}</span>
-    <span class="bar"></span><span class="trade">ホームページ制作と運用｜全国対応</span>
+    <span class="bar"></span><span class="trade">${copy.trade}</span>
   </div>
   <h1><span class="q">${quiet}</span><br>${loud}</h1>
   <div class="foot">
     <div class="pts">
-      <span class="pt">払った日から自分のもの</span>
-      <span class="pt">ソースコードごと納品</span>
-      <span class="pt">契約期間の縛りなし</span>
+      <span class="pt">${copy.ownership}</span>
+      <span class="pt">${copy.source}</span>
+      <span class="pt">${copy.term}</span>
     </div>
-    <div class="amt"><div class="k">1ページから・買い切り</div>
-      <div class="v"><b>${P.SINGLE.price.toLocaleString('en-US')}</b><i>円〜</i></div></div>
+    <div class="amt"><div class="k">${copy.entry}</div>
+      <div class="v"><b>${P.SINGLE.price.toLocaleString('en-US')}</b><i>${copy.yenFrom}</i></div></div>
   </div>
 </body>`;
 }
@@ -117,7 +99,10 @@ const faviSvg = (m: string) =>
   'font-family="Hiragino Sans, Noto Sans CJK JP, Meiryo, sans-serif" ' +
   `font-size="44" font-weight="700" fill="#FFFFFF">${m}</text></svg>`;
 
-const ICONS = [[180, 118, 'apple-touch-icon.png'], [512, 336, 'icon-512.png']] as const;
+const ICONS = [
+  [180, 118, 'apple-touch-icon.png'],
+  [512, 336, 'icon-512.png'],
+] as const;
 
 async function main() {
   // 出力先ごと消さずに上書きする（--out に既存のディレクトリを渡しても中身を巻き込まない）
@@ -131,14 +116,19 @@ async function main() {
 
   const srv = createServer((req, res) => {
     const body = docs.get(req.url ?? '');
-    if (body === undefined) { res.writeHead(404).end(); return; }
+    if (body === undefined) {
+      res.writeHead(404).end();
+      return;
+    }
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }).end(body);
   });
   await new Promise<void>((ok) => srv.listen(0, '127.0.0.1', ok));
   const { port } = srv.address() as AddressInfo;
 
   const report = (file: string) =>
-    console.log(`  ${file.padEnd(22)}${(statSync(join(OUT, file)).size / 1024).toFixed(1).padStart(6)} KB`);
+    console.log(
+      `  ${file.padEnd(22)}${(statSync(join(OUT, file)).size / 1024).toFixed(1).padStart(6)} KB`,
+    );
 
   const browser = await chromium.launch();
   try {

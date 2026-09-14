@@ -24,7 +24,7 @@
 
 ```
 cp -r site ../clients/<顧客名>   # node_modules / .next / out は除く
-# src/content/config.ts と src/pages/ のページ本文を差し替える
+# src/content/config.ts と src/i18n/locales/ja/ の文言（構造は src/views/、ルートは src/routing/registry.ts）を差し替える
 npm ci && npm run validate && npm run verify
 ```
 

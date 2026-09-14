@@ -8,8 +8,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DOMAIN } from '@/content/config';
-import { IND_DATA } from '@/content/industries';
-import { NAV, NAV_LEGAL } from '@/content/nav';
+import { PUBLIC_ROUTES } from '@/routing/registry';
 
 const ROOT = join(import.meta.dirname, '..');
 const STYLES = join(ROOT, 'styles');
@@ -17,8 +16,7 @@ const PUB = join(ROOT, 'public');
 
 const PARTS = ['tokens.css', 'index.css', 'components.css', 'guide.css'];
 const PREAMBLE =
-  '@layer base, components, screens, overrides;\n' +
-  '@view-transition { navigation: auto; }\n';
+  '@layer base, components, screens, overrides;\n' + '@view-transition { navigation: auto; }\n';
 
 mkdirSync(PUB, { recursive: true });
 
@@ -27,9 +25,12 @@ writeFileSync(
   PREAMBLE + PARTS.map((f) => readFileSync(join(STYLES, f), 'utf8')).join('\n'),
 );
 
-writeFileSync(join(PUB, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: https://${DOMAIN}/sitemap.xml\n`);
+writeFileSync(
+  join(PUB, 'robots.txt'),
+  `User-agent: *\nAllow: /\nSitemap: https://${DOMAIN}/sitemap.xml\n`,
+);
 
-const FILES = [...NAV.map(([f]) => f), ...NAV_LEGAL.map(([f]) => f), ...Object.keys(IND_DATA)];
+const FILES = PUBLIC_ROUTES.map((route) => route.file);
 writeFileSync(
   join(PUB, 'sitemap.xml'),
   '<?xml version="1.0" encoding="UTF-8"?>\n' +
@@ -38,4 +39,6 @@ writeFileSync(
     '</urlset>\n',
 );
 
-console.log('public/ に theme.css / robots.txt / sitemap.xml を用意しました（CSS の正本は styles/）');
+console.log(
+  'public/ に theme.css / robots.txt / sitemap.xml を用意しました（CSS の正本は styles/）',
+);

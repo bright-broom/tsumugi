@@ -1,13 +1,20 @@
-import * as C from '@/content/config';
-import Icon from '@/components/Icon';
+import { href } from '@/routing/registry';
+import PhoneLink from '@/components/PhoneLink';
+import { useMessages } from '@/components/ContentProvider';
 
-interface Props { primary?: string; where?: string }
+interface Props {
+  primary?: string;
+  where?: string;
+}
 
-export default function Cta({ primary = 'まず話を聞いてみる', where = 'contact.html' }: Props) {
+export default function Cta({ primary, where = href('contact') }: Props) {
+  const copy = useMessages('cta');
   return (
     <div className="btns">
-      <a className="btn btn-1" href={`tel:${C.TEL_LINK}`}><Icon name="phone" />{`電話する　${C.TEL}`}</a>
-      <a className="btn btn-2" href={where}>{primary}</a>
+      <PhoneLink className="btn btn-1" />
+      <a className="btn btn-2" href={where}>
+        {primary ?? copy.cta}
+      </a>
     </div>
   );
 }

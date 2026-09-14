@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-14（開発基盤の最新化ブランチ）
+- 最終更新：2026-09-14（文言・ルートの中央管理）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -16,10 +16,11 @@
 |---|---|
 | 構成 | `site/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
 | 実行時 JS | 全21ページで 0（`postbuild` と `verify` で確認） |
-| 検査 | `npm run verify`：**PASS 581 / WARN 1 / FAIL 0**。WARN は `PLACEHOLDER=true` による1件。`npm run verify -- --static`：PASS 359 / WARN 1 / FAIL 0 |
-| 型と依存の向き | `npm run check` が通る。ESLint エラー・警告 0、Vitest 82 件合格 |
+| 検査 | `npm run verify`：**PASS 577 / WARN 1 / FAIL 0**。WARN は `PLACEHOLDER=true` による1件。`npm run verify -- --static`：PASS 359 / WARN 1 / FAIL 0 |
+| 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 112 件合格 |
 | 依存の健全性 | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定（ADR 0003） |
 | 動作を確かめた環境 | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一 |
+| 文言とルート | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004） |
 | 旧版 | Python 版（`svc/`）と Astro 版（`svc-astro/`）は削除済み。コミット `01f39d4` で読める。移植が正しいことの確かめ方は [history/2026-09-migration.md](history/2026-09-migration.md) |
 
 ### 中身（公開前の仮の状態）
@@ -51,9 +52,9 @@
 
 | 課題 | やること | 手がかり |
 |---|---|---|
-| 事業者情報・連絡先を実際の値にする | `config.ts` の `AREA` `DOMAIN` `TEL` `EMAIL`・住所・2人のプロフィールを差し替え、`PLACEHOLDER = false` にする。**false にすると `verify` が仮の値の残りを FAIL にする** | [operations.md「公開前にやること」](operations.md) |
+| 事業者情報・連絡先を実際の値にする | `config.ts` の `AREA` `DOMAIN` `TEL` `EMAIL`・住所と `i18n/locales/ja/config.ts` の2人のプロフィールを差し替え、`PLACEHOLDER = false` にする。**false にすると `verify` が仮の値の残りを FAIL にする** | [operations.md「公開前にやること」](operations.md) |
 | 問い合わせフォームの送信先 | `FORM_ENDPOINT` を設定する。**同時に、通知をメールと LINE（または SMS）の2系統に分ける**（問い合わせに気づかないことが最大の失注要因） | 受け口は社内ツールとして作る予定（ガイドライン「10.5」） |
-| `terms.html` の弁護士確認 | 下書きの文面を確認してもらって確定する。フリーランス法第4条（書面交付義務）への対応も同時に。**確認が済むまで、分割払いを商談に出さない** | `src/pages/terms.tsx`、ガイドライン「8.1」 |
+| `terms.html` の弁護士確認 | 下書きの文面を確認してもらって確定する。フリーランス法第4条（書面交付義務）への対応も同時に。**確認が済むまで、分割払いを商談に出さない** | `src/i18n/locales/ja/terms.ts`、ガイドライン「8.1」 |
 | `legal.html` の事業者情報 | 販売事業者名・運営責任者・所在地が仮の値。開業届／登記のあとに差し替える | `config.ts` |
 | 屋号の確認 | 商標（J-PlatPat 第42類・第35類）・同名法人（法人番号公表サイト）・ドメイン | [messaging-and-pricing.md「屋号」](product/messaging-and-pricing.md) |
 | 本番公開と独自ドメイン | Vercel へのプレビュー配備は実施。本番の事業者情報を確定し、独自ドメインを設定して公開する。`◯◯.vercel.app` のまま納品しない | [operations.md「Vercel に載せるとき」](operations.md) |
@@ -62,8 +63,8 @@
 
 | 課題 | やること | 手がかり |
 |---|---|---|
-| LCP の実データ | サイトに載せている LCP は `config.ts` の `LCP_MEASURED`（手元の計測）。公開後に Search Console の実データで確かめる | `npm run verify -- --write` |
-| 制作事例 | 1号案件の実測値（LCP・Google ビジネスプロフィールの閲覧数・問い合わせ件数）を `works.html` に入れる | `src/pages/works.tsx` |
+| LCP の実データ | サイトに載せている LCP は `measurements.ts` の数値から組み立てた `LCP_MEASURED`（手元の計測）。公開後に Search Console の実データで確かめる | `npm run verify -- --write` |
+| 制作事例 | 1号案件の実測値（LCP・Google ビジネスプロフィールの閲覧数・問い合わせ件数）を `works.html` に入れる | `src/views/works.tsx` |
 | 返答時間の実績 | 計測を始めてから `RESPONSE_ACTUAL` に書く（測っていない数字は書かない） | `config.ts` |
 
 ### C. 開発の基盤
@@ -89,3 +90,4 @@
 | 2026-09-14 | `src/` を層に分け、ドキュメントを `docs/` に整理した（#2） |
 | 2026-09-14 | 引き継ぎの入口（`AGENTS.md`）とこの文書を作り、ガイドライン「10. 道具と環境」を今の構成に合わせた |
 | 2026-09-14 | TypeScript 7、Node 24／npm 12、Lucide React・clsx・Zod・Vitest・ESLint・Prettier・最新 Playwright を導入。GitHub Actions、Dependabot、Vercel の静的配備設定を追加。実行時 JavaScript 0 バイトを維持（ADR 0003） |
+| 2026-09-14 | 文言・ブランド呼称・OGP・ルートの中央管理と電話表示の統一（ADR 0004）。型・lint・単体112件・静的359 PASS・全項目577 PASS／WARN 1／FAIL 0を確認。電話補助ラベルの削除でコントラスト対象が111件から107件に減ったため合計を更新 |

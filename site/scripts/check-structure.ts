@@ -1,7 +1,7 @@
 /**
  * ディレクトリの依存の向きを検査する（npm run check で走る）。
  *
- *   pages → layouts → components → content → lib
+ *   pages → application → views → layouts → components → content → i18n → routing → lib
  *
  * 右にあるものは左を import しない。
  * - lib      … 何にも依存しない小道具。どの案件でもそのまま使う
@@ -12,9 +12,20 @@
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
+import ts from 'typescript';
 
 const ROOT = join(import.meta.dirname, '..');
-const LAYERS = ['pages', 'layouts', 'components', 'content', 'lib'] as const;
+const LAYERS = [
+  'pages',
+  'application',
+  'views',
+  'layouts',
+  'components',
+  'content',
+  'i18n',
+  'routing',
+  'lib',
+] as const;
 type Layer = (typeof LAYERS)[number];
 
 const files = (dir: string): string[] =>
@@ -24,27 +35,76 @@ const files = (dir: string): string[] =>
   });
 
 const problems: string[] = [];
+const graph = new Map<string, string[]>();
 for (const dir of ['src', 'scripts', 'verify']) {
   for (const f of files(join(ROOT, dir))) {
     const rel = relative(ROOT, f).split(sep).join('/');
     const from = rel.startsWith('src/') ? (rel.split('/')[1] as Layer) : 'tools';
-    for (const [, spec] of readFileSync(f, 'utf8').matchAll(/from '([^']+)'/g)) {
+    const source = ts.createSourceFile(f, readFileSync(f, 'utf8'), ts.ScriptTarget.Latest, true);
+    const imports: string[] = [];
+    function collect(node: ts.Node) {
+      if (
+        (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+        node.moduleSpecifier &&
+        ts.isStringLiteral(node.moduleSpecifier)
+      )
+        imports.push(node.moduleSpecifier.text);
+      if (
+        ts.isCallExpression(node) &&
+        node.expression.kind === ts.SyntaxKind.ImportKeyword &&
+        node.arguments[0] &&
+        ts.isStringLiteral(node.arguments[0])
+      )
+        imports.push(node.arguments[0].text);
+      ts.forEachChild(node, collect);
+    }
+    collect(source);
+    graph.set(rel, []);
+    for (const spec of imports) {
       if (from !== 'tools' && spec!.startsWith('.')) {
         problems.push(`${rel}: 相対パスで import している（@/ を使う）: ${spec}`);
         continue;
       }
       if (!spec!.startsWith('@/')) continue;
       const to = spec!.slice(2).split('/')[0] as Layer;
-      const ok = from === 'tools'
-        ? to === 'content' || to === 'lib'
-        : LAYERS.includes(to) && LAYERS.indexOf(to) >= LAYERS.indexOf(from);
+      const target = ['.ts', '.tsx', '/index.ts', '/index.tsx']
+        .map((ext) => `src/${spec.slice(2)}${ext}`)
+        .find((candidate) => {
+          try {
+            return statSync(join(ROOT, candidate)).isFile();
+          } catch {
+            return false;
+          }
+        });
+      if (!target) problems.push(`${rel}: import 先がありません: ${spec}`);
+      else graph.get(rel)!.push(target);
+      const ok =
+        from === 'tools'
+          ? ['content', 'i18n', 'routing', 'lib'].includes(to)
+          : LAYERS.includes(to) && LAYERS.indexOf(to) >= LAYERS.indexOf(from);
       if (!ok) problems.push(`${rel}: ${from} から ${to} を import している: ${spec}`);
     }
   }
 }
 
+// Same-layer imports are allowed, but cycles are not (including re-exports and dynamic imports).
+const done = new Set<string>();
+const active = new Set<string>();
+function visit(file: string, trail: string[]) {
+  if (active.has(file)) {
+    problems.push(`循環依存: ${[...trail, file].join(' → ')}`);
+    return;
+  }
+  if (done.has(file)) return;
+  active.add(file);
+  for (const target of graph.get(file) ?? []) visit(target, [...trail, file]);
+  active.delete(file);
+  done.add(file);
+}
+for (const file of graph.keys()) visit(file, []);
+
 if (problems.length) {
   console.error('check-structure: 依存の向きが崩れています\n  ' + problems.join('\n  '));
   process.exit(1);
 }
-console.log('check-structure: pages → layouts → components → content → lib の向きを保っています');
+console.log(`check-structure: ${LAYERS.join(' → ')} の向きを保っています`);
