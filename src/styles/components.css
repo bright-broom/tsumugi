@@ -1187,3 +1187,18 @@
     @apply min-w-[var(--table-min-width,auto)];
   }
 }
+
+@layer components {
+  .nav-group + .nav-group {
+    @apply mt-[20px];
+  }
+  .nav-group-title {
+    @apply mb-[8px] text-[12px] font-medium tracking-[0.08em];
+  }
+  .menu-panel .nav-group-title {
+    @apply text-muted border-b border-line pb-[8px];
+  }
+  .menu-panel .nav-group a {
+    @apply flex items-center gap-[8px];
+  }
+}

@@ -1,5 +1,7 @@
+import ownership from '@/i18n/locales/ja/ownership';
 /** Japanese copy: owned. Keep keys stable; placeholders are named runtime values. */
 export default {
+  ownership,
   title: '借地と所有｜そのホームページ、借りた土地に建っていませんか｜{cBRANDT}',
   desc: '月額制のホームページは、借地に建てた家と同じです。やめた日に更地にして返します。',
   desc2: '@brand:nameは土地ごとお渡しします。ドメイン・ソースコード・置き場所・写真の元データ、',
@@ -51,18 +53,6 @@ export default {
   heading4: '所有しているとは、この4つが手元にあることです',
   lede3:
     '「所有」を気分の話にしないために、<strong>4つに分けて、それぞれ確かめられる形</strong>にしています。',
-  itemsTitle: '① 住所 ── ドメイン',
-  itemsDesc: '初日からお客様の名義で取得します。登録簿でお名前を確認できます。',
-  itemsLink: '名義のお約束',
-  itemsTitle2: '② 建物 ── ソースコード',
-  itemsDesc2: 'HTML・CSS・画像・設定の一式をお渡しします。他社がそのまま引き継げます。',
-  itemsLink2: '納品の中身を見る',
-  itemsTitle3: '③ 地盤 ── 置き場所',
-  itemsDesc3: '実行時のプログラムが0バイトなので、どのサーバーにも置けます。',
-  itemsLink3: '仕様を見る',
-  itemsTitle4: '④ 家具 ── 写真と原稿',
-  itemsDesc4: '納品する原稿・画像は、用途と第三者の利用条件を明示します。',
-  itemsLink4: '権利の扱い',
   headers5: '借地のとき',
   headers6: '{cBRAND}（所有）',
   rows20: 'ドメイン（住所）',

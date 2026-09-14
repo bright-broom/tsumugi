@@ -1,5 +1,5 @@
 import { getMessages } from '@/i18n/catalog';
-import { ALL_ROUTES, INDUSTRY_ROUTES, type Route } from '@/routing/registry';
+import { ALL_ROUTES, INDUSTRY_ROUTES, ROUTES, type Route } from '@/routing/registry';
 import type { IconName } from '@/lib/icons';
 const copy = getMessages().nav;
 const entry = (r: Exclude<Route, { kind: 'error' }>): [string, string] => [
@@ -25,3 +25,19 @@ export const INDUSTRIES: [string, string, string][] = INDUSTRY_ROUTES.map((r) =>
 export const IND_IC: Record<string, IconName> = Object.fromEntries(
   INDUSTRY_ROUTES.map((r) => [r.file, r.icon]),
 );
+
+// Group membership is shared by the expanded header menu and footer.
+const GROUP_ROUTES = {
+  service: ['index', 'owned', 'source', 'spec'],
+  costs: ['price', 'unlimited', 'cost-cut', 'subsidy'],
+  next: ['flow', 'works', 'faq', 'about', 'contact'],
+} as const satisfies Record<
+  keyof typeof copy.groups,
+  readonly Extract<Route, { kind: 'main' }>['id'][]
+>;
+
+export const NAV_GROUPS = Object.entries(GROUP_ROUTES).map(([id, routes]) => ({
+  id,
+  label: copy.groups[id as keyof typeof copy.groups],
+  entries: routes.map((routeId) => ({ ...ROUTES[routeId], label: copy.labels[routeId] })),
+}));

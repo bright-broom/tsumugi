@@ -1,8 +1,9 @@
+import NavigationGroups from '@/components/NavigationGroups';
 import { useMessages } from '@/components/ContentProvider';
 import Icon from '@/components/Icon';
 import PhoneLink from '@/components/PhoneLink';
 import * as C from '@/content/config';
-import { INDUSTRIES, NAV, NAV_IC, NAV_LEGAL } from '@/content/nav';
+import { INDUSTRIES, NAV_IC, NAV_LEGAL } from '@/content/nav';
 import { format } from '@/i18n/format';
 import { href, pathForFile } from '@/routing/registry';
 
@@ -83,16 +84,7 @@ export default function Footer({ file }: { file: string }) {
           </div>
           <nav className="footer-navigation" aria-label={copy.footer.navigation}>
             <h3>{copy.hd}</h3>
-            <ul className="footer-links">
-              {NAV.map(([url, label]) => (
-                <li key={url}>
-                  <a href={pathForFile(url)} aria-current={current(url)}>
-                    <Icon name={NAV_IC[url]!} sm />
-                    <span>{label}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <NavigationGroups file={file} surface="footer" />
           </nav>
           <nav className="footer-industries" aria-label={copy.hd2}>
             <h3>{copy.hd2}</h3>

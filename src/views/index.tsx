@@ -11,7 +11,7 @@ import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Table from '@/components/Table';
 import Note from '@/components/Note';
-import Acc from '@/components/Acc';
+import FaqList from '@/components/FaqList';
 import Cards from '@/components/Cards';
 import Calc from '@/components/Calc';
 import Stats from '@/components/Stats';
@@ -150,31 +150,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           lede={copy.lede}
         >
           <Figure svg={D.landVsOwn()} />
-          <Cards
-            cls="g2"
-            items={[
-              {
-                title: copy.itemsTitle,
-                desc: copy.itemsDesc,
-                link: [copy.itemsLink, href('terms')],
-              },
-              {
-                title: copy.itemsTitle2,
-                desc: copy.itemsDesc2,
-                link: [copy.itemsLink2, href('source')],
-              },
-              {
-                title: copy.itemsTitle3,
-                desc: copy.itemsDesc3,
-                link: [copy.itemsLink3, href('spec')],
-              },
-              {
-                title: copy.itemsTitle4,
-                desc: copy.itemsDesc4,
-                link: [copy.itemsLink4, href('terms')],
-              },
-            ]}
-          />
+          <Cards cls="g2" items={copy.ownership} />
           <Note heading={copy.heading2}>
             <p>
               {copy.p}
@@ -491,31 +467,13 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
         </Section>
 
         <Section
-          navKey={href('spec')}
+          navKey={href('faq')}
           className="home-section home-faq"
           eyebrow={copy.eyebrow10}
           heading={copy.heading16}
           lede={copy.lede9}
         >
-          <Acc summary={copy.summary}>
-            <p>{copy.p13}</p>
-          </Acc>
-          <Acc summary={copy.summary2}>
-            <p>{copy.p14}</p>
-          </Acc>
-          <Acc summary={copy.summary3}>
-            <p>{copy.p15}</p>
-          </Acc>
-          <Acc summary={copy.summary4}>
-            <p>{copy.p16}</p>
-          </Acc>
-          <Acc summary={copy.summary5}>
-            <p>
-              {copy.p17}
-              <strong>{copy.strong8}</strong>
-              {copy.p18}
-            </p>
-          </Acc>
+          <FaqList entries={copy.questions} />
         </Section>
 
         <Section

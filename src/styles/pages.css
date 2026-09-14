@@ -31,3 +31,18 @@
     @apply mt-[18px];
   }
 }
+
+@layer overrides {
+  .faq-index ul {
+    @apply grid grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-[12px] list-none p-[0];
+  }
+  .faq-index a {
+    @apply flex items-center gap-[12px] min-h-[56px] p-[16px] border border-line rounded-[8px] text-ink bg-paper no-underline;
+  }
+  .faq-index a:hover {
+    @apply bg-accent/10;
+  }
+  .faq-index a .ic:last-child {
+    @apply ml-auto;
+  }
+}
