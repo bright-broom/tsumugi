@@ -65,14 +65,15 @@ flowchart TD
   subgraph edit["人が編集する正本"]
     direction LR
     tokens["styles/<br/>design.tokens.json"]
-    css["styles/*.css<br/>3つの層"]
+    css["styles/globals.css<br/>Tailwind の中央管理"]
     content["src/content/<br/>屋号・料金・図"]
     pages["src/views/<br/>21ページの本文"]
   end
 
   tokens -->|npm run tokens| tokcss["tokens.css"]
-  tokcss --> theme["public/theme.css"]
-  css --> theme
+  tokcss --> compiler["Tailwind CSS 4.3.3"]
+  compiler --> theme["public/theme.css"]
+  css --> compiler
   content --> meta["robots.txt<br/>sitemap.xml"]
   content --> html["静的HTML<br/>21ページ"]
   pages -->|next build| html
@@ -80,11 +81,11 @@ flowchart TD
   theme --> out
   meta --> out
   og["public/og/<br/>OGP画像 24"] --> out
-  out -->|npm run verify| report["verify-report.json<br/>PASS 577"]
+  out -->|npm run verify| report["verify-report.json<br/>PASS 608"]
 ```
 
 - **金額の正本は `site/src/content/prices.ts` の1か所。** ページも検査も OGP 画像もここを読む。`docs/business/紬_事業の中身.xlsx` は写しで、Excel を直してもサイトは変わらない
-- **CSS の正本は `site/styles/`。** `public/theme.css` は4枚を束ねた生成物
+- **CSS の正本は `site/styles/`。** `globals.css` が入口となり、Tailwindが共通テーマと各部品の指定を `public/theme.css` にコンパイルする
 - ビルドの4段階と検査の中身は [site/README.md](site/README.md) に図がある
 
 ---
@@ -187,7 +188,7 @@ npx playwright install chromium   # 検査と OGP 画像の生成に使う（初
 npm run dev       # http://localhost:3000（使われていたら npm run dev -- -p 3001）
 npm run check     # 型検査 ＋ 依存の向き
 npm run build     # → out/
-npm run verify    # PASS 577 / WARN 1 / FAIL 0 なら納品可
+npm run verify    # PASS 608 / WARN 1 / FAIL 0 なら納品可
 ```
 
 WARN 1 は `PLACEHOLDER=true`（電話番号・住所が仮）。公開前に潰す既知の1件（[公開前にやること](docs/operations.md)）。
@@ -202,7 +203,7 @@ flowchart TD
   branch["main から<br/>ブランチを切る"] --> change["変更する"]
   change --> check["npm run check"]
   check --> build["npm run build"]
-  build --> verify["npm run verify<br/>PASS 577 / FAIL 0"]
+  build --> verify["npm run verify<br/>PASS 608 / FAIL 0"]
   verify --> record["docs/status.md<br/>を更新<br/>判断は ADR に"]
   record --> commit["コミット<br/>作者は noreply"]
   commit --> mail["送るコミットの<br/>メールを確認"]

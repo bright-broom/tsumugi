@@ -304,7 +304,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           lede={copy.lede4}
         >
           <Entry />
-          <h3 style={{ margin: '44px 0 18px' }}>{copy.h3}</h3>
+          <h3 className="home-pricing-subheading">{copy.h3}</h3>
           <Plans feat={3} />
           <p className="dim fine-note">
             {copy.dim2}
@@ -526,7 +526,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               { icon: 'calculator', value: '=', label: copy.itemsLabel4 },
             ]}
           />
-          <p style={{ marginTop: '18px' }}>
+          <p className="home-followup">
             {copy.p19}
             <strong>{copy.strong9}</strong>
             {copy.p20}

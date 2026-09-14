@@ -1,5 +1,5 @@
 {
-  "$description": "NOT A HOTEL デザインガイドライン v2.0 準拠のトークン正本。DTCG Format Module 2025.10。native/tokens.css はここから生成する（手で編集しない）。",
+  "$description": "NOT A HOTEL デザインガイドライン v2.0 準拠のトークン正本。DTCG Format Module 2025.10。styles/tokens.css（Tailwind @theme） はここから生成する（手で編集しない）。",
   "color": {
     "header-paper": { "$value": "#F7F5F0", "$description": "紬のヘッダー。生成りの面" },
     "header-ink": { "$value": "#19343D", "$description": "紬のヘッダー。藍墨の文字と導線" },

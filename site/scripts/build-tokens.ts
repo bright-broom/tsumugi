@@ -14,21 +14,51 @@ import { fileURLToPath } from 'node:url';
 const STYLES = join(import.meta.dirname, '..', 'styles');
 export const TOKENS_SRC = join(STYLES, 'design.tokens.json');
 export const TOKENS_OUT = join(STYLES, 'tokens.css');
-const PREFIX = '--nah-';
+/** Tailwind v4 namespaces: the JSON is the only source of token values. */
+export function tokenCssName(path: string[]): string {
+  const name = path.join('-');
+  const namespaces = [
+    ['font-family-', 'font-'],
+    ['font-size-', 'text-'],
+    ['font-leading-', 'leading-'],
+    ['font-weight-', 'font-weight-'],
+    ['size-', 'spacing-'],
+    ['theme-', 'color-'],
+    ['motion-', 'duration-'],
+  ];
+  for (const [from, to] of namespaces) {
+    if (name.startsWith(from!)) return `--${to}${name.slice(from!.length)}`;
+  }
+  return `--${name}`;
+}
 const TYPES = new Set(['color', 'dimension', 'duration', 'fontFamily', 'fontWeight', 'number']);
 
 type Json = Record<string, unknown>;
-interface Token { path: string[]; type: string; value: unknown; doc: string | undefined; resolved?: unknown }
+interface Token {
+  path: string[];
+  type: string;
+  value: unknown;
+  doc: string | undefined;
+  resolved?: unknown;
+}
 
 /** 生成物の先頭に書く「どこから・どうやって作ったか」 */
-export interface Header { source: string; command: string }
+export interface Header {
+  source: string;
+  command: string;
+}
 const HEADER: Header = { source: 'styles/design.tokens.json', command: 'npm run tokens' };
 
 const isToken = (v: unknown): v is Json & { $value: unknown } =>
   !!v && typeof v === 'object' && '$value' in v;
 
 /** グループの $type を子に継がせながら平坦化する */
-function flatten(node: Json, path: string[] = [], inherited: string | null = null, out: Token[] = []): Token[] {
+function flatten(
+  node: Json,
+  path: string[] = [],
+  inherited: string | null = null,
+  out: Token[] = [],
+): Token[] {
   const type = (node.$type as string | undefined) ?? inherited;
   for (const [key, val] of Object.entries(node)) {
     if (key.startsWith('$')) continue;
@@ -37,7 +67,12 @@ function flatten(node: Json, path: string[] = [], inherited: string | null = nul
       const t = (val.$type as string | undefined) ?? type;
       if (!t) throw new Error(`型が決まらない: ${next.join('.')}`);
       if (!TYPES.has(t)) throw new Error(`未対応の $type "${t}": ${next.join('.')}`);
-      out.push({ path: next, type: t, value: val.$value, doc: val.$description as string | undefined });
+      out.push({
+        path: next,
+        type: t,
+        value: val.$value,
+        doc: val.$description as string | undefined,
+      });
     } else if (val && typeof val === 'object') {
       flatten(val as Json, next, ((val as Json).$type as string | undefined) ?? type, out);
     }
@@ -81,7 +116,7 @@ export function renderTokensCss(header: Header = HEADER): { css: string; count: 
     ` * 生成: ${header.command}`,
     ` * トークン数: ${tokens.length}`,
     ' */',
-    ':root {',
+    '@theme static {',
   ];
   let group: string | null = null;
   for (const t of tokens) {
@@ -90,7 +125,7 @@ export function renderTokensCss(header: Header = HEADER): { css: string; count: 
       lines.push(`${group ? '\n' : ''}  /* ${g} */`);
       group = g;
     }
-    lines.push(`  ${PREFIX + t.path.join('-')}: ${toCss(t)};${t.doc ? `  /* ${t.doc} */` : ''}`);
+    lines.push(`  ${tokenCssName(t.path)}: ${toCss(t)};${t.doc ? `  /* ${t.doc} */` : ''}`);
   }
   lines.push('}', '');
   return { css: lines.join('\n'), count: tokens.length };
@@ -99,10 +134,18 @@ export function renderTokensCss(header: Header = HEADER): { css: string; count: 
 export function checkTokens(): { ok: boolean; message: string } {
   const { css, count } = renderTokensCss();
   let cur = '';
-  try { cur = readFileSync(TOKENS_OUT, 'utf8'); } catch { /* 未生成 */ }
+  try {
+    cur = readFileSync(TOKENS_OUT, 'utf8');
+  } catch {
+    /* 未生成 */
+  }
   return cur === css
     ? { ok: true, message: `OK tokens.css は定義と一致（${count} トークン）` }
-    : { ok: false, message: 'NG tokens.css が design.tokens.json と一致しません。npm run tokens を実行してください。' };
+    : {
+        ok: false,
+        message:
+          'NG tokens.css が design.tokens.json と一致しません。npm run tokens を実行してください。',
+      };
 }
 
 if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {

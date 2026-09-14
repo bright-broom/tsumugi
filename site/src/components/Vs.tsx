@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { useMessages } from '@/components/ContentProvider';
 import { format } from '@/i18n/format';
 import { rnd } from '@/lib/round';
@@ -32,7 +33,7 @@ export default function Vs({ rows, max }: Props) {
               {format(copy.amtv, { rAmountToLocaleStringEnUS: r.amount.toLocaleString('en-US') })}
             </span>
             <span className="bar">
-              <i style={{ width: `${w}%` }}></i>
+              <i style={{ '--comparison-width': `${w}%` } as CSSProperties}></i>
             </span>
           </div>
         );

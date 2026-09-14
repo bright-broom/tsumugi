@@ -1,0 +1,94 @@
+/* Image rendering only. Shares tokens; never shipped with public page CSS. */
+@layer theme, base, components, utilities;
+@import './tokens.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+
+@layer base {
+  * {
+    @apply m-[0] p-[0];
+  }
+  body {
+    @apply bg-ink text-white flex;
+    font-family: 'Noto Sans CJK JP', 'Hiragino Sans', sans-serif;
+  }
+}
+@layer components {
+  .og-card,
+  .og-card * {
+    @apply box-border;
+  }
+  .og-card {
+    @apply w-[1200px] h-[630px] flex-col justify-between p-[68px_76px];
+    font-feature-settings: 'palt' 1;
+  }
+  .top {
+    @apply flex items-baseline gap-[16px];
+  }
+  .mark {
+    @apply text-[64px] font-bold tracking-[.05em] leading-[1];
+  }
+  .rd {
+    @apply text-[17px] tracking-[.22em] text-muted-on-ink;
+  }
+  .bar {
+    @apply w-[1px] h-[38px] bg-[rgba(255,255,255,.28)] mx-[8px];
+  }
+  .trade {
+    @apply text-[18px] text-muted-on-ink tracking-[.04em];
+  }
+  h1 {
+    @apply font-bold leading-[1.46] tracking-[-.01em];
+  }
+  .og-heading-54 {
+    @apply text-[54px];
+  }
+  .og-heading-46 {
+    @apply text-[46px];
+  }
+  h1 .q {
+    @apply text-muted-on-ink;
+  }
+  .foot {
+    @apply flex items-end justify-between gap-[40px];
+  }
+  .pts {
+    @apply flex gap-[12px] flex-wrap;
+  }
+  .pt {
+    @apply text-[17px] font-bold p-[9px_18px] rounded-pill text-white whitespace-nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .amt {
+    @apply text-right leading-[1] whitespace-nowrap;
+  }
+  .amt .k {
+    @apply text-[15px] text-muted-on-ink tracking-[.04em];
+  }
+  .amt .v {
+    @apply text-[58px] font-bold tracking-[-.02em] mt-[8px];
+  }
+  .amt .v i {
+    @apply text-[22px] not-italic font-semi ml-[4px];
+  }
+  .amt .v b {
+    @apply text-green;
+  }
+  .og-icon {
+    @apply items-center justify-center;
+  }
+  .og-icon span {
+    @apply font-bold leading-[1];
+  }
+  .og-icon-180 {
+    @apply w-[180px] h-[180px];
+  }
+  .og-icon-180 span {
+    @apply text-[118px];
+  }
+  .og-icon-512 {
+    @apply w-[512px] h-[512px];
+  }
+  .og-icon-512 span {
+    @apply text-[336px];
+  }
+}

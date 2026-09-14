@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { useMessages } from '@/components/ContentProvider';
 import { raw } from '@/lib/raw';
 
@@ -28,7 +29,10 @@ export default function Table({ headers, rows, caption, foot, minw }: Props) {
   return (
     <div className={`tblwrap${stack ? ' stack' : ''}`}>
       <div className="tbl">
-        <table style={minw ? { minWidth: `${minw}px` } : undefined}>
+        <table
+          className={minw ? 'table-sized' : undefined}
+          style={minw ? ({ '--table-min-width': `${minw}px` } as CSSProperties) : undefined}
+        >
           {showHead && (
             <thead>
               <tr>

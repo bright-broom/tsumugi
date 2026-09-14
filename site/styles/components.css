@@ -3,707 +3,1226 @@
    クラス名の横の C 番号が、満たすべき契約の出所。
    ══════════════════════════════════════════════════════════════════ */
 @layer components {
-
   /* ── アイコン。装飾なので読み上げない（build.py が aria-hidden を付ける）
         大きさは px ではなく隣の文字に対する比（em）で決める。
         同じ .ic-sm が 12.5px の章ラベルにも 17px の見出しにも入るため、
         px で固定すると場所ごとに 0.88〜1.20 倍とばらつき、行の中で浮いて見えていた。
         em にすると比が常に一定になり、文字の大きさを変えても付いてくる。 */
-  .ic { width: 1.25em; height: 1.25em; flex: none; vertical-align: -.22em; }
-  .ic-sm { width: 1.15em; height: 1.15em; vertical-align: -.19em; }
+  .ic {
+    @apply w-[1.25em] h-[1.25em] flex-[none] align-[-.22em];
+  }
+  .ic-sm {
+    @apply w-[1.15em] h-[1.15em] align-[-.19em];
+  }
   /* 線の太さも見た目で合わせる。小さく描くほど線は細く見えるので、太さを戻す。
      狙いは「描画後の線幅を約1.5pxに揃える」こと（stroke = 1.5 × 24 ÷ 実寸px）。 */
-  .ic { stroke-width: 2.1; }
-  .ic-sm { stroke-width: 2.3; }
-  .icb {
-    width: 40px; height: 40px; flex: none;
-    display: inline-flex; align-items: center; justify-content: center;
-    border-radius: var(--nah-radius-media);
-    background: var(--nah-color-surface); color: var(--nah-color-ink);
+  .ic {
+    @apply stroke-[2.1];
   }
-  .icb .ic { width: 22px; height: 22px; vertical-align: 0; stroke-width: 1.9; }
-  section.dark .icb { background: rgba(255,255,255,.1); color: var(--nah-color-white); }
+  .ic-sm {
+    @apply stroke-[2.3];
+  }
+  .icb {
+    @apply w-[40px] h-[40px] flex-[none] inline-flex items-center justify-center rounded-media bg-surface text-ink;
+  }
+  .icb .ic {
+    @apply w-[22px] h-[22px] align-[0] stroke-[1.9];
+  }
+  section.dark .icb {
+    @apply bg-[rgba(255,255,255,.1)] text-white;
+  }
 
   /* ── 本文へ移動 */
   .skip {
-    position: absolute; left: -9999px; top: 0; z-index: 100;
-    background: var(--nah-color-ink); color: var(--nah-color-white);
-    padding: 12px 18px; text-decoration: none;
+    @apply absolute left-[-9999px] top-[0] z-[100] bg-ink text-white p-[12px_18px] no-underline;
   }
-  .skip:focus { left: 8px; top: 8px; }
+  .skip:focus {
+    @apply left-[8px] top-[8px];
+  }
 
   /* ── 準備中の帯 */
   .draft {
-    background: var(--nah-color-warn-bg); color: var(--nah-color-warn);
-    font-size: var(--nah-font-size-meta); font-weight: var(--nah-font-weight-semi);
-    padding: 5px var(--nah-size-pad-pc);
-    display: flex; align-items: center; justify-content: center; gap: 8px;
+    @apply bg-warn-bg text-warn text-meta font-semi p-[5px_var(--spacing-pad-pc)] flex items-center justify-center gap-[8px];
   }
 
   /* ══ C01 BrandHeader / C02 NavigationPanel。ADR 0006：生成り、藍墨、細い糸の罫線 */
   .hdr {
-    position: sticky; top: 0; z-index: 40;
-    background: var(--nah-color-header-paper); color: var(--nah-color-header-ink);
-    border-bottom: 1px solid color-mix(in srgb, var(--nah-color-header-brass) 28%, transparent);
+    @apply sticky top-[0] z-[40] bg-header-paper text-header-ink;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
   }
   .hdr-in {
-    height: var(--nah-size-header-pc); max-width: 1600px;
-    margin-inline: auto; padding-inline: var(--nah-size-pad-pc);
-    display: flex; align-items: center; gap: 28px;
+    @apply h-header-pc max-w-[1600px] mx-[auto] px-pad-pc flex items-center gap-[28px];
   }
   .logo {
-    display: inline-flex; align-items: center; gap: 17px; flex: none;
-    min-height: var(--nah-size-tap); color: inherit; text-decoration: none;
+    @apply inline-flex items-center gap-[17px] flex-[none] min-h-tap;
+    color: inherit;
+    @apply no-underline;
   }
   .logo .n {
-    font-family: var(--nah-font-family-brand); font-size: 48px;
-    font-weight: var(--nah-font-weight-regular); line-height: 1.1;
+    @apply font-brand text-[48px] font-regular leading-[1.1];
   }
-  .logo-copy { display: grid; gap: 7px; }
-  .logo .roman { font-size: 13px; font-weight: var(--nah-font-weight-medium); letter-spacing: .28em; line-height: 1; }
-  .logo .s { font-size: 12px; letter-spacing: .1em; line-height: 1.4; }
-  .nav { margin-left: auto; }
-  .nav ul { display: flex; align-items: center; gap: 28px; margin: 0; padding: 0; list-style: none; }
-  .nav li { margin: 0; }
+  .logo-copy {
+    @apply grid gap-[7px];
+  }
+  .logo .roman {
+    @apply text-[13px] font-medium tracking-[.28em] leading-[1];
+  }
+  .logo .s {
+    @apply text-[12px] tracking-[.1em] leading-[1.4];
+  }
+  .nav {
+    @apply ml-[auto];
+  }
+  .nav ul {
+    @apply flex items-center gap-[28px] m-[0] p-[0] list-none list-outside;
+  }
+  .nav li {
+    @apply m-[0];
+  }
   .nav a {
-    position: relative; display: inline-flex; align-items: center;
-    min-height: var(--nah-size-tap); color: inherit; text-decoration: none;
-    font-size: 14px; font-weight: var(--nah-font-weight-medium); letter-spacing: .04em; white-space: nowrap;
+    @apply relative inline-flex items-center min-h-tap;
+    color: inherit;
+    @apply no-underline text-[14px] font-medium tracking-[.04em] whitespace-nowrap;
   }
   .nav a::after {
-    content: ""; position: absolute; bottom: 3px; left: 0; right: .04em; height: 1px;
-    background: var(--nah-color-header-brass); transform: scaleX(0); transform-origin: left;
-    transition: transform var(--nah-motion-panel) ease;
+    content: '';
+    @apply absolute bottom-[3px] left-[0] right-[.04em] h-[1px] bg-header-brass;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-panel) ease;
   }
-  .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
-  .nav a[aria-current="page"] { font-weight: var(--nah-font-weight-bold); }
-  .header-actions { display: flex; align-items: center; gap: 25px; }
-  .header-phone { display: none; align-items: center; gap: 8px; min-height: var(--nah-size-tap); color: inherit; text-decoration: none; font-size: 14px; }
-  .header-phone .num { white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .header-phone:hover { text-decoration: underline; text-underline-offset: .3em; }
+  .nav a:hover::after,
+  .nav a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  .nav a[aria-current='page'] {
+    @apply font-bold;
+  }
+  .header-actions {
+    @apply flex items-center gap-[25px];
+  }
+  .header-phone {
+    @apply hidden items-center gap-[8px] min-h-tap;
+    color: inherit;
+    @apply no-underline text-[14px];
+  }
+  .header-phone .num {
+    @apply whitespace-nowrap tabular-nums;
+  }
+  .header-phone:hover {
+    @apply underline underline-offset-[.3em];
+  }
   .header-contact {
-    display: inline-flex; align-items: center; justify-content: center; gap: 18px;
-    min-height: 48px; padding: 10px 20px; border: 1px solid var(--nah-color-header-ink); border-radius: 2px;
-    background: var(--nah-color-header-ink); color: var(--nah-color-header-paper);
-    font-size: 13px; font-weight: var(--nah-font-weight-medium); letter-spacing: .05em;
-    white-space: nowrap; text-decoration: none;
-    transition: background var(--nah-motion-fast) ease, color var(--nah-motion-fast) ease;
+    @apply inline-flex items-center justify-center gap-[18px] min-h-[48px] p-[10px_20px];
+    border: 1px solid var(--color-header-ink);
+    @apply rounded-[2px] bg-header-ink text-header-paper text-[13px] font-medium tracking-[.05em] whitespace-nowrap no-underline;
+    transition:
+      background var(--duration-fast) ease,
+      color var(--duration-fast) ease;
   }
-  .header-contact:hover { background: var(--nah-color-header-paper); color: var(--nah-color-header-ink); }
-  .header-contact .ic { transition: transform var(--nah-motion-fast) ease; }
-  .header-contact:hover .ic { transform: translateX(3px); }
-  .contact-short { display: none; }
-  .menu { flex: none; }
+  .header-contact:hover {
+    @apply bg-header-paper text-header-ink;
+  }
+  .header-contact .ic {
+    transition: transform var(--duration-fast) ease;
+  }
+  .header-contact:hover .ic {
+    transform: translateX(3px);
+  }
+  .contact-short {
+    @apply hidden;
+  }
+  .menu {
+    @apply flex-[none];
+  }
   .menu > summary {
-    list-style: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px;
-    min-height: 52px; min-width: 56px; font-size: 12px; line-height: 1; letter-spacing: .04em;
+    @apply list-none list-outside cursor-pointer flex flex-col items-center justify-center gap-[9px] min-h-[52px] min-w-[56px] text-[12px] leading-[1] tracking-[.04em];
   }
-  .menu > summary::-webkit-details-marker { display: none; }
-  .menu-lines { position: relative; display: block; width: 26px; height: 12px; }
-  .menu-lines::before, .menu-lines::after {
-    content: ""; position: absolute; left: 0; width: 26px; height: 1px; background: currentColor;
-    transition: transform var(--nah-motion-panel) ease;
+  .menu > summary::-webkit-details-marker {
+    @apply hidden;
   }
-  .menu-lines::before { top: 2px; }
-  .menu-lines::after { top: 10px; width: 19px; }
-  .menu[open] .menu-lines::before { transform: translateY(4px) rotate(45deg); }
-  .menu[open] .menu-lines::after { width: 26px; transform: translateY(-4px) rotate(-45deg); }
-  .menu-close, .menu[open] .menu-open { display: none; }
-  .menu[open] .menu-close { display: inline; }
+  .menu-lines {
+    @apply relative block w-[26px] h-[12px];
+  }
+  .menu-lines::before,
+  .menu-lines::after {
+    content: '';
+    @apply absolute left-[0] w-[26px] h-[1px];
+    background: currentColor;
+    transition: transform var(--duration-panel) ease;
+  }
+  .menu-lines::before {
+    @apply top-[2px];
+  }
+  .menu-lines::after {
+    @apply top-[10px] w-[19px];
+  }
+  .menu[open] .menu-lines::before {
+    transform: translateY(4px) rotate(45deg);
+  }
+  .menu[open] .menu-lines::after {
+    @apply w-[26px];
+    transform: translateY(-4px) rotate(-45deg);
+  }
+  .menu-close,
+  .menu[open] .menu-open {
+    @apply hidden;
+  }
+  .menu[open] .menu-close {
+    @apply inline;
+  }
   .menu-panel {
-    position: absolute; right: var(--nah-size-pad-pc); top: 100%;
-    width: min(480px, calc(100vw - 40px)); max-height: calc(100dvh - var(--nah-size-header-pc) - 24px);
-    overflow-y: auto; padding: 24px;
-    background: var(--nah-color-header-paper);
-    border: 1px solid color-mix(in srgb, var(--nah-color-header-brass) 28%, transparent);
-    box-shadow: 0 16px 28px rgb(0 0 0 / .10);
+    @apply absolute right-pad-pc top-[100%] w-[min(480px,_calc(100vw_-_40px))] max-h-[calc(100dvh_-_var(--spacing-header-pc)_-_24px)];
+    overflow-y: auto;
+    @apply p-[24px] bg-header-paper;
+    border: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
+    box-shadow: 0 16px 28px rgb(0 0 0 / 0.1);
   }
-  .menu-panel ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); list-style: none; margin: 0; padding: 0; }
-  .menu-panel li { margin: 0; }
+  .menu-panel ul {
+    @apply grid grid-cols-[repeat(2,_minmax(0,_1fr))] list-none list-outside m-[0] p-[0];
+  }
+  .menu-panel li {
+    @apply m-[0];
+  }
   .menu-panel a {
-    display: flex; align-items: center; min-height: var(--nah-size-tap); padding: 8px 10px;
-    color: inherit; font-size: 14px; line-height: 1.5; text-decoration: none;
+    @apply flex items-center min-h-tap p-[8px_10px];
+    color: inherit;
+    @apply text-[14px] leading-[1.5] no-underline;
   }
-  .menu-panel a:hover, .menu-panel a[aria-current="page"] { background: color-mix(in srgb, var(--nah-color-header-brass) 12%, transparent); }
-  .menu-panel a[aria-current="page"] { font-weight: var(--nah-font-weight-bold); }
+  .menu-panel a:hover,
+  .menu-panel a[aria-current='page'] {
+    background: color-mix(in srgb, var(--color-header-brass) 12%, transparent);
+  }
+  .menu-panel a[aria-current='page'] {
+    @apply font-bold;
+  }
   .menu-panel .hd {
-    font-size: 12px; font-weight: var(--nah-font-weight-medium); letter-spacing: .12em;
-    margin: 20px 0 8px; padding: 0 10px 10px; border-bottom: 1px solid color-mix(in srgb, var(--nah-color-header-brass) 28%, transparent);
+    @apply text-[12px] font-medium tracking-[.12em] m-[20px_0_8px] p-[0_10px_10px];
+    border-bottom: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
   }
-  .menu-panel .hd:first-child { margin-top: 0; }
-  .menu-phone { margin-top: 20px; padding: 12px 10px 0; border-top: 1px solid color-mix(in srgb, var(--nah-color-header-brass) 28%, transparent); }
-  .menu-phone .phone-link { display: inline-flex; gap: 10px; font-size: 17px; padding-inline: 0; }
-  .menu-phone p { margin: 0; font-size: 12px; }
+  .menu-panel .hd:first-child {
+    @apply mt-[0];
+  }
+  .menu-phone {
+    @apply mt-[20px] p-[12px_10px_0];
+    border-top: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
+  }
+  .menu-phone .phone-link {
+    @apply inline-flex gap-[10px] text-[17px] px-[0];
+  }
+  .menu-phone p {
+    @apply m-[0] text-[12px];
+  }
 
   /* ── 電話。主要CTAのひとつ。数字は必ず文字で置く */
   .tel {
-    display: inline-flex; align-items: center; gap: 8px;
-    min-height: var(--nah-size-tap); padding: 5px 14px 5px 12px;
-    border: 1.5px solid var(--nah-color-ink); border-radius: var(--nah-radius-pill);
-    color: var(--nah-color-ink); text-decoration: none; flex: none;
+    @apply inline-flex items-center gap-[8px] min-h-tap p-[5px_14px_5px_12px];
+    border: 1.5px solid var(--color-ink);
+    @apply rounded-pill text-ink no-underline flex-[none];
   }
-  .tel:hover { background: var(--nah-color-ink); color: var(--nah-color-white); }
+  .tel:hover {
+    @apply bg-ink text-white;
+  }
   .tel .num {
-    font-size: 17px; font-weight: var(--nah-font-weight-bold);
-    font-variant-numeric: tabular-nums; white-space: nowrap; color: inherit;
+    @apply text-[17px] font-bold tabular-nums whitespace-nowrap;
+    color: inherit;
   }
 
   /* ══ C03 OutcomeHero ─ メディア（ここでは無彩色の面）、短い価値、主要CTA */
   .hero {
-    background: var(--nah-color-ink); color: var(--nah-color-white);
-    padding-block: var(--nah-size-pad-hero);
+    @apply bg-ink text-white py-pad-hero;
   }
-  .hero .wrap { display: grid; gap: var(--nah-size-gap); }
+  .hero .wrap {
+    @apply grid gap-gap;
+  }
   .hero .kick {
-    display: inline-flex; align-items: center; gap: 7px; margin: 0;
-    font-size: var(--nah-font-size-label); font-weight: var(--nah-font-weight-semi);
-    color: var(--nah-color-muted-on-ink);
+    @apply inline-flex items-center gap-[7px] m-[0] text-label font-semi text-muted-on-ink;
   }
-  .hero h1, .hero .service-intro-title {
-    font-size: var(--nah-font-size-hero-pc);
-    line-height: var(--nah-font-leading-hero);
-    letter-spacing: -.01em;
-    font-weight: var(--nah-font-weight-bold);
-    max-width: 20em;
-    word-break: auto-phrase;   /* 日本語を文節で折る。未対応でも通常の折り返しになる */
+  .hero h1,
+  .hero .service-intro-title {
+    @apply text-hero-pc leading-hero tracking-[-.01em] font-bold max-w-[20em];
+    word-break: auto-phrase; /* 日本語を文節で折る。未対応でも通常の折り返しになる */
   }
   .hero .sub {
-    font-size: 17px; line-height: var(--nah-font-leading-body);
-    color: var(--nah-color-muted-on-ink); max-width: 34em; margin: 0;
+    @apply text-[17px] leading-body text-muted-on-ink max-w-[34em] m-[0];
   }
-  .hero .sub strong { color: var(--nah-color-white); }
+  .hero .sub strong {
+    @apply text-white;
+  }
 
   /* 価格の面。緑は行動のためだけに使うので、数字そのものは無彩色で置く */
   .pricebox {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 28px 40px;
-    padding: var(--nah-size-gap-group);
-    border: 1px solid rgba(255,255,255,.18);
-    border-radius: var(--nah-radius-panel);
-    background: rgba(255,255,255,.045);
+    @apply flex flex-wrap items-center gap-[28px_40px] p-gap-group;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    @apply rounded-panel bg-[rgba(255,255,255,.045)];
   }
-  .amtwrap { display: flex; flex-direction: column; gap: 4px; }
+  .amtwrap {
+    @apply flex flex-col gap-[4px];
+  }
   .amtwrap .pre {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: var(--nah-font-size-meta); color: var(--nah-color-muted-on-ink);
+    @apply inline-flex items-center gap-[6px] text-meta text-muted-on-ink;
   }
   .amt {
-    font-size: 54px; line-height: 1.05; font-weight: var(--nah-font-weight-bold);
-    font-variant-numeric: tabular-nums; letter-spacing: -.02em;
+    @apply text-[54px] leading-[1.05] font-bold tabular-nums tracking-[-.02em];
   }
-  .amt .u { font-size: 19px; font-weight: var(--nah-font-weight-semi); margin-left: 4px; letter-spacing: 0; }
-  .pricebox .alt { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; min-width: 15em; }
+  .amt .u {
+    @apply text-[19px] font-semi ml-[4px] tracking-[0];
+  }
+  .pricebox .alt {
+    @apply list-none list-outside m-[0] p-[0] grid gap-[9px] min-w-[15em];
+  }
   .pricebox .alt li {
-    position: relative; padding-left: 16px; margin: 0;
-    font-size: 14px; line-height: 1.7; color: var(--nah-color-muted-on-ink);
+    @apply relative pl-[16px] m-[0] text-[14px] leading-[1.7] text-muted-on-ink;
   }
   .pricebox .alt li::before {
-    content: ""; position: absolute; left: 0; top: .78em;
-    width: 8px; height: 1.5px; background: var(--accent);
+    content: '';
+    @apply absolute left-[0] top-[.78em] w-[8px] h-[1.5px] bg-[var(--accent)];
   }
-  .pricebox .alt li b { color: var(--nah-color-white); font-weight: var(--nah-font-weight-semi); }
+  .pricebox .alt li b {
+    @apply text-white font-semi;
+  }
 
   /* ══ C04 DisplayTitle ─ 短い欧文のみ。日本語や長い項目名には使わない */
   .display {
-    font-family: var(--nah-font-family-display);
-    font-weight: var(--nah-font-weight-regular);
-    text-transform: uppercase; letter-spacing: .01em; line-height: .9;
-    transform: scaleX(var(--nah-ratio-display-correction));
+    @apply font-display font-regular;
+    text-transform: uppercase;
+    @apply tracking-[.01em] leading-[.9];
+    transform: scaleX(var(--ratio-display-correction));
     transform-origin: left center;
   }
 
   /* ══ C16 PrimaryAction / C17 SecondaryAction
        主要CTA PC 315×57 / モバイル 260×48。緑の上は暗い文字（05 コントラスト） */
-  .btns { display: flex; flex-wrap: wrap; gap: 14px; }
+  .btns {
+    @apply flex flex-wrap gap-[14px];
+  }
   .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
-    min-height: var(--nah-size-cta-h-pc); padding-inline: 26px;
-    border-radius: var(--nah-radius-pill);
-    font-size: 16px; font-weight: var(--nah-font-weight-bold);
-    text-decoration: none; border: 1.5px solid transparent;
-    transition: background var(--nah-motion-fast) ease, color var(--nah-motion-fast) ease;
+    @apply inline-flex items-center justify-center gap-[9px] min-h-cta-h-pc px-[26px] rounded-pill text-[16px] font-bold no-underline;
+    border: 1.5px solid transparent;
+    transition:
+      background var(--duration-fast) ease,
+      color var(--duration-fast) ease;
   }
   .btn-1 {
-    min-width: var(--nah-size-cta-w-pc);
-    background: var(--accent); color: var(--accent-ink); border-color: var(--accent);
+    @apply min-w-cta-w-pc bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--accent)];
   }
-  .btn-1:hover { filter: brightness(.94); }
+  .btn-1:hover {
+    filter: brightness(0.94);
+  }
   .btn-2 {
-    background: transparent; color: var(--nah-color-ink); border-color: var(--nah-color-line-strong);
+    background: transparent;
+    @apply text-ink border-line-strong;
   }
-  .btn-2:hover { border-color: var(--nah-color-ink); background: var(--nah-color-surface); }
-  section.dark .btn-2, .hero .btn-2 {
-    color: var(--nah-color-white); border-color: rgba(255,255,255,.45);
+  .btn-2:hover {
+    @apply border-ink bg-surface;
   }
-  section.dark .btn-2:hover, .hero .btn-2:hover { background: rgba(255,255,255,.1); border-color: var(--nah-color-white); }
+  section.dark .btn-2,
+  .hero .btn-2 {
+    @apply text-white border-[rgba(255,255,255,.45)];
+  }
+  section.dark .btn-2:hover,
+  .hero .btn-2:hover {
+    @apply bg-[rgba(255,255,255,.1)] border-white;
+  }
 
   /* ══ C05 SectionHeading ─ 小分類、見出し、短い導入 */
-  .sh { margin-bottom: 40px; padding-top: 16px; border-top: 1px solid var(--nah-color-ink); }
-  .sh > h2, .sh > .lede { max-width: var(--nah-size-measure-read); }
-  section.dark .sh { border-top-color: var(--nah-color-white); }
-  .sh .lab {
-    display: flex; align-items: center; gap: 7px; margin-bottom: 16px;
-    font-size: 12.5px; font-weight: var(--nah-font-weight-semi);
-    letter-spacing: .08em; color: var(--nah-color-muted);
+  .sh {
+    @apply mb-[40px] pt-[16px];
+    border-top: 1px solid var(--color-ink);
   }
-  section.dark .sh .lab { color: var(--nah-color-muted-on-ink); }
-  .lede { font-size: 17px; line-height: var(--nah-font-leading-body); margin: 14px 0 0; }
-  section .lede:first-child { margin-top: 0; }
-  section > .wrap > .lede, section > .wrap-w > .lede { max-width: var(--nah-size-measure-read); }
+  .sh > h2,
+  .sh > .lede {
+    @apply max-w-measure-read;
+  }
+  section.dark .sh {
+    border-top-color: var(--color-white);
+  }
+  .sh .lab {
+    @apply flex items-center gap-[7px] mb-[16px] text-[12.5px] font-semi tracking-[.08em] text-muted;
+  }
+  section.dark .sh .lab {
+    @apply text-muted-on-ink;
+  }
+  .lede {
+    @apply text-[17px] leading-body m-[14px_0_0];
+  }
+  section .lede:first-child {
+    @apply mt-[0];
+  }
+  section > .wrap > .lede,
+  section > .wrap-w > .lede {
+    @apply max-w-measure-read;
+  }
 
   /* ══ C07 CatalogCard / C08 ScenarioCard
        配置領域の幅で列数を決める（960/520px）。サイドバーに入れても壊れない */
-  .cq, .cards { container-type: inline-size; }
-  .cards .g { display: grid; gap: var(--nah-size-gap); grid-template-columns: 1fr; }
-  @container (min-width: 520px) { .cards .g { grid-template-columns: repeat(2, 1fr); } }
-  @container (min-width: 960px) { .cards .g3 { grid-template-columns: repeat(3, 1fr); }
-                                  .cards .g4 { grid-template-columns: repeat(4, 1fr); } }
+  .cq,
+  .cards {
+    container-type: inline-size;
+  }
+  .cards .g {
+    @apply grid gap-gap grid-cols-[1fr];
+  }
+  @container (min-width: 520px) {
+    .cards .g {
+      @apply grid-cols-[repeat(2,_1fr)];
+    }
+  }
+  @container (min-width: 960px) {
+    .cards .g3 {
+      @apply grid-cols-[repeat(3,_1fr)];
+    }
+    .cards .g4 {
+      @apply grid-cols-[repeat(4,_1fr)];
+    }
+  }
   /* 既定は罫だけ。角丸の箱にすると全部が同じ強さになって階層が消える（原則F） */
   .card {
-    display: flex; flex-direction: column; gap: 10px;
-    padding-top: 20px; border-top: 2px solid var(--nah-color-ink);
+    @apply flex flex-col gap-[10px] pt-[20px];
+    border-top: 2px solid var(--color-ink);
   }
-  section.dark .card { border-top-color: var(--nah-color-white); }
-  .card h3 { font-size: 17px; display: flex; align-items: center; gap: 8px; }
-  .card h3 .ic { color: var(--nah-color-muted); }
-  section.dark .card h3 .ic { color: var(--nah-color-muted-on-ink); }
-  .card .meta { font-size: 14.5px; line-height: 1.85; color: var(--nah-color-muted); margin: 0; }
-  section.dark .card .meta { color: var(--nah-color-muted-on-ink); }
+  section.dark .card {
+    border-top-color: var(--color-white);
+  }
+  .card h3 {
+    @apply text-[17px] flex items-center gap-[8px];
+  }
+  .card h3 .ic {
+    @apply text-muted;
+  }
+  section.dark .card h3 .ic {
+    @apply text-muted-on-ink;
+  }
+  .card .meta {
+    @apply text-[14.5px] leading-[1.85] text-muted m-[0];
+  }
+  section.dark .card .meta {
+    @apply text-muted-on-ink;
+  }
   .card a {
-    margin-top: auto; padding-top: 4px;
-    display: inline-flex; align-items: center;
-    min-height: var(--nah-size-tap);
-    font-size: 14px; font-weight: var(--nah-font-weight-semi);
+    @apply mt-[auto] pt-[4px] inline-flex items-center min-h-tap text-[14px] font-semi;
   }
   /* ══ 手順の縦軸。
         4列の表でも中身は同じだが、390px では横に引かないと「だれが」「目安」が見えなかった。
         手順は時間の並びなので、縦に積むほうが形が意味に合っている。
         これで横スクロールの領域がひとつ減る。 */
-  .flow { list-style: none; margin: 0; padding: 0; }
+  .flow {
+    @apply list-none list-outside m-[0] p-[0];
+  }
   .flow > li {
-    position: relative; margin: 0; padding: 0 0 22px 52px;
+    @apply relative m-[0] p-[0_0_22px_52px];
   }
-  .flow > li::before {   /* 節と節をつなぐ縦線 */
-    content: ""; position: absolute; left: 15px; top: 34px; bottom: 0;
-    width: 2px; background: var(--nah-color-line);
+  .flow > li::before {
+    /* 節と節をつなぐ縦線 */
+    content: '';
+    @apply absolute left-[15px] top-[34px] bottom-[0] w-[2px] bg-line;
   }
-  .flow > li:last-child { padding-bottom: 0; }
-  .flow > li:last-child::before { display: none; }
+  .flow > li:last-child {
+    @apply pb-[0];
+  }
+  .flow > li:last-child::before {
+    @apply hidden;
+  }
   .flow .num {
-    position: absolute; left: 0; top: 1px;
-    width: 32px; height: 32px; border-radius: 50%;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: var(--nah-font-weight-bold);
-    font-variant-numeric: tabular-nums;
-    background: var(--nah-color-surface); color: var(--nah-color-ink);
-    border: 1px solid var(--nah-color-line-strong);
+    @apply absolute left-[0] top-[1px] w-[32px] h-[32px] rounded-[50%] inline-flex items-center justify-center text-[14px] font-bold tabular-nums bg-surface text-ink;
+    border: 1px solid var(--color-line-strong);
   }
-  .flow > li.acc-step .num { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-  .flow b { display: block; font-size: 17px; line-height: 1.5; }
+  .flow > li.acc-step .num {
+    @apply bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--accent)];
+  }
+  .flow b {
+    @apply block text-[17px] leading-[1.5];
+  }
   .flow .d {
-    margin: 4px 0 0; font-size: var(--nah-font-size-meta); line-height: 1.8;
-    color: var(--nah-color-muted); max-width: var(--nah-size-measure-read);
+    @apply m-[4px_0_0] text-meta leading-[1.8] text-muted max-w-measure-read;
   }
-  .flow .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+  .flow .tags {
+    @apply flex flex-wrap gap-[8px] m-[10px_0_0];
+  }
   .flow .tags span {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 3px 11px; border-radius: var(--nah-radius-pill);
-    border: 1px solid var(--nah-color-line-strong);
-    font-size: 12.5px; line-height: 1.7; color: var(--nah-color-muted);
-    white-space: nowrap;
+    @apply inline-flex items-center gap-[6px] p-[3px_11px] rounded-pill;
+    border: 1px solid var(--color-line-strong);
+    @apply text-[12.5px] leading-[1.7] text-muted whitespace-nowrap;
   }
-  .flow .tags .ic { color: var(--nah-color-muted); }
-  section.dark .flow > li::before { background: rgba(255,255,255,.18); }
-  section.dark .flow .num { background: rgba(255,255,255,.1); color: var(--nah-color-white);
-                           border-color: rgba(255,255,255,.24); }
-  section.dark .flow .d, section.dark .flow .tags span { color: var(--nah-color-muted-on-ink); }
-  section.dark .flow .tags span { border-color: rgba(255,255,255,.24); }
+  .flow .tags .ic {
+    @apply text-muted;
+  }
+  section.dark .flow > li::before {
+    @apply bg-[rgba(255,255,255,.18)];
+  }
+  section.dark .flow .num {
+    @apply bg-[rgba(255,255,255,.1)] text-white border-[rgba(255,255,255,.24)];
+  }
+  section.dark .flow .d,
+  section.dark .flow .tags span {
+    @apply text-muted-on-ink;
+  }
+  section.dark .flow .tags span {
+    @apply border-[rgba(255,255,255,.24)];
+  }
 
   /* 章の末尾に置く但し書き。本文より一段落として、幅も本文に合わせる */
   .fine-note {
-    margin-top: 14px; font-size: var(--nah-font-size-meta); line-height: 1.8;
-    max-width: var(--nah-size-measure-read);
+    @apply mt-[14px] text-meta leading-[1.8] max-w-measure-read;
   }
-  .card a.more::after { content: " →"; }
+  .card a.more::after {
+    content: ' →';
+  }
   a.more {
-    display: inline-flex; align-items: center;
-    min-height: var(--nah-size-tap);
-    font-size: 14px; font-weight: var(--nah-font-weight-semi);
+    @apply inline-flex items-center min-h-tap text-[14px] font-semi;
   }
-  a.more::after { content: " →"; }
-  .plan a.more { margin-top: -4px; }
+  a.more::after {
+    content: ' →';
+  }
+  .plan a.more {
+    @apply mt-[-4px];
+  }
 
   /* ── 数値の面。写真がないので、整ったデータ面を主役にする（原則C） */
-  .stats { display: grid; gap: 28px 40px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-  .stat { display: grid; gap: 4px; align-content: start;
-          padding-top: 16px; border-top: 1px solid var(--nah-color-line-strong); }
-  section.dark .stat { border-top-color: rgba(255,255,255,.3); }
-  .stat .v { font-size: 34px; font-weight: var(--nah-font-weight-bold); line-height: 1.05;
-             font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
-  .stat .k { font-size: 13px; line-height: 1.6; color: var(--nah-color-muted); }
-  section.dark .stat .k { color: var(--nah-color-muted-on-ink); }
+  .stats {
+    @apply grid gap-[28px_40px] grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))];
+  }
+  .stat {
+    @apply grid gap-[4px];
+    align-content: start;
+    @apply pt-[16px];
+    border-top: 1px solid var(--color-line-strong);
+  }
+  section.dark .stat {
+    border-top-color: rgba(255, 255, 255, 0.3);
+  }
+  .stat .v {
+    @apply text-[34px] font-bold leading-[1.05] tabular-nums tracking-[-.01em];
+  }
+  .stat .k {
+    @apply text-[13px] leading-[1.6] text-muted;
+  }
+  section.dark .stat .k {
+    @apply text-muted-on-ink;
+  }
 
   /* ── 状態の面。ブランド色と意味を分離し、文字とアイコンを併用する（原則E） */
   /* 既定と good は面を持たせない。罫と見出しだけで足りる */
   .alert {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 20px 0 0; border-top: 1px solid var(--nah-color-line-strong);
-    font-size: 15px; line-height: 1.85;
+    @apply flex items-start gap-[12px] p-[20px_0_0];
+    border-top: 1px solid var(--color-line-strong);
+    @apply text-[15px] leading-[1.85];
   }
-  .alert > .ic { margin-top: 5px; }
-  .alert .bd { min-width: 0; }
-  .alert .h { display: block; margin-bottom: 8px; font-weight: var(--nah-font-weight-bold); font-size: 16px; }
-  section.dark .alert { border-top-color: rgba(255,255,255,.3); }
-  .alert.good { border-top-color: var(--nah-color-ink); }
-  section.dark .alert.good { border-top-color: var(--nah-color-white); }
+  .alert > .ic {
+    @apply mt-[5px];
+  }
+  .alert .bd {
+    @apply min-w-[0];
+  }
+  .alert .h {
+    @apply block mb-[8px] font-bold text-[16px];
+  }
+  section.dark .alert {
+    border-top-color: rgba(255, 255, 255, 0.3);
+  }
+  .alert.good {
+    border-top-color: var(--color-ink);
+  }
+  section.dark .alert.good {
+    border-top-color: var(--color-white);
+  }
   /* 状態を示すものだけ面を持つ */
-  .alert.warn, .alert.bad {
-    padding: 20px 22px; border-top: none; border-left: 3px solid;
-    border-radius: var(--nah-radius-media);
+  .alert.warn,
+  .alert.bad {
+    @apply p-[20px_22px];
+    border-top: none;
+    border-left: 3px solid;
+    @apply rounded-media;
   }
-  .alert.warn { background: var(--nah-color-warn-bg); border-left-color: var(--nah-color-warn); }
-  .alert.warn { color: #5C4400; }
-  .alert.warn .ic, .alert.warn .h { color: var(--nah-color-warn); }
-  .alert.bad  { background: var(--nah-color-alert-bg); border-left-color: var(--nah-color-alert); }
-  .alert.bad { color: #7A1B15; }
-  .alert.bad .ic, .alert.bad .h { color: var(--nah-color-alert); }
-  section.dark .alert.warn, section.dark .alert.bad {
-    background: rgba(255,255,255,.07); color: var(--nah-color-white);
+  .alert.warn {
+    @apply bg-warn-bg;
+    border-left-color: var(--color-warn);
   }
-  section.dark .alert.warn { border-left-color: #D6AC5A; }
-  section.dark .alert.warn .ic, section.dark .alert.warn .h { color: #E3C077; }
-  section.dark .alert.bad { border-left-color: #FF8E84; }
-  section.dark .alert.bad .ic, section.dark .alert.bad .h { color: #FF8E84; }
-  .alert + .alert, .alert + .acc, .acc + .acc, .acc + .alert { margin-top: 20px; }
-  .lede + .alert, .tbl + .alert, .calc + .alert, .fig + .alert,
-  .plans + .alert, .cq + .alert, .vs + .alert { margin-top: 32px; }
+  .alert.warn {
+    @apply text-[#5C4400];
+  }
+  .alert.warn .ic,
+  .alert.warn .h {
+    @apply text-warn;
+  }
+  .alert.bad {
+    @apply bg-alert-bg;
+    border-left-color: var(--color-alert);
+  }
+  .alert.bad {
+    @apply text-[#7A1B15];
+  }
+  .alert.bad .ic,
+  .alert.bad .h {
+    @apply text-alert;
+  }
+  section.dark .alert.warn,
+  section.dark .alert.bad {
+    @apply bg-[rgba(255,255,255,.07)] text-white;
+  }
+  section.dark .alert.warn {
+    border-left-color: #d6ac5a;
+  }
+  section.dark .alert.warn .ic,
+  section.dark .alert.warn .h {
+    @apply text-[#E3C077];
+  }
+  section.dark .alert.bad {
+    border-left-color: #ff8e84;
+  }
+  section.dark .alert.bad .ic,
+  section.dark .alert.bad .h {
+    @apply text-[#FF8E84];
+  }
+  .alert + .alert,
+  .alert + .acc,
+  .acc + .acc,
+  .acc + .alert {
+    @apply mt-[20px];
+  }
+  .lede + .alert,
+  .tbl + .alert,
+  .calc + .alert,
+  .fig + .alert,
+  .plans + .alert,
+  .cq + .alert,
+  .vs + .alert {
+    @apply mt-[32px];
+  }
 
   /* ══ 入口の商品。3プランの上に置く1枚。
         月額制の「1ページ 月◯◯円」に、同じ土俵（1ページ）で買い切りをぶつける場所。
         プランの枠に入れると3つの中の一番安いものに見えてしまうので、別の器にする。 */
   .entry {
-    display: grid; gap: 22px 36px; grid-template-columns: 1fr;
-    padding: var(--nah-size-gap-group);
-    border: 1.5px solid var(--nah-color-ink);
-    border-radius: var(--nah-radius-panel);
-    background: var(--nah-color-white);
+    @apply grid gap-[22px_36px] grid-cols-[1fr] p-gap-group;
+    border: 1.5px solid var(--color-ink);
+    @apply rounded-panel bg-white;
   }
-  section.dark .entry { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.4); }
-  section.tint .entry { background: var(--nah-color-white); }
-  @media (min-width: 820px) { .entry { grid-template-columns: minmax(230px, 290px) 1fr; } }
+  section.dark .entry {
+    @apply bg-[rgba(255,255,255,.05)] border-[rgba(255,255,255,.4)];
+  }
+  section.tint .entry {
+    @apply bg-white;
+  }
+  @media (min-width: 820px) {
+    .entry {
+      @apply grid-cols-[minmax(230px,_290px)_1fr];
+    }
+  }
   .entry .lab {
-    display: inline-flex; align-items: center; gap: 7px;
-    font-size: 12.5px; font-weight: var(--nah-font-weight-bold);
-    letter-spacing: .06em; color: var(--accent-text);
+    @apply inline-flex items-center gap-[7px] text-[12.5px] font-bold tracking-[.06em] text-[var(--accent-text)];
   }
-  section.dark .entry .lab { color: var(--accent); }
-  .entry .pn { margin-top: 8px; font-size: 20px; font-weight: var(--nah-font-weight-bold); }
-  .entry .amt { display: block; margin-top: 6px; }
+  section.dark .entry .lab {
+    @apply text-[var(--accent)];
+  }
+  .entry .pn {
+    @apply mt-[8px] text-[20px] font-bold;
+  }
+  .entry .amt {
+    @apply block mt-[6px];
+  }
   .entry .sub2 {
-    display: block; margin-top: 8px; font-size: 13px; line-height: 1.75;
-    color: var(--nah-color-muted);
+    @apply block mt-[8px] text-[13px] leading-[1.75] text-muted;
   }
-  section.dark .entry .sub2 { color: var(--nah-color-muted-on-ink); }
-  .entry ul { margin: 0 0 16px; }
-  .entry .btns { margin-top: 0; }
+  section.dark .entry .sub2 {
+    @apply text-muted-on-ink;
+  }
+  .entry ul {
+    @apply m-[0_0_16px];
+  }
+  .entry .btns {
+    @apply mt-[0];
+  }
 
   /* ══ C15 Disclosure ─ details。未確認・重要条件は初期状態で見せる */
   .acc {
-    border: 1px solid var(--nah-color-line); border-radius: var(--nah-radius-card);
-    background: var(--nah-color-white); overflow: hidden;
+    border: 1px solid var(--color-line);
+    @apply rounded-card bg-white overflow-hidden;
   }
-  section.dark .acc { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.14); }
+  section.dark .acc {
+    @apply bg-[rgba(255,255,255,.05)] border-[rgba(255,255,255,.14)];
+  }
   .acc > summary {
-    list-style: none; cursor: pointer;
-    display: flex; align-items: center; gap: 11px;
-    min-height: var(--nah-size-tap); padding: 15px 20px;
-    font-size: 16px; font-weight: var(--nah-font-weight-semi);
+    @apply list-none list-outside cursor-pointer flex items-center gap-[11px] min-h-tap p-[15px_20px] text-[16px] font-semi;
   }
-  .acc > summary::-webkit-details-marker { display: none; }
+  .acc > summary::-webkit-details-marker {
+    @apply hidden;
+  }
   .acc > summary::after {
-    content: ""; margin-left: auto; width: 9px; height: 9px; flex: none;
-    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    content: '';
+    @apply ml-[auto] w-[9px] h-[9px] flex-[none];
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
     transform: rotate(45deg) translate(-2px, -2px);
-    transition: transform var(--nah-motion-fast) ease;
+    transition: transform var(--duration-fast) ease;
   }
-  .acc[open] > summary::after { transform: rotate(225deg) translate(-2px, -2px); }
-  .acc > summary:hover { background: var(--nah-color-surface); }
-  section.dark .acc > summary:hover { background: rgba(255,255,255,.07); }
+  .acc[open] > summary::after {
+    transform: rotate(225deg) translate(-2px, -2px);
+  }
+  .acc > summary:hover {
+    @apply bg-surface;
+  }
+  section.dark .acc > summary:hover {
+    @apply bg-[rgba(255,255,255,.07)];
+  }
 
-  .acc .bd { padding: 0 20px 20px 51px; font-size: 15px; }
-  .acc .bd > :first-child { margin-top: 0; }
+  .acc .bd {
+    @apply p-[0_20px_20px_51px] text-[15px];
+  }
+  .acc .bd > :first-child {
+    @apply mt-[0];
+  }
 
   /* ── 計算の面。桁を揃える（12 他アプリへの画面構成） */
   .calc {
-    border: 1px solid var(--nah-color-line); border-radius: var(--nah-radius-card);
-    overflow: hidden; background: var(--nah-color-white);
+    border: 1px solid var(--color-line);
+    @apply rounded-card overflow-hidden bg-white;
   }
-  section.dark .calc { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.14); }
+  section.dark .calc {
+    @apply bg-[rgba(255,255,255,.05)] border-[rgba(255,255,255,.14)];
+  }
   .calc .ttl {
-    padding: 13px 20px; background: var(--nah-color-surface);
-    font-size: 13.5px; font-weight: var(--nah-font-weight-semi);
-    letter-spacing: .04em; color: var(--nah-color-muted);
+    @apply p-[13px_20px] bg-surface text-[13.5px] font-semi tracking-[.04em] text-muted;
   }
-  section.dark .calc .ttl { background: rgba(255,255,255,.07); }
+  section.dark .calc .ttl {
+    @apply bg-[rgba(255,255,255,.07)];
+  }
   .calc .r {
-    display: flex; justify-content: space-between; align-items: center; gap: 20px;
-    padding: 15px 20px; border-bottom: 1px solid var(--nah-color-line);
+    @apply flex justify-between items-center gap-[20px] p-[15px_20px];
+    border-bottom: 1px solid var(--color-line);
   }
-  section.dark .calc .r { border-color: rgba(255,255,255,.12); }
-  .calc .r:last-child { border-bottom: none; }
-  .calc .r .k { display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
-  .calc .r .k .ic { margin-top: 4px; color: var(--nah-color-muted); }
+  section.dark .calc .r {
+    @apply border-[rgba(255,255,255,.12)];
+  }
+  .calc .r:last-child {
+    border-bottom: none;
+  }
+  .calc .r .k {
+    @apply flex items-start gap-[10px] min-w-[0];
+  }
+  .calc .r .k .ic {
+    @apply mt-[4px] text-muted;
+  }
   .calc .r .k em {
-    font-style: normal; display: block; margin-top: 2px;
-    font-size: var(--nah-font-size-meta); color: var(--nah-color-muted);
+    @apply not-italic block mt-[2px] text-meta text-muted;
   }
-  section.dark .calc .r .k em { color: var(--nah-color-muted-on-ink); }
+  section.dark .calc .r .k em {
+    @apply text-muted-on-ink;
+  }
   .calc .r .v {
-    font-size: 19px; font-weight: var(--nah-font-weight-bold);
-    font-variant-numeric: tabular-nums; white-space: nowrap;
+    @apply text-[19px] font-bold tabular-nums whitespace-nowrap;
   }
-  .calc .r.small { font-size: 14.5px; padding-block: 11px; }
-  .calc .r.small .v { font-size: 15px; }
-  .calc .r.sum { background: var(--nah-color-surface); }
-  section.dark .calc .r.sum { background: rgba(255,255,255,.07); }
-  .calc .r.minus .v { color: var(--nah-color-ok); }
-  .calc .r.net { background: var(--nah-color-ink); color: var(--nah-color-white); padding-block: 20px; }
-  .calc .r.net .k { color: var(--nah-color-muted-on-ink); font-size: 14px; }
-  .calc .r.net .k em { color: var(--nah-color-muted-on-ink); }
-  .calc .r.net .k .ic { color: var(--accent); }
-  .calc .r.net .v { font-size: 34px; }
-  section.dark .calc .r.net { background: var(--accent); color: var(--accent-ink); }
-  section.dark .calc .r.net .k, section.dark .calc .r.net .k .ic { color: var(--accent-ink); opacity: .84; }
+  .calc .r.small {
+    @apply text-[14.5px] py-[11px];
+  }
+  .calc .r.small .v {
+    @apply text-[15px];
+  }
+  .calc .r.sum {
+    @apply bg-surface;
+  }
+  section.dark .calc .r.sum {
+    @apply bg-[rgba(255,255,255,.07)];
+  }
+  .calc .r.minus .v {
+    @apply text-ok;
+  }
+  .calc .r.net {
+    @apply bg-ink text-white py-[20px];
+  }
+  .calc .r.net .k {
+    @apply text-muted-on-ink text-[14px];
+  }
+  .calc .r.net .k em {
+    @apply text-muted-on-ink;
+  }
+  .calc .r.net .k .ic {
+    @apply text-[var(--accent)];
+  }
+  .calc .r.net .v {
+    @apply text-[34px];
+  }
+  section.dark .calc .r.net {
+    @apply bg-[var(--accent)] text-[var(--accent-ink)];
+  }
+  section.dark .calc .r.net .k,
+  section.dark .calc .r.net .k .ic {
+    @apply text-[var(--accent-ink)] opacity-[.84];
+  }
   /* 緑の面に載る補足。muted-on-ink（明るい灰）のままだと緑地に埋まって読めない */
-  section.dark .calc .r.net .k em { color: var(--accent-ink); opacity: .8; }
+  section.dark .calc .r.net .k em {
+    @apply text-[var(--accent-ink)] opacity-[.8];
+  }
 
   /* ── 比較バー。いま払っている金額を基準に並べる */
-  .vs { display: grid; gap: 10px; }
-  .vs .row { display: grid; grid-template-columns: 1fr auto; gap: 6px 18px; align-items: center; }
-  .vs .nm { display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: var(--nah-font-weight-semi); }
-  .vs .nm .ic { color: var(--nah-color-muted); }
-  .vs .nm em { font-style: normal; font-weight: var(--nah-font-weight-regular); font-size: 13px; color: var(--nah-color-muted); }
-  .vs .amtv { font-size: 17px; font-weight: var(--nah-font-weight-bold); font-variant-numeric: tabular-nums; }
-  .vs .bar { grid-column: 1 / -1; height: 10px; border-radius: var(--nah-radius-pill); background: var(--nah-color-line); overflow: hidden; }
-  .vs .bar i { display: block; height: 100%; background: var(--nah-color-line-strong); border-radius: inherit; }
-  .vs .row.ours .bar i { background: var(--accent); }
-  .vs .row.ours .nm { color: var(--accent-text); }
-  .vs .row.ours .nm .ic { color: var(--accent-text); }
-  section.dark .vs .bar { background: rgba(255,255,255,.16); }
-  section.dark .vs .bar i { background: rgba(255,255,255,.5); }
-  section.dark .vs .row.ours .nm, section.dark .vs .row.ours .nm .ic { color: var(--accent); }
+  .vs {
+    @apply grid gap-[10px];
+  }
+  .vs .row {
+    @apply grid grid-cols-[1fr_auto] gap-[6px_18px] items-center;
+  }
+  .vs .nm {
+    @apply flex items-center gap-[9px] text-[15px] font-semi;
+  }
+  .vs .nm .ic {
+    @apply text-muted;
+  }
+  .vs .nm em {
+    @apply not-italic font-regular text-[13px] text-muted;
+  }
+  .vs .amtv {
+    @apply text-[17px] font-bold tabular-nums;
+  }
+  .vs .bar {
+    @apply col-[1_/_-1] h-[10px] rounded-pill bg-line overflow-hidden;
+  }
+  .vs .bar i {
+    @apply block h-[100%] bg-line-strong rounded-[inherit];
+  }
+  .vs .row.ours .bar i {
+    @apply bg-[var(--accent)];
+  }
+  .vs .row.ours .nm {
+    @apply text-[var(--accent-text)];
+  }
+  .vs .row.ours .nm .ic {
+    @apply text-[var(--accent-text)];
+  }
+  section.dark .vs .bar {
+    @apply bg-[rgba(255,255,255,.16)];
+  }
+  section.dark .vs .bar i {
+    @apply bg-[rgba(255,255,255,.5)];
+  }
+  section.dark .vs .row.ours .nm,
+  section.dark .vs .row.ours .nm .ic {
+    @apply text-[var(--accent)];
+  }
 
   /* ══ C14 SegmentedTabs ─ 同じ領域の表示切り替え。JavaScript を使わない */
-  .seg { display: flex; gap: 4px; padding: 4px; margin-bottom: 26px;
-         background: var(--nah-color-surface); border-radius: var(--nah-radius-pill); width: max-content; max-width: 100%; }
-  .seg input { position: absolute; opacity: 0; pointer-events: none; }
+  .seg {
+    @apply flex gap-[4px] p-[4px] mb-[26px] bg-surface rounded-pill w-[max-content] max-w-[100%];
+  }
+  .seg input {
+    @apply absolute opacity-[0] pointer-events-none;
+  }
   .seg label {
-    display: inline-flex; align-items: center; justify-content: center;
-    min-height: var(--nah-size-tap); padding-inline: 20px; cursor: pointer;
-    border-radius: var(--nah-radius-pill);
-    font-size: 14.5px; font-weight: var(--nah-font-weight-semi); white-space: nowrap;
+    @apply inline-flex items-center justify-center min-h-tap px-[20px] cursor-pointer rounded-pill text-[14.5px] font-semi whitespace-nowrap;
   }
-  .seg input:checked + label { background: var(--nah-color-ink); color: var(--nah-color-white); }
-  .seg input:focus-visible + label { outline: 3px solid var(--nah-color-ink); outline-offset: 2px; }
-  .switcher .v-b, .switcher .n-b { display: none; }
-  .switcher:has(#pb:checked) .v-m, .switcher:has(#pb:checked) .n-m { display: none; }
-  .switcher:has(#pb:checked) .v-b, .switcher:has(#pb:checked) .n-b { display: block; }
+  .seg input:checked + label {
+    @apply bg-ink text-white;
+  }
+  .seg input:focus-visible + label {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+  .switcher .v-b,
+  .switcher .n-b {
+    @apply hidden;
+  }
+  .switcher:has(#pb:checked) .v-m,
+  .switcher:has(#pb:checked) .n-m {
+    @apply hidden;
+  }
+  .switcher:has(#pb:checked) .v-b,
+  .switcher:has(#pb:checked) .n-b {
+    @apply block;
+  }
   .segnote {
-    display: flex; align-items: flex-start; gap: 10px; margin: -12px 0 26px;
-    font-size: 13.5px; line-height: 1.8; color: var(--nah-color-muted);
-    max-width: var(--nah-size-measure-read);
+    @apply flex items-start gap-[10px] m-[-12px_0_26px] text-[13.5px] leading-[1.8] text-muted max-w-measure-read;
   }
-  .segnote > .ic { margin-top: 5px; }
-  .plan .pv .sub2 { display: block; margin-top: 8px; font-size: 13px; line-height: 1.75; color: var(--nah-color-muted); }
-  .plan .pv .sub2 b { color: var(--nah-color-ink); }
-  .plan .flex { flex: 1; }
+  .segnote > .ic {
+    @apply mt-[5px];
+  }
+  .plan .pv .sub2 {
+    @apply block mt-[8px] text-[13px] leading-[1.75] text-muted;
+  }
+  .plan .pv .sub2 b {
+    @apply text-ink;
+  }
+  .plan .flex {
+    @apply flex-[1];
+  }
 
   /* ── プラン。一つの判断領域に主役を一つだけ置く（原則A） */
-  .plans { display: grid; gap: var(--nah-size-gap); grid-template-columns: 1fr; }
-  @container (min-width: 760px) { .plans { grid-template-columns: repeat(3, 1fr); align-items: stretch; } }
+  .plans {
+    @apply grid gap-gap grid-cols-[1fr];
+  }
+  @container (min-width: 760px) {
+    .plans {
+      @apply grid-cols-[repeat(3,_1fr)] items-stretch;
+    }
+  }
   .plan {
-    display: flex; flex-direction: column; gap: 14px;
-    padding: var(--nah-size-gap-group);
-    border: 1px solid var(--nah-color-line); border-radius: var(--nah-radius-card);
-    background: var(--nah-color-white);
+    @apply flex flex-col gap-[14px] p-gap-group;
+    border: 1px solid var(--color-line);
+    @apply rounded-card bg-white;
   }
   .plan.pick {
-    border: 2px solid var(--nah-color-ink);
-    background: var(--nah-color-white);
+    border: 2px solid var(--color-ink);
+    @apply bg-white;
   }
-  @container (min-width: 760px) { .plan.pick { margin-block: -14px; padding-block: calc(var(--nah-size-gap-group) + 14px); } }
+  @container (min-width: 760px) {
+    .plan.pick {
+      @apply my-[-14px] py-[calc(var(--spacing-gap-group)_+_14px)];
+    }
+  }
   .plan .tag {
-    align-self: flex-start;
-    font-size: 12px; font-weight: var(--nah-font-weight-bold);
-    letter-spacing: .06em; color: var(--nah-color-ink);
+    @apply self-start text-[12px] font-bold tracking-[.06em] text-ink;
   }
-  .plan .tag::before { content: "▸ "; }
-  .plan .pn { font-size: var(--nah-font-size-h3); font-weight: var(--nah-font-weight-bold); }
-  .plan .pmeta { font-size: var(--nah-font-size-meta); color: var(--nah-color-muted); margin-top: -8px; }
-  .plan .pv .amt { font-size: 38px; }
-  .plan .pv .amt .u { font-size: 15px; }
-  .plan .why { font-size: 14.5px; line-height: 1.75; color: var(--nah-color-muted); }
-  .plan ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
-  .plan ul li { position: relative; padding-left: 16px; margin: 0; font-size: 14.5px; line-height: 1.7; }
+  .plan .tag::before {
+    content: '▸ ';
+  }
+  .plan .pn {
+    @apply text-h3 font-bold;
+  }
+  .plan .pmeta {
+    @apply text-meta text-muted mt-[-8px];
+  }
+  .plan .pv .amt {
+    @apply text-[38px];
+  }
+  .plan .pv .amt .u {
+    @apply text-[15px];
+  }
+  .plan .why {
+    @apply text-[14.5px] leading-[1.75] text-muted;
+  }
+  .plan ul {
+    @apply list-none list-outside m-[0] p-[0] grid gap-[9px];
+  }
+  .plan ul li {
+    @apply relative pl-[16px] m-[0] text-[14.5px] leading-[1.7];
+  }
   .plan ul li::before {
-    content: ""; position: absolute; left: 0; top: .75em;
-    width: 7px; height: 1.5px; background: currentColor; opacity: .45;
+    content: '';
+    @apply absolute left-[0] top-[.75em] w-[7px] h-[1.5px];
+    background: currentColor;
+    @apply opacity-[.45];
   }
 
   /* ══ C19 ComparisonMatrix ─ table と見出しセルを使い、横スクロールは領域内に閉じる */
-  .tblwrap { position: relative; }
+  .tblwrap {
+    @apply relative;
+  }
   .tbl {
-    overflow-x: auto; border: 1px solid var(--nah-color-line);
-    border-radius: var(--nah-radius-card);
+    @apply overflow-x-auto;
+    border: 1px solid var(--color-line);
+    @apply rounded-card;
     /* 端まで来たら止まる位置を作って、指で弾いたときの行き過ぎを防ぐ */
     scroll-snap-type: x proximity;
   }
-  section.dark .tbl { border-color: rgba(255,255,255,.16); }
-  .tbl table { width: 100%; min-width: 520px; font-size: 15px; }
+  section.dark .tbl {
+    @apply border-[rgba(255,255,255,.16)];
+  }
+  .tbl table {
+    @apply w-[100%] min-w-[520px] text-[15px];
+  }
   /* 表の外に出したキャプションと脚注。散文なので折り返して全部読める */
   .tbl-note {
-    margin: 12px 0 0; font-size: var(--nah-font-size-meta);
-    line-height: 1.8; color: var(--nah-color-muted);
-    max-width: var(--nah-size-measure-read);
+    @apply m-[12px_0_0] text-meta leading-[1.8] text-muted max-w-measure-read;
   }
-  section.dark .tbl-note { color: var(--nah-color-muted-on-ink); }
-  .tbl-hint { display: none; }
-  .tbl th, .tbl td { padding: 13px 18px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--nah-color-line); }
-  section.dark .tbl th, section.dark .tbl td { border-color: rgba(255,255,255,.12); }
-  .tbl thead th { background: var(--nah-color-surface); font-size: 13.5px; font-weight: var(--nah-font-weight-bold); white-space: nowrap; }
-  section.dark .tbl thead th { background: rgba(255,255,255,.08); color: var(--nah-color-white); }
-  .tbl tbody th, .tbl thead th:first-child {
-    position: sticky; left: 0; z-index: 1;
-    font-weight: var(--nah-font-weight-semi);
-    background: var(--nah-color-white);
-    box-shadow: 1px 0 0 var(--nah-color-line);
+  section.dark .tbl-note {
+    @apply text-muted-on-ink;
   }
-  .tbl thead th:first-child { background: var(--nah-color-surface); }
+  .tbl-hint {
+    @apply hidden;
+  }
+  .tbl th,
+  .tbl td {
+    @apply p-[13px_18px] text-left align-[top];
+    border-bottom: 1px solid var(--color-line);
+  }
+  section.dark .tbl th,
+  section.dark .tbl td {
+    @apply border-[rgba(255,255,255,.12)];
+  }
+  .tbl thead th {
+    @apply bg-surface text-[13.5px] font-bold whitespace-nowrap;
+  }
+  section.dark .tbl thead th {
+    @apply bg-[rgba(255,255,255,.08)] text-white;
+  }
+  .tbl tbody th,
+  .tbl thead th:first-child {
+    @apply sticky left-[0] z-[1] font-semi bg-white;
+    box-shadow: 1px 0 0 var(--color-line);
+  }
+  .tbl thead th:first-child {
+    @apply bg-surface;
+  }
   /* 固定する列は幅を決める。決めないと狭くなりすぎて、行見出しが何行にも折れる */
-  .tbl tbody th, .tbl thead th:first-child { min-width: 8.5em; }
-  .tbl tbody th .dim { display: block; margin-top: 2px; font-size: 11.5px; line-height: 1.55; }
-  .tbl tbody th br { display: none; }
-  section.dark .tbl tbody th { background: var(--nah-color-ink); box-shadow: 1px 0 0 rgba(255,255,255,.16); }
-  section.dark .tbl thead th:first-child { background: #1B222C; }
-  section.tint .tbl tbody th { background: var(--nah-color-white); }
-  .tbl th.n, .tbl td.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .tbl tbody tr:last-child th, .tbl tbody tr:last-child td { border-bottom: none; }
-  .tbl tfoot td { background: var(--nah-color-surface); font-size: var(--nah-font-size-meta); color: var(--nah-color-muted); }
-  section.dark .tbl tfoot td { background: rgba(255,255,255,.08); color: var(--nah-color-muted-on-ink); }
+  .tbl tbody th,
+  .tbl thead th:first-child {
+    @apply min-w-[8.5em];
+  }
+  .tbl tbody th .dim {
+    @apply block mt-[2px] text-[11.5px] leading-[1.55];
+  }
+  .tbl tbody th br {
+    @apply hidden;
+  }
+  section.dark .tbl tbody th {
+    @apply bg-ink;
+    box-shadow: 1px 0 0 rgba(255, 255, 255, 0.16);
+  }
+  section.dark .tbl thead th:first-child {
+    @apply bg-[#1B222C];
+  }
+  section.tint .tbl tbody th {
+    @apply bg-white;
+  }
+  .tbl th.n,
+  .tbl td.n {
+    @apply text-right tabular-nums whitespace-nowrap;
+  }
+  .tbl tbody tr:last-child th,
+  .tbl tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .tbl tfoot td {
+    @apply bg-surface text-meta text-muted;
+  }
+  section.dark .tbl tfoot td {
+    @apply bg-[rgba(255,255,255,.08)] text-muted-on-ink;
+  }
 
-  .yes { color: var(--nah-color-ok); font-weight: var(--nah-font-weight-bold); display: inline-flex; align-items: baseline; gap: 5px; }
-  .no  { color: var(--nah-color-alert); font-weight: var(--nah-font-weight-bold); display: inline-flex; align-items: baseline; gap: 5px; }
-  section.dark .yes { color: #7FD3AC; }
-  section.dark .no  { color: #FF8E84; }
-  .yes .ic, .no .ic { align-self: center; }
+  .yes {
+    @apply text-ok font-bold inline-flex items-baseline gap-[5px];
+  }
+  .no {
+    @apply text-alert font-bold inline-flex items-baseline gap-[5px];
+  }
+  section.dark .yes {
+    @apply text-[#7FD3AC];
+  }
+  section.dark .no {
+    @apply text-[#FF8E84];
+  }
+  .yes .ic,
+  .no .ic {
+    @apply self-center;
+  }
 
   /* ── 手順 */
-  ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; gap: 2px; }
+  ol.steps {
+    @apply list-none list-outside;
+    counter-reset: s;
+    @apply m-[0] p-[0] grid gap-[2px];
+  }
   ol.steps li {
-    counter-increment: s; margin: 0;
-    display: grid; grid-template-columns: auto 1fr; gap: 4px 16px;
-    padding: 20px 0; border-top: 1px solid var(--nah-color-line);
+    counter-increment: s;
+    @apply m-[0] grid grid-cols-[auto_1fr] gap-[4px_16px] p-[20px_0];
+    border-top: 1px solid var(--color-line);
   }
-  section.dark ol.steps li { border-color: rgba(255,255,255,.14); }
+  section.dark ol.steps li {
+    @apply border-[rgba(255,255,255,.14)];
+  }
   ol.steps li::before {
-    content: counter(s, decimal-leading-zero); grid-row: 1 / span 2;
-    font-family: var(--nah-font-family-display); font-size: 30px; line-height: .95;
-    color: var(--accent-text);
+    content: counter(s, decimal-leading-zero);
+    @apply row-[1_/_span_2] font-display text-[30px] leading-[.95] text-[var(--accent-text)];
   }
-  section.dark ol.steps li::before { color: var(--accent); }
-  ol.steps li b { font-size: 17px; }
-  ol.steps li .d { font-size: 15px; line-height: 1.8; color: var(--nah-color-muted); }
-  section.dark ol.steps li .d { color: var(--nah-color-muted-on-ink); }
+  section.dark ol.steps li::before {
+    @apply text-[var(--accent)];
+  }
+  ol.steps li b {
+    @apply text-[17px];
+  }
+  ol.steps li .d {
+    @apply text-[15px] leading-[1.8] text-muted;
+  }
+  section.dark ol.steps li .d {
+    @apply text-muted-on-ink;
+  }
 
-  ul.plain { list-style: none; padding: 0; display: grid; gap: 12px; }
-  ul.plain li { position: relative; padding-left: 18px; margin: 0; font-size: 15px; line-height: 1.85; }
+  ul.plain {
+    @apply list-none list-outside p-[0] grid gap-[12px];
+  }
+  ul.plain li {
+    @apply relative pl-[18px] m-[0] text-[15px] leading-[1.85];
+  }
   ul.plain li::before {
-    content: ""; position: absolute; left: 0; top: .78em;
-    width: 8px; height: 1.5px; background: currentColor; opacity: .5;
+    content: '';
+    @apply absolute left-[0] top-[.78em] w-[8px] h-[1.5px];
+    background: currentColor;
+    @apply opacity-[.5];
   }
 
   /* ══ C22 OrganizationFacts ─ 見出しと値の対応を保つ */
-  .ledger { border: 1px solid var(--nah-color-line); border-radius: var(--nah-radius-card); overflow: hidden; }
-  .ledger .hd { padding: 13px 20px; background: var(--nah-color-surface); font-size: 14px; font-weight: var(--nah-font-weight-bold); }
-  .ledger .row { display: flex; justify-content: space-between; gap: 18px; padding: 13px 20px; border-top: 1px solid var(--nah-color-line); }
-  .ledger .row .v { font-variant-numeric: tabular-nums; font-weight: var(--nah-font-weight-semi); }
-  .ledger .row.sub { font-size: 14px; color: var(--nah-color-muted); }
-  .ledger .row.net { background: var(--nah-color-ink); color: var(--nah-color-white); }
+  .ledger {
+    border: 1px solid var(--color-line);
+    @apply rounded-card overflow-hidden;
+  }
+  .ledger .hd {
+    @apply p-[13px_20px] bg-surface text-[14px] font-bold;
+  }
+  .ledger .row {
+    @apply flex justify-between gap-[18px] p-[13px_20px];
+    border-top: 1px solid var(--color-line);
+  }
+  .ledger .row .v {
+    @apply tabular-nums font-semi;
+  }
+  .ledger .row.sub {
+    @apply text-[14px] text-muted;
+  }
+  .ledger .row.net {
+    @apply bg-ink text-white;
+  }
 
   /* ── 業種の入口 */
-  .inds { display: grid; gap: 1px; background: var(--nah-color-line);
-          border: 1px solid var(--nah-color-line); border-radius: var(--nah-radius-card); overflow: hidden; }
-  @container (min-width: 520px) { .inds { grid-template-columns: repeat(2, 1fr); } }
-  @container (min-width: 960px) { .inds { grid-template-columns: repeat(4, 1fr); } }
-  .ind { background: var(--nah-color-white); padding: 24px; text-decoration: none; color: inherit;
-         display: grid; gap: 8px; align-content: start; min-height: 130px; }
-  .ind:hover { background: var(--nah-color-surface); }
-  .ind .n { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: var(--nah-font-weight-bold); }
-  .ind .n::after { content: "→"; margin-left: auto; color: var(--nah-color-muted); font-weight: 400; }
-  .ind:hover .n::after { color: var(--accent-text); }
-  .ind .p { font-size: 13.5px; line-height: 1.7; color: var(--nah-color-muted); }
+  .inds {
+    @apply grid gap-[1px] bg-line;
+    border: 1px solid var(--color-line);
+    @apply rounded-card overflow-hidden;
+  }
+  @container (min-width: 520px) {
+    .inds {
+      @apply grid-cols-[repeat(2,_1fr)];
+    }
+  }
+  @container (min-width: 960px) {
+    .inds {
+      @apply grid-cols-[repeat(4,_1fr)];
+    }
+  }
+  .ind {
+    @apply bg-white p-[24px] no-underline;
+    color: inherit;
+    @apply grid gap-[8px];
+    align-content: start;
+    @apply min-h-[130px];
+  }
+  .ind:hover {
+    @apply bg-surface;
+  }
+  .ind .n {
+    @apply flex items-center gap-[8px] text-[17px] font-bold;
+  }
+  .ind .n::after {
+    content: '→';
+    @apply ml-[auto] text-muted font-[400];
+  }
+  .ind:hover .n::after {
+    @apply text-[var(--accent-text)];
+  }
+  .ind .p {
+    @apply text-[13.5px] leading-[1.7] text-muted;
+  }
 
   /* ══ C20 FieldGroup ─ 入力文字 16px、枠の薄さだけに依存しない */
-  .field { display: grid; gap: 7px; margin-bottom: 22px; }
-  .field label { font-size: 14.5px; font-weight: var(--nah-font-weight-semi); display: flex; align-items: center; gap: 8px; }
-  .field .req { font-size: 11px; font-weight: var(--nah-font-weight-bold); padding: 2px 7px; border-radius: var(--nah-radius-pill);
-                background: var(--nah-color-ink); color: var(--nah-color-white); }
-  .field .opt { font-size: 11px; padding: 2px 7px; border-radius: var(--nah-radius-pill);
-                background: var(--nah-color-surface); color: var(--nah-color-muted); }
-  .field .hint { font-size: var(--nah-font-size-meta); color: var(--nah-color-muted); }
-  .field input, .field select, .field textarea {
-    font: inherit; font-size: var(--nah-font-size-body);
-    min-height: var(--nah-size-field-h); padding: 11px 14px;
-    background: var(--nah-color-field); color: var(--nah-color-ink);
-    border: 1.5px solid var(--nah-color-line-strong); border-radius: var(--nah-radius-media);
-    width: 100%;
+  .field {
+    @apply grid gap-[7px] mb-[22px];
   }
-  .field textarea { min-height: 150px; line-height: 1.8; resize: vertical; }
-  .field:has(input:focus, select:focus, textarea:focus) label { color: var(--accent-text); }
-  .field:has([aria-invalid="true"]) input, .field:has([aria-invalid="true"]) textarea { border-color: var(--nah-color-alert); }
-  .field:has([aria-invalid="true"]) label { color: var(--nah-color-alert); }
+  .field label {
+    @apply text-[14.5px] font-semi flex items-center gap-[8px];
+  }
+  .field .req {
+    @apply text-[11px] font-bold p-[2px_7px] rounded-pill bg-ink text-white;
+  }
+  .field .opt {
+    @apply text-[11px] p-[2px_7px] rounded-pill bg-surface text-muted;
+  }
+  .field .hint {
+    @apply text-meta text-muted;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    font: inherit;
+    @apply text-body min-h-field-h p-[11px_14px] bg-field text-ink;
+    border: 1.5px solid var(--color-line-strong);
+    @apply rounded-media w-[100%];
+  }
+  .field textarea {
+    @apply min-h-[150px] leading-[1.8];
+    resize: vertical;
+  }
+  .field:has(input:focus, select:focus, textarea:focus) label {
+    @apply text-[var(--accent-text)];
+  }
+  .field:has([aria-invalid='true']) input,
+  .field:has([aria-invalid='true']) textarea {
+    @apply border-alert;
+  }
+  .field:has([aria-invalid='true']) label {
+    @apply text-alert;
+  }
 
   /* ══ C18 ContextualCTA ─ 文脈、説明、操作を一まとまりに */
   .ctapanel {
-    background: var(--nah-color-panel); color: var(--nah-color-white);
-    border-radius: var(--nah-radius-panel);
-    padding: 44px;
-    display: grid; gap: 18px; justify-items: start;
+    @apply bg-panel text-white rounded-panel p-[44px] grid gap-[18px];
+    justify-items: start;
   }
-  .ctapanel h2, .ctapanel h3 { color: var(--nah-color-white); }
-  .ctapanel p { color: var(--nah-color-muted-on-ink); max-width: 40em; }
+  .ctapanel h2,
+  .ctapanel h3 {
+    @apply text-white;
+  }
+  .ctapanel p {
+    @apply text-muted-on-ink max-w-[40em];
+  }
 
   /* 固定CTA。本文・フッターを覆わないよう body 側で余白を確保する */
-  .fixbar { display: none; }
+  .fixbar {
+    @apply hidden;
+  }
 
   /* C24 Footer は footer.css に定義する。 */
 
   /* ── 構造図。写真がないときは構造図か整ったデータ面を使う（原則C） */
   .fig {
     --fig-accent: var(--accent-text);
-    --fig-ok: var(--nah-color-ok);
-    --fig-bad: var(--nah-color-alert);
-    margin: 32px 0 0; padding: 24px 0 0;
-    border-top: 1px solid var(--nah-color-line-strong);
-    color: var(--nah-color-ink);
-    overflow-x: auto;
+    --fig-ok: var(--color-ok);
+    --fig-bad: var(--color-alert);
+    @apply m-[32px_0_0] p-[24px_0_0];
+    border-top: 1px solid var(--color-line-strong);
+    @apply text-ink overflow-x-auto;
   }
-  .fig > svg { display: block; width: 100%; min-width: 520px; height: auto; font-family: var(--nah-font-family-ja); }
+  .fig > svg {
+    @apply block w-[100%] min-w-[520px] h-[auto] font-ja;
+  }
   /* スマホ用に組み直した図がある場合、広い画面では横長のほうを出す */
-  .fig.has-narrow > .fn { display: none; }
-  .fig.has-narrow { overflow-x: visible; }
+  .fig.has-narrow > .fn {
+    @apply hidden;
+  }
+  .fig.has-narrow {
+    overflow-x: visible;
+  }
   .fig figcaption {
-    margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--nah-color-line);
-    max-width: var(--nah-size-measure-read);
-    font-size: var(--nah-font-size-meta); line-height: 1.85; color: var(--nah-color-muted);
+    @apply mt-[18px] pt-[14px];
+    border-top: 1px solid var(--color-line);
+    @apply max-w-measure-read text-meta leading-[1.85] text-muted;
   }
   section.dark .fig {
-    border-top-color: rgba(255,255,255,.32); color: var(--nah-color-white);
-    --fig-accent: var(--accent); --fig-ok: #7FD3AC; --fig-bad: #FF8E84;
+    border-top-color: rgba(255, 255, 255, 0.32);
+    @apply text-white;
+    --fig-accent: var(--accent);
+    --fig-ok: #7fd3ac;
+    --fig-bad: #ff8e84;
   }
-  section.dark .fig figcaption { border-color: rgba(255,255,255,.14); color: var(--nah-color-muted-on-ink); }
-  .fig-hint { display: none; }
+  section.dark .fig figcaption {
+    @apply border-[rgba(255,255,255,.14)] text-muted-on-ink;
+  }
+  .fig-hint {
+    @apply hidden;
+  }
 
   /* 仕様ページの分類見出し */
-  h3.grp { margin-top: 44px; padding-top: 12px; border-top: 2px solid var(--nah-color-ink); font-size: 18px; }
-  h3.grp + .dim { margin-top: 6px; }
+  h3.grp {
+    @apply mt-[44px] pt-[12px];
+    border-top: 2px solid var(--color-ink);
+    @apply text-[18px];
+  }
+  h3.grp + .dim {
+    @apply mt-[6px];
+  }
+}
+
+@layer components {
+  .vs .bar i {
+    @apply w-[var(--comparison-width,0%)];
+  }
+  .tbl table.table-sized {
+    @apply min-w-[var(--table-min-width,auto)];
+  }
 }

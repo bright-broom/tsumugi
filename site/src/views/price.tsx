@@ -44,7 +44,7 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
           {copy.p}
         </p>
         <Entry full />
-        <h3 style={{ margin: '48px 0 18px' }}>{copy.h3}</h3>
+        <h3 className="pricing-subheading">{copy.h3}</h3>
         <Plans />
       </Section>
 

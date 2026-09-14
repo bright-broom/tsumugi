@@ -39,7 +39,7 @@ export default function SpecPage({ copy, route }: PageProps<'spec'>) {
             { icon: 'ban', value: '5', unit: copy.itemsUnit, label: copy.itemsLabel4 },
           ]}
         />
-        <p style={{ marginTop: '20px' }}>
+        <p className="spec-followup">
           {copy.p}
           <strong>{copy.strong}</strong>
         </p>
@@ -49,9 +49,7 @@ export default function SpecPage({ copy, route }: PageProps<'spec'>) {
         {groups.map(([grp, rows]) => (
           <Fragment key={grp}>
             <h3 className="grp">{grp}</h3>
-            <p className="dim" style={{ fontSize: '14px' }}>
-              {SPEC_GROUP_LEDE[grp]}
-            </p>
+            <p className="dim spec-note">{SPEC_GROUP_LEDE[grp]}</p>
             {rows.map((it) => (
               <Acc summary={it.title} key={it.title}>
                 <p dangerouslySetInnerHTML={raw(it.detail)} />

@@ -1,0 +1,33 @@
+/* Page-specific roles share the same Tailwind theme and cascade. */
+@layer overrides {
+  .member-cards {
+    @apply grid-cols-[repeat(auto-fit,minmax(260px,1fr))];
+  }
+  .entry-lede {
+    @apply mb-[12px];
+  }
+  .entry-exclusions {
+    @apply m-[-6px_0_16px];
+  }
+  .works-followup {
+    @apply mt-[22px];
+  }
+  .spec-followup {
+    @apply mt-[20px];
+  }
+  .spec-note {
+    @apply text-[14px];
+  }
+  .pricing-subheading {
+    @apply m-[48px_0_18px];
+  }
+  .ownership-emphasis {
+    @apply text-white;
+  }
+  .home-pricing-subheading {
+    @apply m-[44px_0_18px];
+  }
+  .home-followup {
+    @apply mt-[18px];
+  }
+}
