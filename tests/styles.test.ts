@@ -43,7 +43,7 @@ describe('Tailwind production compiler', () => {
         expect(css).toContain('tailwindcss v4.');
         expect(css).toContain('--color-main: #F7F5F0');
         expect(css).toContain('--color-sub: #243B3B');
-        expect(css).toContain('--color-accent: #B44B35');
+        expect(css).toContain('--color-accent: #FFB000');
         expect(css).not.toMatch(/@(?:apply|theme|import|source)\b/);
         if (input === 'globals') {
           expect(css).toContain('.footer-intro');

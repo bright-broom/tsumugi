@@ -31,7 +31,7 @@
     @apply rounded-[6px] text-[14px];
   }
   .home-content .btn-1 {
-    @apply bg-accent text-main border-accent min-w-[220px];
+    @apply bg-accent text-sub border-accent min-w-[220px];
   }
   .home-content .btn-2 {
     @apply border-line-strong;
@@ -43,7 +43,7 @@
     @apply bg-surface border-ink;
   }
   .home-intro .pricebox {
-    @apply flex flex-col items-stretch gap-[32px] p-[40px] bg-accent text-main;
+    @apply flex flex-col items-stretch gap-[32px] p-[40px] bg-accent text-sub;
     border: 0;
     @apply rounded-[20px];
   }
@@ -599,30 +599,43 @@
   }
 }
 
-/* 7:2:1の面積配分。最後の相談エリアを朱の面にする。 */
+/* 7:2:1の面積配分。琥珀の面は見出し・補足・操作とも墨で統一する。 */
 @layer overrides {
   .home-intro .pricebox .pre,
-  .home-intro .pricebox .alt li {
-    @apply text-main;
-  }
-  .home-section.dark .card h3 .ic {
-    @apply text-main;
-  }
-  .home-section.home-contact {
-    @apply bg-accent text-main;
-  }
+  .home-intro .pricebox .alt li,
+  .home-intro .pricebox .alt li b,
+  .home-contact h2,
   .home-contact .sh .lede,
+  .home-contact .sh .lede strong,
   .home-contact .stat .k,
   .home-contact .stat > .ic {
-    @apply text-main;
+    @apply text-sub;
+  }
+  .home-section.dark .card h3 .ic {
+    @apply text-accent;
+  }
+  .home-intro .pricebox .alt {
+    border-color: var(--color-sub);
+  }
+  .home-intro .pricebox .alt li::before {
+    @apply bg-sub;
+  }
+  .home-section.home-contact {
+    @apply bg-accent text-sub;
   }
   .home-contact .btn-1 {
-    @apply bg-main text-sub border-main;
+    @apply bg-sub text-main border-sub;
   }
   .home-contact .btn-2 {
-    @apply text-main border-main;
+    @apply text-sub border-sub;
+  }
+  .home-contact .btn-2:hover {
+    @apply bg-main text-sub;
   }
   .home-contact .stat {
-    border-color: var(--color-main);
+    border-color: var(--color-sub);
+  }
+  .home-section.home-contact :where(a, summary, label):focus-visible {
+    outline-color: var(--color-sub);
   }
 }

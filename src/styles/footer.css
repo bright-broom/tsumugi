@@ -39,11 +39,11 @@
     @apply whitespace-nowrap;
   }
   .ftr .footer-contact {
-    @apply inline-flex items-center justify-center gap-[16px] min-h-[60px] p-[16px_24px] rounded-[6px] bg-accent text-main text-[14px] whitespace-nowrap flex-[none];
+    @apply inline-flex items-center justify-center gap-[16px] min-h-[60px] p-[16px_24px] rounded-[6px] bg-accent text-sub text-[14px] whitespace-nowrap flex-[none];
     transition: background var(--duration-fast) ease;
   }
   .ftr .footer-contact:hover {
-    @apply bg-header-ink no-underline;
+    @apply bg-header-ink text-main no-underline;
   }
   .footer-contact .ic:last-child {
     @apply ml-[16px];

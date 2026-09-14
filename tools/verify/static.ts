@@ -72,7 +72,7 @@ export function checkStatic(dist: string): void {
     ['--text-hero-mb: 24px', 'ヒーロー モバイル 24px'],
     ['--color-main: #F7F5F0', 'メイン70%・生成り #F7F5F0'],
     ['--color-sub: #243B3B', 'サブ20%・墨 #243B3B'],
-    ['--color-accent: #B44B35', 'アクセント10%・朱 #B44B35'],
+    ['--color-accent: #FFB000', 'アクセント10%・琥珀 #FFB000'],
     ['--radius-media: 8px', '角丸 media 8px'],
     ['--radius-pill: 999px', '角丸 pill 999px'],
   ];
