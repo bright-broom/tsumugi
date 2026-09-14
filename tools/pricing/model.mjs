@@ -1,4 +1,4 @@
-// Internal decision model. Public tariffs remain in site/src/content/prices.ts.
+// Internal decision model. Public tariffs remain in src/content/prices.ts.
 const number = (value, name, min = 0) => {
   if (!Number.isFinite(value) || value < min) throw new RangeError(`${name}: invalid value`);
   return value;

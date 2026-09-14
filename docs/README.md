@@ -22,7 +22,7 @@
 | 技術的な判断と、その記録（ADR） | [architecture/README.md](architecture/README.md) |
 | 公開前にやること・顧客サイトの作り方・デプロイ | [operations.md](operations.md) |
 | Python／Astro から Next.js への移行 | [history/2026-09-migration.md](history/2026-09-migration.md) |
-| コードを触るとき（コマンド・書き方・置き場所の決まり） | [../site/README.md](../site/README.md) |
+| コードを触るとき（コマンド・書き方・置き場所の決まり） | [../docs/development.md](development.md) |
 
 ---
 
@@ -41,9 +41,9 @@
 ## 文書の置き場所の決まり
 
 - **事業の規範は `business/` が正本。** `product/` には、それをこのサイトでどう表現し、どう検査しているかを書く
-- **コードと一緒に変わるもの（コマンド・書き方・置き場所）は [site/README.md](../site/README.md)。** 理由や経緯のように、コードに書けないものを `docs/` に置く
+- **コードと一緒に変わるもの（コマンド・書き方・置き場所）は [docs/development.md](development.md)。** 理由や経緯のように、コードに書けないものを `docs/` に置く
 - **決めたことは `architecture/` に ADR として残す。** 決定を覆すときも古い記録は消さず、新しい番号を足す
 - **いまの状態と残課題は [status.md](status.md) だけに書く。** 作業を終えたら更新する。ほかの文書には書かず、リンクする
 - **引き継ぎの入口はリポジトリ直下の [AGENTS.md](../AGENTS.md)。** 崩してはいけないこと・合格ライン・進め方・はまりどころを書く。`CLAUDE.md` はそれを読み込むだけ
-- `site/AGENTS.md` と `site/CLAUDE.md` は `next dev` が生成・再生成するので、`site/` から動かさない
-- 文中のコードのパスは `site/` からの相対
+- ルートの `AGENTS.md` 末尾にNext.jsが生成するルールを統合する。`CLAUDE.md` はその参照だけを持つ
+- 文中のコードのパスは リポジトリルートからの相対
