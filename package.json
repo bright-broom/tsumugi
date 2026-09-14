@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "tsx tools/scripts/dev.ts",
     "build": "tsx tools/scripts/build-tokens.ts --check && tsx tools/scripts/build-public.ts && next build && tsx tools/scripts/postbuild.ts",
-    "check": "tsc --noEmit && tsx tools/scripts/check-structure.ts && tsx tools/scripts/check-content.ts && tsx tools/scripts/check-styles.ts",
+    "check": "tsc --noEmit && tsx tools/scripts/check-structure.ts && tsx tools/scripts/check-content.ts && tsx tools/scripts/check-styles.ts && npm run check:unused",
     "verify": "tsx tools/verify/verify.ts",
     "tokens": "tsx tools/scripts/build-tokens.ts",
     "og": "tsx tools/scripts/og.ts",
@@ -22,7 +22,8 @@
     "deploy:production": "vercel --prod",
     "styles": "tsx tools/scripts/build-styles.ts",
     "styles:watch": "tsx tools/scripts/build-styles.ts --watch",
-    "test:pricing": "node --test tools/pricing/model.test.mjs"
+    "test:pricing": "node --test tools/pricing/model.test.mjs",
+    "check:unused": "knip --config config/knip.config.ts"
   },
   "dependencies": {
     "clsx": "2.1.1",
@@ -41,6 +42,7 @@
     "eslint": "9.39.5",
     "eslint-config-next": "16.3.5",
     "jiti": "2.7.0",
+    "knip": "6.35.1",
     "playwright": "1.63.0",
     "prettier": "3.9.6",
     "tailwindcss": "4.3.3",

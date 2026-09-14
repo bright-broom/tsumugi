@@ -2,7 +2,7 @@ import { NAV_IC } from '@/content/nav';
 import { ic } from '@/lib/ic';
 import { raw } from '@/lib/raw';
 
-export interface Card {
+interface Card {
   title: string; desc: string;
   link?: [label: string, href: string];
 }

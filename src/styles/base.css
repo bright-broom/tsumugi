@@ -141,15 +141,11 @@
 
   /* ── 器。PC 1104px / 3列 / 間隔32px（07 寸法） */
   .wrap,
-  .wrap-read,
   .wrap-w {
     @apply mx-[auto] px-pad-pc;
   }
   .wrap {
     @apply max-w-container;
-  }
-  .wrap-read {
-    @apply max-w-[calc(var(--spacing-measure-read)_+_var(--spacing-pad-pc)_*_2)];
   }
   .wrap-w {
     @apply max-w-[calc(var(--spacing-measure-wide)_+_var(--spacing-pad-pc)_*_2)];
@@ -239,7 +235,6 @@
       scroll-padding-top: calc(var(--spacing-header-mb) + 12px);
     }
     .wrap,
-    .wrap-read,
     .wrap-w {
       @apply px-pad-mb;
     }

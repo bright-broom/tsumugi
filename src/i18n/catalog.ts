@@ -1,10 +1,9 @@
 import { ja } from '@/i18n/locales/ja';
 import { getRoute } from '@/routing/registry';
 
-export const DEFAULT_LOCALE = 'ja' as const;
+const DEFAULT_LOCALE = 'ja' as const;
 export const LOCALE = { language: 'ja', openGraph: 'ja_JP', number: 'en-US' } as const;
 export type Messages = typeof ja;
-export type Locale = typeof DEFAULT_LOCALE;
 
 function resolveLinks(value: unknown): unknown {
   if (typeof value === 'string')

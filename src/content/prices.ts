@@ -2,11 +2,9 @@ import { getMessages } from '@/i18n/catalog';
 import { format } from '@/i18n/format';
 const copy = getMessages().prices;
 /** 公開価格の唯一の正本。金額は税別円。キーで参照する。 */
-export const PRICING_VERSION = '2026-09-14';
-export const TAX_RATE = 0.1;
+const TAX_RATE = 0.1;
 export const EXTERNAL_MONTHLY_ESTIMATE = 3500;
-export const PAYMENT_DEPOSIT_RATE = 0.5;
-export const UPGRADE_MONTHS = 12;
+const PAYMENT_DEPOSIT_RATE = 0.5;
 export const SINGLE = {
   key: 'single',
   name: copy.singleName,
@@ -143,7 +141,6 @@ export const OPTIONS = [
 // 金額は各社が公開している料金ページの表示値。サイトに他社名は書かない。
 export const COMPARE_MONTHS = 36;
 export const SUBS_TRANSFER_MONTHS = 36;
-export const SUBS_MIN_TERM = 6;
 export const SUBS_SOURCE = copy.comparisonSource;
 
 export const SUBS_MARKET = [
@@ -167,12 +164,6 @@ export const FREE_ITEMS = [
   { name: copy.freeItemName2, market: copy.freeItemMarket3 },
   { name: copy.freeItemName3, market: copy.freeItemMarket4 },
   { name: copy.freeItemName4, market: copy.freeItemMarket5 },
-] as const;
-export const MARKET_SPOT = [
-  { name: copy.marketSpotName, price: copy.marketSpotPrice },
-  { name: copy.marketSpotName2, price: copy.marketSpotPrice2 },
-  { name: copy.marketSpotName3, price: copy.marketSpotPrice3 },
-  { name: copy.marketSpotName4, price: copy.marketSpotPrice4 },
 ] as const;
 
 /** ここから下は、月次変更の範囲・補助金などの定義。ページには必ずここから引く（手で書き写さない） */
@@ -228,9 +219,6 @@ export function compareRows(months = COMPARE_MONTHS) {
     };
   });
 }
-
-/** シングルの買い切り額が、月額制の何か月分にあたるか */
-export const singleVsSubsMonths = () => SINGLE.price / SUBS_MARKET[0]!.monthly;
 
 /** 小規模事業者持続化補助金 */
 export const SUBSIDY = {

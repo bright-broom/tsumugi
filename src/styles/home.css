@@ -314,12 +314,6 @@
   .home-pricing .plan .amt {
     @apply text-[40px];
   }
-  .home-pricing .seg {
-    @apply rounded-[6px];
-  }
-  .home-pricing .seg label {
-    @apply rounded-[3px];
-  }
   .home-comparison .fig {
     @apply bg-panel border-[rgb(255_255_255_/_.18)];
   }

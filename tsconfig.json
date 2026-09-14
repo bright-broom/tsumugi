@@ -22,7 +22,11 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false
   },
   "include": [
     "next-env.d.ts",

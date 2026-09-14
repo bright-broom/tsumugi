@@ -372,9 +372,6 @@
     .cards .g3 {
       @apply grid-cols-[repeat(3,_1fr)];
     }
-    .cards .g4 {
-      @apply grid-cols-[repeat(4,_1fr)];
-    }
   }
   /* 既定は罫だけ。角丸の箱にすると全部が同じ強さになって階層が消える（原則F） */
   .card {
@@ -798,36 +795,6 @@
   section.dark .vs .row.ours .nm .ic {
     @apply text-[var(--accent)];
   }
-
-  /* ══ C14 SegmentedTabs ─ 同じ領域の表示切り替え。JavaScript を使わない */
-  .seg {
-    @apply flex gap-[4px] p-[4px] mb-[26px] bg-surface rounded-pill w-[max-content] max-w-[100%];
-  }
-  .seg input {
-    @apply absolute opacity-[0] pointer-events-none;
-  }
-  .seg label {
-    @apply inline-flex items-center justify-center min-h-tap px-[20px] cursor-pointer rounded-pill text-[14.5px] font-semi whitespace-nowrap;
-  }
-  .seg input:checked + label {
-    @apply bg-ink text-white;
-  }
-  .seg input:focus-visible + label {
-    outline: 3px solid var(--color-ink);
-    outline-offset: 2px;
-  }
-  .switcher .v-b,
-  .switcher .n-b {
-    @apply hidden;
-  }
-  .switcher:has(#pb:checked) .v-m,
-  .switcher:has(#pb:checked) .n-m {
-    @apply hidden;
-  }
-  .switcher:has(#pb:checked) .v-b,
-  .switcher:has(#pb:checked) .n-b {
-    @apply block;
-  }
   .segnote {
     @apply flex items-start gap-[10px] m-[-12px_0_26px] text-[13.5px] leading-[1.8] text-muted max-w-measure-read;
   }
@@ -1129,9 +1096,6 @@
   .field .req {
     @apply text-[11px] font-bold p-[2px_7px] rounded-pill bg-ink text-white;
   }
-  .field .opt {
-    @apply text-[11px] p-[2px_7px] rounded-pill bg-surface text-muted;
-  }
   .field .hint {
     @apply text-meta text-muted;
   }
@@ -1156,19 +1120,6 @@
   }
   .field:has([aria-invalid='true']) label {
     @apply text-alert;
-  }
-
-  /* ══ C18 ContextualCTA ─ 文脈、説明、操作を一まとまりに */
-  .ctapanel {
-    @apply bg-panel text-white rounded-panel p-[44px] grid gap-[18px];
-    justify-items: start;
-  }
-  .ctapanel h2,
-  .ctapanel h3 {
-    @apply text-white;
-  }
-  .ctapanel p {
-    @apply text-muted-on-ink max-w-[40em];
   }
 
   /* 固定CTA。本文・フッターを覆わないよう body 側で余白を確保する */
