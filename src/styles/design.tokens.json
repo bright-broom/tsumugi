@@ -1,14 +1,14 @@
 {
-  "$description": "紬の3色設計。生成り70・墨20・琥珀10をUIの面積配分の目安にする。色の原値はmain/sub/accentだけ。src/styles/tokens.cssは生成物。",
+  "$description": "紬の3色設計。アイボリー70・エスプレッソ20・琥珀10をUIの面積配分の目安にする。色の原値はmain/sub/accentだけ。src/styles/tokens.cssは生成物。",
   "color": {
     "$type": "color",
     "main": {
-      "$value": "#F7F5F0",
-      "$description": "メイン70%：生成り。背景・余白・反転文字"
+      "$value": "#FFF8ED",
+      "$description": "メイン70%：アイボリー。背景・余白・反転文字"
     },
     "sub": {
-      "$value": "#243B3B",
-      "$description": "サブ20%：墨。本文・説明の面・構造線"
+      "$value": "#302820",
+      "$description": "サブ20%：エスプレッソ。本文・説明の面・構造線"
     },
     "accent": {
       "$value": "#FFB000",
@@ -44,7 +44,7 @@
       "accent": { "$value": "{color.accent}" },
       "accent-ink": {
         "$value": "{color.sub}",
-        "$description": "琥珀の面は墨の文字。小さい文字も薄めない"
+        "$description": "琥珀の面はエスプレッソの文字。小さい文字も薄めない"
       },
       "accent-text": {
         "$value": "{color.green-deep}",

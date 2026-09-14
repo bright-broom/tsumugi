@@ -5,19 +5,19 @@
  */
 @theme static {
   /* color */
-  --color-main: #F7F5F0;  /* メイン70%：生成り。背景・余白・反転文字 */
-  --color-sub: #243B3B;  /* サブ20%：墨。本文・説明の面・構造線 */
+  --color-main: #FFF8ED;  /* メイン70%：アイボリー。背景・余白・反転文字 */
+  --color-sub: #302820;  /* サブ20%：エスプレッソ。本文・説明の面・構造線 */
   --color-accent: #FFB000;  /* アクセント10%：琥珀。主要操作・重要な数字・相談の面 */
-  --color-header-paper: #F7F5F0;
-  --color-header-ink: #243B3B;
+  --color-header-paper: #FFF8ED;
+  --color-header-ink: #302820;
   --color-header-brass: #FFB000;
-  --color-white: #F7F5F0;
-  --color-ink: #243B3B;
-  --color-panel: #243B3B;
-  --color-black: #243B3B;
-  --color-surface: #F7F5F0;
-  --color-field: #F7F5F0;
-  --color-paper: #F7F5F0;
+  --color-white: #FFF8ED;
+  --color-ink: #302820;
+  --color-panel: #302820;
+  --color-black: #302820;
+  --color-surface: #FFF8ED;
+  --color-field: #FFF8ED;
+  --color-paper: #FFF8ED;
   --color-line: color-mix(in srgb, var(--color-sub) 20%, var(--color-main));
   --color-line-strong: color-mix(in srgb, var(--color-sub) 45%, var(--color-main));
   --color-green: #FFB000;
@@ -25,19 +25,19 @@
   --color-blue: #FFB000;
   --color-muted: color-mix(in srgb, var(--color-sub) 78%, var(--color-main));
   --color-muted-on-ink: color-mix(in srgb, var(--color-main) 82%, var(--color-sub));
-  --color-alert: #243B3B;
-  --color-alert-bg: #F7F5F0;
+  --color-alert: #302820;
+  --color-alert-bg: #FFF8ED;
   --color-ok: color-mix(in srgb, var(--color-accent) 25%, var(--color-sub));
-  --color-ok-bg: #F7F5F0;
-  --color-warn: #243B3B;
-  --color-warn-bg: #F7F5F0;
+  --color-ok-bg: #FFF8ED;
+  --color-warn: #302820;
+  --color-warn-bg: #FFF8ED;
 
   /* theme */
   --color-campaign-accent: #FFB000;
-  --color-campaign-accent-ink: #243B3B;  /* 琥珀の面は墨の文字。小さい文字も薄めない */
+  --color-campaign-accent-ink: #302820;  /* 琥珀の面はエスプレッソの文字。小さい文字も薄めない */
   --color-campaign-accent-text: color-mix(in srgb, var(--color-accent) 25%, var(--color-sub));  /* 白地に置く強調文字・リンク */
   --color-main-accent: #FFB000;
-  --color-main-accent-ink: #243B3B;
+  --color-main-accent-ink: #302820;
   --color-main-accent-text: color-mix(in srgb, var(--color-accent) 25%, var(--color-sub));
 
   /* size */
