@@ -10,7 +10,7 @@
 | 何のサイトか | 飲食店・工務店・美容室・士業向けのホームページ制作と運用。**顧客に納品するサイトのテンプレートも兼ねる** |
 | 主張 | 「いまのホームページは借地権、紬がつくるのは所有権」 |
 | 技術 | Next.js 16（Pages Router）+ React 19 + TypeScript → **静的 HTML** |
-| 納品の条件 | 自動検査 **581 項目で FAIL 0** |
+| 納品の条件 | 自動検査 **577 項目で FAIL 0** |
 | 実行時 JS | **0 バイト**（全21ページ） |
 
 **目次**：[1. リポジトリの地図](#1-リポジトリの地図) ／ [2. ソースから納品物まで](#2-ソースから納品物まで) ／ [3. 0バイトの守り方](#3-0バイトの守り方) ／ [4. サイトの構成](#4-サイトの構成) ／ [5. 動かす](#5-動かす) ／ [6. 変更の進め方](#6-変更の進め方) ／ [7. 顧客サイトを作るとき](#7-顧客サイトを作るとき) ／ [8. どの文書を読むか](#8-どの文書を読むか)
@@ -67,7 +67,7 @@ flowchart TD
     tokens["styles/<br/>design.tokens.json"]
     css["styles/*.css<br/>3つの層"]
     content["src/content/<br/>屋号・料金・図"]
-    pages["src/pages/<br/>21ページの本文"]
+    pages["src/views/<br/>21ページの本文"]
   end
 
   tokens -->|npm run tokens| tokcss["tokens.css"]
@@ -80,7 +80,7 @@ flowchart TD
   theme --> out
   meta --> out
   og["public/og/<br/>OGP画像 24"] --> out
-  out -->|npm run verify| report["verify-report.json<br/>PASS 581"]
+  out -->|npm run verify| report["verify-report.json<br/>PASS 577"]
 ```
 
 - **金額の正本は `site/src/content/prices.ts` の1か所。** ページも検査も OGP 画像もここを読む。`docs/business/紬_事業の中身.xlsx` は写しで、Excel を直してもサイトは変わらない
@@ -187,7 +187,7 @@ npx playwright install chromium   # 検査と OGP 画像の生成に使う（初
 npm run dev       # http://localhost:3000（使われていたら npm run dev -- -p 3001）
 npm run check     # 型検査 ＋ 依存の向き
 npm run build     # → out/
-npm run verify    # PASS 581 / WARN 1 / FAIL 0 なら納品可
+npm run verify    # PASS 577 / WARN 1 / FAIL 0 なら納品可
 ```
 
 WARN 1 は `PLACEHOLDER=true`（電話番号・住所が仮）。公開前に潰す既知の1件（[公開前にやること](docs/operations.md)）。
@@ -202,7 +202,7 @@ flowchart TD
   branch["main から<br/>ブランチを切る"] --> change["変更する"]
   change --> check["npm run check"]
   check --> build["npm run build"]
-  build --> verify["npm run verify<br/>PASS 581 / FAIL 0"]
+  build --> verify["npm run verify<br/>PASS 577 / FAIL 0"]
   verify --> record["docs/status.md<br/>を更新<br/>判断は ADR に"]
   record --> commit["コミット<br/>作者は noreply"]
   commit --> mail["送るコミットの<br/>メールを確認"]
@@ -221,7 +221,7 @@ flowchart TD
 
 ## 7. 顧客サイトを作るとき
 
-このサイトは1号案件で、**そのままテンプレートになる**。差し替える範囲は `src/content/` と `src/pages/` に閉じてある。
+このサイトは1号案件で、**そのままテンプレートになる**。差し替える範囲は `src/content/`・`src/i18n/locales/ja/`・`src/routing/`・`src/views/` に分かれている。
 
 ```mermaid
 flowchart TD
@@ -229,8 +229,8 @@ flowchart TD
 
   subgraph swap["差し替える"]
     s1["src/content/<br/>屋号・料金・ナビ<br/>業種・仕様・図"]
-    s2["src/pages/<br/>ページの本文"]
-    s3["scripts/og.ts<br/>共有カードの文面"]
+    s2["src/views/<br/>ページの構造"]
+    s3["src/i18n/locales/ja/<br/>本文・共有カードの文面"]
     s1 --> s2 --> s3
   end
 
@@ -243,7 +243,7 @@ flowchart TD
 ```
 
 - `◯◯.vercel.app` のまま渡さない（「ドメインは初日からお客様の名義」という約束が守れない）
-- 手順の詳細は [docs/operations.md](docs/operations.md)、層を分けた理由は [ADR 0002](docs/architecture/0002-directory-layers.md)
+- 手順の詳細は [docs/operations.md](docs/operations.md)、層を分けた理由は [ADR 0004](docs/architecture/0004-content-and-routing.md)
 
 ---
 

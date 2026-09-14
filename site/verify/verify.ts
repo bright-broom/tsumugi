@@ -4,7 +4,7 @@
  *
  *   npm run verify                      静的＋ブラウザ検証（out/ を検査する）
  *   npm run verify -- --static          静的のみ（ブラウザ不要・CI向け）
- *   npm run verify -- --write           LCP実測値を src/content/config.ts に書き戻す
+ *   npm run verify -- --write           LCP実測値を src/content/measurements.ts に書き戻す
  *   npm run verify -- --dist <path>     検査するディレクトリを差し替える
  *
  * 出力: 標準出力のレポート ＋ <dist>/../verify-report.json

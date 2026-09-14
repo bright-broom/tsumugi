@@ -133,8 +133,6 @@
     color: var(--nah-color-ink); text-decoration: none; flex: none;
   }
   .tel:hover { background: var(--nah-color-ink); color: var(--nah-color-white); }
-  .tel .t { display: flex; flex-direction: column; line-height: 1.15; }
-  .tel .lbl { font-size: 10px; color: inherit; opacity: .72; }
   .tel .num {
     font-size: 17px; font-weight: var(--nah-font-weight-bold);
     font-variant-numeric: tabular-nums; white-space: nowrap; color: inherit;

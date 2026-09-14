@@ -117,7 +117,7 @@ export function checkStatic(dist: string): void {
       rec('FAIL', '25 必須ページ', f, `${label} がありません`);
       continue;
     }
-    const miss = files.filter((p) => !html.get(p)!.includes(`href="${f}"`));
+    const miss = files.filter((p) => !html.get(p)!.includes(`href="/${f}"`));
     rec(miss.length ? 'FAIL' : 'PASS', '25 必須ページ', f,
       miss.length ? `リンクが無いページ: ${list(miss)}` : `${label}（全ページから到達可）`);
   }
@@ -262,7 +262,7 @@ export function checkStatic(dist: string): void {
 
     // 内部リンクの解決
     const dead = [...new Set(all(h, /href="([^"#:]+?)(?:#[^"]*)?"/g))]
-      .filter((x) => !['http', 'mailto', 'tel', '//'].some((p) => x.startsWith(p)) && !names.has(x))
+      .filter((x) => !['http', 'mailto', 'tel', '//'].some((p) => x.startsWith(p)) && !names.has(x.replace(/^\//, '')))
       .sort();
     rec(dead.length ? 'FAIL' : 'PASS', '内部リンクの解決', n, dead.length ? `リンク切れ: ${list(dead)}` : '');
 
