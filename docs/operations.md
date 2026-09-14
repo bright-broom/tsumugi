@@ -51,13 +51,4 @@ npm install && npm run build && npm run verify
 
 ## 残っている宿題
 
-| 項目 | 内容 |
-|---|---|
-| **原書体の契約** | 欧文ディスプレイは無料代替の League Gothic で、原サイトの Manuka Condensed とは字形が異なります。契約して差し替える場合は `--nah-ratio-display-correction` を 1 に戻して再計測すること |
-| **LCPの実測条件** | 外部読み込みが 0 になったため、遮断なしで 0.30 秒。公開後にSearch Consoleの実データで再確認すること |
-| **問い合わせフォームの送信先** | 未設定。設定と同時に通知の二重化を行う |
-| **制作事例** | まだ0件。1号案件の実測値（LCP・GBP閲覧数・問い合わせ件数）を `works.html` に入れる |
-| **返答時間の実績** | `src/content/config.ts` の `RESPONSE_ACTUAL`。計測を始めてから書く（測っていない数字は書かない） |
-| **CIへの組み込み** | `npm run verify -- --static` を pre-commit か GitHub Actions に入れる。ブラウザ検証は納品前に手動で回す |
-| **`terms.html` の弁護士確認** | いまの文面は契約書の下書きです。`PLACEHOLDER=True` のあいだは「弁護士確認前」の注意書きが自動で出ます。確認後に文面を確定し、フリーランス法第4条（書面交付義務）への対応も同時に見てもらうこと |
-| **`legal.html` の事業者情報** | 販売事業者名・運営責任者・所在地が仮の値。開業届／登記が済んだら `src/content/config.ts` を差し替える |
+[status.md](status.md) の「残課題」にまとめてある（課題の一覧は1か所だけに持つ）。
