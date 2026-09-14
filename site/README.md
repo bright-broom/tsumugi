@@ -1,7 +1,7 @@
 # 紬サイト ── Next.js + React + TypeScript
 
 サービスサイト本体。21ページ、**実行時 JavaScript 0バイト**。
-ここには**コードを触るときの決まり**だけを書く。引き継ぎの入口は [AGENTS.md](../AGENTS.md)、いまの状態と残課題は [docs/status.md](../docs/status.md)。理由や経緯は [docs/](../docs/README.md)（技術の判断は [docs/architecture/](../docs/architecture/README.md)）。
+ここには**コードを触るときの決まり**だけを書く。引き継ぎの入口は [AGENTS.md](../AGENTS.md)、いまの状態と残課題は [docs/status.md](../docs/status.md)。理由や経緯は [docs/](../docs/README.md)（技術の判断は [docs/architecture/](../docs/architecture/README.md)）。全体の図は [リポジトリ直下の README](../README.md)。
 
 ```bash
 npm install
@@ -15,6 +15,62 @@ npm run tokens           # styles/design.tokens.json → styles/tokens.css（--c
 npm run og               # OGP画像とファビコン（文面を変えたときだけ。差分をコミットする）
 npm run check            # 型検査 ＋ ディレクトリの依存の向きの検査
 ```
+
+---
+
+## ビルドの流れ（`npm run build`）
+
+4段階を順に回し、**どこかで崩れていたらその場で止まる。**
+
+```mermaid
+flowchart TD
+  s1["① build-tokens.ts<br/>--check<br/>トークンの同期"] --> s2["② build-public.ts<br/>theme.css<br/>robots・sitemap"]
+  s2 --> s3["③ next build<br/>静的書き出し"]
+  s3 --> s4["④ postbuild.ts<br/>印の除去<br/>0バイトの検査"]
+  s4 --> out[("out/<br/>HTML 21・CSS<br/>OGP画像 24")]
+  s1 -.->|ずれていたら| stop["ビルドが止まる"]
+  s4 -.->|script が残れば| stop
+```
+
+| 段階 | やること | 止まる条件 |
+|---|---|---|
+| ① `build-tokens.ts --check` | `styles/design.tokens.json` と `styles/tokens.css` が一致するか | 手で `tokens.css` を直した・`npm run tokens` を忘れた |
+| ② `build-public.ts` | `styles/` の4枚を `public/theme.css` に束ね、`robots.txt`・`sitemap.xml` を書く | — |
+| ③ `next build` | 21ページを `out/` に書き出す（型検査を含む） | 型エラー |
+| ④ `postbuild.ts` | `data-next-head` などの印を消し、JSON-LD 以外の `<script>` と `<!-- -->` を数え、`out/_next/` を消す | 1件でもあれば |
+
+### CSS の流れ
+
+```mermaid
+flowchart LR
+  json["design.tokens.json<br/>80トークン"] -->|npm run tokens| tcss["tokens.css"]
+  tcss --> theme["public/theme.css"]
+  idx["index.css<br/>base"] --> theme
+  comp["components.css<br/>components"] --> theme
+  guide["guide.css<br/>screens<br/>overrides"] --> theme
+```
+
+色や寸法は `design.tokens.json` を直して `npm run tokens`。`tokens.css` と `public/theme.css` は手で編集しない。
+
+---
+
+## 検査の流れ（`npm run verify`）
+
+```mermaid
+flowchart TD
+  out[("out/")] --> st["静的検査<br/>PASS 359"]
+  out --> br["ブラウザ実測<br/>PASS 222"]
+  content["src/content/<br/>config・prices"] -.->|突き合わせる| st
+  st --> full["verify-report.json<br/>PASS 581<br/>WARN 1 / FAIL 0"]
+  br --> full
+  st -.->|簡易版のとき| static["verify-report<br/>.static.json"]
+  full -.->|次のビルドで| works["works.html の<br/>「581項目」"]
+```
+
+- **静的検査**：電話番号・JSON-LD・実行時JSなし・内部リンク・CSS変数・価格・トークンの同期・OGP画像など。**ブラウザ実測**：LCP・横スクロール・タップ領域・コントラスト・図の色・コンソールエラー
+- **1件でも FAIL があれば終了コード 1**（納品しない）。項目の一覧は [docs/spec.md](../docs/spec.md)
+- ページに出す件数は、**ビルドした時点**の `verify-report.json` から取る。数字を最新にするなら `npm run build && npm run verify && npm run build`
+- 簡易版（`--static`）の結果は別のファイルに書くので、回しても件数は変わらない
 
 ---
 
@@ -63,18 +119,35 @@ App Router は静的書き出しでも全ページに約173KB（gzip）の JS �
 | `public/fonts/` | League Gothic（OFL・latinサブセット 10KB）。**外部フォントは読み込まない** |
 | `public/og/` | `npm run og` の生成物（コミットする）。ビルドはそのまま `out/og/` に出す |
 | `public/theme.css` `robots.txt` `sitemap.xml` | `scripts/build-public.ts` の生成物（コミットしない）。CSS の正本は `styles/` |
-| `scripts/` | `build-public.ts`（theme.css / robots.txt / sitemap.xml）・`postbuild.ts`（0バイトの番人）・`build-tokens.ts`・`og.ts` |
+| `scripts/` | `build-public.ts`（theme.css / robots.txt / sitemap.xml）・`postbuild.ts`（0バイトの番人）・`build-tokens.ts`・`og.ts`・`check-structure.ts`（依存の向き） |
 | `verify/` | **標準仕様の自動検査。これが仕様の実体**（項目の一覧は [docs/spec.md](../docs/spec.md)） |
 | `out/` | 出力（静的HTML・CSS・robots.txt・sitemap.xml）。これを置けば公開できる |
 | `verify-report.json` | 検査結果（全項目）。ページに出す件数はここから取る。`--static` の結果は `verify-report.static.json` |
 
 ### 置き場所の決まり
 
-依存は一方向。**右にあるものは左を import しない。**`npm run check`（`scripts/check-structure.ts`）が検査する。
+依存は一方向。**矢印の向きにだけ import してよい。**`npm run check`（`scripts/check-structure.ts`）が検査する。
 
 ```
 pages → layouts → components → content → lib
 ```
+
+```mermaid
+flowchart LR
+  pages["pages/<br/>ルートと本文"] --> layouts["layouts/<br/>器"]
+  layouts --> components["components/<br/>部品"]
+  components --> content["content/<br/>このサイト<br/>固有の中身"]
+  content --> lib["lib/<br/>小道具"]
+  tools["scripts/<br/>verify/"] --> content
+  tools --> lib
+
+  classDef swap fill:#fff4d6,stroke:#b58900,color:#3d2e00
+  classDef keep fill:#e6f4ea,stroke:#2e7d32,color:#12351a
+  class pages,content swap
+  class layouts,components,lib,tools keep
+```
+
+黄色は**別の案件で差し替える**もの、緑は**そのまま使う**もの。飛び越える import（`pages` から `lib` など）はしてよい。逆向きは不可。
 
 | | 何を置くか | 別の案件では |
 |---|---|---|
