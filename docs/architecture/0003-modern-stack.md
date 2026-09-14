@@ -20,6 +20,14 @@ Next.js 16.3.5、React 19.3.0 は調査時点の npm `latest` と一致した。
 - Playwright を最新化し、既存の全ページの検証を継続する。Prettier は設定と実行コマンドを用意し、既存の大量の整形差分を今回の変更に混ぜない。
 - GitHub Actions は型・lint・単体テスト・ビルド・静的検査とブラウザ実測を実行する。Dependabot は依存更新を PR として提示する。
 
+## Dependabot の更新範囲
+
+2026-09-14、PR #6 の ESLint 10.10.0 への更新で、`eslint-plugin-react` 7.37.5 の `react/display-name` が `contextOrFilename.getFilename is not a function` を出し、CI とローカルの lint が停止した。ESLint を 9.39.5 に戻し、同じ PR に含まれる `@types/node` も実行環境の Node 24 と一致する 24.13.4 に戻す。
+
+`.github/dependabot.yml` では、この2依存だけ `version-update:semver-major` を除外する。マイナー・パッチ更新と、その他の依存の更新は引き続き PR で受け取る。
+ESLint の次のメジャーは Next.js のプラグインが対応してから、Node の型定義の次のメジャーはローカル・CI・Vercel の実行環境を移行するときに、明示的に更新する。どちらもクリーンインストールと全検査を通して判断し、peer dependency や lint のエラーを無視しない。
+ESLint 9.39.5 は npm がサポート終了の警告を出すため、互換性を保つための暫定的な維持とする。Next.js 側の対応時に更新を再評価する。
+
 ## Vercel と静的配信
 
 `site/vercel.json` は Framework Preset を Other（`framework: null`）にし、Next.js で生成して postbuild で検証した `out/` だけを配信する。
@@ -49,3 +57,4 @@ npm 12 の install scripts は `allowScripts` で esbuild・unrs-resolver・fsev
 - [Microsoft: TypeScript 7 と 6 の併用](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0)
 - [Vercel の Node.js バージョン](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions)
 - [Vercel の静的設定](https://vercel.com/docs/project-configuration/vercel-json)
+- [GitHub: Dependabot の ignore 設定](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#ignore)

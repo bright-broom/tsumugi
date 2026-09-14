@@ -5,6 +5,13 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # Next.js の React プラグインが ESLint 10 に未対応（ADR 0003）。
+      - dependency-name: eslint
+        update-types: [version-update:semver-major]
+      # 実行環境の Node 24 と型定義のメジャーを合わせる。
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
     groups:
       next-react:
         patterns: [next, react, react-dom, '@types/react*', eslint-config-next]
