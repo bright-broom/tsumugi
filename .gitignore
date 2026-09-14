@@ -1,6 +1,19 @@
 .DS_Store
 node_modules/
-
+.next/
+out/
+.artifacts/
 .vercel/
+coverage/
 .env*
 !.env.example
+next-env.d.ts
+*.tsbuildinfo
+public/theme.css
+public/robots.txt
+public/sitemap.xml
+public/images/onokoro-hero.svg
+
+# Legacy output names must never become tracked again.
+shot-*.png
+verify-report*.json

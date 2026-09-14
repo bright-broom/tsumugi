@@ -1,10 +1,10 @@
 # 現状と残課題
 
-- 最終更新：2026-09-14（新料金体系をプロジェクトへ反映）
+- 最終更新：2026-09-14（単一アプリのルート構成へ整理）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
-> 文中のコードのパス（`src/…` `scripts/…` `verify/` `styles/` `public/` `out/`）は `site/` からの相対。
+> 文中のコードのパス（`src/…` `tools/scripts/…` `tools/verify/` `src/styles/` `public/` `out/`）は リポジトリルートからの相対。
 
 ---
 
@@ -14,7 +14,7 @@
 
 | | 状態 |
 |---|---|
-| 構成 | `site/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
+| 構成 | ルート直下の `src/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
 | 実行時 JS | 全21ページで 0（`postbuild` と `verify` で確認） |
 | 検査 | `npm run verify`：**PASS 603 / WARN 1 / FAIL 0**。WARN は `PLACEHOLDER=true` による1件。`npm run verify -- --static`：PASS 358 / WARN 1 / FAIL 0 |
 | 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 122 件合格 |
@@ -23,7 +23,7 @@
 | 文言とルート | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004） |
 | CSSの中央管理 | Tailwind CSS 4.3.3。85個のトークンから `@theme` を生成し、公開ページは `globals.css`、共有カード画像は `og.css` を入口にコンパイル。ページの静的インライン指定を解消、開発時の監視と中央管理の自動検査を追加（ADR 0009） |
 | 共通フッター | 明るいグレーの面に、相談・連絡先・案内・大きなブランド文字を配置。アイコン32個、20ページへの案内、先頭への移動、現在地を表示（ADR 0008） |
-| ホーム本文 | 白・グレー・チャコールを基調に、広い図解・左右に分けた説明・料金比較・FAQを再構成。元の図解4点と全説明文を保持、本文のLucideアイコンは31→45。CSSは `styles/home.css` に限定（ADR 0007） |
+| ホーム本文 | 白・グレー・チャコールを基調に、広い図解・左右に分けた説明・料金比較・FAQを再構成。元の図解4点と全説明文を保持、本文のLucideアイコンは31→45。CSSは `src/styles/home.css` に限定（ADR 0007） |
 | 共通ヘッダー | 生成り・藍墨・明朝の屋号。高さ88/72px、問い合わせCTAとネイティブの全体メニュー。追加の実行時JS・外部フォントなし（ADR 0006） |
 | 暫定ヒーロー | ヘッダー直下に国生みの画像を配置。自己完結SVG（WebP内包、約741 KiB）、モバイルの補助コピーと読み上げに対応（ADR 0005） |
 | 旧版 | Python 版（`svc/`）と Astro 版（`svc-astro/`）は削除済み。コミット `01f39d4` で読める。移植が正しいことの確かめ方は [history/2026-09-migration.md](history/2026-09-migration.md) |
@@ -43,11 +43,11 @@
 
 | | 状態 |
 |---|---|
-| GitHub | `bright-broom/tsumugi`・**private**・既定ブランチ `main` |
+| GitHub | `bright-broom/tsumugi`・**Public**・既定ブランチ `main` |
 | マージ済み | #1 Next.js への集約、#2 `src/` の層分けと `docs/` の整理 |
 | 残っているブランチ | マージ済みの `feat/nextjs-migration` と `refactor/directory-structure` がリモートに残っている |
 | CI | GitHub Actions に型・lint・単体テスト・ビルド・静的検査・Chromium 実測を追加。実行結果は PR のチェックを参照 |
-| デプロイ | Vercel `koenigwolfs-projects/tsumugi` と GitHub を接続。Root Directory=`site`、Framework=Other、output=`out`、Node 24。認証付きプレビューで全21ページ HTTP 200、実行時 JS 0、未知の URL は 404 を確認。本番の独自ドメインは未設定 |
+| デプロイ | Vercel `koenigwolfs-projects/tsumugi` と GitHub を接続。Root Directory=未指定（リポジトリルート）、Framework=Other、output=`out`、Node 24。認証付きプレビューで全21ページ HTTP 200、実行時 JS 0、未知の URL は 404 を確認。本番の独自ドメインは未設定 |
 
 ---
 
@@ -94,11 +94,11 @@
 | 課題 | やること | 手がかり |
 |---|---|---|
 | ヒーロー画像の本採用 | 暫定SVG内の絵と描き込み文字を分離し、表示コピーをすべてカタログから生成する。現段階で文言を変える場合は元絵も同時に更新する | [ADR 0005](architecture/0005-temporary-hero.md)、`assets/hero/README.md` |
-| OGP画像の字形の正本 | コミット済みの PNG 23枚は別のマシンで作ったもの。この Mac で `npm run og` を実行すると、日本語の書体の違いで全PNGが差分になる（ファビコンの SVG は一致）。どの環境の字形を正本にするか決め、その環境で作ってコミットする | `scripts/og.ts`、[design.md「共有カード」](product/design.md) |
+| OGP画像の字形の正本 | コミット済みの PNG 23枚は別のマシンで作ったもの。この Mac で `npm run og` を実行すると、日本語の書体の違いで全PNGが差分になる（ファビコンの SVG は一致）。どの環境の字形を正本にするか決め、その環境で作ってコミットする | `tools/scripts/og.ts`、[design.md「共有カード」](product/design.md) |
 | マージ済みブランチの削除 | リモートの `feat/nextjs-migration`・`refactor/directory-structure` を消す | `git push origin --delete <ブランチ名>` |
 | Next.js を上げるときの確認 | `unstable_runtimeJS` は将来の版で変わりうる。上げたら合格ラインを全部通す | [ADR 0001](architecture/0001-pages-router.md) |
 | 共通部分のパッケージ分割 | **顧客サイトが2件目になったときに**、`content/` を境に切り出す。それまではやらない | [ADR 0002](architecture/0002-directory-layers.md) |
-| 原書体の契約 | 欧文ディスプレイは無料代替の League Gothic（原サイトは Manuka Condensed）。契約して差し替えるなら `--nah-ratio-display-correction` を 1 に戻して再計測する | `styles/` |
+| 原書体の契約 | 欧文ディスプレイは無料代替の League Gothic（原サイトは Manuka Condensed）。契約して差し替えるなら `--nah-ratio-display-correction` を 1 に戻して再計測する | `src/styles/` |
 | 競合調査メモ | 文書が参照している `claude/competitor-propagate.md` が、このリポジトリにない | 必要なら `docs/business/` に入れる |
 | 書き換え前のコミット | 2026-09-14 に、コミットの作者欄のメールアドレスが一時的に公開された。履歴は書き換え済みで、一度privateにした。現在はPublicで、2026-09-14にユーザーが社内資料を含むpushを明示的に承認した。書き換え前のコミット（`cfb3616` `ddb0f82` `21437ee`）は、GitHub 上で SHA を指定すると見られる可能性が残る | 完全に消すなら GitHub Support に依頼する |
 
@@ -123,3 +123,12 @@
 
 
 2026-09-14 料金反映の検証：型・lint・単体122件、モデル9件、ビルド、全603 PASS / WARN 1 / FAIL 0。静的358 PASS。幅320・390・1440pxで全21ページの横はみ出しと旧料金の混入がなく、実行時JSは0。分割切替の撤去等で実在対象5件が減り、検査しきい値は維持。Excelは再計算と公開価格比較の一致を確認。詳細はADR 0011。
+
+
+### 2026-09-14 ディレクトリの最適化
+
+`site/` を解消し、Next.jsの単一アプリをルートから操作する構成へ移行。`src/`・`public/`・`tests/` をルートに、スタイルと元画像を `src/styles/`・`src/assets/` に、生成と検査を `tools/scripts/`・`tools/verify/` に集約した。ESLint・Vitest・Prettierは `config/`、検査レポートは `.artifacts/verification/`。開発用のローカル設定を移し、機密情報やキャッシュはGit管理外のまま保持する。
+
+GitHub Actions・Dependabot・npm・Vercelをルート基準へ統一。出力50ファイル（HTML21枚・CSS・画像等）は移動前とSHA-256がすべて一致した。価格・表示・ルートは変更なし。検証詳細は [ADR 0012](architecture/0012-root-project-layout.md)。
+
+ローカル検証：ルートでnpm ci成功、型・lint・単体122件・価格モデル9件合格。全項目603 PASS / WARN 1 / FAIL 0、静的358 PASS。Vercel APIで既存プロジェクトのRoot Directory=null、build=npm run validate、output=outを確認。GitHub・Vercelの配備結果は今回のPRで追跡する。

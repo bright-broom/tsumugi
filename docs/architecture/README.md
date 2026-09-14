@@ -1,6 +1,6 @@
 # アーキテクチャ
 
-コードを触るときの決まり（コマンド・書き方・置き場所）は [site/README.md](../../site/README.md)。
+コードを触るときの決まり（コマンド・書き方・置き場所）は [docs/development.md](../development.md)。
 ここには、**なぜそう決めたか**を残す。
 
 ## 決定の記録（ADR）
@@ -21,11 +21,13 @@
 
 新しい決定は `NNNN-短い名前.md` で足す。決定を覆すときは古い記録を消さず、状態を「置き換え（NNNN）」にして新しい番号を足す。
 
-> 文中のコードのパス（`src/…` `scripts/…` `verify/` `styles/` `public/` `out/`）は `site/` からの相対。
+> 文中のコードのパス（`src/…` `tools/scripts/…` `tools/verify/` `src/styles/` `public/` `out/`）は リポジトリルートからの相対。
 
 ---
 
 - [0011 新料金体系の採用と資料同期](0011-adopt-pricing-140h.md)
+
+- [0012 単一アプリをルートから操作する構成](0012-root-project-layout.md)
 
 ## 技術的な判断とその理由
 

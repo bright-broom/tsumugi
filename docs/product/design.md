@@ -1,6 +1,6 @@
 # デザイン
 
-> 文中のコードのパス（`src/…` `scripts/…` `verify/` `styles/` `public/` `out/`）は `site/` からの相対。
+> 文中のコードのパス（`src/…` `tools/scripts/…` `tools/verify/` `src/styles/` `public/` `out/`）は リポジトリルートからの相対。
 
 ---
 
@@ -218,7 +218,7 @@ LCPが実測0.30秒で描画が詰まっていないのに、
 
 ---
 
-## 共有カード（`scripts/og.ts`）
+## 共有カード（`tools/scripts/og.ts`）
 
 **営業の主経路は「電話 → URLを送る」で、地方ではそれが LINE になります。**
 リンクを貼ったときにカードが真っ白か、屋号と金額が出るかで開封率が変わるので、
@@ -235,17 +235,17 @@ OGP画像は装飾ではなく**導線の一部**として扱っています。
 
 ヒーロー以下は日本画の装飾から切り替え、白・グレー・チャコール、ゴシック、大きな数字で構成します。図解は幅を確保し、見出しと説明をPCで左右に分けます。修正費と内訳は計算と説明を並べ、料金は比較しやすいカード、FAQは罫線で整理します。スマートフォンでは一列を基本にします。
 
-既存の4図解と説明文を残し、本文のLucideアイコンを31個から45個に増やしました。用途はページ内の道案内と修正内容の識別です。色の意味は既存の良／悪・注意と共有します。価格・条件は変更しません。CSSは `styles/home.css`、器の幅は `home-container` トークン、追加コピーは `i18n/locales/ja/home.ts` を正本にします。[判断の記録](../architecture/0007-home-editorial-layout.md)も参照してください。
+既存の4図解と説明文を残し、本文のLucideアイコンを31個から45個に増やしました。用途はページ内の道案内と修正内容の識別です。色の意味は既存の良／悪・注意と共有します。価格・条件は変更しません。CSSは `src/styles/home.css`、器の幅は `home-container` トークン、追加コピーは `i18n/locales/ja/home.ts` を正本にします。[判断の記録](../architecture/0007-home-editorial-layout.md)も参照してください。
 
 ## 共通フッターのデザイン（ADR 0008）
 
 明るいグレーの面に切り替え、相談の見出し、アイコン付きの案内、連絡先、大きなTSUMUGIの文字で終端を構成します。全21ページで共通です。32個のLucideアイコンを配置し、狭い画面では装飾矢印4個を隠します。主要・業種・法務の20ページへの案内を保ち、現在地とページ先頭への移動にも対応します。
 
-CSSは `styles/footer.css`、追加文言は `shell.footer` が正本です。既存の黒いフッター指定とホーム限定の上書きは取り除きました。[判断の記録](../architecture/0008-icon-rich-footer.md)を参照してください。
+CSSは `src/styles/footer.css`、追加文言は `shell.footer` が正本です。既存の黒いフッター指定とホーム限定の上書きは取り除きました。[判断の記録](../architecture/0008-icon-rich-footer.md)を参照してください。
 
 
 ## CSSの管理と実装
 
-Tailwind CSS 4.3.3を使い、85個の色・書体・寸法は `styles/design.tokens.json` から `@theme` へ生成する。公開ページの入口は `styles/globals.css` に統一し、各部品・ホーム・フッターの共通クラスを `@apply` で定義する。各ページはクラス名を使い、見た目の直接指定を持たない。SVGの座標は図解データ、比率などの数値はCSS変数として渡す。特殊な描画やアニメーションも同じグローバルCSSに置く。
+Tailwind CSS 4.3.3を使い、85個の色・書体・寸法は `src/styles/design.tokens.json` から `@theme` へ生成する。公開ページの入口は `src/styles/globals.css` に統一し、各部品・ホーム・フッターの共通クラスを `@apply` で定義する。各ページはクラス名を使い、見た目の直接指定を持たない。SVGの座標は図解データ、比率などの数値はCSS変数として渡す。特殊な描画やアニメーションも同じグローバルCSSに置く。
 
-共有カードの描画CSSも `styles/og.css` に移し、共通テーマから画像生成時だけコンパイルする。通常ページへの追加JavaScriptはない。実装・検証の境界は [ADR 0009](../architecture/0009-global-tailwind.md) と [site/README](../../site/README.md) を参照。
+共有カードの描画CSSも `src/styles/og.css` に移し、共通テーマから画像生成時だけコンパイルする。通常ページへの追加JavaScriptはない。実装・検証の境界は [ADR 0009](../architecture/0009-global-tailwind.md) と [site/README](../development.md) を参照。
