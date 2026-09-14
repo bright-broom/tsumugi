@@ -1,7 +1,7 @@
 # 紬サイト ── Next.js + React + TypeScript
 
 サービスサイト本体。21ページ、**実行時 JavaScript 0バイト**。
-ここには**コードを触るときの決まり**だけを書く。理由や経緯は [docs/](../docs/README.md)（技術の判断は [docs/architecture/](../docs/architecture/README.md)）。
+ここには**コードを触るときの決まり**だけを書く。引き継ぎの入口は [AGENTS.md](../AGENTS.md)、いまの状態と残課題は [docs/status.md](../docs/status.md)。理由や経緯は [docs/](../docs/README.md)（技術の判断は [docs/architecture/](../docs/architecture/README.md)）。
 
 ```bash
 npm install
