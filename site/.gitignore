@@ -9,6 +9,7 @@ next-env.d.ts
 public/theme.css
 public/robots.txt
 public/sitemap.xml
+public/images/onokoro-hero.svg
 verify-report*.json
 shot-*.png
 

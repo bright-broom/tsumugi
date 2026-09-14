@@ -155,7 +155,7 @@
     font-size: var(--nah-font-size-label); font-weight: var(--nah-font-weight-semi);
     color: var(--nah-color-muted-on-ink);
   }
-  .hero h1 {
+  .hero h1, .hero .service-intro-title {
     font-size: var(--nah-font-size-hero-pc);
     line-height: var(--nah-font-leading-hero);
     letter-spacing: -.01em;

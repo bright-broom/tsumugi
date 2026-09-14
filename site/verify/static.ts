@@ -226,8 +226,9 @@ export function checkStatic(dist: string): void {
     rec(noAlt.length ? 'FAIL' : 'PASS', '07 imgのalt', n,
       noAlt.length ? `alt無し ${noAlt.length}枚` : `${imgs.length}枚すべてalt有り`);
     if (imgs.length) {
-      const lazy = imgs[0]!.includes('loading="lazy"');
-      const prio = imgs[0]!.includes('fetchpriority="high"');
+      // HTML 属性名は大小文字を区別しない。React は fetchPriority と出力する。
+      const lazy = /\sloading\s*=\s*["']lazy["']/i.test(imgs[0]!);
+      const prio = /\sfetchpriority\s*=\s*["']high["']/i.test(imgs[0]!);
       rec(lazy ? 'FAIL' : 'PASS', '14 先頭画像にlazyを付けない', n, lazy ? 'lazy が付いています' : '');
       rec(prio ? 'PASS' : 'WARN', '14 先頭画像に fetchpriority', n, prio ? '' : 'fetchpriority="high" 推奨');
     } else {

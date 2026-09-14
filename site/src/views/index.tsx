@@ -21,6 +21,7 @@ import Plans from '@/components/Plans';
 import Figure from '@/components/Figure';
 import Icon from '@/components/Icon';
 import type { PageProps } from '@/content/page-props';
+import { HOME_HERO } from '@/content/hero';
 
 export default function IndexPage({ copy, route }: PageProps<'home'>) {
   const file = ROUTES[route].file;
@@ -38,15 +39,38 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
 
   return (
     <Base file={file} title={title} desc={desc}>
-      {/* 主張の1番は「借地か、所有か」。金額はその次に置く */}
+      <section className="brand-hero" aria-labelledby="brand-heading">
+        <img
+          className="brand-hero-artwork"
+          src={HOME_HERO.src}
+          width={HOME_HERO.width}
+          height={HOME_HERO.height}
+          alt={copy.hero.artworkAlt}
+          fetchPriority="high"
+          loading="eager"
+        />
+        <div className="brand-hero-copy">
+          <h1 id="brand-heading">
+            {copy.hero.heading}
+            <br />
+            {copy.hero.heading2}
+          </h1>
+          <p>
+            {copy.hero.message}
+            <br />
+            {copy.hero.message2}
+          </p>
+        </div>
+      </section>
+      {/* ブランド画像に続けて、所有・価格・問い合わせの具体的な案内を置く。 */}
       <section className="hero">
         <div className="wrap">
           <p className="kick">{copy.kick}</p>
-          <h1>
+          <h2 className="service-intro-title">
             {copy.h1}
             <br />
             {copy.h12}
-          </h1>
+          </h2>
           <p className="sub">
             {copy.sub}
             <strong>{copy.strong}</strong>

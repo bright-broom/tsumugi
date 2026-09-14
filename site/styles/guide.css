@@ -4,12 +4,42 @@
    ══════════════════════════════════════════════════════════════════ */
 @layer screens {
 
+  /* 暫定の承認済み画像は、文字と二柱を切り取らずヘッダー直下に置く。 */
+  .brand-hero {
+    position: relative;
+    padding: 0;
+    background: var(--nah-color-ink);
+    color: var(--nah-color-white);
+  }
+  .brand-hero-artwork { width: 100%; height: auto; border-radius: 0; }
+  .brand-hero-copy { padding: 28px var(--nah-size-pad-mb) 32px; }
+  .brand-hero-copy h1 {
+    font-size: var(--nah-font-size-hero-mb);
+    line-height: var(--nah-font-leading-hero);
+    margin-bottom: 16px;
+  }
+  .brand-hero-copy p { font-size: var(--nah-font-size-body); }
+  @media (min-width: 769px) {
+    /* 画像内のコピーと同じ内容を、読み上げでは見出し・本文として届ける。 */
+    .brand-hero-copy {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+    }
+  }
+
   /* ── ヒーロー。PCは 45/67.5px、モバイルは 24/36px（06 文字と書体） */
   @media (max-width: 768px) {
     .hero { padding-block: 44px 40px; }
     /* 日本語の改行を再構成する（C03）。PC用の強制改行は外し、文節で折る */
-    .hero h1 { font-size: var(--nah-font-size-hero-mb); }
-    .hero h1 br { display: none; }
+    .hero h1, .hero .service-intro-title { font-size: var(--nah-font-size-hero-mb); }
+    .hero h1 br, .hero .service-intro-title br { display: none; }
     /* 前置きは手に持つ画面でいちばん飛ばされる。大きくして、白に寄せて、改行は外す */
     /* 新しい色は足さない。白と墨紺を混ぜて作る（トークンから導出する） */
     .hero .sub { font-size: 16px;
