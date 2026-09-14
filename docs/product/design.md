@@ -93,13 +93,12 @@ export const PROFILE = 'main' as const;       // 青。プロダクト面向け
 繰り返すから記号として学習され、ページを開いた瞬間に行き先が分かる。
 1項目ごとに散らすのとは別物で、散らすと「AI感」に戻ります。**それ以外の場所には付けません。**
 
-Lucide 公式SVG（lucide-static v0.454.0, ISC）を**ビルド時に埋め込み**。`src/lib/icons.ts` に57種。
-実行時の読み込みはゼロです。
+Lucide React（`lucide-react` 1.45.0, ISC）を**ビルド時に SVG へ変換**します。
+`src/lib/icons.ts` には使用する 65 種を明示的に import しています。実行時の読み込みはゼロです。
 
-```bash
-curl -s https://cdn.jsdelivr.net/npm/lucide-static@0.454.0/icons/<name>.svg
-# 中身のパスを src/lib/icons.ts の ICONS に追加して <Icon name="<name>" /> で呼ぶ
-```
+アイコンを増やすときは公式 React コンポーネントを `ICONS` に登録し、`<Icon name="…" />` で呼びます。
+表や図の HTML 文字列に必要な場合は `ic()` が同じコンポーネントを静的に描画します。
+SVG パスを外部サイトから手作業でコピーする必要はありません。
 
 `verify` が**すべてのインラインSVGに `aria-hidden="true"` か `role="img"` が付いているか**を
 検査します（装飾アイコンは読み上げない、図は読み上げる、のどちらかに必ず倒すため）。

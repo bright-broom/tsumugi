@@ -1,4 +1,3 @@
-import type { IconName } from '@/lib/icons';
 import type { BuildKey } from '@/content/prices';
 
 /**

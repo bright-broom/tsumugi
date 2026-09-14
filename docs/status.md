@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-14（`main` = `8cdea1f` の時点）
+- 最終更新：2026-09-14（開発基盤の最新化ブランチ）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -14,11 +14,12 @@
 
 | | 状態 |
 |---|---|
-| 構成 | `site/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 5.9.3。21ページを `out/` に静的書き出し |
+| 構成 | `site/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
 | 実行時 JS | 全21ページで 0（`postbuild` と `verify` で確認） |
 | 検査 | `npm run verify`：**PASS 581 / WARN 1 / FAIL 0**。WARN は `PLACEHOLDER=true` による1件。`npm run verify -- --static`：PASS 359 / WARN 1 / FAIL 0 |
-| 型と依存の向き | `npm run check` が通る |
-| 動作を確かめた環境 | macOS・Node 23.10.0・npm 10.9.2・Playwright 1.60.0（Chromium）。`package.json` の `engines` は Node 22 以上 |
+| 型と依存の向き | `npm run check` が通る。ESLint エラー・警告 0、Vitest 82 件合格 |
+| 依存の健全性 | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定（ADR 0003） |
+| 動作を確かめた環境 | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一 |
 | 旧版 | Python 版（`svc/`）と Astro 版（`svc-astro/`）は削除済み。コミット `01f39d4` で読める。移植が正しいことの確かめ方は [history/2026-09-migration.md](history/2026-09-migration.md) |
 
 ### 中身（公開前の仮の状態）
@@ -39,8 +40,8 @@
 | GitHub | `bright-broom/tsumugi`・**private**・既定ブランチ `main` |
 | マージ済み | #1 Next.js への集約、#2 `src/` の層分けと `docs/` の整理 |
 | 残っているブランチ | マージ済みの `feat/nextjs-migration` と `refactor/directory-structure` がリモートに残っている |
-| CI | なし（`.github/` がない） |
-| デプロイ | 未設定（このリポジトリにデプロイの設定はない。方針は [operations.md](operations.md)） |
+| CI | GitHub Actions に型・lint・単体テスト・ビルド・静的検査・Chromium 実測を追加。実行結果は PR のチェックを参照 |
+| デプロイ | Vercel `koenigwolfs-projects/tsumugi` と GitHub を接続。Root Directory=`site`、Framework=Other、output=`out`、Node 24。認証付きプレビューで全21ページ HTTP 200、実行時 JS 0、未知の URL は 404 を確認。本番の独自ドメインは未設定 |
 
 ---
 
@@ -55,7 +56,7 @@
 | `terms.html` の弁護士確認 | 下書きの文面を確認してもらって確定する。フリーランス法第4条（書面交付義務）への対応も同時に。**確認が済むまで、分割払いを商談に出さない** | `src/pages/terms.tsx`、ガイドライン「8.1」 |
 | `legal.html` の事業者情報 | 販売事業者名・運営責任者・所在地が仮の値。開業届／登記のあとに差し替える | `config.ts` |
 | 屋号の確認 | 商標（J-PlatPat 第42類・第35類）・同名法人（法人番号公表サイト）・ドメイン | [messaging-and-pricing.md「屋号」](product/messaging-and-pricing.md) |
-| デプロイ先と独自ドメイン | Vercel に載せ、独自ドメインで公開する。`◯◯.vercel.app` のまま公開しない | [operations.md「Vercel に載せるとき」](operations.md) |
+| 本番公開と独自ドメイン | Vercel へのプレビュー配備は実施。本番の事業者情報を確定し、独自ドメインを設定して公開する。`◯◯.vercel.app` のまま納品しない | [operations.md「Vercel に載せるとき」](operations.md) |
 
 ### B. 公開のあとに
 
@@ -69,7 +70,6 @@
 
 | 課題 | やること | 手がかり |
 |---|---|---|
-| CI | GitHub Actions で `npm run check`・`npm run build`・`npm run verify -- --static` を回す。ブラウザ計測を含む全項目の検査は、納品前に手元で回す | [AGENTS.md「4. コマンドと合格ライン」](../AGENTS.md) |
 | OGP画像の字形の正本 | コミット済みの PNG 23枚は別のマシンで作ったもの。この Mac で `npm run og` を実行すると、日本語の書体の違いで全PNGが差分になる（ファビコンの SVG は一致）。どの環境の字形を正本にするか決め、その環境で作ってコミットする | `scripts/og.ts`、[design.md「共有カード」](product/design.md) |
 | マージ済みブランチの削除 | リモートの `feat/nextjs-migration`・`refactor/directory-structure` を消す | `git push origin --delete <ブランチ名>` |
 | Next.js を上げるときの確認 | `unstable_runtimeJS` は将来の版で変わりうる。上げたら合格ラインを全部通す | [ADR 0001](architecture/0001-pages-router.md) |
@@ -88,3 +88,4 @@
 | 2026-09-14 | `verify --static` の結果を別ファイルに分け、簡易版を回しても `works.html` の件数が下がらないようにした（#1） |
 | 2026-09-14 | `src/` を層に分け、ドキュメントを `docs/` に整理した（#2） |
 | 2026-09-14 | 引き継ぎの入口（`AGENTS.md`）とこの文書を作り、ガイドライン「10. 道具と環境」を今の構成に合わせた |
+| 2026-09-14 | TypeScript 7、Node 24／npm 12、Lucide React・clsx・Zod・Vitest・ESLint・Prettier・最新 Playwright を導入。GitHub Actions、Dependabot、Vercel の静的配備設定を追加。実行時 JavaScript 0 バイトを維持（ADR 0003） |

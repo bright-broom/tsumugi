@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "tsx scripts/build-public.ts && next dev",
@@ -11,19 +11,55 @@
     "check": "tsc --noEmit && tsx scripts/check-structure.ts",
     "verify": "tsx verify/verify.ts",
     "tokens": "tsx scripts/build-tokens.ts",
-    "og": "tsx scripts/og.ts"
+    "og": "tsx scripts/og.ts",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "validate": "npm run check && npm run lint && npm test && npm run build && npm run verify -- --static",
+    "deploy:preview": "vercel --cwd ..",
+    "deploy:production": "vercel --cwd .. --prod"
   },
   "dependencies": {
+    "clsx": "2.1.1",
+    "lucide-react": "1.45.0",
     "next": "16.3.5",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@types/node": "24.13.4",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "playwright": "1.60.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.5",
+    "jiti": "2.7.0",
+    "playwright": "1.63.0",
+    "prettier": "3.9.6",
     "tsx": "4.23.13",
-    "typescript": "5.9.3"
+    "typescript": "npm:@typescript/typescript6@6.0.3",
+    "vercel": "59.16.0",
+    "vitest": "5.0.0",
+    "@typescript/native": "npm:typescript@7.0.2"
+  },
+  "overrides": {
+    "@tootallnate/once": "2.0.1",
+    "ajv@^8": "8.20.0",
+    "minimatch@^10": "10.2.6",
+    "path-to-regexp@6.1.0": "6.3.0",
+    "path-to-regexp@^8": "8.4.0",
+    "smol-toml": "1.8.0",
+    "tar@^7": "7.5.22",
+    "js-yaml@^4": "4.3.2",
+    "esbuild@^0.27": "0.28.2",
+    "undici@<7": "6.28.0"
+  },
+  "packageManager": "npm@12.0.2",
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "unrs-resolver@1.12.2": true,
+    "fsevents@2.3.3": true
   }
 }

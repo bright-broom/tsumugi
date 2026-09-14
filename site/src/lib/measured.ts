@@ -1,5 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { z } from 'zod';
+
+const reportSchema = z.object({ pass: z.number().int().nonnegative() });
 
 /**
  * verify-report.json の PASS 件数。
@@ -11,7 +14,9 @@ import { join } from 'node:path';
  */
 export function verifyPass(): string | number {
   try {
-    return JSON.parse(readFileSync(join(process.cwd(), 'verify-report.json'), 'utf-8')).pass;
+    return reportSchema.parse(
+      JSON.parse(readFileSync(join(process.cwd(), 'verify-report.json'), 'utf-8')),
+    ).pass;
   } catch {
     return '—';
   }

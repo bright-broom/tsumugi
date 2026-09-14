@@ -4,7 +4,7 @@
 ここには**コードを触るときの決まり**だけを書く。引き継ぎの入口は [AGENTS.md](../AGENTS.md)、いまの状態と残課題は [docs/status.md](../docs/status.md)。理由や経緯は [docs/](../docs/README.md)（技術の判断は [docs/architecture/](../docs/architecture/README.md)）。
 
 ```bash
-npm install
+npm ci
 npm run dev              # http://localhost:3000 （href="terms.html" のままのリンクも踏める）
 npm run build            # トークン同期の検査 → public/ の生成 → next build → postbuild → out/
 npm run verify           # 標準仕様の検査（ブラウザ実測を含む）。FAIL 0 で納品可
@@ -52,7 +52,7 @@ App Router は静的書き出しでも全ページに約173KB（gzip）の JS �
 | `src/components/*.tsx` | Section / Table / Note / Calc / Flow / Stats / Acc / Cta / Entry / Plans / Cards / Vs / Figure / Icon |
 | `src/content/config.ts` | **屋号・エリア・連絡先・テーマ。別ブランドに振り替えるときはここだけ編集する** |
 | `src/content/prices.ts` | **価格の単一の出所。**全ページがここを参照するので、値を変えると表記が一斉に変わる。`as const` で値から型が付く。添字ではなく `build(key)` / `run(key)` で引く |
-| `src/lib/icons.ts` | Lucide（lucide-static v0.454.0, ISC）のパス。**使うアイコンはここに足す** |
+| `src/lib/icons.ts` | Lucide React の明示的な import。**使うアイコンはここに登録する** |
 | `src/content/nav.ts` / `industries.ts` / `spec.ts` | ナビ・業種・仕様の並び |
 | `src/content/diagrams.ts` | **図。手書きのインラインSVG** |
 | `styles/design.tokens.json` | **色・寸法・書体の正本（DTCG 2025.10 形式・80トークン）** |
@@ -87,3 +87,29 @@ pages → layouts → components → content → lib
 - `src/` の中は **`@/…` で import する**（例：`@/content/prices`）。置き場所を変えても import を書き換えずに済む
 - 部品と器が `content/` を読むのは `config`・`nav`・`prices` の3つだけ。別の案件ではこの3つの形を保てば、部品はそのまま動く
 - 層を分けた理由と、検討してやめた選択肢は [ADR 0002](../docs/architecture/0002-directory-layers.md)
+
+
+## 開発ライブラリと実行環境
+
+Node.js 24 系を使います（`.nvmrc` と `package.json` の `engines`、CI、Vercel で共通）。
+初回は `nvm install && nvm use`、`npm install --global npm@12.0.2`、続けて `npm ci` を実行してください。npm 12.0.2 は `packageManager`・CI・Vercel のインストール指定で統一しています。
+
+| 用途 | ライブラリ／コマンド |
+|---|---|
+| コンパイルと型検査 | TypeScript 7.0.2（`@typescript/native` の `tsc`） |
+| 検査ツール用の互換 API | `typescript` は `@typescript/typescript6` 6.0.3 の npm alias |
+| React のアイコン | `lucide-react`。SVG はビルド時に描画 |
+| 条件付きの CSS クラス | `clsx` |
+| 外部データの構造検証 | `zod`。実測レポートの値を検証 |
+| コード検査 | ESLint 9 の最新互換版 + `eslint-config-next`。`npm run lint` |
+| 単体テスト | Vitest。`npm test`／`npm run test:watch` |
+| ブラウザ実測 | Playwright。`npm run verify` |
+| 整形 | Prettier。`npm run format`／`npm run format:check`（既存ファイルの一括整形は任意） |
+| 配備 | Vercel CLI。`npm run deploy:preview`／`npm run deploy:production` |
+
+`npm run validate` は型・依存方向・lint・単体テスト・ビルド・静的検査をまとめて実行します。
+CI は追加で Chromium の実測検査も行います。テストや設定ファイルも TypeScript で管理します。
+Vercel は `site/` を Root Directory に設定し、`vercel.json` で `out/` だけを配信します。
+
+ESLint 10 は Next.js が使う React/import/a11y プラグインのサポート範囲外のため、9.39.5 を使います。
+TypeScript 7 の CLI と互換 API の併用理由、依存の overrides は [ADR 0003](../docs/architecture/0003-modern-stack.md) を参照してください。
