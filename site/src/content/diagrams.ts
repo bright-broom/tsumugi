@@ -204,7 +204,7 @@ export function moneyFlow(portal = 27_500, run = 16_000) {
   ];
   return fig(
     s.join(''),
-    format(copy.moneyFlow, { run: c(run), rest: c(rest) }),
+    format(copy.moneyFlow, { portal: c(portal), run: c(run), rest: c(rest) }),
     format(copy.moneyFlow2, { portal: c(portal), run: c(run), rest: c(rest) }),
     '0 0 700 192',
     moneyFlowNarrow(portal, run),

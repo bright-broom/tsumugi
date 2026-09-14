@@ -62,6 +62,7 @@ describe('route completeness', () => {
     expect(html).toContain('<main id="main">');
     expect(html).not.toMatch(/<script(?![^>]*application\/ld\+json)/);
     expect(html).not.toMatch(/@route:|電話する|タップで発信|undefined/);
+    expect(html).not.toMatch(/39,800|698,000|変更は何回でも無料|修正・更新 何回でも|制作費24回/);
   });
 });
 
@@ -97,5 +98,18 @@ describe('copy regression guard', () => {
         '// 日本語のコメント\nconst x = <p className="lead">{copy.lead}</p>;',
       ),
     ).toEqual([]);
+  });
+});
+
+describe('adopted tariff presentation', () => {
+  it('shows the CMS plan as preparing and separates external costs from support', () => {
+    const html = renderToStaticMarkup(<Page {...pageProps('price')} />);
+    expect(html).toContain('受付準備中');
+    expect(html).toContain('外部');
+    expect(html).toContain('30分');
+    expect(html).toContain('90分');
+    expect(html).toContain('676,800');
+    expect(html).toContain('139,000');
+    expect(html).not.toContain('type="radio"');
   });
 });

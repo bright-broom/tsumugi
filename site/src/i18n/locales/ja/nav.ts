@@ -3,7 +3,7 @@ export default {
     index: 'ホーム',
     owned: '借地と所有',
     price: '料金',
-    unlimited: '変更は何回でも',
+    unlimited: '変更と継続支援',
     source: 'ソースコードの納品',
     'cost-cut': '掲載費の見直し',
     subsidy: '補助金',

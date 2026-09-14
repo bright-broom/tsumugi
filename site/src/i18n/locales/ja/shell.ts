@@ -1,7 +1,8 @@
 /** Japanese copy: shell. Keep keys stable; placeholders are named runtime values. */
 export default {
   structuredDataDescription: '小規模事業者向けのホームページ制作と運用。全国対応。',
-  structuredDataDescription2: '変更は何回でも無料、ソースコードを納品、掲載費の見直しまで。',
+  structuredDataDescription2:
+    '買い切り制作と任意の継続支援。変更枠・外部費・引継ぎ条件を明示します。',
   areaServedName: '日本',
   skip: '本文へ移動',
   header: {

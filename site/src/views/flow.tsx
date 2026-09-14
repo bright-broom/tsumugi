@@ -38,7 +38,12 @@ export default function FlowPage({ copy, route }: PageProps<'flow'>) {
             },
             { icon: 'users', value: 2, unit: copy.itemsUnit2, label: copy.itemsLabel2 },
             { icon: 'list-checks', value: 20, unit: copy.itemsUnit3, label: copy.itemsLabel3 },
-            { icon: 'repeat-2', value: 0, unit: copy.itemsUnit4, label: copy.itemsLabel4 },
+            {
+              icon: 'repeat-2',
+              value: P.run('run_basic').minutes,
+              unit: copy.itemsUnit4,
+              label: copy.itemsLabel4,
+            },
           ]}
         />
       </Section>

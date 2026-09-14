@@ -853,6 +853,12 @@
       @apply grid-cols-[repeat(3,_1fr)] items-stretch;
     }
   }
+  @container (min-width: 760px) {
+    .plans.production-plans,
+    .plans.support-plans {
+      @apply grid-cols-2;
+    }
+  }
   .plan {
     @apply flex flex-col gap-[14px] p-gap-group;
     border: 1px solid var(--color-line);
@@ -866,6 +872,9 @@
     .plan.pick {
       @apply my-[-14px] py-[calc(var(--spacing-gap-group)_+_14px)];
     }
+  }
+  .production-plans .plan.pick {
+    @apply my-[0] py-gap-group;
   }
   .plan .tag {
     @apply self-start text-[12px] font-bold tracking-[.06em] text-ink;

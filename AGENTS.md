@@ -56,8 +56,8 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 
 1. `npm run check`・`npm run lint`・`npm test` が通る
 2. `npm run build` が通る（postbuild が「実行時の script 0件・区切りコメント 0件」を出す）
-3. `npm run verify` が **PASS 608 / WARN 1 / FAIL 0**（WARN 1 は `PLACEHOLDER=true` による既知の1件）
-   - 検査項目やページを増減すると 608 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
+3. `npm run verify` が **PASS 603 / WARN 1 / FAIL 0**（WARN 1 は `PLACEHOLDER=true` による既知の1件）
+   - 検査項目やページを増減すると 603 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
 4. 見た目を変えないはずの変更（リファクタリング）では、`site/out/` の全ファイルのハッシュが変更前と同じ。HTML/CSSの生成方式自体を変更する場合は、変更対象以外のハッシュ一致と、同じブラウザでのPC・モバイルの画面比較で確かめ、差分の理由をADRに記録する（[ADR 0009](docs/architecture/0009-global-tailwind.md)）
 
 ## 5. 進め方
@@ -67,7 +67,7 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
   GitHub のメール保護が有効で、個人のアドレスが入ったコミットを含む push は拒否される
 - **push の前に、送るコミットのメールを確かめる：** `git log --format='%h %ae %ce %s' origin/main..HEAD`
 - `git push … | tail` のようにパイプでつなぐと、失敗が握りつぶされて次のコマンドが走る。つなぐなら `set -o pipefail`
-- リポジトリは **private のまま**にする。`docs/business/` に社内の数字がある
+- リポジトリは **Publicのまま**にする。2026-09-14にユーザーが `docs/business/` の社内資料を含めたpushを明示的に承認した。作者メールは引き続きnoreplyを使い、認証情報は含めない。
 - 判断を下したら `docs/architecture/` に ADR を足す。**作業を終えたら `docs/status.md` を更新する**
 - 文書の置き場所は [docs/README.md](docs/README.md)「文書の置き場所の決まり」に従う
 

@@ -1,6 +1,6 @@
 {
-  "version": "2026-09-14-proposal",
-  "status": "internal-proposal-not-a-published-tariff",
+  "version": "2026-09-14",
+  "status": "adopted-in-project-pending-release",
   "currency": "JPY",
   "tax": "exclusive",
   "assumptions": {
@@ -16,26 +16,91 @@
     "supportConversion": 0.75
   },
   "builds": [
-    { "key": "entry", "name": "入口をつくる", "price": 79800, "pages": 1, "hours": 5.5, "cashCost": 2000, "cashAcquisitionCost": 6000 },
-    { "key": "core", "name": "事業の土台をつくる", "price": 198000, "pages": 6, "hours": 15, "cashCost": 5000, "cashAcquisitionCost": 10000 },
-    { "key": "expand", "name": "情報を育てる", "price": 398000, "pages": 9, "hours": 26, "cashCost": 10000, "cashAcquisitionCost": 20000 }
+    {
+      "key": "entry",
+      "name": "入口をつくる",
+      "price": 79800,
+      "pages": 1,
+      "hours": 5.5,
+      "cashCost": 2000,
+      "cashAcquisitionCost": 6000
+    },
+    {
+      "key": "core",
+      "name": "事業の土台をつくる",
+      "price": 198000,
+      "pages": 6,
+      "hours": 15,
+      "cashCost": 5000,
+      "cashAcquisitionCost": 10000
+    },
+    {
+      "key": "expand",
+      "name": "情報を育てる",
+      "price": 398000,
+      "pages": 9,
+      "hours": 26,
+      "cashCost": 10000,
+      "cashAcquisitionCost": 20000
+    }
   ],
   "support": [
-    { "key": "self", "name": "自分で管理", "price": 0, "workMinutes": 0, "hours": 0, "cashCost": 0 },
-    { "key": "care", "name": "守る", "price": 4800, "workMinutes": 0, "hours": 0.3, "cashCost": 300 },
-    { "key": "update", "name": "整える", "price": 9800, "workMinutes": 30, "hours": 0.75, "cashCost": 400 },
-    { "key": "improve", "name": "育てる", "price": 29800, "workMinutes": 90, "hours": 2.25, "cashCost": 700 }
+    {
+      "key": "self",
+      "name": "自分で管理",
+      "price": 0,
+      "workMinutes": 0,
+      "hours": 0,
+      "cashCost": 0
+    },
+    {
+      "key": "care",
+      "name": "守る",
+      "price": 4800,
+      "workMinutes": 0,
+      "hours": 0.3,
+      "cashCost": 300
+    },
+    {
+      "key": "update",
+      "name": "整える",
+      "price": 9800,
+      "workMinutes": 30,
+      "hours": 0.75,
+      "cashCost": 400
+    },
+    {
+      "key": "improve",
+      "name": "育てる",
+      "price": 29800,
+      "workMinutes": 90,
+      "hours": 2.25,
+      "cashCost": 700
+    }
   ],
   "portfolio": {
-    "buildCounts": { "entry": 0, "core": 1, "expand": 1 },
-    "supportCounts": { "self": 0, "care": 10, "update": 16, "improve": 6 }
+    "buildCounts": {
+      "entry": 0,
+      "core": 1,
+      "expand": 1
+    },
+    "supportCounts": {
+      "self": 0,
+      "care": 10,
+      "update": 16,
+      "improve": 6
+    }
   },
   "competitorReference": {
     "url": "https://www.propagateinc.com/web-design",
     "checkedAt": "2026-09-14",
     "initial": 5000,
     "minimumMonths": 6,
-    "monthly": { "entry": 9800, "core": 14800, "expand": 19800 },
+    "monthly": {
+      "entry": 9800,
+      "core": 14800,
+      "expand": 19800
+    },
     "note": "ページ数の近い公開料金の参考。更新範囲・制作内容・所有条件は同一ではない。競合の追加実費は見積確認時に加算する。"
   }
 }

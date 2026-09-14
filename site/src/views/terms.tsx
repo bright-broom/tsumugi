@@ -52,7 +52,7 @@ export default function TermsPage({ copy, route }: PageProps<'terms'>) {
             [copy.rows15, copy.rows16],
             [copy.rows17, copy.rows18],
             [copy.rows19, copy.rows20],
-            [copy.rows21, format(copy.rows22, { pINSTALLMENTCOUNT: P.INSTALLMENT_COUNT })],
+            [copy.rows21, copy.rows22],
             [copy.rows23, copy.rows24],
           ]}
           caption={copy.caption2}
