@@ -147,8 +147,6 @@
     font-size: 17px; font-weight: var(--nah-font-weight-bold);
     font-variant-numeric: tabular-nums; white-space: nowrap; color: inherit;
   }
-  .ftr .tel { border-color: var(--nah-color-white); color: var(--nah-color-white); }
-  .ftr .tel:hover { background: var(--nah-color-white); color: var(--nah-color-ink); }
 
   /* ══ C03 OutcomeHero ─ メディア（ここでは無彩色の面）、短い価値、主要CTA */
   .hero {
@@ -677,33 +675,7 @@
   /* 固定CTA。本文・フッターを覆わないよう body 側で余白を確保する */
   .fixbar { display: none; }
 
-  /* ══ C24 Footer ─ 黒い面。終端 */
-  .ftr { background: var(--nah-color-black); color: var(--nah-color-white); padding-block: 64px 40px; }
-  .ftr h4 { font-size: 14px; margin-bottom: 14px; }
-  .ftr p, .ftr li { font-size: 14px; line-height: 1.8; color: var(--nah-color-muted-on-ink); }
-  .ftr a { color: var(--nah-color-white); text-decoration: none; }
-  .ftr a:hover { text-decoration: underline; }
-  .ftr-g { display: grid; gap: 40px; grid-template-columns: 1fr; }
-  @media (min-width: 769px) { .ftr-g { grid-template-columns: 1.4fr 1fr 1fr; gap: var(--nah-size-gap); } }
-  .ftr ul { list-style: none; padding: 0; margin: 0; }
-  .ftr ul li { margin: 0; }
-  .ftr ul a { display: inline-flex; align-items: center;
-              min-height: var(--nah-size-tap); min-width: var(--nah-size-tap); }
-  .ftr .meta { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; margin-bottom: 6px; }
-  .ftr .meta a { display: inline-flex; align-items: center; min-height: var(--nah-size-tap); }
-  /* リンクの行はタップ領域で背が高くなるので、ラベルの高さを合わせる */
-  .ftr .meta:has(a) { align-items: center; }
-  .ftr .meta .ic { margin-top: 5px; }
-  /* 約束を書いた場所。本編の案内とは別枠にして、下段に横並びで置く */
-  .ftr-legal {
-    display: flex; flex-wrap: wrap; gap: 4px 28px;
-    margin-top: 40px; padding-top: 20px;
-    border-top: 1px solid rgba(255,255,255,.16);
-  }
-  .ftr-legal a { gap: 7px; font-size: 13px; }
-  .ftr-legal .ic { color: var(--nah-color-muted-on-ink); }
-  .ftr .fine { margin-top: 20px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.16);
-               font-size: 12px; line-height: 1.9; color: var(--nah-color-muted-on-ink); }
+  /* C24 Footer は footer.css に定義する。 */
 
   /* ── 構造図。写真がないときは構造図か整ったデータ面を使う（原則C） */
   .fig {

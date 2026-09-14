@@ -1,6 +1,7 @@
 import {
   Phone,
   ArrowRight,
+  ArrowUp,
   ChevronDown,
   Check,
   X,
@@ -71,6 +72,7 @@ import {
 export const ICONS = {
   phone: Phone,
   'arrow-right': ArrowRight,
+  'arrow-up': ArrowUp,
   'chevron-down': ChevronDown,
   check: Check,
   x: X,

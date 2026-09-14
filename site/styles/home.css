@@ -128,8 +128,6 @@
   .home-contact .stat .v { font-family: var(--nah-font-family-mono); font-size: 60px; font-weight: var(--nah-font-weight-regular); }
   .home-contact .stat .k { font-size: 14px; }
   .home-contact .btns { margin-top: 34px; }
-  .nah-app:has(.home-content) .ftr { border-top: 1px solid rgb(255 255 255 / .2); }
-  .nah-app:has(.home-content) .ftr h4 { letter-spacing: .08em; }
   @media (min-width: 1100px) { .home-ownership .cards .g { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
   @media (max-width: 1099px) {
     .home-intro > .wrap { gap: 36px; }

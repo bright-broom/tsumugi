@@ -103,7 +103,6 @@
     .calc .r .v { font-size: 17px; }
     .calc .r.net .v { font-size: 27px; }
     .ctapanel { padding: 24px; }
-    .ftr { padding-block: 44px 32px; }
   }
 
   /* ── 固定CTA。C18：本文・キーボード・フッターを覆わない */
@@ -203,9 +202,6 @@
     .menu-panel a { font-size: 14px; }
     .stat .k { font-size: 13.5px; }
     .tbl-hint, .fig-hint { font-size: 13px; }
-    .ftr .meta { font-size: 14px; }
-    .ftr .fine { font-size: 13px; line-height: 2; }
-    .ftr-legal a { font-size: 14px; }
     .pmeta, .sub2 { font-size: 13.5px; }
     .calc .r.net .k { font-size: 15px; }
     .calc .r .k em { font-size: 13px; }
