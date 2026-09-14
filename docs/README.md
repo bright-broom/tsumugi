@@ -15,6 +15,7 @@
 | **いまの状態と残課題** | [status.md](status.md) |
 | 事業の規範（何を売り、何を売らないか・営業・納品・運用・法令） | [business/紬_ビジネスガイドライン.md](business/紬_ビジネスガイドライン.md) |
 | 事業の数字（料金レバー・プラン・補助金・掲載費） | [business/紬_事業の中身.xlsx](business/紬_事業の中身.xlsx) |
+| 月140時間での料金再設計案・提供範囲・採算・検証計画 | [business/pricing-redesign-140h.md](business/pricing-redesign-140h.md) |
 | サイトの主張・値付け・約束の置き場所・屋号・数字の出典 | [product/messaging-and-pricing.md](product/messaging-and-pricing.md) |
 | デザインの出所・スマホ表示・図・共有カード | [product/design.md](product/design.md) |
 | 検査している項目（納品の条件）と、検査で見つかった不具合 | [spec.md](spec.md) |
