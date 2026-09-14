@@ -1,0 +1,471 @@
+/* ══════════════════════════════════════════════════════════════════
+   画面層。768px でページを切り替える（07 寸法とレイアウト）。
+   一度しか使わないページ固有の余白はここに置き、トークンには上げない。
+   ══════════════════════════════════════════════════════════════════ */
+@layer screens {
+  /* 暫定の承認済み画像は、文字と二柱を切り取らずヘッダー直下に置く。 */
+  .brand-hero {
+    @apply relative p-[0] bg-ink text-white;
+  }
+  .brand-hero-artwork {
+    @apply w-[100%] h-[auto] rounded-[0];
+  }
+  .brand-hero-copy {
+    @apply p-[28px_var(--spacing-pad-mb)_32px];
+  }
+  .brand-hero-copy h1 {
+    @apply text-hero-mb leading-hero mb-[16px];
+  }
+  .brand-hero-copy p {
+    @apply text-body;
+  }
+  @media (min-width: 769px) {
+    /* 画像内のコピーと同じ内容を、読み上げでは見出し・本文として届ける。 */
+    .brand-hero-copy {
+      @apply absolute w-[1px] h-[1px] p-[0] m-[-1px] overflow-hidden;
+      clip-path: inset(50%);
+      @apply whitespace-nowrap;
+      border: 0;
+    }
+  }
+
+  /* ── ヒーロー。PCは 45/67.5px、モバイルは 24/36px（06 文字と書体） */
+  @media (max-width: 768px) {
+    .hero {
+      @apply py-[44px_40px];
+    }
+    /* 日本語の改行を再構成する（C03）。PC用の強制改行は外し、文節で折る */
+    .hero h1,
+    .hero .service-intro-title {
+      @apply text-hero-mb;
+    }
+    .hero h1 br,
+    .hero .service-intro-title br {
+      @apply hidden;
+    }
+    /* 前置きは手に持つ画面でいちばん飛ばされる。大きくして、白に寄せて、改行は外す */
+    /* 新しい色は足さない。白と墨紺を混ぜて作る（トークンから導出する） */
+    .hero .sub {
+      @apply text-[16px];
+      color: color-mix(in oklab, var(--color-white) 86%, var(--color-ink));
+    }
+    .hero .sub br {
+      @apply hidden;
+    }
+    .amt {
+      @apply text-[42px];
+    }
+    .amt .u {
+      @apply text-[16px];
+    }
+    .pricebox {
+      @apply p-[20px] gap-[20px];
+    }
+    .pricebox .alt {
+      @apply min-w-[0];
+    }
+  }
+
+  /* ── ヘッダー。ブランドの余白を保ち、狭い画面では主ナビを全体メニューへ集約する */
+  @media (min-width: 1440px) {
+    .header-phone {
+      @apply inline-flex;
+    }
+  }
+  @media (max-width: 1199px) {
+    .hdr-in {
+      @apply gap-[20px];
+    }
+    .nav ul {
+      @apply gap-[20px];
+    }
+    .logo .s {
+      @apply hidden;
+    }
+    .header-actions {
+      @apply gap-[16px];
+    }
+  }
+  @media (max-width: 999px) {
+    .nav {
+      @apply hidden;
+    }
+    .header-actions {
+      @apply ml-[auto];
+    }
+    .logo .s {
+      @apply block;
+    }
+  }
+  @media (max-width: 768px) {
+    .hdr-in {
+      @apply h-header-mb px-pad-mb-head gap-[10px];
+    }
+    .logo {
+      @apply gap-[10px];
+    }
+    .logo .n {
+      @apply text-[39px];
+    }
+    .logo .roman {
+      @apply text-[12px] tracking-[.18em];
+    }
+    .logo .s {
+      @apply hidden;
+    }
+    .header-actions {
+      @apply gap-[10px];
+    }
+    .header-contact {
+      @apply min-h-tap gap-[10px] p-[9px_12px];
+    }
+    .contact-long {
+      @apply hidden;
+    }
+    .contact-short {
+      @apply inline;
+    }
+    .menu > summary {
+      @apply min-w-tap;
+    }
+    .menu-panel {
+      @apply right-[20px] p-[18px_12px] max-h-[calc(100dvh_-_var(--spacing-header-mb)_-_80px)];
+    }
+    .draft {
+      @apply px-pad-mb-head text-[12px];
+    }
+    .tel {
+      @apply p-[4px_12px_4px_10px];
+    }
+    .tel .num {
+      @apply text-[15px];
+    }
+  }
+
+  /* ── 主要CTA。PC 315×57 → モバイル 260×48 */
+  @media (max-width: 768px) {
+    .btn {
+      @apply min-h-cta-h-mb px-[20px] text-[15px];
+    }
+    .btn-1 {
+      @apply min-w-[min(var(--spacing-cta-w-mb),_100%)];
+    }
+    .btns {
+      @apply gap-[10px];
+    }
+  }
+  /* 幅いっぱいに伸ばすのは、横に2つ並べられない画面だけにする */
+  @media (max-width: 479px) {
+    .btns .btn {
+      @apply flex-[1_1_100%];
+    }
+  }
+
+  /* ── 章の余白を業務寄りに圧縮する（原則B） */
+  @media (max-width: 768px) {
+    .sh {
+      @apply mb-[26px];
+    }
+    .card,
+    .plan {
+      @apply p-[20px];
+    }
+    .alert {
+      @apply p-[18px];
+    }
+    .acc > summary {
+      @apply p-[13px_16px] text-[15px];
+    }
+    .acc .bd {
+      @apply p-[0_16px_16px_16px];
+    }
+    .calc .r {
+      @apply p-[13px_16px];
+    }
+    .calc .r .v {
+      @apply text-[17px];
+    }
+    .calc .r.net .v {
+      @apply text-[27px];
+    }
+    .ctapanel {
+      @apply p-[24px];
+    }
+  }
+
+  /* ── 固定CTA。C18：本文・キーボード・フッターを覆わない */
+  @media (max-width: 768px) {
+    body,
+    .nah-app {
+      @apply pb-[68px];
+    }
+    .fixbar {
+      @apply grid grid-cols-[1fr_1fr] gap-[8px] fixed left-[0] right-[0] bottom-[0] z-[50] p-[10px_var(--spacing-pad-mb)_calc(10px_+_env(safe-area-inset-bottom))] bg-[rgba(255,255,255,.94)];
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--color-line);
+    }
+    .fixbar a {
+      @apply inline-flex items-center justify-center gap-[7px] min-h-cta-h-mb rounded-pill text-[15px] font-bold no-underline;
+    }
+    .fixbar a:first-child {
+      @apply bg-ink text-white;
+    }
+    .fixbar a:last-child {
+      @apply bg-[var(--accent)] text-[var(--accent-ink)];
+    }
+  }
+
+  /* ── 図。狭い画面では縮小せず横に動かす（縮小すると本文が読めなくなる） */
+  @media (max-width: 900px) {
+    .fig {
+      @apply p-[16px];
+    }
+    .fig > svg {
+      @apply min-w-[480px];
+    }
+    /* 組み直した図があるなら、縮小も横スクロールもせずそちらを出す。
+       その場合は左右の余白も外して、文字を1pxでも大きく描く */
+    .fig.has-narrow {
+      @apply p-[18px_0_0];
+    }
+    .fig.has-narrow > .fw {
+      @apply hidden;
+    }
+    .fig.has-narrow > .fn {
+      @apply block min-w-[0];
+    }
+    .fig-hint {
+      @apply block sticky left-[0] m-[12px_0_0] text-[12px] font-semi text-muted;
+    }
+    .fig-hint::before {
+      content: '↔ ';
+    }
+    section.dark .fig-hint {
+      @apply text-muted-on-ink;
+    }
+  }
+
+  /* ── 表。横スクロールは領域内に閉じる（14 品質）。
+        動かせることを見せ、行見出しは固定したまま残す */
+  @media (max-width: 768px) {
+    .tbl th,
+    .tbl td {
+      @apply p-[11px_14px] text-[14px];
+    }
+    .tbl tbody th,
+    .tbl thead th:first-child {
+      @apply min-w-[7.5em];
+    }
+    .tbl-hint {
+      @apply block m-[10px_0_0] text-[12px] font-semi text-muted;
+    }
+    .tbl-hint::before {
+      content: '↔ ';
+    }
+    section.dark .tbl-hint {
+      @apply text-muted-on-ink;
+    }
+    .tbl-hint + .tbl-note {
+      @apply mt-[6px];
+    }
+  }
+
+  /* ── 2〜3列の表は、狭い画面では横に引かせず1行ずつ縦に開く。
+        指で引かないと右の列が見えない、という状態を作らないのが目的。
+        列名は各セルの頭に data-h から出すので、見出し行は畳んでよい。 */
+  @media (max-width: 768px) {
+    .tblwrap.stack .tbl {
+      overflow-x: visible;
+      scroll-snap-type: none;
+    }
+    .tblwrap.stack table {
+      @apply block min-w-[0]!;
+    }
+    .tblwrap.stack thead {
+      @apply hidden;
+    }
+    .tblwrap.stack tbody {
+      @apply block;
+    }
+    .tblwrap.stack tbody tr {
+      @apply block p-[15px_16px];
+      border-bottom: 1px solid var(--color-line);
+    }
+    .tblwrap.stack tbody tr:last-child {
+      border-bottom: 0;
+    }
+    .tblwrap.stack tbody th {
+      @apply block;
+      position: static;
+      box-shadow: none;
+      background: none;
+      @apply min-w-[0] p-[0_0_8px] text-[15.5px] leading-[1.6];
+    }
+    .tblwrap.stack tbody th .dim {
+      @apply text-[13px];
+    }
+    /* セルは block のまま。grid にすると中のリンクが grid item になって
+       ブロック化し、「本文中のリンク」ではなくなってタップ領域の検査に引っかかる。 */
+    .tblwrap.stack tbody td {
+      @apply block p-[8px_0_0] text-[14.5px] leading-[1.75];
+      border: 0;
+    }
+    .tblwrap.stack tbody td[data-h]::before {
+      content: attr(data-h);
+      @apply block text-[12.5px] font-semi leading-[1.7] text-muted;
+    }
+    .tblwrap.stack tbody td.grp {
+      @apply p-[0];
+    }
+    section.dark .tblwrap.stack tbody tr {
+      @apply border-[rgba(255,255,255,.14)];
+    }
+    section.dark .tblwrap.stack tbody td[data-h]::before {
+      @apply text-muted-on-ink;
+    }
+  }
+
+  /* ── 小さすぎる文字の底上げ。
+        390px で測ったところ 10〜13px の文字が 300 箇所以上あった。
+        ガイド06の寸法はPC向けなので、手に持つ画面では下限を引き上げる。
+        色を濃くするのではなく大きくする（#626873 は白地で 5.8:1 あり、
+        読みにくさの原因は明度差ではなく字面の小ささだった）。 */
+  @media (max-width: 768px) {
+    .sh .lab {
+      @apply text-[13.5px];
+    }
+    .tel .lbl {
+      @apply text-[11.5px];
+    }
+    .menu-panel .hd {
+      @apply text-[13px];
+    }
+    .menu-panel a {
+      @apply text-[14px];
+    }
+    .stat .k {
+      @apply text-[13.5px];
+    }
+    .tbl-hint,
+    .fig-hint {
+      @apply text-[13px];
+    }
+    .pmeta,
+    .sub2 {
+      @apply text-[13.5px];
+    }
+    .calc .r.net .k {
+      @apply text-[15px];
+    }
+    .calc .r .k em {
+      @apply text-[13px];
+    }
+    .field .req,
+    .field .opt {
+      @apply text-[12.5px];
+    }
+    .tbl tbody th .dim {
+      @apply text-[12.5px];
+    }
+    /* 比較バーは、名前と補足と金額が1行に詰まると読みにくい。
+       名前の行と金額の行を分け、補足はその下に落とす */
+    .vs {
+      @apply gap-[18px] mt-[20px];
+    }
+    .vs .row {
+      @apply grid-cols-[1fr] gap-[2px];
+    }
+    .vs .nm {
+      @apply text-[15.5px];
+    }
+    .vs .nm em {
+      @apply block text-[13px];
+    }
+    .vs .nm > span {
+      @apply block;
+    }
+    .vs .amtv {
+      @apply text-[19px];
+    }
+    .vs .bar {
+      @apply col-[1];
+    }
+  }
+
+  /* ── 指の下でのふるまい。
+        overscroll-behavior がないと、表を横に引き切ったところで
+        その勢いがページに渡り、iOS では「戻る」のスワイプに化ける。 */
+  .tbl,
+  .fig,
+  .menu-panel,
+  .cq {
+    overscroll-behavior: contain;
+  }
+  .tbl {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── 読み進みの目安。ヘッダーの下端に1本。
+        スクロール駆動アニメーションなので JavaScript は要らない。
+        対応していないブラウザでは @supports ごと無視される＝ただ出ないだけ。 */
+  @supports (animation-timeline: scroll()) {
+    .hdr::after {
+      content: '';
+      @apply absolute left-[0] bottom-[-1px] h-[2px] w-[100%];
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      @apply bg-header-brass;
+      animation: nah-read linear both;
+      animation-timeline: scroll(root block);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hdr::after {
+        @apply hidden;
+      }
+    }
+  }
+  @keyframes nah-read {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  /* ── ページ間の遷移で、固定されているものは動かさない。
+        ヘッダーと下部CTAが毎回かぶさり直すと、紙芝居に見える。 */
+  .hdr {
+    view-transition-name: hdr;
+  }
+  .fixbar {
+    view-transition-name: fixbar;
+  }
+  ::view-transition-group(hdr),
+  ::view-transition-group(fixbar) {
+    animation: none;
+  }
+  ::view-transition-old(root) {
+    animation-duration: 120ms;
+  }
+  ::view-transition-new(root) {
+    animation-duration: 160ms;
+  }
+}
+
+@layer overrides {
+  /* 印刷時は固定要素を外す */
+  @media print {
+    .hdr,
+    .fixbar,
+    .skip,
+    .menu {
+      @apply hidden!;
+    }
+    body,
+    .nah-app {
+      @apply pb-[0];
+    }
+    section {
+      @apply py-[24px];
+    }
+  }
+}

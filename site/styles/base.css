@@ -1,0 +1,277 @@
+/* ══════════════════════════════════════════════════════════════════
+   基礎層。NOT A HOTEL デザインガイドライン v2.0 の 04〜07 に対応する。
+   トークンは tokens.css（Tailwind @theme）（design.tokens.json からの生成物）。
+   ここには「面・文字・余白の土台」だけを置き、部品は components.css へ。
+   ══════════════════════════════════════════════════════════════════ */
+@layer base {
+  /* 欧文ディスプレイのみ自ホスティング。日本語は端末の書体を使う（外部依存なし） */
+  @font-face {
+    font-family: 'League Gothic';
+    src: url('fonts/league-gothic-latin.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+    unicode-range: U+0000-00FF, U+2000-206F, U+2212, U+FF01-FF5E;
+  }
+
+  *,
+  *::before,
+  *::after {
+    @apply box-border;
+  }
+
+  :root {
+    color-scheme: light;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* ページ内リンクは飛ぶのではなく滑らせる。固定ヘッダーぶんの逃げは下の scroll-padding。
+       動きを減らす設定の人には下のブロックで auto に戻す。 */
+    @apply scroll-smooth;
+    scroll-padding-top: calc(var(--spacing-header-pc) + 16px);
+  }
+  body {
+    @apply m-[0] bg-white;
+  }
+
+  /* ── 指で触る前提の既定値。
+        touch-action: manipulation は、ダブルタップ判定の待ち時間（約300ms）を消す。
+        タップの灰色い矩形は自前の :active に置き換える（下）。 */
+  a,
+  button,
+  summary,
+  label,
+  input,
+  select,
+  textarea,
+  [role='button'] {
+    @apply touch-manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 画面のルート。テーマは data-profile で振り替える（16 導入と運用）。
+     body ではなくこの div に載せるのは、埋め込み先が body を持つ場合があるため。 */
+  .nah-app {
+    --accent: var(--color-campaign-accent);
+    --accent-ink: var(--color-campaign-accent-ink);
+    --accent-text: var(--color-campaign-accent-text);
+    @apply bg-white text-ink font-ja text-body leading-body font-regular;
+    font-feature-settings: 'palt' 1;
+  }
+  .nah-app[data-profile='main'] {
+    --accent: var(--color-main-accent);
+    --accent-ink: var(--color-main-accent-ink);
+    --accent-text: var(--color-main-accent-text);
+  }
+
+  /* ── 見出し。役割ごとに書体を分ける（原則D） */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply m-[0] font-bold leading-heading tracking-[.01em];
+  }
+  h1 {
+    @apply text-page-pc;
+  }
+  h2 {
+    @apply text-h2;
+  }
+  h3 {
+    @apply text-h3;
+  }
+  h4 {
+    @apply text-body;
+  }
+
+  p {
+    @apply m-[0_0_1.1em];
+  }
+  p:last-child {
+    @apply mb-[0];
+  }
+
+  strong,
+  b {
+    @apply font-bold;
+  }
+
+  a {
+    @apply text-[var(--accent-text)] underline underline-offset-[.18em];
+  }
+  a:hover {
+    @apply decoration-[2px];
+  }
+
+  /* フォーカスは常に見える。固定ヘッダーに隠れないよう scroll-margin を持たせる */
+  :where(a, button, summary, input, select, textarea, [tabindex]):focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 2px;
+    @apply rounded-[4px];
+  }
+  :where(a, button, summary, input, select, textarea, h1, h2, h3, [id]) {
+    scroll-margin-top: calc(var(--spacing-header-pc) + 16px);
+  }
+
+  img,
+  svg,
+  video {
+    @apply max-w-[100%];
+  }
+  img {
+    @apply h-[auto] block rounded-media;
+  }
+
+  ul,
+  ol {
+    @apply m-[0_0_1.1em] pl-[1.35em];
+  }
+  li {
+    @apply mb-[.4em];
+  }
+
+  table {
+    @apply border-collapse;
+  }
+
+  /* 数字は桁を揃える。金額の比較が主な仕事なので既定で効かせる */
+  .tnum {
+    @apply tabular-nums;
+  }
+
+  /* ── 器。PC 1104px / 3列 / 間隔32px（07 寸法） */
+  .wrap,
+  .wrap-read,
+  .wrap-w {
+    @apply mx-[auto] px-pad-pc;
+  }
+  .wrap {
+    @apply max-w-container;
+  }
+  .wrap-read {
+    @apply max-w-[calc(var(--spacing-measure-read)_+_var(--spacing-pad-pc)_*_2)];
+  }
+  .wrap-w {
+    @apply max-w-[calc(var(--spacing-measure-wide)_+_var(--spacing-pad-pc)_*_2)];
+  }
+
+  /* ── 章。読むテンポを変える（原則F） */
+  section {
+    @apply py-section-pc;
+  }
+  section.tint {
+    @apply bg-surface;
+  }
+  section.dark {
+    @apply bg-ink text-white;
+  }
+  section.dark a {
+    @apply text-white;
+  }
+  section.dark h1,
+  section.dark h2,
+  section.dark h3 {
+    @apply text-white;
+  }
+
+  /* ── 補助文字。推奨値 #626873（観測の #858A95 は使わない） */
+  .dim {
+    @apply text-muted;
+  }
+  section.dark .dim {
+    @apply text-muted-on-ink;
+  }
+
+  /* ── 押した手ごたえ。アプリらしさの大半はここで、色ではなく反応の速さで決まる。
+        120ms は「押した」と感じる下限あたり。これより長いと引っかかって感じる。 */
+  .btn,
+  .tel,
+  .ind,
+  .card,
+  .plan,
+  .fixbar a,
+  .menu > summary,
+  .acc > summary,
+  .more {
+    transition:
+      transform 120ms cubic-bezier(0.2, 0.8, 0.3, 1),
+      background-color 150ms ease,
+      border-color 150ms ease,
+      box-shadow 150ms ease;
+  }
+  .btn:active,
+  .tel:active,
+  .fixbar a:active,
+  .menu > summary:active {
+    transform: scale(0.97);
+  }
+  .ind:active,
+  .card:active,
+  .acc > summary:active {
+    transform: scale(0.99);
+  }
+  .more:active {
+    @apply opacity-[.6];
+  }
+
+  /* ── 動きを減らす設定（11 レスポンシブ・14 品質） */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      @apply scroll-auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      @apply scroll-auto!;
+      view-transition-name: none !important;
+    }
+  }
+
+  /* ── 768px でページを切り替える（07） */
+  @media (max-width: 768px) {
+    :root {
+      --spacing-pad-pc: var(--spacing-pad-mb);
+    }
+    html {
+      scroll-padding-top: calc(var(--spacing-header-mb) + 12px);
+    }
+    .wrap,
+    .wrap-read,
+    .wrap-w {
+      @apply px-pad-mb;
+    }
+    section {
+      @apply py-section-mb;
+    }
+    h1 {
+      @apply text-page-mb;
+    }
+    h2 {
+      @apply text-[22px];
+    }
+    h3 {
+      @apply text-[18px];
+    }
+    :where(a, button, summary, input, select, textarea, h1, h2, h3, [id]) {
+      scroll-margin-top: calc(var(--spacing-header-mb) + 12px);
+    }
+    /* ガイド06の寸法はPC向け。手に持つ画面では補助文字の下限を上げる。
+       読み手が50〜60代である前提はタップ領域44pxと同じ根拠で、文字にも効かせる。 */
+    .nah-app {
+      --text-meta: 14px;
+    }
+    /* 白と補助面（#F4F5F7）の差は、屋外の画面では見分けがつかない。
+       色を濃くするとガイドから外れるので、境目に髪の毛の線を1本入れて章を区切る。 */
+    section + section {
+      border-top: 1px solid var(--color-line);
+    }
+    section.dark + section,
+    section + section.dark,
+    section.tint + section.tint {
+      border-top: 0;
+    }
+  }
+}

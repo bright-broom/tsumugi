@@ -24,7 +24,7 @@ npm run check            # 型・依存方向・循環・文言とルートの�
 
 ```mermaid
 flowchart TD
-  s1["① build-tokens.ts<br/>--check<br/>トークンの同期"] --> s2["② build-public.ts<br/>theme.css<br/>robots・sitemap"]
+  s1["① build-tokens.ts<br/>--check<br/>Tailwindテーマの同期"] --> s2["② build-public.ts<br/>theme.css<br/>robots・sitemap"]
   s2 --> s3["③ next build<br/>静的書き出し"]
   s3 --> s4["④ postbuild.ts<br/>印の除去<br/>0バイトの検査"]
   s4 --> out[("out/<br/>HTML 21・CSS<br/>OGP画像 24")]
@@ -35,22 +35,31 @@ flowchart TD
 | 段階 | やること | 止まる条件 |
 |---|---|---|
 | ① `build-tokens.ts --check` | `styles/design.tokens.json` と `styles/tokens.css` が一致するか | 手で `tokens.css` を直した・`npm run tokens` を忘れた |
-| ② `build-public.ts` | `styles/` の6枚（`home.css` と `footer.css` を含む）を `public/theme.css` に束ね、`robots.txt`・`sitemap.xml` を書く | — |
+| ② `build-public.ts` | `styles/globals.css` を Tailwind CLI で `public/theme.css` にコンパイルし、`robots.txt`・`sitemap.xml` を書く | CSSコンパイル失敗 |
 | ③ `next build` | 21ページを `out/` に書き出す（型検査を含む） | 型エラー |
 | ④ `postbuild.ts` | `data-next-head` などの印を消し、JSON-LD 以外の `<script>` と `<!-- -->` を数え、`out/_next/` を消す | 1件でもあれば |
 
-### CSS の流れ
+### CSS の中央管理（Tailwind CSS 4.3.3）
 
 ```mermaid
 flowchart LR
-  json["design.tokens.json<br/>80トークン"] -->|npm run tokens| tcss["tokens.css"]
-  tcss --> theme["public/theme.css"]
-  idx["index.css<br/>base"] --> theme
-  comp["components.css<br/>components"] --> theme
-  guide["guide.css<br/>screens<br/>overrides"] --> theme
+  json["design.tokens.json<br/>85トークン"] -->|npm run tokens| tcss["tokens.css<br/>Tailwind @theme"]
+  tcss --> entry["globals.css<br/>唯一の公開CSS入口"]
+  parts["base・components・responsive<br/>home・footer・pages"] --> entry
+  entry -->|Tailwind CLI| theme["public/theme.css<br/>全21ページで共有"]
+  tcss --> og["og.css<br/>画像生成専用"]
 ```
 
-色や寸法は `design.tokens.json` を直して `npm run tokens`。`tokens.css` と `public/theme.css` は手で編集しない。
+- 色・書体・寸法は `styles/design.tokens.json` が正本。`npm run tokens` で `@theme` を生成する。`tokens.css`・`public/theme.css` は手で編集しない。
+- 共通部品の見た目は `styles/` の意味を持つクラスに `@apply` で定義する。ページのJSXにはクラス名を渡す。`source(none)` により、ページ内の文字列から偶然ユーティリティを生成しない。
+- 各CSSは `globals.css` からだけ読む。`theme → base → components → screens → overrides → utilities` の順。既存のリセットを維持し、Preflightを追加しない。
+- カード幅など役割のある寸法は `w-container`、色は `text-ink`、書体は `font-brand` などテーマのユーティリティを使う。用途固有の値は `styles/` 内の任意値で指定できる。
+- グラデーション・キーフレーム・複雑な状態セレクターなどは同じCSS内に置く。SVGの座標・図形属性は図解データに残し、意味を持つ色は共通CSS変数で供給する。
+- JSXの `style` は比較バーの比率・表の指定幅というデータを渡すCSS変数だけ。静的なスタイル、CSS Modules、`<style>` の持ち込みは `npm run check` が止める。
+- `npm run dev` はテーマ生成・Tailwind監視・Nextをまとめて起動／終了する。JSONとCSSの変更は自動コンパイルされ、CSSはブラウザの再読み込みで反映する。単独実行は `npm run styles` / `npm run styles:watch`。
+- `styles/og.css` も同じテーマとTailwindで画像生成時にコンパイルする。通常のページには配らない。字形の正本が未確定のため、OGPの変更検証は `npm run og -- --out <一時ディレクトリ>` で行い、既存PNGを不用意に上書きしない。
+
+設計の理由と移行時の確認は [ADR 0009](../docs/architecture/0009-global-tailwind.md) を参照。
 
 ---
 
@@ -59,12 +68,12 @@ flowchart LR
 ```mermaid
 flowchart TD
   out[("out/")] --> st["静的検査<br/>PASS 360"]
-  out --> br["ブラウザ実測<br/>PASS 220"]
+  out --> br["ブラウザ実測<br/>PASS 248"]
   content["src/content/<br/>config・prices"] -.->|突き合わせる| st
-  st --> full["verify-report.json<br/>PASS 610<br/>WARN 1 / FAIL 0"]
+  st --> full["verify-report.json<br/>PASS 608<br/>WARN 1 / FAIL 0"]
   br --> full
   st -.->|簡易版のとき| static["verify-report<br/>.static.json"]
-  full -.->|次のビルドで| works["works.html の<br/>「610項目」"]
+  full -.->|次のビルドで| works["works.html の<br/>「608項目」"]
 ```
 
 - **静的検査**：電話番号・JSON-LD・実行時JSなし・内部リンク・CSS変数・価格・トークンの同期・OGP画像など。**ブラウザ実測**：LCP・横スクロール・タップ領域・コントラスト・図の色・コンソールエラー

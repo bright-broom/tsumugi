@@ -37,7 +37,7 @@ export default function Entry({ full = false }: Props) {
           </span>
         </div>
         <div>
-          <p style={{ marginBottom: '12px' }}>{sg.lede}</p>
+          <p className="entry-lede">{sg.lede}</p>
           <ul className="plain">
             {items.map((i) => (
               <li key={i}>
@@ -47,7 +47,7 @@ export default function Entry({ full = false }: Props) {
             ))}
           </ul>
           {full && (
-            <p className="dim" style={{ margin: '-6px 0 16px' }}>
+            <p className="dim entry-exclusions">
               {format(copy.dim, { sgNotIncludesJoin: sg.notIncludes.join('／') })}
             </p>
           )}

@@ -37,7 +37,7 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
           </h1>
           <p className="sub">
             {copy.sub}
-            <strong style={{ color: '#fff' }}>{copy.strong}</strong>
+            <strong className="ownership-emphasis">{copy.strong}</strong>
             {copy.sub2}
           </p>
           <Cta />

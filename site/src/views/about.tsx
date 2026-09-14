@@ -24,10 +24,7 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
       />
 
       <Section>
-        <div
-          className="cards"
-          style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(260px,1fr))' }}
-        >
+        <div className="cards member-cards">
           {C.MEMBERS.map((m) => (
             <div className="card" key={m.name}>
               <div className="ttl">{m.name}</div>

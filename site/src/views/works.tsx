@@ -56,7 +56,7 @@ export default function WorksPage({ copy, route, pass }: PageProps<'works'>) {
             { icon: 'zap', value: '0', unit: copy.itemsUnit3, label: copy.itemsLabel4 },
           ]}
         />
-        <p style={{ marginTop: '22px' }}>
+        <p className="works-followup">
           {copy.p5}
           <strong>{copy.strong4}</strong>
           {copy.p6}

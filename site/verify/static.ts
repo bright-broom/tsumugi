@@ -60,21 +60,21 @@ export function checkStatic(dist: string): void {
 
   // ガイドの数値がそのまま出ているか。書き換えたら気づけるようにする
   const GUIDE: [string, string][] = [
-    ['--nah-size-header-pc: 88px', 'ヘッダー高 PC 88px'],
-    ['--nah-size-header-mb: 72px', 'ヘッダー高 モバイル 72px'],
-    ['--nah-size-cta-w-pc: 315px', '主要CTA幅 PC 315px'],
-    ['--nah-size-cta-h-pc: 57px', '主要CTA高 PC 57px'],
-    ['--nah-size-cta-w-mb: 260px', '主要CTA幅 モバイル 260px'],
-    ['--nah-size-cta-h-mb: 48px', '主要CTA高 モバイル 48px'],
-    ['--nah-size-container: 1104px', '器 1104px'],
-    ['--nah-size-measure-read: 720px', '読み幅 720px'],
-    ['--nah-font-size-hero-pc: 45px', 'ヒーロー PC 45px'],
-    ['--nah-font-size-hero-mb: 24px', 'ヒーロー モバイル 24px'],
-    ['--nah-color-ink: #0B0B0D', '暗い章 #0B0B0D'],
-    ['--nah-color-green: #42D083', 'LPの緑 #42D083'],
-    ['--nah-color-muted: #626873', '補助文字の推奨値 #626873'],
-    ['--nah-radius-media: 8px', '角丸 media 8px'],
-    ['--nah-radius-pill: 999px', '角丸 pill 999px'],
+    ['--spacing-header-pc: 88px', 'ヘッダー高 PC 88px'],
+    ['--spacing-header-mb: 72px', 'ヘッダー高 モバイル 72px'],
+    ['--spacing-cta-w-pc: 315px', '主要CTA幅 PC 315px'],
+    ['--spacing-cta-h-pc: 57px', '主要CTA高 PC 57px'],
+    ['--spacing-cta-w-mb: 260px', '主要CTA幅 モバイル 260px'],
+    ['--spacing-cta-h-mb: 48px', '主要CTA高 モバイル 48px'],
+    ['--spacing-container: 1104px', '器 1104px'],
+    ['--spacing-measure-read: 720px', '読み幅 720px'],
+    ['--text-hero-pc: 45px', 'ヒーロー PC 45px'],
+    ['--text-hero-mb: 24px', 'ヒーロー モバイル 24px'],
+    ['--color-ink: #0B0B0D', '暗い章 #0B0B0D'],
+    ['--color-green: #42D083', 'LPの緑 #42D083'],
+    ['--color-muted: #626873', '補助文字の推奨値 #626873'],
+    ['--radius-media: 8px', '角丸 media 8px'],
+    ['--radius-pill: 999px', '角丸 pill 999px'],
   ];
   const off = GUIDE.filter(([t]) => !css.includes(t)).map(([, d]) => d);
   rec(off.length ? 'FAIL' : 'PASS', '21 ガイドの実測値', 'tokens.css',
@@ -93,8 +93,8 @@ export function checkStatic(dist: string): void {
 
   // 図の色。accent（勧める側）と ok（残るもの）は同じ意味圏なので同色でよいが、
   // bad（失われるもの）が同色になると、良い話と悪い話が区別できなくなる。
-  const tok = (name: string) => css.match(new RegExp(`--nah-${name}:\\s*([^;]+);`))?.[1]?.trim() ?? null;
-  const good = new Set([tok('theme-campaign-accent-text'), tok('color-ok')].filter((v): v is string => v !== null));
+  const tok = (name: string) => css.match(new RegExp(`--${name}:\\s*([^;]+);`))?.[1]?.trim() ?? null;
+  const good = new Set([tok('color-campaign-accent-text'), tok('color-ok')].filter((v): v is string => v !== null));
   const badColor = tok('color-alert');
   const distinct = badColor !== null && !good.has(badColor);
   rec(distinct ? 'PASS' : 'FAIL', '24 図の色（良／悪の区別）', 'tokens.css',

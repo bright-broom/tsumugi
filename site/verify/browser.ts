@@ -96,6 +96,10 @@ export async function checkBrowser(dist: string, root: string, writeBack: boolea
       const preferred = ['index.html', 'price.html', 'owned.html', 'flow.html'].filter((c) => have.includes(c));
       for (const cf of preferred.length ? preferred : [have[0]!]) {
         await pg.goto(`${base}/${cf}`, { waitUntil: 'domcontentloaded' });
+        // Static pages have no deferred scripts to delay DOMContentLoaded until CSS is ready.
+        // Measuring earlier intermittently counted hidden navigation and fallback-font text.
+        await pg.waitForFunction(`(${JS.STYLES_READY})()`, undefined, { timeout: 5000 });
+        await pg.evaluate(() => document.fonts.ready.then(() => undefined));
         for (const c of await run<{ sel: string; ratio: number; size: number; large: boolean }[]>(pg, JS.CONTRAST)) {
           const req = need(c.large);
           rec(c.ratio >= req ? 'PASS' : 'FAIL', 'コントラスト比 AA', cf,
