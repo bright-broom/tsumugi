@@ -44,7 +44,7 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-  json["design.tokens.json<br/>85トークン"] -->|npm run tokens| tcss["tokens.css<br/>Tailwind @theme"]
+  json["design.tokens.json<br/>88トークン"] -->|npm run tokens| tcss["tokens.css<br/>Tailwind @theme"]
   tcss --> entry["globals.css<br/>唯一の公開CSS入口"]
   parts["base・components・responsive<br/>home・footer・pages"] --> entry
   entry -->|Tailwind CLI| theme["public/theme.css<br/>全21ページで共有"]

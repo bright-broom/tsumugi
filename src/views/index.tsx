@@ -324,7 +324,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
         </Section>
 
         <Section
-          tone="tint"
+          tone="dark"
           navKey={href('price')}
           className="home-section home-included"
           eyebrow={copy.eyebrow6}

@@ -40,6 +40,15 @@ flowchart TD
 
 正確な依存バージョンは [package.json](package.json) と [package-lock.json](package-lock.json) が正本です。TypeScriptのCLIと検査ツール用APIを併用する理由は [ADR 0003](docs/architecture/0003-modern-stack.md) にまとめています。
 
+## ブランドの配色
+
+| メイン70% | サブ20% | アクセント10% |
+|---|---|---|
+| 生成り `#F7F5F0` | 墨 `#243B3B` | 朱 `#B44B35` |
+| 背景・余白 | 文字・説明の章 | 主要ボタン・料金・相談 |
+
+比率はイラストを除くUI面積の目安です。3色の正本と派生トークンを中央管理し、ヘッダーからフッター、共有カードまで揃えています。[配色ルール](docs/product/design.md#3色の使い方と721) · [判断と検証](docs/architecture/0014-three-color-system.md)
+
 ## ディレクトリ構成
 
 単一アプリをリポジトリのルートから操作します。`src/` に実装、`tools/` に開発と検査、`docs/` に仕様と判断を置きます。

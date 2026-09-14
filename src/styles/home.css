@@ -31,7 +31,7 @@
     @apply rounded-[6px] text-[14px];
   }
   .home-content .btn-1 {
-    @apply bg-ink text-white border-ink min-w-[220px];
+    @apply bg-accent text-main border-accent min-w-[220px];
   }
   .home-content .btn-2 {
     @apply border-line-strong;
@@ -43,7 +43,7 @@
     @apply bg-surface border-ink;
   }
   .home-intro .pricebox {
-    @apply flex flex-col items-stretch gap-[32px] p-[40px] bg-ink text-white;
+    @apply flex flex-col items-stretch gap-[32px] p-[40px] bg-accent text-main;
     border: 0;
     @apply rounded-[20px];
   }
@@ -60,7 +60,7 @@
     @apply text-[21px];
   }
   .home-intro .pricebox .alt {
-    border-top: 1px solid rgb(255 255 255 / 0.24);
+    border-top: 1px solid color-mix(in srgb, var(--color-main) 24%, transparent);
     @apply p-[25px_0_0] grid gap-[18px] min-w-[0];
   }
   .home-intro .pricebox .alt li {
@@ -251,7 +251,7 @@
   }
   .home-section.dark .card {
     @apply bg-panel;
-    border: 1px solid rgb(255 255 255 / 0.13);
+    border: 1px solid color-mix(in srgb, var(--color-main) 13%, transparent);
   }
   .home-section.dark .card .more {
     @apply text-white;
@@ -273,7 +273,7 @@
   }
   .home-promises .card .more {
     @apply pt-[16px];
-    border-top: 1px solid rgb(255 255 255 / 0.15);
+    border-top: 1px solid color-mix(in srgb, var(--color-main) 15%, transparent);
     @apply w-[100%];
   }
   .home-pricing .entry {
@@ -315,14 +315,14 @@
     @apply text-[40px];
   }
   .home-comparison .fig {
-    @apply bg-panel border-[rgb(255_255_255_/_.18)];
+    @apply bg-main border-line;
   }
   .home-comparison .calc {
     @apply mb-[34px];
   }
   .home-comparison .tbl {
     @apply rounded-[12px];
-    border: 1px solid rgb(255 255 255 / 0.2);
+    border: 1px solid color-mix(in srgb, var(--color-main) 20%, transparent);
   }
   .home-industries .inds {
     @apply gap-[0] grid-cols-[repeat(2,_minmax(0,_1fr))];
@@ -596,5 +596,33 @@
     .home-content .btns .btn {
       @apply min-w-[0] max-w-[100%];
     }
+  }
+}
+
+/* 7:2:1の面積配分。最後の相談エリアを朱の面にする。 */
+@layer overrides {
+  .home-intro .pricebox .pre,
+  .home-intro .pricebox .alt li {
+    @apply text-main;
+  }
+  .home-section.dark .card h3 .ic {
+    @apply text-main;
+  }
+  .home-section.home-contact {
+    @apply bg-accent text-main;
+  }
+  .home-contact .sh .lede,
+  .home-contact .stat .k,
+  .home-contact .stat > .ic {
+    @apply text-main;
+  }
+  .home-contact .btn-1 {
+    @apply bg-main text-sub border-main;
+  }
+  .home-contact .btn-2 {
+    @apply text-main border-main;
+  }
+  .home-contact .stat {
+    border-color: var(--color-main);
   }
 }

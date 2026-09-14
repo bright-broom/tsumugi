@@ -70,9 +70,9 @@ export function checkStatic(dist: string): void {
     ['--spacing-measure-read: 720px', '読み幅 720px'],
     ['--text-hero-pc: 45px', 'ヒーロー PC 45px'],
     ['--text-hero-mb: 24px', 'ヒーロー モバイル 24px'],
-    ['--color-ink: #0B0B0D', '暗い章 #0B0B0D'],
-    ['--color-green: #42D083', 'LPの緑 #42D083'],
-    ['--color-muted: #626873', '補助文字の推奨値 #626873'],
+    ['--color-main: #F7F5F0', 'メイン70%・生成り #F7F5F0'],
+    ['--color-sub: #243B3B', 'サブ20%・墨 #243B3B'],
+    ['--color-accent: #B44B35', 'アクセント10%・朱 #B44B35'],
     ['--radius-media: 8px', '角丸 media 8px'],
     ['--radius-pill: 999px', '角丸 pill 999px'],
   ];
@@ -82,7 +82,7 @@ export function checkStatic(dist: string): void {
 
   // 観測値のうち、使わないと決めたもの（05 色とテーマ）
   const banned: [string, string][] = [
-    ['#858A95', '補助文字は #626873 を使う'],
+    ['#858A95', '補助文字はメインとサブの混色トークンを使う'],
     ['Shippori', '日本語はガイドの端末書体スタックを使う'],
     ['fonts.googleapis.com', '外部フォントに依存しない'],
   ];

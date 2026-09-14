@@ -1,41 +1,44 @@
 /* 生成物。手で編集しない。
  * 出所: src/styles/design.tokens.json
  * 生成: npm run tokens
- * トークン数: 85
+ * トークン数: 88
  */
 @theme static {
   /* color */
-  --color-header-paper: #F7F5F0;  /* 紬のヘッダー。生成りの面 */
-  --color-header-ink: #19343D;  /* 紬のヘッダー。藍墨の文字と導線 */
-  --color-header-brass: #85704B;  /* 紬のヘッダー。糸を思わせる細い真鍮色の罫線 */
-  --color-white: #FFFFFF;  /* 白い面。標準の読む面 */
-  --color-ink: #0B0B0D;  /* 暗い章。没入・章切り替え */
-  --color-panel: #1C1C1C;  /* CTAパネル。主要行動のまとまり */
-  --color-black: #000000;  /* フッター等。終端の面 */
-  --color-surface: #F4F5F7;  /* 補助面。カード内部、補足情報 */
-  --color-field: #F7F7F7;  /* 入力面。フォームの編集領域 */
-  --color-paper: #FFF8EF;  /* 記事の柔らかい読書面。全面共通色にはしない */
-  --color-line: #E9E9EB;  /* 非操作の区切り */
-  --color-line-strong: #C8CAD0;  /* 入力枠・フォーカス。線より濃い色を使う */
-  --color-green: #42D083;  /* LPの緑。キャンペーンテーマ。白文字と組まない（1.98:1） */
-  --color-green-deep: #0E7A45;  /* 緑の上に置けない場面のための濃い緑。白文字可 */
-  --color-blue: #0171E3;  /* 本体の青。プロダクトテーマ、リンク系列 */
-  --color-muted: #626873;  /* 補助文字の推奨値。観測の #858A95 は使わない */
-  --color-muted-on-ink: #A8AEB8;  /* 暗い面の補助文字 */
-  --color-alert: #B3261E;  /* 業務状態の注意。ブランド色と意味を分離する */
-  --color-alert-bg: #FDECEA;  /* 注意の面 */
-  --color-ok: #0E7A45;  /* 業務状態の良。文字・アイコンを必ず併用する */
-  --color-ok-bg: #E8F5EE;  /* 良の面 */
-  --color-warn: #7A5B00;  /* 業務状態の要確認 */
-  --color-warn-bg: #FBF3DE;  /* 要確認の面 */
+  --color-main: #F7F5F0;  /* メイン70%：生成り。背景・余白・反転文字 */
+  --color-sub: #243B3B;  /* サブ20%：墨。本文・説明の面・構造線 */
+  --color-accent: #B44B35;  /* アクセント10%：朱。主要操作・重要な数字・相談の面 */
+  --color-header-paper: #F7F5F0;
+  --color-header-ink: #243B3B;
+  --color-header-brass: #B44B35;
+  --color-white: #F7F5F0;
+  --color-ink: #243B3B;
+  --color-panel: #243B3B;
+  --color-black: #243B3B;
+  --color-surface: #F7F5F0;
+  --color-field: #F7F5F0;
+  --color-paper: #F7F5F0;
+  --color-line: color-mix(in srgb, var(--color-sub) 20%, var(--color-main));
+  --color-line-strong: color-mix(in srgb, var(--color-sub) 45%, var(--color-main));
+  --color-green: #B44B35;
+  --color-green-deep: #B44B35;
+  --color-blue: #B44B35;
+  --color-muted: color-mix(in srgb, var(--color-sub) 78%, var(--color-main));
+  --color-muted-on-ink: color-mix(in srgb, var(--color-main) 82%, var(--color-sub));
+  --color-alert: #243B3B;
+  --color-alert-bg: #F7F5F0;
+  --color-ok: #B44B35;
+  --color-ok-bg: #F7F5F0;
+  --color-warn: #243B3B;
+  --color-warn-bg: #F7F5F0;
 
   /* theme */
-  --color-campaign-accent: #42D083;
-  --color-campaign-accent-ink: #0B0B0D;  /* 緑の上は暗い文字。白文字にしない */
-  --color-campaign-accent-text: #0E7A45;  /* 白地に置く強調文字・リンク */
-  --color-main-accent: #0171E3;
-  --color-main-accent-ink: #FFFFFF;
-  --color-main-accent-text: #0171E3;
+  --color-campaign-accent: #B44B35;
+  --color-campaign-accent-ink: #F7F5F0;  /* 朱の面は生成りの文字。小さい文字も薄めない */
+  --color-campaign-accent-text: #B44B35;  /* 白地に置く強調文字・リンク */
+  --color-main-accent: #B44B35;
+  --color-main-accent-ink: #F7F5F0;
+  --color-main-accent-text: #B44B35;
 
   /* size */
   --spacing-home-container: 1280px;  /* ホーム本文。図解と比較のための広い器 */
