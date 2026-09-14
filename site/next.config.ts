@@ -8,7 +8,7 @@ import { PHASE_DEVELOPMENT_SERVER } from 'next/constants';
  * 開発サーバーは /terms で配るので、.html 付きのリンクを踏めるよう開発時だけ書き換える
  * （rewrites は output: 'export' と併用できないので、フェーズで分けている）。
  *
- * App Router ではなく Pages Router を使っている理由は README の「なぜ Pages Router か」。
+ * App Router ではなく Pages Router を使っている理由は docs/architecture/0001-pages-router.md。
  * 要点：App Router は静的書き出しでも全ページに約173KB（gzip）の JS を配り、減らせない。
  */
 export default function config(phase: string): NextConfig {
