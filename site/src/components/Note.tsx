@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import type { IconName } from '../data/icons';
-import { raw } from '../lib/raw';
-import Icon from './Icon';
+import type { IconName } from '@/lib/icons';
+import { raw } from '@/lib/raw';
+import Icon from '@/components/Icon';
 
 /** アイコンは状態を示すとき（warn / bad）だけ付ける（原則E） */
 interface Props { heading: string; kind?: '' | 'good' | 'warn' | 'bad'; children?: ReactNode }

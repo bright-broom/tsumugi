@@ -1,8 +1,8 @@
-import * as C from '../data/config';
-import * as P from '../data/prices';
-import Base from '../layouts/Base';
-import Section from '../components/Section';
-import Table from '../components/Table';
+import * as C from '@/content/config';
+import * as P from '@/content/prices';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Table from '@/components/Table';
 
 export const config = { unstable_runtimeJS: false };
 

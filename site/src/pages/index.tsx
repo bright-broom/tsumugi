@@ -1,20 +1,20 @@
-import * as C from '../data/config';
-import * as P from '../data/prices';
-import * as D from '../lib/diagrams';
-import { INDUSTRIES, IND_IC } from '../data/nav';
-import Base from '../layouts/Base';
-import Section from '../components/Section';
-import Table from '../components/Table';
-import Note from '../components/Note';
-import Acc from '../components/Acc';
-import Cards from '../components/Cards';
-import Calc from '../components/Calc';
-import Stats from '../components/Stats';
-import Vs from '../components/Vs';
-import Entry from '../components/Entry';
-import Plans from '../components/Plans';
-import Figure from '../components/Figure';
-import Icon from '../components/Icon';
+import * as C from '@/content/config';
+import * as P from '@/content/prices';
+import * as D from '@/content/diagrams';
+import { INDUSTRIES, IND_IC } from '@/content/nav';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Table from '@/components/Table';
+import Note from '@/components/Note';
+import Acc from '@/components/Acc';
+import Cards from '@/components/Cards';
+import Calc from '@/components/Calc';
+import Stats from '@/components/Stats';
+import Vs from '@/components/Vs';
+import Entry from '@/components/Entry';
+import Plans from '@/components/Plans';
+import Figure from '@/components/Figure';
+import Icon from '@/components/Icon';
 
 export const config = { unstable_runtimeJS: false };
 

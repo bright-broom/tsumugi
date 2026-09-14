@@ -1,5 +1,5 @@
-import type { IconName } from './icons';
-import type { BuildKey } from './prices';
+import type { IconName } from '@/lib/icons';
+import type { BuildKey } from '@/content/prices';
 
 /**
  * 業種別ページの中身。pages/[industry].tsx が1つのテンプレートで4枚に展開する。

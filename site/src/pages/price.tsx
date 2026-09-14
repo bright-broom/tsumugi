@@ -1,15 +1,15 @@
-import * as C from '../data/config';
-import * as P from '../data/prices';
-import * as D from '../lib/diagrams';
-import { NOT_SELLING } from '../data/spec';
-import Base from '../layouts/Base';
-import Section from '../components/Section';
-import Table from '../components/Table';
-import Note from '../components/Note';
-import Calc from '../components/Calc';
-import Entry from '../components/Entry';
-import Plans from '../components/Plans';
-import Figure from '../components/Figure';
+import * as C from '@/content/config';
+import * as P from '@/content/prices';
+import * as D from '@/content/diagrams';
+import { NOT_SELLING } from '@/content/spec';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Table from '@/components/Table';
+import Note from '@/components/Note';
+import Calc from '@/components/Calc';
+import Entry from '@/components/Entry';
+import Plans from '@/components/Plans';
+import Figure from '@/components/Figure';
 
 export const config = { unstable_runtimeJS: false };
 

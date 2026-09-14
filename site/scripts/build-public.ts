@@ -7,9 +7,9 @@
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { DOMAIN } from '../src/data/config';
-import { IND_DATA } from '../src/data/industries';
-import { NAV, NAV_LEGAL } from '../src/data/nav';
+import { DOMAIN } from '@/content/config';
+import { IND_DATA } from '@/content/industries';
+import { NAV, NAV_LEGAL } from '@/content/nav';
 
 const ROOT = join(import.meta.dirname, '..');
 const STYLES = join(ROOT, 'styles');

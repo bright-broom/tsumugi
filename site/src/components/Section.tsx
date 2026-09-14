@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { NAV_IC } from '../data/nav';
-import { raw } from '../lib/raw';
-import Icon from './Icon';
+import { NAV_IC } from '@/content/nav';
+import { raw } from '@/lib/raw';
+import Icon from '@/components/Icon';
 
 interface Props {
   eyebrow?: string; heading?: string; lede?: string;

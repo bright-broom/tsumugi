@@ -1,4 +1,4 @@
-import type { IconName } from './icons';
+import type { IconName } from '@/lib/icons';
 
 /**
  * 納品する仕様の20項目と、売らないと決めた5項目。

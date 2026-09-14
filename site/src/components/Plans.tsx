@@ -1,4 +1,4 @@
-import * as P from '../data/prices';
+import * as P from '@/content/prices';
 
 /** プランは3枚並列にしない。真ん中を大きくして、選ぶ理由を書く。
     支払い方の切り替えはラジオ＋:has()で、JavaScriptは使わない。 */

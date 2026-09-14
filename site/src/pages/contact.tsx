@@ -1,9 +1,9 @@
-import * as C from '../data/config';
-import { INDUSTRIES } from '../data/nav';
-import Base from '../layouts/Base';
-import Section from '../components/Section';
-import Note from '../components/Note';
-import Icon from '../components/Icon';
+import * as C from '@/content/config';
+import { INDUSTRIES } from '@/content/nav';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Note from '@/components/Note';
+import Icon from '@/components/Icon';
 
 export const config = { unstable_runtimeJS: false };
 
@@ -44,7 +44,7 @@ export default function ContactPage() {
       <Section heading="フォームから">
         {disabled && (
           <Note heading="この見本ではフォームの送信先が未設定です" kind="warn">
-            <p>src/data/config.ts の FORM_ENDPOINT に送信先を設定すると有効になります。
+            <p>src/content/config.ts の FORM_ENDPOINT に送信先を設定すると有効になります。
               設定と同時に、通知をメールとLINE（またはSMS）の2系統に分けます。</p>
           </Note>
         )}

@@ -10,6 +10,8 @@
  * - role="img" と aria-label は必須（verify が検査する）。
  */
 
+import { rnd } from '@/lib/round';
+
 const BOX_F = 'fill="currentColor" fill-opacity=".045"';
 const BOX_S = 'stroke="currentColor" stroke-width="1.4" stroke-opacity=".55"';
 const DIM = 'fill="currentColor" opacity=".72"';
@@ -24,20 +26,6 @@ const DEFS =
 
 /** 3桁区切り。Python の f"{n:,}" と同じ */
 const c = (n: number) => n.toLocaleString('en-US');
-
-/**
- * Python の round() と同じ丸め（偶数丸め）。
- * JS の Math.round は 0.5 を必ず切り上げるので、
- * 340 × 500,000 ÷ 800,000 = 212.5 が Python では 212、JS では 213 になる。
- * 帯の幅が1pxずれるだけだが、移植で静かにずれる典型なので合わせておく。
- */
-export function rnd(v: number): number {
-  const f = Math.floor(v);
-  const d = v - f;
-  if (d > 0.5) return f + 1;
-  if (d < 0.5) return f;
-  return f % 2 === 0 ? f : f + 1;   // ちょうど .5 は偶数側へ
-}
 
 /**
  * marker の id はページ内で衝突させない。接尾辞は図の aria-label から決める。

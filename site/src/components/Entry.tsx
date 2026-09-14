@@ -1,5 +1,5 @@
-import * as P from '../data/prices';
-import Icon from './Icon';
+import * as P from '@/content/prices';
+import Icon from '@/components/Icon';
 
 /** 入口の1ページ商品。3プランの上に置く別の器 */
 interface Props { full?: boolean }

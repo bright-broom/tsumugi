@@ -1,15 +1,15 @@
 import { Fragment } from 'react';
-import * as C from '../data/config';
-import { SPEC_ITEMS, SPEC_GROUP_LEDE, NOT_SELLING } from '../data/spec';
-import { ic } from '../lib/ic';
-import { raw } from '../lib/raw';
-import Base from '../layouts/Base';
-import Section from '../components/Section';
-import Table from '../components/Table';
-import Note from '../components/Note';
-import Stats from '../components/Stats';
-import Acc from '../components/Acc';
-import Cta from '../components/Cta';
+import * as C from '@/content/config';
+import { SPEC_ITEMS, SPEC_GROUP_LEDE, NOT_SELLING } from '@/content/spec';
+import { ic } from '@/lib/ic';
+import { raw } from '@/lib/raw';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Table from '@/components/Table';
+import Note from '@/components/Note';
+import Stats from '@/components/Stats';
+import Acc from '@/components/Acc';
+import Cta from '@/components/Cta';
 
 export const config = { unstable_runtimeJS: false };
 

@@ -1,5 +1,5 @@
-import { raw } from '../lib/raw';
-import Icon from './Icon';
+import { raw } from '@/lib/raw';
+import Icon from '@/components/Icon';
 
 /** 手順の縦軸。表にすると4列になり、390pxでは右2列が見えない */
 interface Props {

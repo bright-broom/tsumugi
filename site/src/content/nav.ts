@@ -1,4 +1,4 @@
-import type { IconName } from './icons';
+import type { IconName } from '@/lib/icons';
 
 export const NAV_IC: Record<string, IconName> = {
   'index.html': 'circle-dollar-sign', 'owned.html': 'key', 'price.html': 'calculator',
