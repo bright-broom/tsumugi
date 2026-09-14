@@ -39,7 +39,7 @@
     @apply whitespace-nowrap;
   }
   .ftr .footer-contact {
-    @apply inline-flex items-center justify-center gap-[16px] min-h-[60px] p-[16px_24px] rounded-[6px] bg-ink text-white text-[14px] whitespace-nowrap flex-[none];
+    @apply inline-flex items-center justify-center gap-[16px] min-h-[60px] p-[16px_24px] rounded-[6px] bg-accent text-main text-[14px] whitespace-nowrap flex-[none];
     transition: background var(--duration-fast) ease;
   }
   .ftr .footer-contact:hover {
@@ -127,6 +127,7 @@
     @apply border-ink no-underline;
   }
   .footer-wordmark {
+    color: var(--color-sub);
     @apply my-[54px_40px] font-ja text-[clamp(60px,_14.5vw,_196px)] font-medium tracking-[.045em] leading-[1.05] text-center;
     user-select: none;
   }

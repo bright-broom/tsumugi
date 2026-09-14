@@ -23,6 +23,7 @@ import { join, resolve } from 'node:path';
 import { chromium } from 'playwright';
 import * as C from '@/content/config';
 import * as P from '@/content/prices';
+import tokens from '@/styles/design.tokens.json';
 
 import { ROOT } from '../paths';
 const outArg = process.argv.indexOf('--out');
@@ -67,10 +68,10 @@ const favi = (n: number, m: string, css: string) =>
 // SVG のファビコン。背景を塗って一文字を置くだけなので、字形はブラウザの書体に任せる
 const faviSvg = (m: string) =>
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">' +
-  '<rect width="64" height="64" rx="12" fill="#0B0B0D"/>' +
+  `<rect width="64" height="64" rx="12" fill="${tokens.color.accent.$value}"/>` +
   '<text x="32" y="33" text-anchor="middle" dominant-baseline="central" ' +
   'font-family="Hiragino Sans, Noto Sans CJK JP, Meiryo, sans-serif" ' +
-  `font-size="44" font-weight="700" fill="#FFFFFF">${m}</text></svg>`;
+  `font-size="44" font-weight="700" fill="${tokens.color.main.$value}">${m}</text></svg>`;
 
 const ICONS = [
   [180, 'apple-touch-icon.png'],

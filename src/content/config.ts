@@ -5,7 +5,7 @@ import { format } from '@/i18n/format';
 /**
  * ブランド設定 ── 連絡先と公開設定。表示用文言は i18n/locales/ja/config.ts に置く。
  */
-export const PROFILE = 'campaign' as const; // campaign=緑 / main=青
+export const PROFILE = 'campaign' as const; // 両プロファイルとも紬の3色テーマを参照
 export const PLACEHOLDER = true; // 本番公開時に false
 
 export const BRAND = copy.brand;

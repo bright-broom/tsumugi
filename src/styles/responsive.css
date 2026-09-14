@@ -44,7 +44,7 @@
       @apply hidden;
     }
     /* 前置きは手に持つ画面でいちばん飛ばされる。大きくして、白に寄せて、改行は外す */
-    /* 新しい色は足さない。白と墨紺を混ぜて作る（トークンから導出する） */
+    /* 新しい色は足さない。生成りと墨を混ぜて作る（トークンから導出する） */
     .hero .sub {
       @apply text-[16px];
       color: color-mix(in oklab, var(--color-white) 86%, var(--color-ink));
@@ -197,7 +197,7 @@
       @apply pb-[68px];
     }
     .fixbar {
-      @apply grid grid-cols-[1fr_1fr] gap-[8px] fixed left-[0] right-[0] bottom-[0] z-[50] p-[10px_var(--spacing-pad-mb)_calc(10px_+_env(safe-area-inset-bottom))] bg-[rgba(255,255,255,.94)];
+      @apply grid grid-cols-[1fr_1fr] gap-[8px] fixed left-[0] right-[0] bottom-[0] z-[50] p-[10px_var(--spacing-pad-mb)_calc(10px_+_env(safe-area-inset-bottom))] bg-[color-mix(in_srgb,_var(--color-main)_94%,_transparent)];
       -webkit-backdrop-filter: blur(12px);
       backdrop-filter: blur(12px);
       border-top: 1px solid var(--color-line);
@@ -316,7 +316,7 @@
       @apply p-[0];
     }
     section.dark .tblwrap.stack tbody tr {
-      @apply border-[rgba(255,255,255,.14)];
+      @apply border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
     }
     section.dark .tblwrap.stack tbody td[data-h]::before {
       @apply text-muted-on-ink;
@@ -326,7 +326,7 @@
   /* ── 小さすぎる文字の底上げ。
         390px で測ったところ 10〜13px の文字が 300 箇所以上あった。
         ガイド06の寸法はPC向けなので、手に持つ画面では下限を引き上げる。
-        色を濃くするのではなく大きくする（#626873 は白地で 5.8:1 あり、
+        色を濃くするのではなく大きくする（補助文字は背景とのコントラストを確保し、
         読みにくさの原因は明度差ではなく字面の小ささだった）。 */
   @media (max-width: 768px) {
     .sh .lab {

@@ -29,7 +29,7 @@
     @apply w-[22px] h-[22px] align-[0] stroke-[1.9];
   }
   section.dark .icb {
-    @apply bg-[rgba(255,255,255,.1)] text-white;
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)] text-white;
   }
 
   /* ── 本文へ移動 */
@@ -114,8 +114,8 @@
   }
   .header-contact {
     @apply inline-flex items-center justify-center gap-[18px] min-h-[48px] p-[10px_20px];
-    border: 1px solid var(--color-header-ink);
-    @apply rounded-[2px] bg-header-ink text-header-paper text-[13px] font-medium tracking-[.05em] whitespace-nowrap no-underline;
+    border: 1px solid var(--color-accent);
+    @apply rounded-[4px] bg-accent text-main text-[13px] font-medium tracking-[.05em] whitespace-nowrap no-underline;
     transition:
       background var(--duration-fast) ease,
       color var(--duration-fast) ease;
@@ -176,7 +176,7 @@
     overflow-y: auto;
     @apply p-[24px] bg-header-paper;
     border: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
-    box-shadow: 0 16px 28px rgb(0 0 0 / 0.1);
+    box-shadow: 0 16px 28px color-mix(in srgb, var(--color-sub) 10%, transparent);
   }
   .menu-panel ul {
     @apply grid grid-cols-[repeat(2,_minmax(0,_1fr))] list-none list-outside m-[0] p-[0];
@@ -250,11 +250,11 @@
     @apply text-white;
   }
 
-  /* 価格の面。緑は行動のためだけに使うので、数字そのものは無彩色で置く */
+  /* 価格の面。ホームでは朱の面と生成りの文字で入口価格を示す */
   .pricebox {
     @apply flex flex-wrap items-center gap-[28px_40px] p-gap-group;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    @apply rounded-panel bg-[rgba(255,255,255,.045)];
+    border: 1px solid color-mix(in srgb, var(--color-main) 18%, transparent);
+    @apply rounded-panel bg-[color-mix(in_srgb,_var(--color-main)_4.5%,_transparent)];
   }
   .amtwrap {
     @apply flex flex-col gap-[4px];
@@ -292,7 +292,7 @@
   }
 
   /* ══ C16 PrimaryAction / C17 SecondaryAction
-       主要CTA PC 315×57 / モバイル 260×48。緑の上は暗い文字（05 コントラスト） */
+       主要CTA PC 315×57 / モバイル 260×48。朱の上は生成りの文字（ADR 0014） */
   .btns {
     @apply flex flex-wrap gap-[14px];
   }
@@ -318,11 +318,11 @@
   }
   section.dark .btn-2,
   .hero .btn-2 {
-    @apply text-white border-[rgba(255,255,255,.45)];
+    @apply text-white border-[color-mix(in_srgb,_var(--color-main)_45%,_transparent)];
   }
   section.dark .btn-2:hover,
   .hero .btn-2:hover {
-    @apply bg-[rgba(255,255,255,.1)] border-white;
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)] border-white;
   }
 
   /* ══ C05 SectionHeading ─ 小分類、見出し、短い導入 */
@@ -445,17 +445,17 @@
     @apply text-muted;
   }
   section.dark .flow > li::before {
-    @apply bg-[rgba(255,255,255,.18)];
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_18%,_transparent)];
   }
   section.dark .flow .num {
-    @apply bg-[rgba(255,255,255,.1)] text-white border-[rgba(255,255,255,.24)];
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)] text-white border-[color-mix(in_srgb,_var(--color-main)_24%,_transparent)];
   }
   section.dark .flow .d,
   section.dark .flow .tags span {
     @apply text-muted-on-ink;
   }
   section.dark .flow .tags span {
-    @apply border-[rgba(255,255,255,.24)];
+    @apply border-[color-mix(in_srgb,_var(--color-main)_24%,_transparent)];
   }
 
   /* 章の末尾に置く但し書き。本文より一段落として、幅も本文に合わせる */
@@ -486,7 +486,7 @@
     border-top: 1px solid var(--color-line-strong);
   }
   section.dark .stat {
-    border-top-color: rgba(255, 255, 255, 0.3);
+    border-top-color: color-mix(in srgb, var(--color-main) 30%, transparent);
   }
   .stat .v {
     @apply text-[34px] font-bold leading-[1.05] tabular-nums tracking-[-.01em];
@@ -515,7 +515,7 @@
     @apply block mb-[8px] font-bold text-[16px];
   }
   section.dark .alert {
-    border-top-color: rgba(255, 255, 255, 0.3);
+    border-top-color: color-mix(in srgb, var(--color-main) 30%, transparent);
   }
   .alert.good {
     border-top-color: var(--color-ink);
@@ -536,7 +536,7 @@
     border-left-color: var(--color-warn);
   }
   .alert.warn {
-    @apply text-[#5C4400];
+    @apply text-[var(--color-sub)];
   }
   .alert.warn .ic,
   .alert.warn .h {
@@ -547,7 +547,7 @@
     border-left-color: var(--color-alert);
   }
   .alert.bad {
-    @apply text-[#7A1B15];
+    @apply text-[var(--color-sub)];
   }
   .alert.bad .ic,
   .alert.bad .h {
@@ -555,21 +555,21 @@
   }
   section.dark .alert.warn,
   section.dark .alert.bad {
-    @apply bg-[rgba(255,255,255,.07)] text-white;
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)] text-white;
   }
   section.dark .alert.warn {
-    border-left-color: #d6ac5a;
+    border-left-color: var(--color-main);
   }
   section.dark .alert.warn .ic,
   section.dark .alert.warn .h {
-    @apply text-[#E3C077];
+    @apply text-[var(--color-main)];
   }
   section.dark .alert.bad {
-    border-left-color: #ff8e84;
+    border-left-color: var(--color-main);
   }
   section.dark .alert.bad .ic,
   section.dark .alert.bad .h {
-    @apply text-[#FF8E84];
+    @apply text-[var(--color-main)];
   }
   .alert + .alert,
   .alert + .acc,
@@ -596,7 +596,7 @@
     @apply rounded-panel bg-white;
   }
   section.dark .entry {
-    @apply bg-[rgba(255,255,255,.05)] border-[rgba(255,255,255,.4)];
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_5%,_transparent)] border-[color-mix(in_srgb,_var(--color-main)_40%,_transparent)];
   }
   section.tint .entry {
     @apply bg-white;
@@ -637,7 +637,7 @@
     @apply rounded-card bg-white overflow-hidden;
   }
   section.dark .acc {
-    @apply bg-[rgba(255,255,255,.05)] border-[rgba(255,255,255,.14)];
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_5%,_transparent)] border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
   }
   .acc > summary {
     @apply list-none list-outside cursor-pointer flex items-center gap-[11px] min-h-tap p-[15px_20px] text-[16px] font-semi;
@@ -660,7 +660,7 @@
     @apply bg-surface;
   }
   section.dark .acc > summary:hover {
-    @apply bg-[rgba(255,255,255,.07)];
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)];
   }
 
   .acc .bd {
@@ -676,20 +676,20 @@
     @apply rounded-card overflow-hidden bg-white;
   }
   section.dark .calc {
-    @apply bg-[rgba(255,255,255,.05)] border-[rgba(255,255,255,.14)];
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_5%,_transparent)] border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
   }
   .calc .ttl {
     @apply p-[13px_20px] bg-surface text-[13.5px] font-semi tracking-[.04em] text-muted;
   }
   section.dark .calc .ttl {
-    @apply bg-[rgba(255,255,255,.07)];
+    @apply text-main bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)];
   }
   .calc .r {
     @apply flex justify-between items-center gap-[20px] p-[15px_20px];
     border-bottom: 1px solid var(--color-line);
   }
   section.dark .calc .r {
-    @apply border-[rgba(255,255,255,.12)];
+    @apply border-[color-mix(in_srgb,_var(--color-main)_12%,_transparent)];
   }
   .calc .r:last-child {
     border-bottom: none;
@@ -719,7 +719,7 @@
     @apply bg-surface;
   }
   section.dark .calc .r.sum {
-    @apply bg-[rgba(255,255,255,.07)];
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)];
   }
   .calc .r.minus .v {
     @apply text-ok;
@@ -744,11 +744,11 @@
   }
   section.dark .calc .r.net .k,
   section.dark .calc .r.net .k .ic {
-    @apply text-[var(--accent-ink)] opacity-[.84];
+    @apply text-[var(--accent-ink)];
   }
-  /* 緑の面に載る補足。muted-on-ink（明るい灰）のままだと緑地に埋まって読めない */
+  /* 朱の面に載る補足。生成りの文字を薄めず、コントラストを保つ */
   section.dark .calc .r.net .k em {
-    @apply text-[var(--accent-ink)] opacity-[.8];
+    @apply text-[var(--accent-ink)];
   }
 
   /* ── 比較バー。いま払っている金額を基準に並べる */
@@ -786,10 +786,10 @@
     @apply text-[var(--accent-text)];
   }
   section.dark .vs .bar {
-    @apply bg-[rgba(255,255,255,.16)];
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_16%,_transparent)];
   }
   section.dark .vs .bar i {
-    @apply bg-[rgba(255,255,255,.5)];
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_50%,_transparent)];
   }
   section.dark .vs .row.ours .nm,
   section.dark .vs .row.ours .nm .ic {
@@ -889,7 +889,7 @@
     scroll-snap-type: x proximity;
   }
   section.dark .tbl {
-    @apply border-[rgba(255,255,255,.16)];
+    @apply border-[color-mix(in_srgb,_var(--color-main)_16%,_transparent)];
   }
   .tbl table {
     @apply w-[100%] min-w-[520px] text-[15px];
@@ -911,13 +911,13 @@
   }
   section.dark .tbl th,
   section.dark .tbl td {
-    @apply border-[rgba(255,255,255,.12)];
+    @apply border-[color-mix(in_srgb,_var(--color-main)_12%,_transparent)];
   }
   .tbl thead th {
     @apply bg-surface text-[13.5px] font-bold whitespace-nowrap;
   }
   section.dark .tbl thead th {
-    @apply bg-[rgba(255,255,255,.08)] text-white;
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_8%,_transparent)] text-white;
   }
   .tbl tbody th,
   .tbl thead th:first-child {
@@ -940,10 +940,10 @@
   }
   section.dark .tbl tbody th {
     @apply bg-ink;
-    box-shadow: 1px 0 0 rgba(255, 255, 255, 0.16);
+    box-shadow: 1px 0 0 color-mix(in srgb, var(--color-main) 16%, transparent);
   }
   section.dark .tbl thead th:first-child {
-    @apply bg-[#1B222C];
+    @apply bg-sub;
   }
   section.tint .tbl tbody th {
     @apply bg-white;
@@ -960,7 +960,7 @@
     @apply bg-surface text-meta text-muted;
   }
   section.dark .tbl tfoot td {
-    @apply bg-[rgba(255,255,255,.08)] text-muted-on-ink;
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_8%,_transparent)] text-muted-on-ink;
   }
 
   .yes {
@@ -970,10 +970,10 @@
     @apply text-alert font-bold inline-flex items-baseline gap-[5px];
   }
   section.dark .yes {
-    @apply text-[#7FD3AC];
+    @apply text-main;
   }
   section.dark .no {
-    @apply text-[#FF8E84];
+    @apply text-[var(--color-main)];
   }
   .yes .ic,
   .no .ic {
@@ -992,7 +992,7 @@
     border-top: 1px solid var(--color-line);
   }
   section.dark ol.steps li {
-    @apply border-[rgba(255,255,255,.14)];
+    @apply border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
   }
   ol.steps li::before {
     content: counter(s, decimal-leading-zero);
@@ -1154,14 +1154,15 @@
     @apply max-w-measure-read text-meta leading-[1.85] text-muted;
   }
   section.dark .fig {
-    border-top-color: rgba(255, 255, 255, 0.32);
-    @apply text-white;
-    --fig-accent: var(--accent);
-    --fig-ok: #7fd3ac;
-    --fig-bad: #ff8e84;
+    background: var(--color-main);
+    border-top-color: var(--color-line);
+    @apply text-sub;
+    --fig-accent: var(--color-accent);
+    --fig-ok: var(--color-accent);
+    --fig-bad: var(--color-sub);
   }
   section.dark .fig figcaption {
-    @apply border-[rgba(255,255,255,.14)] text-muted-on-ink;
+    @apply border-line text-muted;
   }
   .fig-hint {
     @apply hidden;

@@ -103,16 +103,33 @@ export const OVERFLOW = String.raw`
 }
 `;
 
+// Let Chromium normalize CSS Color 4 (including color-mix) into sRGB + alpha.
+// Reading the numbers in color(srgb ...) as 0–255 would report false contrast failures.
+const COLOR_READER = String.raw`
+  const context = document.createElement('canvas').getContext('2d', {willReadFrequently: true});
+  if (!context) throw new Error('Color measurement requires a 2D canvas');
+  const colors = new Map();
+  const rgba = s => {
+    if (!colors.has(s)) {
+      if (!CSS.supports('color', s)) throw new Error('Unsupported measured color: ' + s);
+      context.clearRect(0, 0, 1, 1);
+      context.fillStyle = s;
+      context.fillRect(0, 0, 1, 1);
+      colors.set(s, [...context.getImageData(0, 0, 1, 1).data]);
+    }
+    return colors.get(s);
+  };
+  const parse = s => rgba(s).slice(0, 3);
+  const alphaOf = s => rgba(s)[3] / 255;
+`;
+
 export const CONTRAST = String.raw`
 () => {
   const lum = c => {
     const [r,g,b] = c.map(v => { v/=255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); });
     return 0.2126*r + 0.7152*g + 0.0722*b;
   };
-  const parse = s => { const m = s.match(/[\d.]+/g); return m ? m.slice(0,3).map(Number) : null; };
-  const alphaOf = s => { const m = s.match(/rgba?\(([^)]+)\)/);
-    if (!m) return 1; const p = m[1].split(',').map(x => parseFloat(x));
-    return p.length > 3 ? p[3] : 1; };
+${COLOR_READER}
   const bgOf = el => {
     // 半透明の背景は下の色と合成してから評価する（合成しないと誤検出になる）
     const stack = [];
@@ -179,10 +196,7 @@ export const FIG_CONTRAST = String.raw`
     const [r,g,b] = c.map(v => { v/=255; return v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4); });
     return 0.2126*r + 0.7152*g + 0.0722*b;
   };
-  const parse = s => { const m = s.match(/[\d.]+/g); return m ? m.slice(0,3).map(Number) : null; };
-  const alphaOf = s => { const m = s.match(/rgba?\(([^)]+)\)/);
-    if (!m) return 1; const p = m[1].split(',').map(x => parseFloat(x));
-    return p.length > 3 ? p[3] : 1; };
+${COLOR_READER}
   const bgOf = el => {
     const stack = []; let a = el;
     while (a) {

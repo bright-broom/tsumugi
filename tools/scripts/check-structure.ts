@@ -68,6 +68,12 @@ for (const dir of ['src', 'tools']) {
         continue;
       }
       if (!spec!.startsWith('@/')) continue;
+      // The shared design-token JSON is a data-only leaf, also used by document metadata and OGP.
+      if (spec === '@/styles/design.tokens.json') {
+        if (!statSync(join(ROOT, 'src/styles/design.tokens.json')).isFile())
+          problems.push(`${rel}: デザイントークンの正本がありません`);
+        continue;
+      }
       const to = spec!.slice(2).split('/')[0] as Layer;
       const target = ['.ts', '.tsx', '/index.ts', '/index.tsx']
         .map((ext) => `src/${spec.slice(2)}${ext}`)

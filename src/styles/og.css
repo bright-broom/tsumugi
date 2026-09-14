@@ -8,7 +8,7 @@
     @apply m-[0] p-[0];
   }
   body {
-    @apply bg-ink text-white flex;
+    @apply bg-main text-sub flex;
     font-family: 'Noto Sans CJK JP', 'Hiragino Sans', sans-serif;
   }
 }
@@ -28,13 +28,13 @@
     @apply text-[64px] font-bold tracking-[.05em] leading-[1];
   }
   .rd {
-    @apply text-[17px] tracking-[.22em] text-muted-on-ink;
+    @apply text-[17px] tracking-[.22em] text-muted;
   }
   .bar {
-    @apply w-[1px] h-[38px] bg-[rgba(255,255,255,.28)] mx-[8px];
+    @apply w-[1px] h-[38px] bg-[color-mix(in_srgb,_var(--color-sub)_28%,_transparent)] mx-[8px];
   }
   .trade {
-    @apply text-[18px] text-muted-on-ink tracking-[.04em];
+    @apply text-[18px] text-muted tracking-[.04em];
   }
   h1 {
     @apply font-bold leading-[1.46] tracking-[-.01em];
@@ -46,7 +46,7 @@
     @apply text-[46px];
   }
   h1 .q {
-    @apply text-muted-on-ink;
+    @apply text-muted;
   }
   .foot {
     @apply flex items-end justify-between gap-[40px];
@@ -55,14 +55,14 @@
     @apply flex gap-[12px] flex-wrap;
   }
   .pt {
-    @apply text-[17px] font-bold p-[9px_18px] rounded-pill text-white whitespace-nowrap;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    @apply text-[17px] font-bold p-[9px_18px] rounded-pill text-sub whitespace-nowrap;
+    border: 1px solid color-mix(in srgb, var(--color-sub) 30%, transparent);
   }
   .amt {
     @apply text-right leading-[1] whitespace-nowrap;
   }
   .amt .k {
-    @apply text-[15px] text-muted-on-ink tracking-[.04em];
+    @apply text-[15px] text-muted tracking-[.04em];
   }
   .amt .v {
     @apply text-[58px] font-bold tracking-[-.02em] mt-[8px];
@@ -74,7 +74,7 @@
     @apply text-green;
   }
   .og-icon {
-    @apply items-center justify-center;
+    @apply items-center justify-center bg-accent text-main;
   }
   .og-icon span {
     @apply font-bold leading-[1];
