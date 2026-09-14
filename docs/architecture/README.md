@@ -45,6 +45,8 @@
 
 - [0020 内容に合う部品と自然な読み順](0020-natural-components.md)
 
+- [0021 料金の読み順と和欧文の表記](0021-pricing-and-typesetting.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |

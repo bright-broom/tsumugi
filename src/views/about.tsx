@@ -1,3 +1,4 @@
+import { esc, raw } from '@/lib/raw';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
 import { format } from '@/i18n/format';
@@ -46,11 +47,9 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
         eyebrow={copy.eyebrow2}
         heading={format(copy.heading3, { cRESPONSEPROMISE: C.RESPONSE_PROMISE })}
       >
-        <p>
-          {copy.p2}
-          <strong>{C.RESPONSE_PROMISE}</strong>
-          {copy.p3}
-        </p>
+        <p
+          dangerouslySetInnerHTML={raw(format(copy.response, { promise: esc(C.RESPONSE_PROMISE) }))}
+        />
         {C.RESPONSE_ACTUAL ? (
           <p>
             <strong>{format(copy.strong2, { cRESPONSEACTUAL: C.RESPONSE_ACTUAL })}</strong>

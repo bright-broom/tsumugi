@@ -1,3 +1,4 @@
+import { spaceHtml } from '@/i18n/html-typography';
 /**
  * next build の後始末と、「実行時JS 0バイト」の番人。
  *
@@ -26,6 +27,7 @@ for (const f of pages) {
     .replaceAll(' data-next-head=""', '')
     .replaceAll('<noscript data-n-css=""></noscript>', '');
   writeFileSync(path, h);
+  if (spaceHtml(h, false) !== h) problems.push(`${f}: 和文・英数字の半角スペースが未適用です`);
   const scripts = h.match(/<script\b(?![^>]*application\/ld\+json)[^>]*>/g) ?? [];
   if (scripts.length) problems.push(`${f}: 実行時の <script> が ${scripts.length} 件`);
   if (h.includes('/_next/')) problems.push(`${f}: /_next/ を参照している`);

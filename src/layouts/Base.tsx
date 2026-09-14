@@ -1,3 +1,4 @@
+import { japaneseSpacing } from '@/i18n/typography';
 import { href } from '@/routing/registry';
 import PhoneLink from '@/components/PhoneLink';
 import Header from '@/components/Header';
@@ -24,11 +25,13 @@ interface Props {
 
 export default function Base({ file, title, desc, children }: Props) {
   const copy = useMessages('shell');
+  title = japaneseSpacing(title);
+  desc = japaneseSpacing(desc);
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     name: C.BRAND,
-    description: copy.structuredDataDescription + copy.structuredDataDescription2,
+    description: japaneseSpacing(copy.structuredDataDescription + copy.structuredDataDescription2),
     url: `https://${C.DOMAIN}/`,
     telephone: C.TEL,
     address: {

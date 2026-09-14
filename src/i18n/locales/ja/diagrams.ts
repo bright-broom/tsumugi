@@ -53,12 +53,12 @@ export default {
   ownershipClock3: '月{subMonthly}円 × {months}か月 ＋ 初期費用 ＝ {subTotal}円',
   ownershipClock4: 'ここで降りると、サイトは非公開',
   ownershipClock5: '納品時から',
-  ownershipClock6: '制作{ourPrice}円 ＋ 保守・外部費概算 月{ourRun}円',
+  ownershipClock6: '制作{ourPrice}円',
   ownershipClock7: 'ここで降りても、サイトは残る',
   ownershipClock8:
-    '比較先の公開料金を参考にした図です。紬の月額には「守る」と外部費の概算を含みます。変更作業・契約条件は同一ではありません。支援を終了しても外部費は必要です。',
+    '比較先の公開料金を参考にした図です。変更作業・契約条件は同一ではありません。支援を終了しても外部費は必要です。',
   ownershipClock9:
-    '上段は月額制の参考料金。下段は紬の制作費と「守る」＋外部費概算。ソースは納品時に渡し、支援を終了しても顧客名義の外部契約は継続します。',
+    '上段は月額制の参考料金。下段は紬の制作費と納品の時期。ソースは納品時に渡し、支援を終了しても顧客名義の外部契約は継続します。',
   rentVsOwnNarrowLabel1: 'いま ── 借りている場所を通す',
   rentVsOwnNarrowLabel2: 'お客様',
   rentVsOwnNarrowLabel3: '掲載料 月{portal}円',
@@ -124,7 +124,7 @@ export default {
   ownershipClockNarrowLabel5: '途中解約で非公開となる条件',
   ownershipClockNarrowLabel6: '@brand:name',
   ownershipClockNarrowLabel7: '買い切り {ourPrice}円',
-  ownershipClockNarrowLabel8: '＋ 保守・外部費 月{ourRun}円',
+  ownershipClockNarrowLabel8: '保守・更新の支援は任意',
   ownershipClockNarrowLabel9: '納品時にお渡し',
   ownershipClockNarrowLabel10: '公開継続には外部契約が必要',
 } as const;

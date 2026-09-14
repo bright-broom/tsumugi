@@ -1,3 +1,4 @@
+import { spaceHtml } from '@/i18n/html-typography';
 import { OG_CARDS } from '@/content/og';
 import { getMessages } from '@/i18n/catalog';
 const copy = getMessages().og;
@@ -43,7 +44,7 @@ function pageHtml(quiet: string, loud: string, css: string): string {
   const hs = [...quiet].length + [...loud].length <= 30 ? 54 : 46;
   // カードに出す金額は「入口の金額」にする。
   // リンクを開くかどうかは、いちばん小さい数字で決まる。
-  return `<!doctype html><meta charset="utf-8"><style>${css}</style>
+  return spaceHtml(`<!doctype html><meta charset="utf-8"><style>${css}</style>
 <body class="og-card">
   <div class="top">
     <span class="mark">${C.BRAND}</span><span class="rd">${C.BRAND_READING}</span>
@@ -59,7 +60,7 @@ function pageHtml(quiet: string, loud: string, css: string): string {
     <div class="amt"><div class="k">${copy.entry}</div>
       <div class="v"><b>${P.SINGLE.price.toLocaleString('en-US')}</b><i>${copy.yenFrom}</i></div></div>
   </div>
-</body>`;
+</body>`);
 }
 
 const favi = (n: number, m: string, css: string) =>

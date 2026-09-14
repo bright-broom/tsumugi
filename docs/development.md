@@ -181,3 +181,10 @@ TypeScript 7 の CLI と互換 API の併用理由、依存の overrides は [AD
 ESLint・Vitest・Prettierの補助設定は `config/`、Next.js・TypeScript・npm・Vercelの探索起点となる設定はルートに残す。`@/` は引き続き `src/` を指す。検査レポートとスクリーンショットは `.artifacts/` に置き、Gitに含めない。
 
 `npm run validate` は価格モデル9件も検査する。VercelのRoot DirectoryとGitHub Actions・Dependabotはすべてルート基準。旧 `site/` を再作成しない。
+
+
+### 和文・英数字の半角スペース
+
+表示文言はカタログを解決するときと `i18n/format.ts` の変数差し込み時に整える。`制作{price}円` は `制作 79,800 円` になる。本文・表・図解・案内属性・OGPに共通適用する。値と単位を別の要素で出す場合は、単位のi18n文言に半角スペースを含める。Statsのように一つの文字列に組み立てる場合は共通の `japaneseSpacing` を通す。URLやコードへスペースを挿入しない。
+
+HTML文言は `i18n/html-typography.ts` がparse5でテキストと案内属性だけを扱う。全HTMLの単純置換や、SSR後だけの整形はしない。`postbuild` と全ページ描画テストが未適用の文字列を検出する。共有画像の文言変更時は `npm run og` でも同じ規則が適用される（[ADR 0021](architecture/0021-pricing-and-typesetting.md)）。

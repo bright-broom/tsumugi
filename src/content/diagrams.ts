@@ -279,7 +279,7 @@ export function subsidyBar(total: number, web: number, pr: number, grant: number
 
 // ═══════════════ 5. 補助金の順序（交付決定の前に着手しない）
 const short = (d: string) => {
-  const m = /(\d+)月(\d+)日/.exec(d);
+  const m = /(\d+)\s*月\s*(\d+)\s*日/.exec(d);
   return m ? `${m[1]}/${m[2]}` : d;
 };
 
@@ -516,7 +516,6 @@ function ownershipClockNarrow(
   subMonthly: number,
   subTotal: number,
   ourPrice: number,
-  ourRun: number,
   months: number,
 ): Narrow {
   const track = (y: number, atEnd: boolean) => {
@@ -541,7 +540,7 @@ function ownershipClockNarrow(
     cap(0, 196, copy.ownershipClockNarrowLabel6),
     `<rect x="0" y="206" width="${NW}" height="48" rx="8" fill="var(--fig-accent)" fill-opacity=".08" stroke="var(--fig-accent)" stroke-width="2"/>`,
     `<text x="16" y="227" font-size="13.5" font-weight="700" fill="currentColor">${format(copy.ownershipClockNarrowLabel7, { ourPrice: c(ourPrice) })}</text>`,
-    `<text x="16" y="245" font-size="12.5" ${DIM}>${format(copy.ownershipClockNarrowLabel8, { ourRun: c(ourRun) })}</text>`,
+    `<text x="16" y="245" font-size="12.5" ${DIM}>${copy.ownershipClockNarrowLabel8}</text>`,
     `<text x="0" y="266" font-size="12.5" font-weight="700" fill="var(--fig-ok)">${copy.ownershipClockNarrowLabel9}</text>`,
     track(294, false),
     `<text x="0" y="330" font-size="12.5" font-weight="700" fill="var(--fig-ok)">${copy.ownershipClockNarrowLabel10}</text>`,
@@ -562,7 +561,6 @@ export function ownershipClock(
   subMonthly: number,
   subTotal: number,
   ourPrice: number,
-  ourRun: number,
   months = 36,
 ) {
   const x0 = 116,
@@ -593,7 +591,7 @@ export function ownershipClock(
     flag(x0, 160, true),
     `<text x="${x0 + 28}" y="142" font-size="12.5" font-weight="700" fill="var(--fig-ok)">${copy.ownershipClockNarrowLabel9}</text>`,
     `<rect x="${x0}" y="160" width="${x1 - x0}" height="44" rx="8" fill="var(--fig-accent)" fill-opacity=".08" stroke="var(--fig-accent)" stroke-width="2"/>`,
-    `<text x="${(x0 + x1) / 2}" y="188" text-anchor="middle" font-size="13.5" fill="currentColor">${format(copy.ownershipClock6, { ourPrice: c(ourPrice), ourRun: c(ourRun) })}</text>`,
+    `<text x="${(x0 + x1) / 2}" y="188" text-anchor="middle" font-size="13.5" fill="currentColor">${format(copy.ownershipClock6, { ourPrice: c(ourPrice) })}</text>`,
     `<path d="M${mx(12) - 7} 222 l6 7 l12 -14" fill="none" stroke="var(--fig-ok)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`,
     `<text x="${mx(12) + 18}" y="230" font-size="12.5" font-weight="700" fill="var(--fig-ok)">${copy.ownershipClock7}</text>`,
   );
@@ -602,6 +600,6 @@ export function ownershipClock(
     format(copy.ownershipClock8, { months: months }),
     format(copy.ownershipClock9, { subMonthly: c(subMonthly), months: months }),
     '0 0 722 288',
-    ownershipClockNarrow(subMonthly, subTotal, ourPrice, ourRun, months),
+    ownershipClockNarrow(subMonthly, subTotal, ourPrice, months),
   );
 }

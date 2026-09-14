@@ -40,11 +40,11 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
         h1
         lede={format(copy.lede, { dName: d.name })}
       >
-        <p>
-          {format(copy.p, { dName: d.name })}
-          <strong>{d.median}</strong>
-          {copy.p2}
-        </p>
+        <p
+          dangerouslySetInnerHTML={raw(
+            format(copy.marketMedian, { dName: esc(d.name), median: esc(d.median) }),
+          )}
+        />
       </Section>
 
       {/* 業種の話に入る前に、業種を問わない1番の主張を1枚はさむ */}

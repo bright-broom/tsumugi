@@ -866,13 +866,10 @@
     @apply list-none list-outside m-[0] p-[0] grid gap-[9px];
   }
   .plan ul li {
-    @apply relative pl-[16px] m-[0] text-[14.5px] leading-[1.7];
+    @apply flex items-start gap-[9px] m-[0] text-[14.5px] leading-[1.7];
   }
-  .plan ul li::before {
-    content: '';
-    @apply absolute left-[0] top-[.75em] w-[7px] h-[1.5px];
-    background: currentColor;
-    @apply opacity-[.45];
+  .plan ul li .ic {
+    @apply shrink-0 mt-[4px] text-muted;
   }
 
   /* ══ C19 ComparisonMatrix ─ table と見出しセルを使い、横スクロールは領域内に閉じる */
@@ -1014,6 +1011,15 @@
   }
   ul.plain li {
     @apply relative pl-[18px] m-[0] text-[15px] leading-[1.85];
+  }
+  .entry ul.plain li {
+    @apply flex items-start gap-[9px] pl-[0];
+  }
+  .entry ul.plain li .ic {
+    @apply mt-[6px];
+  }
+  .entry ul.plain li::before {
+    content: none;
   }
   ul.plain li::before {
     content: '';

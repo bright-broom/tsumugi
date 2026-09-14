@@ -66,15 +66,17 @@ export default function Entry({ full = false }: Props) {
           </div>
         </div>
       </div>
-      <p className="fine-note">
-        {format(copy.fineNote, {
-          subMonthly: n(sub.monthly),
-          pCOMPAREMONTHS: P.COMPARE_MONTHS,
-          pSubsTotalSub: n(P.subsTotal(sub)),
-        })}
-        <strong>{format(copy.strong, { pSUBSTRANSFERMONTHS: P.SUBS_TRANSFER_MONTHS })}</strong>
-        {format(copy.fineNote2, { pSUBSSOURCE: P.SUBS_SOURCE })}
-      </p>
+      {full && (
+        <p className="fine-note">
+          {format(copy.fineNote, {
+            subMonthly: n(sub.monthly),
+            pCOMPAREMONTHS: P.COMPARE_MONTHS,
+            pSubsTotalSub: n(P.subsTotal(sub)),
+          })}
+          <strong>{format(copy.strong, { pSUBSTRANSFERMONTHS: P.SUBS_TRANSFER_MONTHS })}</strong>
+          {format(copy.fineNote2, { pSUBSSOURCE: P.SUBS_SOURCE })}
+        </p>
+      )}
     </>
   );
 }

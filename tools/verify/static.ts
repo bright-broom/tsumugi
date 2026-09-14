@@ -1,3 +1,4 @@
+import { japaneseSpacing } from '@/i18n/typography';
 /**
  * 静的検証（ブラウザ不要）。出力された HTML と CSS を文字列として検査する。
  */
@@ -136,7 +137,7 @@ export function checkStatic(dist: string): void {
   for (const [txt, fname, what] of PRICE_FACTS) {
     // 「9,800<span class="u">円／月」のようにタグで割れているので、外してから探す
     const flat = readIf(join(dist, fname)).replace(/<[^>]+>/g, '');
-    const found = flat.includes(txt);
+    const found = flat.includes(japaneseSpacing(txt));
     rec(found ? 'PASS' : 'FAIL', '29 価格の一致', fname,
       found ? `${what} ${txt}` : `${what} ${txt} がページに出ていません`);
   }
@@ -146,7 +147,7 @@ export function checkStatic(dist: string): void {
     if (!existsSync(join(dist, fname))) continue;
     const h = read(join(dist, fname));
     if (!h.includes('月額制')) continue;
-    const cited = h.includes(P.SUBS_SOURCE);
+    const cited = h.includes(japaneseSpacing(P.SUBS_SOURCE));
     rec(cited ? 'PASS' : 'FAIL', '30 他社比較の出典', fname,
       cited ? P.SUBS_SOURCE : '比較の金額に出典・時点の記載がありません');
   }
