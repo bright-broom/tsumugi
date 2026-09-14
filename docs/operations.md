@@ -25,7 +25,7 @@
 ```
 cp -r site ../clients/<顧客名>   # node_modules / .next / out は除く
 # src/content/config.ts と src/pages/ のページ本文を差し替える
-npm install && npm run build && npm run verify
+npm ci && npm run validate && npm run verify
 ```
 
 顧客サイトでは実写を使うので、次の2点が効いてきます。
@@ -40,7 +40,11 @@ npm install && npm run build && npm run verify
 
 ## Vercel に載せるとき
 
-- 静的出力（`out/`）なので **Hobby でも足りる。** Framework Preset は Next.js のままでよい
+- Vercel プロジェクトの Root Directory を `site` にする。Node.js は 24 系。
+- `site/vercel.json` に install=`npx --yes npm@12.0.2 ci`、build=`npm run validate`、output=`out`、Framework Preset=`Other` を保存してある。Next.js の静的生成を使い、検証済みの出力をそのまま配信する。
+- 初回はリポジトリ直下で `site/node_modules/.bin/vercel link` を実行してプロジェクトへ接続し、`npm run deploy:preview` で確認する。本番は事業者情報などの公開条件を満たしてから `npm run deploy:production`。
+- 商用利用のプランは契約条件に従う。[Hobby は個人の非商用向け](https://vercel.com/docs/plans/hobby)なので、「静的だから Hobby でよい」とは判断しない。
+- Vercel の初回配備は指定にかかわらず Production として扱われることがある。新規案件では認証保護とドメイン割り当てを確認する。紬では初回の自動 Production 配備を削除し、Preview に切り替えて検証した。
 - **公開URLは独自ドメインにする。** `◯◯.vercel.app` のまま渡すと、
   全プランに書いた「独自ドメイン取得（初日からお客様の名義）」が守れない。
   vercel.app は公開前の確認用に使う
@@ -52,3 +56,5 @@ npm install && npm run build && npm run verify
 ## 残っている宿題
 
 [status.md](status.md) の「残課題」にまとめてある（課題の一覧は1か所だけに持つ）。
+
+プレビューと Git 配備は測定レポートをアップロードしないため、`works.html` の検査件数は未計測表示（「—」）となる。公開時に数値を載せる場合は、そのビルドに対応する全項目の実測レポートを作成する。

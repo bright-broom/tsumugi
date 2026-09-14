@@ -125,8 +125,8 @@ export const UNLIMITED_NOTE = "実際のご依頼は月1〜2時間で収まる�
 export function compareRows(months = COMPARE_MONTHS) {
   const pairs: [(typeof SUBS_MARKET)[number], number, RunKey, string, number][] = [
     [SUBS_MARKET[0]!, SINGLE.price, 'run_light', SINGLE.name, SINGLE.pages],
-    [SUBS_MARKET[1]!, BUILD[0]!.price, 'run_basic', BUILD[0]!.name, BUILD[0]!.pages],
-    [SUBS_MARKET[2]!, BUILD[1]!.price, 'run_standard', BUILD[1]!.name, BUILD[1]!.pages],
+    [SUBS_MARKET[1]!, build('basic').price, 'run_basic', build('basic').name, build('basic').pages],
+    [SUBS_MARKET[2]!, build('standard').price, 'run_standard', build('standard').name, build('standard').pages],
   ];
   return pairs.map(([sub, price, runKey, name, pages]) => {
     const st = subsTotal(sub, months);

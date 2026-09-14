@@ -42,8 +42,10 @@ Codex・Cursor・GitHub Copilot などはこのファイルを、Claude Code は
 
 ```bash
 cd site
-npm install
-npx playwright install chromium   # 初回だけ（verify と og が使う）
+nvm install && nvm use
+npm install --global npm@12.0.2
+npm ci
+PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium   # 初回だけ（verify と og が使う）
 npm run dev       # http://localhost:3000
 npm run check     # 型検査 ＋ 依存の向きの検査
 npm run build     # トークン同期の検査 → public/ の生成 → next build → postbuild → out/
@@ -52,7 +54,7 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 
 **変更を出す前に、次の全部を満たす。**
 
-1. `npm run check` が通る
+1. `npm run check`・`npm run lint`・`npm test` が通る
 2. `npm run build` が通る（postbuild が「実行時の script 0件・区切りコメント 0件」を出す）
 3. `npm run verify` が **PASS 581 / WARN 1 / FAIL 0**（WARN 1 は `PLACEHOLDER=true` による既知の1件）
    - 検査項目やページを増減すると 581 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
@@ -81,8 +83,8 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 | `node:fs` を使ったページでビルドが落ちる | ページのモジュールはクライアント用の束にも含まれる | `getStaticProps` の中だけで使う |
 | `npm run dev` の HTML に script がある | 開発サーバーはホットリロード用の JS を入れる | 0バイトの対象は `out/`。開発中の HTML で判断しない |
 | `next dev` のたびに `site/AGENTS.md`・`site/CLAUDE.md` が現れる | Next.js 16 が生成・再生成する | 動かさずにコミットしておく |
-| TypeScript を最新に上げたくなる | npm の最新は TypeScript 7（ネイティブ実装への移行版）。Next.js 16 との組み合わせは確かめていない | 5.9.3 に固定している。上げるときは合格ラインを全部通す |
-| 検査で「ブラウザが無い」と言われる | Playwright のブラウザは Playwright の版ごとに入れる | `npx playwright install chromium` |
+| TypeScript 7 で ESLint が動かない | typescript-eslint は TypeScript 6 の JavaScript API が必要 | `@typescript/native` の `tsc` は 7.0.2、`typescript` は公式互換パッケージの 6.0.3。併用を保つ（ADR 0003） |
+| 検査で「ブラウザが無い」と言われる | Playwright のブラウザは Playwright の版ごとに入れる | `PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium` |
 
 ## 7. いまの状態と残課題
 
