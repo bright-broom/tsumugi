@@ -1,5 +1,6 @@
 import { href } from '@/routing/registry';
 import PhoneLink from '@/components/PhoneLink';
+import Header from '@/components/Header';
 import { useMessages } from '@/components/ContentProvider';
 import { format } from '@/i18n/format';
 /**
@@ -11,7 +12,7 @@ import { LOCALE } from '@/i18n/catalog';
 import { canonical, ogImage, pathForFile } from '@/routing/registry';
 import type { ReactNode } from 'react';
 import * as C from '@/content/config';
-import { NAV, NAV_MAIN, NAV_LEGAL, NAV_IC, INDUSTRIES } from '@/content/nav';
+import { NAV, NAV_LEGAL, NAV_IC, INDUSTRIES } from '@/content/nav';
 import { raw } from '@/lib/raw';
 import Icon from '@/components/Icon';
 
@@ -53,8 +54,6 @@ export default function Base({ file, title, desc, children }: Props) {
 
   const url = canonical(C.DOMAIN, file);
   const og = ogImage(C.DOMAIN, file);
-  const one = C.BRAND.length <= 2 ? ' one' : '';
-  const current = (u: string) => (u === file ? 'page' : undefined);
   return (
     <>
       <Head>
@@ -87,61 +86,7 @@ export default function Base({ file, title, desc, children }: Props) {
             <span>{copy.span}</span>
           </div>
         )}
-        <header className="hdr">
-          <div className="hdr-in">
-            <a className={`logo${one}`} href={href('index')}>
-              <span className="n">{C.BRAND}</span>
-              {C.BRAND_READING && <span className="rd">{C.BRAND_READING}</span>}
-              <span className="s">{copy.s}</span>
-              <span className="s2">{copy.s2}</span>
-            </a>
-            <nav className="nav" aria-label={copy.ariaLabel}>
-              <ul>
-                {NAV_MAIN.map(([u, t]) => (
-                  <li key={u}>
-                    <a href={pathForFile(u)} aria-current={current(u)}>
-                      <Icon name={NAV_IC[u]!} sm />
-                      {t}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-            <span className="tel-hours">
-              <span>
-                {copy.span2}
-                <br />
-                {C.TEL_HOURS}
-              </span>
-            </span>
-            <PhoneLink className="tel" />
-            <details className="menu">
-              <summary aria-label={copy.ariaLabel2}>
-                <span>{copy.span3}</span>
-              </summary>
-              <div className="menu-panel">
-                <p className="hd">{copy.hd}</p>
-                <ul>
-                  {NAV.map(([u, t]) => (
-                    <li key={u}>
-                      <a href={pathForFile(u)} aria-current={current(u)}>
-                        {t}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-                <p className="hd">{copy.hd2}</p>
-                <ul>
-                  {INDUSTRIES.map(([u, nm]) => (
-                    <li key={u}>
-                      <a href={pathForFile(u)}>{nm}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </details>
-          </div>
-        </header>
+        <Header file={file} />
         <main id="main">{children}</main>
         <footer className="ftr">
           <div className="wrap">

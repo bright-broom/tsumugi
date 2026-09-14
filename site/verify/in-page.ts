@@ -136,6 +136,7 @@ export const CONTRAST = String.raw`
                    '.btn-1', '.btn-2', '.card .meta', '.plan .why', '.plan .pmeta',
                    '.hero h1, .hero .service-intro-title', '.hero .sub', '.hero .kick', '.logo .n', '.logo .s',
                    '.brand-hero-copy h1', '.brand-hero-copy p',
+                   '.header-contact', '.logo .roman', '.menu > summary', '.header-phone',
                    '.amt', '.pricebox .alt li', '.amtwrap .pre',
                    'thead th', '.ftr p', '.ftr .fine', '.sh .lab', '.calc .r .k em',
                    '.calc .r.net .v', '.calc .r.net .k', '.stat .k', '.vs .nm em',

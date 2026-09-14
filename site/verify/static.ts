@@ -60,8 +60,8 @@ export function checkStatic(dist: string): void {
 
   // ガイドの数値がそのまま出ているか。書き換えたら気づけるようにする
   const GUIDE: [string, string][] = [
-    ['--nah-size-header-pc: 62px', 'ヘッダー高 PC 62px'],
-    ['--nah-size-header-mb: 54px', 'ヘッダー高 モバイル 54px'],
+    ['--nah-size-header-pc: 88px', 'ヘッダー高 PC 88px'],
+    ['--nah-size-header-mb: 72px', 'ヘッダー高 モバイル 72px'],
     ['--nah-size-cta-w-pc: 315px', '主要CTA幅 PC 315px'],
     ['--nah-size-cta-h-pc: 57px', '主要CTA高 PC 57px'],
     ['--nah-size-cta-w-mb: 260px', '主要CTA幅 モバイル 260px'],

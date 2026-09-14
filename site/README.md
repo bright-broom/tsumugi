@@ -61,10 +61,10 @@ flowchart TD
   out[("out/")] --> st["静的検査<br/>PASS 360"]
   out --> br["ブラウザ実測<br/>PASS 220"]
   content["src/content/<br/>config・prices"] -.->|突き合わせる| st
-  st --> full["verify-report.json<br/>PASS 580<br/>WARN 1 / FAIL 0"]
+  st --> full["verify-report.json<br/>PASS 592<br/>WARN 1 / FAIL 0"]
   br --> full
   st -.->|簡易版のとき| static["verify-report<br/>.static.json"]
-  full -.->|次のビルドで| works["works.html の<br/>「580項目」"]
+  full -.->|次のビルドで| works["works.html の<br/>「592項目」"]
 ```
 
 - **静的検査**：電話番号・JSON-LD・実行時JSなし・内部リンク・CSS変数・価格・トークンの同期・OGP画像など。**ブラウザ実測**：LCP・横スクロール・タップ領域・コントラスト・図の色・コンソールエラー
