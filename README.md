@@ -110,7 +110,8 @@ flowchart TD
 | ---------------------------------- | ------------------------------------------------------------------------------------ |
 | 見出し・本文・SEO・図のラベル      | [src/i18n/locales/ja/](src/i18n/locales/ja/)                                         |
 | 金額・プラン・価格計算             | [src/content/prices.ts](src/content/prices.ts)                                       |
-| 連絡先・ドメイン・フォーム送信先   | [src/content/config.ts](src/content/config.ts)                                       |
+| 連絡先・プロフィール | [src/i18n/locales/ja/config.ts](src/i18n/locales/ja/config.ts) |
+| ドメイン・フォーム送信先・公開設定 | [src/content/config.ts](src/content/config.ts) |
 | ページのURL・アイコン・ナビ分類    | [src/routing/registry.ts](src/routing/registry.ts)                                   |
 | ページの構造・共通部品             | [src/views/](src/views/)・[src/components/](src/components/)                         |
 | 色・書体・寸法                     | [src/styles/design.tokens.json](src/styles/design.tokens.json)                       |
@@ -141,7 +142,7 @@ flowchart TD
   common --> html
 ```
 
-現在の対応言語は**日本語のみ**です。i18nは文言を中央管理する基盤であり、言語切り替え機能は未実装です。ヒーロー画像に描き込まれた文字も、カタログからの生成へ移す課題が残っています。
+現在の対応言語は**日本語のみ**です。i18nは文言を中央管理する基盤であり、言語切り替え機能は未実装です。ヒーローも背景画と文字を分離し、見出し・本文をカタログからHTMLとして描画します。電話番号・メール・郵便番号もカタログに集約しています。金額・計算は `src/content/prices.ts`、URLはルート設定で管理します。
 
 ### ページの地図
 

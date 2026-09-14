@@ -85,6 +85,12 @@ describe('copy regression guard', () => {
       '<p>こんにちは</p>',
       '<p>Hello</p>',
       '<input placeholder="Name" />',
+      '<input placeholder={"Name"} />',
+      '<p>{"Hello"}</p>',
+      '<p>{ready ? "Ready" : "Waiting"}</p>',
+      '<p>{ready && "Ready"}</p>',
+      '<p>{`Hello ${name}`}</p>',
+      'const item = { label: "Email" };',
       'const x = `約${days}日`;',
       '<a href="price.html" />',
     ]) {
@@ -95,9 +101,27 @@ describe('copy regression guard', () => {
     expect(
       inspectSource(
         'src/views/example.tsx',
-        '// 日本語のコメント\nconst x = <p className="lead">{copy.lead}</p>;',
+        '// 日本語のコメント\nconst x = <p className={"lead"} id="intro">{copy.lead}{"—"}{status === "ready" && copy.ready}{href("price")}</p>; const y = { id: "name", value: "email" }; throw new Error("Invalid configuration");',
       ),
     ).toEqual([]);
+  });
+});
+
+describe('hero catalog', () => {
+  it('renders replacement copy as HTML independently of the artwork', () => {
+    const props = JSON.parse(JSON.stringify(pageProps('index')));
+    const replacement = {
+      heading: 'A new heading',
+      heading2: 'A second line',
+      message: 'A new message',
+      message2: 'Another message',
+      artworkAlt: 'Artwork description',
+    };
+    props.copy.hero = replacement;
+    const html = renderToStaticMarkup(<Page {...props} />);
+    for (const text of Object.values(replacement)) expect(html).toContain(text);
+    expect(html).toContain('<h1 id="brand-heading">A new heading<br/>A second line</h1>');
+    expect(html).not.toContain(getMessages().home.hero.heading);
   });
 });
 

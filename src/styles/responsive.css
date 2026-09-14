@@ -3,9 +3,10 @@
    一度しか使わないページ固有の余白はここに置き、トークンには上げない。
    ══════════════════════════════════════════════════════════════════ */
 @layer screens {
-  /* 暫定の承認済み画像は、文字と二柱を切り取らずヘッダー直下に置く。 */
+  /* 文字のない背景画とカタログのコピーを組み合わせ、二柱を切り取らない。 */
   .brand-hero {
     @apply relative p-[0] bg-ink text-white;
+    container-type: inline-size;
   }
   .brand-hero-artwork {
     @apply w-[100%] h-[auto] rounded-[0];
@@ -20,12 +21,14 @@
     @apply text-body;
   }
   @media (min-width: 769px) {
-    /* 画像内のコピーと同じ内容を、読み上げでは見出し・本文として届ける。 */
     .brand-hero-copy {
-      @apply absolute w-[1px] h-[1px] p-[0] m-[-1px] overflow-hidden;
-      clip-path: inset(50%);
-      @apply whitespace-nowrap;
-      border: 0;
+      @apply absolute left-[5%] top-[26%] w-[55%] p-[0];
+    }
+    .brand-hero-copy h1 {
+      @apply font-brand text-[6.4cqw] leading-[1.36] mb-[2cqw];
+    }
+    .brand-hero-copy p {
+      @apply font-brand text-[2.15cqw] leading-[1.65] m-[0];
     }
   }
 

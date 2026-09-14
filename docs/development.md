@@ -100,12 +100,13 @@ App Router は静的書き出しでも全ページに約173KB（gzip）の JS �
 |---|---|
 | 本文・見出し・SEO・共通文言・図のラベル | `src/i18n/locales/ja/`。ページ名・用途別の名前空間 |
 | OGP画像の文面 | `src/i18n/locales/ja/og.ts`。金額は `content/og.ts` が価格データから差し込む |
-| 連絡先・公開前設定 | `src/content/config.ts`。表示用プロフィールは `i18n/locales/ja/config.ts` |
+| 連絡先・プロフィール | `src/i18n/locales/ja/config.ts`。電話番号・メール・郵便番号もここから `content/config.ts` に渡す |
+| ドメイン・送信先・公開前設定 | `src/content/config.ts` |
 | 金額・計算 | `src/content/prices.ts`。BUILD・RUNは安定したキーで引く |
 | 実測値 | `src/content/measurements.ts`。`verify --write` が数値だけを更新する |
 | ページ追加・URL・アイコン・ナビ分類 | `src/routing/registry.ts` |
 | ページの構造 | `src/views/`。`PageProps<'home'>` など、当該ページ用の文言だけを描画する |
-| 暫定ヒーロー画像 | `assets/hero/onokoro.webp`。`build-public.ts` が `public/images/onokoro-hero.svg` に内包。コピーと代替説明は `i18n/locales/ja/home.ts` の `hero`（[ADR 0005](architecture/0005-temporary-hero.md)） |
+| 暫定ヒーロー画像 | `src/assets/hero/onokoro.webp`。`build-public.ts` が `public/images/onokoro-hero.svg` に内包。コピーと代替説明は `i18n/locales/ja/home.ts` の `hero`。背景画に文字は含めず、コピーはHTMLで表示する（[ADR 0019](architecture/0019-complete-i18n.md)） |
 | 静的生成の入口 | `src/pages/index.tsx`・`404.tsx`・`[page].tsx`。全入口に `unstable_runtimeJS: false` |
 | props の用意とテンプレート選択 | `src/application/`。ファイルシステムは `getStaticProps` からだけ読む |
 | 共通表示 | `src/layouts/`・`src/components/`。文言は `ContentProvider` で配布 |

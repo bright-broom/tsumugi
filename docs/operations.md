@@ -7,7 +7,7 @@
 ## 公開前にやること
 
 1. `src/content/config.ts` の `PLACEHOLDER = false` にする（ページ上部の「準備中」の帯が消えます）
-2. `AREA` / `DOMAIN` / `TEL` / `EMAIL` / 住所 / 2人のプロフィールを実際の値に
+2. `src/content/config.ts` の `DOMAIN` と、`src/i18n/locales/ja/config.ts` の地域・電話番号・メール・郵便番号・住所・2人のプロフィールを実際の値に
 3. `FORM_ENDPOINT` に問い合わせフォームの送信先を設定する
    （**設定と同時に、通知をメールとLINE（またはSMS）の2系統に分けること**。
    「問い合わせに気づかない」が最大の失注要因です）

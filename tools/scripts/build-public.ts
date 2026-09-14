@@ -20,15 +20,14 @@ const PUB = join(ROOT, 'public');
 mkdirSync(PUB, { recursive: true });
 await buildStyles();
 
-// SVG は画像を内包する単体ファイル。元絵の文字は暫定のため描き込みのまま。
+// SVG は画像を内包する単体ファイル。背景画だけを内包し、コピーは HTML がカタログから描画する。
 const hero = getMessages().home.hero;
 const heroImage = readFileSync(join(ROOT, 'src/assets/hero/onokoro.webp')).toString('base64');
 mkdirSync(join(PUB, 'images'), { recursive: true });
 writeFileSync(
   join(PUB, HOME_HERO.src),
-  `<svg xmlns="http://www.w3.org/2000/svg" width="${HOME_HERO.width}" height="${HOME_HERO.height}" viewBox="0 0 ${HOME_HERO.width} ${HOME_HERO.height}" role="img" aria-labelledby="title description">` +
-    `<title id="title">${esc(hero.heading + hero.heading2)}</title>` +
-    `<desc id="description">${esc(hero.message + hero.message2 + hero.artworkAlt)}</desc>` +
+  `<svg xmlns="http://www.w3.org/2000/svg" width="${HOME_HERO.width}" height="${HOME_HERO.height}" viewBox="0 0 ${HOME_HERO.width} ${HOME_HERO.height}" role="img" aria-labelledby="title">` +
+    `<title id="title">${esc(hero.artworkAlt)}</title>` +
     `<image width="${HOME_HERO.width}" height="${HOME_HERO.height}" href="data:image/webp;base64,${heroImage}"/></svg>`,
 );
 
