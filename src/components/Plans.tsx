@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { href } from '@/routing/registry';
 import { useMessages } from '@/components/ContentProvider';
 import { format } from '@/i18n/format';
@@ -24,7 +25,10 @@ export default function Plans({ feat = 6 }: { feat?: number }) {
             <div className="why">{p.lede}</div>
             <ul>
               {p.includes.slice(0, feat).map((i) => (
-                <li key={i}>{i}</li>
+                <li key={i}>
+                  <Icon name="check" sm />
+                  <span>{i}</span>
+                </li>
               ))}
             </ul>
             {feat < p.includes.length && (

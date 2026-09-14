@@ -98,13 +98,7 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         lede={format(copy.comparisonLede, { months: P.COMPARE_MONTHS })}
       >
         <Figure
-          svg={D.ownershipClock(
-            one.sub_monthly,
-            one.sub_total,
-            one.our_price,
-            one.our_run + one.our_external,
-            P.COMPARE_MONTHS,
-          )}
+          svg={D.ownershipClock(one.sub_monthly, one.sub_total, one.our_price, P.COMPARE_MONTHS)}
         />
         <Table
           headers={[...copy.comparisonHeaders]}
@@ -115,10 +109,8 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
               monthly: n(r.sub_monthly),
               total: n(r.sub_total),
             }),
-            format(copy.comparisonOurs, {
+            format(copy.comparison.ours, {
               price: n(r.our_price),
-              care: n(r.our_run),
-              external: n(r.our_external),
               total: n(r.our_total),
             }) +
               '<br>' +
@@ -126,9 +118,14 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
           ])}
           caption={format(copy.comparisonNote, {
             source: P.SUBS_SOURCE,
-            external: n(P.EXTERNAL_MONTHLY_ESTIMATE),
           })}
         />
+        <p className="fine-note">
+          {format(copy.comparison.assumptions, {
+            care: n(P.run('run_light').price),
+            external: n(P.EXTERNAL_MONTHLY_ESTIMATE),
+          })}
+        </p>
         <Note heading={copy.comparisonDetailTitle}>
           <p>
             {format(copy.comparisonDetail, {

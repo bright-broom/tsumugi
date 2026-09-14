@@ -1,3 +1,5 @@
+import Acc from '@/components/Acc';
+import type { IconName } from '@/lib/icons';
 import { pathForFile } from '@/routing/registry';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
@@ -31,6 +33,8 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
   const tabelogBasic = 27_500;
   const cmp = P.compareRows();
   const one = cmp[0]!;
+  const scopeIcons: IconName[] = ['route', 'file-text', 'code-xml', 'pen-line', 'key'];
+  const extraIcons: IconName[] = ['camera', 'globe', 'shield'];
 
   const title = format(copy.title, { pSINGLEPrice: n(P.SINGLE.price), cBRANDT: C.BRAND_T });
   const desc = format(copy.desc, { pSINGLEPrice: n(P.SINGLE.price) }) + copy.desc2;
@@ -283,10 +287,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           className="home-section home-pricing"
           id="pricing"
           eyebrow={copy.eyebrow5}
-          heading={format(copy.heading8, {
-            singlePrice: n(P.SINGLE.price),
-            standardPrice: n(std.price),
-          })}
+          heading={copy.heading8}
           lede={copy.lede4}
         >
           <Entry />
@@ -304,30 +305,48 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           className="home-section home-included"
           eyebrow={copy.eyebrow6}
           heading={copy.heading9}
-          lede={copy.lede5}
         >
-          <div className="home-pair">
-            <Calc
-              title={copy.title3}
-              rows={[
-                { label: copy.rowsLabel8, value: '', cls: 'small', sub: copy.rowsSub5 },
-                { label: copy.rowsLabel9, value: copy.rowsValue5, cls: 'sum' },
-                {
-                  label: copy.rowsLabel10,
-                  value: format(copy.rowsValue6, { stdPrice: n(std.price) }),
-                  cls: 'net',
-                },
-              ]}
-            />
-            <div className="home-aside">
-              <Note heading={copy.heading10}>
-                <p>
-                  {copy.p5}
-                  <a href={href('price')}>{copy.a2}</a>
-                  {copy.p6}
-                  <a href={href('spec')}>{copy.a3}</a>
-                </p>
-              </Note>
+          <div className="pricing-scope">
+            <div className="scope-included">
+              <h3>{copy.scope.included}</h3>
+              <ul>
+                {copy.scope.items.map((item, i) => (
+                  <li key={item}>
+                    <Icon name={scopeIcons[i]!} />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="scope-separate">
+              <h3>
+                <Icon name="receipt" />
+                {copy.scope.separate}
+              </h3>
+              <ul>
+                {copy.scope.extras.map((item, i) => (
+                  <li key={item}>
+                    <Icon name={extraIcons[i]!} />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <a className="more" href={href('spec')}>
+                {copy.a3}
+              </a>
+            </div>
+            <div className="scope-price">
+              <div>
+                <span className="scope-status">{copy.scope.preparing}</span>
+                <h3>{copy.title3}</h3>
+                <p>{copy.scope.note}</p>
+              </div>
+              <div>
+                <strong className="tnum">
+                  {format(copy.rowsValue6, { stdPrice: n(std.price) })}
+                </strong>
+                <span>{copy.scope.tax}</span>
+              </div>
             </div>
           </div>
         </Section>
@@ -339,81 +358,70 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           className="home-section home-comparison"
           eyebrow={copy.eyebrow7}
           heading={copy.heading11}
-          lede={format(copy.lede6, { pCOMPAREMONTHS: P.COMPARE_MONTHS })}
+          lede={copy.lede6}
         >
-          <Figure
-            svg={D.ownershipClock(
-              one.sub_monthly,
-              one.sub_total,
-              one.our_price,
-              one.our_run + one.our_external,
-              P.COMPARE_MONTHS,
-            )}
-          />
-          <Calc
-            title={format(copy.title4, { pCOMPAREMONTHS: P.COMPARE_MONTHS })}
-            rows={[
-              {
-                label: format(copy.rowsLabel11, {
-                  oneSubMonthly: n(one.sub_monthly),
-                  pSUBSMARKET0Init: n(P.SUBS_MARKET[0].init),
-                }),
-                value: format(copy.rowsValue7, { oneSubTotal: n(one.sub_total) }),
-                cls: 'small',
-                sub: format(copy.rowsSub6, { pSUBSTRANSFERMONTHS: P.SUBS_TRANSFER_MONTHS }),
-              },
-              {
-                label: format(copy.rowsLabel12, { cBRAND: C.BRAND }),
-                value: format(copy.rowsValue8, { ourTotal: n(one.our_total) }),
-                cls: 'sum',
-                sub: copy.rowsSub7,
-              },
-              {
-                label: copy.rowsLabel13,
-                value: format(copy.rowsValue9, {
-                  difference: n(one.diff),
-                }),
-                cls: 'net',
-                sub: copy.rowsSub8,
-              },
-            ]}
-          />
-          <Table
-            headers={[copy.headers, copy.headers2, C.BRAND]}
-            rows={cmp.map((r) => [
-              format(copy.rows, { rSubPages: r.sub_pages }),
-              format(copy.rows2, {
-                rSubMonthly: n(r.sub_monthly),
-                pCOMPAREMONTHS: P.COMPARE_MONTHS,
-                rSubTotal: n(r.sub_total),
-              }) + format(copy.rows3, { pSUBSTRANSFERMONTHS: P.SUBS_TRANSFER_MONTHS }),
-              format(copy.rows4, {
-                rOurPrice: n(r.our_price),
-                rOurRun: n(r.our_run),
-                rOurTotal: n(r.our_total),
-                external: n(r.our_external),
-              }) + copy.rows5,
-            ])}
-            foot={format(copy.foot, {
-              pSUBSSOURCE: P.SUBS_SOURCE,
-            })}
-          />
-          <Note heading={copy.heading12} kind="good">
-            <p>
-              {format(copy.p7, { pCOMPAREMONTHS: P.COMPARE_MONTHS })}
-              <strong>
-                {format(copy.strong5, {
-                  difference: n(one.diff),
-                })}
-              </strong>
-              {copy.p8}
+          <div className="comparison-overview">
+            <p className="comparison-period">
+              <Icon name="calendar-days" sm />
+              {format(copy.comparisonUi.total, { months: P.COMPARE_MONTHS })}
             </p>
+            <div className="comparison-totals">
+              <div>
+                <h3>
+                  <Icon name="repeat-2" />
+                  {copy.comparisonUi.other}
+                </h3>
+                <strong className="tnum">{P.yen(one.sub_total)}</strong>
+                <p>{format(copy.rowsSub6, { pSUBSTRANSFERMONTHS: P.SUBS_TRANSFER_MONTHS })}</p>
+              </div>
+              <div>
+                <h3>
+                  <Icon name="key" />
+                  {copy.comparisonUi.ours}
+                </h3>
+                <strong className="tnum">{P.yen(one.our_total)}</strong>
+                <p>{copy.rowsSub7}</p>
+              </div>
+            </div>
+            <div className="comparison-difference">
+              <Icon name="scale" />
+              <div>
+                <strong>{format(copy.comparisonUi.difference, { difference: n(one.diff) })}</strong>
+                <p>{copy.rowsSub8}</p>
+              </div>
+            </div>
+            <p className="comparison-assumptions">
+              {format(copy.comparison.assumptions, {
+                care: n(one.our_run),
+                external: n(one.our_external),
+              })}
+            </p>
+          </div>
+          <Figure
+            svg={D.ownershipClock(one.sub_monthly, one.sub_total, one.our_price, P.COMPARE_MONTHS)}
+          />
+          <Acc summary={copy.comparisonUi.detail}>
+            <Table
+              headers={[copy.headers, copy.headers2, C.BRAND]}
+              rows={cmp.map((r) => [
+                format(copy.rows, { rSubPages: r.sub_pages }),
+                format(copy.rows2, {
+                  rSubMonthly: n(r.sub_monthly),
+                  pCOMPAREMONTHS: P.COMPARE_MONTHS,
+                  rSubTotal: n(r.sub_total),
+                }) + format(copy.rows3, { pSUBSTRANSFERMONTHS: P.SUBS_TRANSFER_MONTHS }),
+                format(copy.comparison.ours, { price: n(r.our_price), total: n(r.our_total) }),
+              ])}
+              foot={format(copy.foot, {
+                pSUBSSOURCE: P.SUBS_SOURCE,
+              })}
+            />
             <p>
               {copy.p9}
               <strong>{copy.strong6}</strong>
               {copy.p10}
             </p>
-          </Note>
+          </Acc>
         </Section>
 
         <Section

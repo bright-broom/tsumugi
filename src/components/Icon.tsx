@@ -14,6 +14,7 @@ export default function Icon({ name, sm = false, className }: Props) {
   return (
     <Glyph
       className={clsx('ic', sm && 'ic-sm', className)}
+      xmlns={undefined}
       size="1em"
       aria-hidden="true"
       focusable="false"

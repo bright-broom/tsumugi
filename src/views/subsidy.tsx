@@ -1,3 +1,4 @@
+import { esc, raw } from '@/lib/raw';
 import { ROUTES } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
@@ -58,11 +59,11 @@ export default function SubsidyPage({ copy, route }: PageProps<'subsidy'>) {
 
       <Section tone="tint" heading={copy.heading4}>
         <Note heading={copy.heading5} kind="bad">
-          <p>
-            {copy.p3}
-            <strong>{S.adoption_rate}</strong>
-            {format(copy.p4, { sAdoptionDetail: S.adoption_detail })}
-          </p>
+          <p
+            dangerouslySetInnerHTML={raw(
+              format(copy.adoption, { rate: esc(S.adoption_rate), detail: esc(S.adoption_detail) }),
+            )}
+          />
           <p>
             <strong>{copy.strong3}</strong>
             {copy.p5}

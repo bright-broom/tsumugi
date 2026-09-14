@@ -2,7 +2,7 @@
 export default {
   lab: 'まず1枚から',
   pn: '{sgName}　{sgPages}ページ',
-  u: '円',
+  u: ' 円',
   sub2: '買い切り・税別／約{sgWeeks}週間が目安',
   sub22: '保守は任意で月{pRunRunLightPrice}円から。外部費は別途。',
   dim: '含まれないもの：{sgNotIncludesJoin}',

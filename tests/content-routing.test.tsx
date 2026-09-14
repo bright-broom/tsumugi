@@ -130,8 +130,8 @@ describe('adopted tariff presentation', () => {
     const html = renderToStaticMarkup(<Page {...pageProps('price')} />);
     expect(html).toContain('受付準備中');
     expect(html).toContain('外部');
-    expect(html).toContain('30分');
-    expect(html).toContain('90分');
+    expect(html).toContain('30 分');
+    expect(html).toContain('90 分');
     expect(html).toContain('676,800');
     expect(html).toContain('139,000');
     expect(html).not.toContain('type="radio"');

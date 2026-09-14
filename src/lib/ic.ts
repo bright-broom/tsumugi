@@ -10,6 +10,7 @@ export function ic(name: IconName, className = ''): string {
   return renderToStaticMarkup(
     createElement(icon, {
       className: clsx('ic', className),
+      xmlns: undefined,
       size: '1em',
       'aria-hidden': true,
       focusable: false,

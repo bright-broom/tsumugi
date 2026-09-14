@@ -45,7 +45,7 @@ describe('information architecture', () => {
     expect(answer('initial-cost')).toContain('受付準備中');
     expect(answer('writing')).toContain('支給素材から原稿を整理');
     expect(answer('writing')).toContain(href('price'));
-    expect(answer('case-studies')).toContain('この自社サイト1件');
+    expect(answer('case-studies')).toContain('この自社サイト 1 件');
     expect(answer('case-studies')).toContain(href('works'));
   });
 

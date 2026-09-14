@@ -1,3 +1,4 @@
+import { spaceCopy } from '@/i18n/html-typography';
 import { ja } from '@/i18n/locales/ja';
 import { getRoute } from '@/routing/registry';
 
@@ -7,13 +8,15 @@ export type Messages = typeof ja;
 
 function resolveLinks(value: unknown): unknown {
   if (typeof value === 'string')
-    return value
-      .replaceAll('@brand:name', ja.config.brand)
-      .replace(/@route:([a-z0-9-]+)/g, (_, id: string) => {
-        const route = getRoute(id);
-        if (!route) throw new Error(`Unknown catalog route: ${id}`);
-        return route.path;
-      });
+    return spaceCopy(
+      value
+        .replaceAll('@brand:name', ja.config.brand)
+        .replace(/@route:([a-z0-9-]+)/g, (_, id: string) => {
+          const route = getRoute(id);
+          if (!route) throw new Error(`Unknown catalog route: ${id}`);
+          return route.path;
+        }),
+    );
   if (Array.isArray(value)) return value.map(resolveLinks);
   if (value && typeof value === 'object')
     return Object.fromEntries(
@@ -22,7 +25,7 @@ function resolveLinks(value: unknown): unknown {
   return value;
 }
 
-// Shape and placeholders remain identical; only symbolic links are resolved.
+// Keys and placeholders retain their shape; visible copy gains consistent spacing.
 const messages = resolveLinks(ja) as Messages;
 
 /** Locale is chosen at build time. Unsupported locales fail instead of silently mixing languages. */

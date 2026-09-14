@@ -11,6 +11,8 @@ describe('Lucide の静的描画', () => {
       expect(html).toBe(ic(name));
       expect(html).toContain('aria-hidden="true"');
       expect(html).not.toContain('<script');
+      // HTML parsing supplies the SVG namespace; do not repeat it on every icon.
+      expect(html).not.toContain('xmlns=');
       expect(html).toContain('width="1em" height="1em"');
     });
   }

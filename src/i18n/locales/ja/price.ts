@@ -1,4 +1,6 @@
+import comparison from '@/i18n/locales/ja/comparison';
 export default {
+  comparison,
   title: '料金｜買い切り{single}円から・任意の継続支援｜{brand}',
   desc: '制作は買い切り。継続支援は必要な分だけ。作業枠、外部費、お支払い、増築時の条件まで先に確認できます。',
   eyebrow: '料金と提供範囲',
@@ -14,7 +16,7 @@ export default {
   supportTitle: '保守・更新の月額プラン',
   supportLede:
     '支援は任意・1か月単位。前月末までの申し出で翌月から変更・終了できます。支援をやめても、顧客名義の外部契約を続ければサイトを公開できます。',
-  monthly: '円／月',
+  monthly: ' 円／月',
   scopeTitle: '作業時間と追加料金のルール',
   scope:
     '「整える」は月30分、「育てる」は月90分の作業枠。5分単位で月の実作業を合算し、依頼ごとに切り上げません。未使用分は繰越なし。超過前に翌月対応か追加見積もりを選び、自動で追加請求しません。',
@@ -35,12 +37,10 @@ export default {
   comparisonHeaders: ['規模', '月額制の公開料金', '紬の総額'],
   comparisonPages: '紬{ours}ページ／比較先{theirs}ページ',
   comparisonOther: '初期{initial}円＋月{monthly}円<br><strong>{total}円</strong>',
-  comparisonOurs:
-    '制作{price}円＋保守月{care}円＋外部費概算月{external}円<br><strong>{total}円</strong>',
   cheaper: '{diff}円 安い',
   dearer: '{diff}円 高い',
   comparisonNote:
-    '{source}。税別。比較先は月5回の更新を含み、紬「守る」は通常の変更を含みません。比較先は最低6か月、36か月未満の解約で非公開と案内しています。外部費概算は月{external}円。実際の契約・利用量で変わります。',
+    '{source}。税別。比較先は月5回の更新を含み、紬「守る」は通常の変更を含みません。比較先は最低6か月、36か月未満の解約で非公開と案内しています。',
   comparisonDetailTitle: '更新も任せる場合の総額',
   comparisonDetail:
     '6ページ＋「整える」＋同じ外部費概算では、36か月{total}円。比較先より{diff}円高くなります。更新量・素材・所有条件を揃えて選びます。',
