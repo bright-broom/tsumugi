@@ -50,7 +50,7 @@ export const questions = {
     id: 'transfer',
     question: '他社の「◯か月で無償譲渡」と何が違いますか？',
     answer:
-      "<p>渡される<strong>中身</strong>と<strong>時点</strong>が違います。</p><p>時点：紬はドメインを顧客名義で取得し、ソースは納品時にお渡しします。比較先の譲渡時期・条件は契約によります。</p><p>中身：サイト作成ツールで作られている場合、譲渡されるのは<strong>ツールのアカウント</strong>で、そのツールの外へは持ち出せません。当方はHTMLとCSSのままお渡しするので、どのサーバーにも置けます。<a href='@route:owned'>「譲渡します」にも2種類あります</a>。</p>",
+      "<p>渡される<strong>中身</strong>と<strong>時点</strong>が違います。</p><p>時点：紬はドメインを顧客名義で取得し、ソースは納品時にお渡しします。比較先の譲渡時期・条件は契約によります。</p><p>中身：契約やツールによっては、譲渡されるのが<strong>ツールのアカウントのみ</strong>で、データを外へ持ち出せない場合があります。当方はHTMLとCSSのままお渡しするので、どのサーバーにも置けます。<a href='@route:owned'>「譲渡します」にも2種類あります</a>。</p>",
   },
   'support-term': {
     id: 'support-term',
@@ -60,27 +60,27 @@ export const questions = {
   },
   'source-code': {
     id: 'source-code',
-    question: 'ソースコードは本当にもらえるんですか？',
+    question: 'ソースコードは受け取れますか？',
     answer:
-      "<p>もらえます。GitHubという保管場所にご招待してお渡しします。アカウントの作り方からお手伝いします。<a href='@route:source'>納品の中身</a>。</p>",
+      "<p>はい。GitHubというデータの保管場所に、お客様のアカウントをご招待します。アカウントの作成とデータの見方もご案内します。<a href='@route:source'>納品する内容を見る</a></p>",
   },
   migration: {
     id: 'migration',
     question: 'いま他社で作ったサイトがあります。移せますか？',
     answer:
-      '<p>移せます。ドメインの名義と解約条件を先に確認します。<strong>いまのサイトを生かしたまま</strong>新しいものを作って、最後に切り替えます。</p>',
+      '<p>ドメインの名義、データの利用条件、解約条件を確認して、移せる範囲をお伝えします。<strong>現在のサイトを公開したまま</strong>準備し、最後に切り替えます。</p>',
   },
   'business-closure': {
     id: 'business-closure',
     question: '@brand:nameさんが廃業したら、どうなりますか？',
     answer:
-      '<p>サイトは動き続けます。<strong>そのために全部お渡ししています。</strong>引き継ぎの手順書も納品時に同梱しているので、他社がそのまま引き継げます。</p>',
+      '<p>ドメインとサーバーの契約を続ければ、サイトの公開は継続できます。<strong>ソースコードと引き継ぎ手順書</strong>を納品しますので、別の会社へ保守や更新を依頼できます。</p>',
   },
   specification: {
     id: 'specification',
     question: 'どんなサイトになりますか？',
     answer:
-      "<p>作る内容を<a href='@route:spec'>先に全部公開しています</a>。20項目すべてを機械で検証して、1つでも落ちたら納品しません。</p>",
+      "<p>連絡先、営業時間、スマートフォンでの表示など、<a href='@route:spec'>20項目の標準仕様</a>に沿って制作します。公開前の検査で不具合が見つかった場合は、修正してから納品します。</p>",
   },
   'self-updates': {
     id: 'self-updates',
@@ -104,37 +104,37 @@ export const questions = {
     id: 'mobile',
     question: 'スマートフォンでも見られますか？',
     answer:
-      '<p>もちろんです。<strong>パソコン版から内容を削りません。</strong>同じ内容が出ます。</p>',
+      '<p>はい。<strong>パソコンと同じ内容</strong>を、スマートフォンの画面幅に合わせて表示します。</p>',
   },
   'search-ranking': {
     id: 'search-ranking',
     question: '検索で1位になりますか？',
     answer:
-      '<p><strong>お約束しません。</strong>順位を保証する会社があれば、疑ったほうがいいです。やるのは、Googleが公表している要因のうち<strong>こちらで動かせるもの</strong>を全部揃えることです。</p>',
+      "<p><strong>検索順位は保証できません。</strong>事業の内容や所在地を整理し、ページの読み込みやスマートフォンでの表示を確認します。実施する内容は<a href='@route:spec'>標準仕様</a>にまとめています。</p>",
   },
   acquisition: {
     id: 'acquisition',
     question: '新規のお客様は増えますか？',
     answer:
-      '<p>増えるとは約束しません。確実にできるのは<strong>手数料の削減と、再来店の導線づくり</strong>です。そこは数字で確認できます。</p>',
+      '<p>新規のお客様が増えることは保証できません。<strong>掲載費の見直しと、予約・問い合わせの案内</strong>を整え、公開後の件数や費用を確認します。</p>',
   },
   portals: {
     id: 'portals',
     question: 'ポータルサイトはやめたほうがいいですか？',
     answer:
-      "<p><strong>いきなりやめる提案はしません。</strong>準備なしにやめると売上が落ちます。3〜6か月は併走します。やめるべきでないお店には「やめないでください」と申し上げます。<a href='@route:cost-cut'>進め方</a>。</p>",
+      "<p><strong>現在の予約件数と費用を見て判断します。</strong>3〜6か月は並行して使い、予約への影響を確認します。掲載を続けたほうがよい場合もあります。<a href='@route:cost-cut'>見直しの進め方</a></p>",
   },
   'ai-search': {
     id: 'ai-search',
     question: 'AI検索の対策はしてもらえますか？',
     answer:
-      '<p><strong>売りません。</strong>Googleの公式ガイドが「生成AIの検索に構造化データもAI向けの書き方も不要」と明記しています。根拠のないものは商品にしていません。</p>',
+      '<p>AI検索への掲載や順位を保証する専用商品は扱っていません。<strong>内容の正確さ、読みやすさ、表示速度</strong>など、通常のサイト制作に含まれる項目を整えます。</p>',
   },
   'subsidy-approval': {
     id: 'subsidy-approval',
     question: '補助金は必ず通りますか？',
     answer:
-      '<p>通りません。採択率は{pSUBSIDYAdoptionRate}です。<strong>通らなかった場合の扱いは、契約前に書面で決めます。</strong></p>',
+      '<p>採択は保証できません。掲載している回の採択率は{pSUBSIDYAdoptionRate}です。<strong>不採択の場合に制作を続けるか、中止するか</strong>は、契約前に書面で決めます。</p>',
   },
   'subsidy-application': {
     id: 'subsidy-application',
@@ -157,23 +157,24 @@ export const questions = {
     id: 'team',
     question: '何人でやっているんですか？',
     answer:
-      "<p>2人です。<a href='@route:about'>私たちについて</a>。<strong>人を増やして数をこなす形にはしません。</strong></p>",
+      "<p>2人で担当する予定です。プロフィールは現在準備中です。公開前に、名前と担当する仕事を<a href='@route:about'>私たちについて</a>に掲載します。</p>",
   },
   'case-studies': {
     id: 'case-studies',
     question: '制作事例を見せてください',
     answer:
-      "<p>現在公開しているのは<strong>この自社サイト1件</strong>です。他社の事例を自分の実績のようには見せません。<a href='@route:works'>自社サイトの実測値</a>を公開しています。顧客事例は1件目から表示速度・マップ閲覧数・問い合わせ件数を記録します。</p>",
+      "<p>現在公開しているのは<strong>この自社サイト1件</strong>です。<a href='@route:works'>表示速度と検査結果</a>をご覧いただけます。顧客事例は、掲載許可をいただいたうえで、制作内容と実際に計測できた変化をご紹介します。</p>",
   },
   consultation: {
     id: 'consultation',
     question: '相談したら、そのまま契約になりませんか？',
     answer:
-      '<p>なりません。ご相談は無料で、その場でお返事をいただく必要もありません。<strong>いまのままで大丈夫だと思えば、そう申し上げます。</strong></p>',
+      '<p>ご相談だけで契約になることはありません。<strong>費用と内容をご確認いただいてから</strong>、依頼するかお決めください。相談は無料です。</p>',
   },
   advertising: {
     id: 'advertising',
     question: '広告はやめたほうがいいですか？',
-    answer: '<p>止めた実測例では、予算3.45倍に対し売上は1.07倍。 止めずに入札単価を下げます。</p>',
+    answer:
+      '<p>現在の費用と、そこからの予約や問い合わせを確認して判断します。配信地域、検索語、入札単価を見直し、<strong>変更後の件数や費用</strong>を確認します。</p>',
   },
 } as const;

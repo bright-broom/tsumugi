@@ -1,8 +1,5 @@
 /* ホーム本文：余白、ゴシック、比較データを中心にした現代的な面。ADR 0007。 */
 @layer screens {
-  .home-content {
-    counter-reset: home-chapter;
-  }
   .home-content .wrap {
     @apply max-w-home-container;
   }
@@ -86,18 +83,13 @@
     @apply bg-surface;
   }
   .home-section {
-    counter-increment: home-chapter;
     @apply py-[110px];
   }
   .home-section .sh {
     @apply relative grid grid-cols-[1.15fr_1fr] gap-[20px_70px];
     align-items: start;
     border: 0;
-    @apply p-[0_0_0_70px] mb-[52px];
-  }
-  .home-section .sh::before {
-    content: counter(home-chapter, decimal-leading-zero);
-    @apply absolute top-[-5px] left-[0] text-muted font-mono text-[18px] leading-[1.5];
+    @apply p-[0] mb-[52px];
   }
   .home-section .sh .lab {
     @apply col-[1_/_-1] m-[0] text-[13px] text-muted tracking-[.07em];
@@ -235,7 +227,6 @@
   .home-section.dark {
     @apply bg-ink;
   }
-  .home-section.dark .sh::before,
   .home-section.dark .sh .lab,
   .home-section.dark .sh .lede {
     @apply text-muted-on-ink;
@@ -357,7 +348,7 @@
     align-items: start;
   }
   .home-faq .sh {
-    @apply block row-[1_/_6] pl-[48px];
+    @apply block row-[1_/_6] pl-[0];
   }
   .home-faq .sh .lab {
     @apply mb-[20px];
@@ -385,9 +376,6 @@
   }
   .home-contact .sh {
     @apply pl-[0];
-  }
-  .home-contact .sh::before {
-    @apply hidden;
   }
   .home-contact .sh h2 {
     @apply text-[clamp(32px,_3.8vw,_52px)] leading-[1.45];
@@ -477,10 +465,7 @@
       @apply py-[64px];
     }
     .home-section .sh {
-      @apply block pl-[0] pt-[32px] mb-[30px];
-    }
-    .home-section .sh::before {
-      @apply top-[0] text-[13px];
+      @apply block pl-[0] pt-[0] mb-[30px];
     }
     .home-section .sh .lab {
       @apply mb-[18px] text-[12px];

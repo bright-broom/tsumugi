@@ -237,3 +237,7 @@ CSSは `src/styles/footer.css`、追加文言は `shell.footer` が正本です�
 Tailwind CSS 4.3.3を使い、85個の色・書体・寸法は `src/styles/design.tokens.json` から `@theme` へ生成する。公開ページの入口は `src/styles/globals.css` に統一し、各部品・ホーム・フッターの共通クラスを `@apply` で定義する。各ページはクラス名を使い、見た目の直接指定を持たない。SVGの座標は図解データ、比率などの数値はCSS変数として渡す。特殊な描画やアニメーションも同じグローバルCSSに置く。
 
 共有カードの描画CSSも `src/styles/og.css` に移し、共通テーマから画像生成時だけコンパイルする。通常ページへの追加JavaScriptはない。実装・検証の境界は [ADR 0009](../architecture/0009-global-tailwind.md) と [site/README](../development.md) を参照。
+
+## 文章と見出しの整理（ADR 0018）
+
+自己評価を繰り返すコピーから、頼める仕事・納品物・判断に必要な条件の説明へ変更しました。業種別ページは掲載する内容を具体的に案内します。手順ではないホームの飾り番号を外し、見出しと本文の左端を揃えています。3色、4図解、Lucideアイコン、暫定ヒーローは維持しています。追加のUIライブラリはありません。[判断と検証](../architecture/0018-plainspoken-copy.md)を参照してください。

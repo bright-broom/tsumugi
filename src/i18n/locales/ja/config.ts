@@ -17,8 +17,7 @@ export default {
     'フリーランスのエンジニア。医療・建設・製造・クリエイター領域でのシステム開発とDX支援。',
   memberBio2: 'Microsoft Azure のエンタープライズ窓口で法人サポートの経験。AZ-900 / PL-900。',
   memberRole2: '撮影・取材・集客支援',
-  memberBio3:
-    '（役割に合わせて書き換える。撮影／原稿の聞き取り／広告運用のどれを担うかを明記する）',
+  memberBio3: '担当者のプロフィールは準備中です。担当範囲を確認し、公開前に掲載します。',
   brandWithReading: '{brand}（{brandReading}）',
   lcpMeasured: '{seconds}秒（全{pages}ページの最大値・実測）',
 } as const;
