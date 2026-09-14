@@ -243,3 +243,9 @@
     }
   }
 }
+
+@layer overrides {
+  .footer-navigation .nav-group-title {
+    @apply text-[12px] text-muted;
+  }
+}

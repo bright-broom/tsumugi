@@ -1,8 +1,9 @@
+import NavigationGroups from '@/components/NavigationGroups';
 import { useMessages } from '@/components/ContentProvider';
 import Icon from '@/components/Icon';
 import PhoneLink from '@/components/PhoneLink';
 import * as C from '@/content/config';
-import { INDUSTRIES, NAV, NAV_MAIN } from '@/content/nav';
+import { INDUSTRIES, NAV_MAIN } from '@/content/nav';
 import { href, pathForFile, ROUTES } from '@/routing/registry';
 
 export default function Header({ file }: { file: string }) {
@@ -51,16 +52,7 @@ export default function Header({ file }: { file: string }) {
             </summary>
             <div className="menu-panel">
               <nav aria-label={copy.header.navigation}>
-                <p className="hd">{copy.hd}</p>
-                <ul>
-                  {NAV.map(([url, label]) => (
-                    <li key={url}>
-                      <a href={pathForFile(url)} aria-current={current(url)}>
-                        {label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+                <NavigationGroups file={file} surface="menu" />
                 <p className="hd">{copy.hd2}</p>
                 <ul>
                   {INDUSTRIES.map(([url, label]) => (

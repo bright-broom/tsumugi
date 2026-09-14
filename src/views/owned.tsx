@@ -85,27 +85,7 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
       </Section>
 
       <Section tone="dark" eyebrow={copy.eyebrow3} heading={copy.heading4} lede={copy.lede3}>
-        <Cards
-          cls="g2"
-          items={[
-            { title: copy.itemsTitle, desc: copy.itemsDesc, link: [copy.itemsLink, href('terms')] },
-            {
-              title: copy.itemsTitle2,
-              desc: copy.itemsDesc2,
-              link: [copy.itemsLink2, href('source')],
-            },
-            {
-              title: copy.itemsTitle3,
-              desc: copy.itemsDesc3,
-              link: [copy.itemsLink3, href('spec')],
-            },
-            {
-              title: copy.itemsTitle4,
-              desc: copy.itemsDesc4,
-              link: [copy.itemsLink4, href('terms')],
-            },
-          ]}
-        />
+        <Cards cls="g2" items={copy.ownership} />
         <Table
           headers={['', copy.headers5, format(copy.headers6, { cBRAND: C.BRAND })]}
           rows={[

@@ -17,6 +17,7 @@
 | 事業の数字（料金レバー・プラン・補助金・掲載費） | [business/紬_事業の中身.xlsx](business/紬_事業の中身.xlsx) |
 | 月140時間で採用した料金体系・提供範囲・採算・検証計画 | [business/pricing-redesign-140h.md](business/pricing-redesign-140h.md) |
 | サイトの主張・値付け・約束の置き場所・屋号・数字の出典 | [product/messaging-and-pricing.md](product/messaging-and-pricing.md) |
+| 21ページの役割と共通情報の管理 | [product/information-architecture.md](product/information-architecture.md) |
 | デザインの出所・スマホ表示・図・共有カード | [product/design.md](product/design.md) |
 | 検査している項目（納品の条件）と、検査で見つかった不具合 | [spec.md](spec.md) |
 | 技術的な判断と、その記録（ADR） | [architecture/README.md](architecture/README.md) |

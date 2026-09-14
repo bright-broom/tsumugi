@@ -1,4 +1,9 @@
 export default {
+  groups: {
+    service: 'サービスを知る',
+    costs: '費用を確かめる',
+    next: '相談・依頼を進める',
+  },
   labels: {
     index: 'ホーム',
     owned: '借地と所有',
