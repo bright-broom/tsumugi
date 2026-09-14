@@ -1,0 +1,197 @@
+/* ホーム本文：余白、ゴシック、比較データを中心にした現代的な面。ADR 0007。 */
+@layer screens {
+  .home-content { counter-reset: home-chapter; }
+  .home-content .wrap { max-width: var(--nah-size-home-container); }
+  .home-content .home-intro { background: var(--nah-color-white); color: var(--nah-color-ink); padding-block: 100px; }
+  .home-intro > .wrap { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 64px; align-items: center; }
+  .home-intro .kick { color: var(--nah-color-muted); font-size: 13px; margin-bottom: 24px; }
+  .home-intro .service-intro-title { font-size: clamp(30px, 3.4vw, 48px); line-height: 1.45; letter-spacing: -.045em; margin-bottom: 24px; }
+  .home-intro .sub { color: var(--nah-color-muted); font-size: 16px; line-height: 2; }
+  .home-intro .sub strong { color: var(--nah-color-ink); }
+  .home-intro .btns { margin-top: 30px; gap: 10px; }
+  .home-content .btn { border-radius: 6px; font-size: 14px; }
+  .home-content .btn-1 { background: var(--nah-color-ink); color: var(--nah-color-white); border-color: var(--nah-color-ink); min-width: 220px; }
+  .home-content .btn-2 { border-color: var(--nah-color-line-strong); }
+  .home-intro .btn-2 { color: var(--nah-color-ink); padding-inline: 18px; }
+  .home-intro .btn-2:hover { background: var(--nah-color-surface); border-color: var(--nah-color-ink); }
+  .home-intro .pricebox { display: flex; flex-direction: column; align-items: stretch; gap: 32px; padding: 40px; background: var(--nah-color-ink); color: var(--nah-color-white); border: 0; border-radius: 20px; }
+  .home-intro .pricebox .amtwrap { gap: 18px; }
+  .home-intro .pricebox .pre { color: var(--nah-color-muted-on-ink); font-size: 14px; }
+  .home-intro .pricebox .amt { font-size: clamp(54px, 5.6vw, 80px); font-weight: var(--nah-font-weight-medium); letter-spacing: -.06em; }
+  .home-intro .pricebox .u { font-size: 21px; }
+  .home-intro .pricebox .alt { border-top: 1px solid rgb(255 255 255 / .24); padding: 25px 0 0; display: grid; gap: 18px; min-width: 0; }
+  .home-intro .pricebox .alt li { font-size: 14px; line-height: 1.9; padding-left: 17px; }
+  .home-index { border-block: 1px solid var(--nah-color-line); background: var(--nah-color-white); }
+  .home-index .wrap { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home-index a { display: flex; align-items: center; gap: 14px; min-height: 94px; padding: 18px 22px; color: var(--nah-color-ink); text-decoration: none; font-size: 14px; }
+  .home-index a + a { border-left: 1px solid var(--nah-color-line); }
+  .home-index a .ic:last-child { margin-left: auto; }
+  .home-index a:hover { background: var(--nah-color-surface); }
+  .home-section { counter-increment: home-chapter; padding-block: 110px; }
+  .home-section .sh { position: relative; display: grid; grid-template-columns: 1.15fr 1fr; gap: 20px 70px; align-items: start; border: 0; padding: 0 0 0 70px; margin-bottom: 52px; }
+  .home-section .sh::before { content: counter(home-chapter, decimal-leading-zero); position: absolute; top: -5px; left: 0; color: var(--nah-color-muted); font-family: var(--nah-font-family-mono); font-size: 18px; line-height: 1.5; }
+  .home-section .sh .lab { grid-column: 1 / -1; margin: 0; font-size: 13px; color: var(--nah-color-muted); letter-spacing: .07em; }
+  .home-section .sh h2 { font-size: clamp(28px, 2.8vw, 38px); line-height: 1.5; letter-spacing: -.035em; max-width: 21em; text-wrap: balance; word-break: auto-phrase; }
+  .home-section .sh .lede { font-size: 16px; line-height: 2; margin: 0; padding-top: 6px; color: var(--nah-color-muted); }
+  .home-section .sh .lede strong { color: var(--nah-color-ink); }
+  .home-section .sh h2:last-child { grid-column: 1 / -1; }
+  .home-section .btns { margin-top: 32px; }
+  .home-section .fig { border: 1px solid var(--nah-color-line); padding: 32px; border-radius: 16px; background: var(--nah-color-white); margin-block: 36px; }
+  .home-section .cards .g { gap: 24px; }
+  .home-section .card { border: 0; padding: 26px; background: var(--nah-color-white); border-radius: 12px; }
+  .home-section .card h3 { line-height: 1.7; font-size: 17px; }
+  .home-section .card .meta { font-size: 14px; line-height: 1.9; }
+  .home-section .card .more { color: var(--nah-color-ink); margin-top: auto; }
+  .home-section .card h3 .ic { color: var(--accent-text); }
+  .home-section .alert { padding-top: 26px; border-color: var(--nah-color-line-strong); }
+  .home-section .alert .h { font-size: 17px; }
+  .home-section .alert p { font-size: 15px; line-height: 2; }
+  .home-section .alert.warn { padding: 26px; border-color: var(--nah-color-warn); }
+  .home-ownership .cards { margin-top: 34px; }
+  .home-ownership .cards .g { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-ownership .card { border: 1px solid var(--nah-color-line); }
+  .home-ownership .card h3 { display: block; text-wrap: balance; }
+  .home-ownership .card h3 .ic { display: block; margin-bottom: 16px; }
+  .home-cost .vs { padding: 32px 36px; background: var(--nah-color-surface); border-radius: 16px; gap: 24px; }
+  .home-cost .vs .row { gap: 9px 24px; }
+  .home-cost .vs .nm { font-size: 16px; }
+  .home-cost .vs .nm em { margin-left: 14px; }
+  .home-cost .vs .amtv { font-size: 24px; letter-spacing: -.025em; }
+  .home-cost .vs .bar { height: 12px; border-radius: 3px; background: var(--nah-color-white); }
+  .home-cost .vs .row.ours .amtv { color: var(--accent-text); }
+  .home-cost .vs .bar i { border-radius: 3px; background: var(--nah-color-muted); }
+  .home-cost .vs .row.ours .bar i { background: var(--accent); }
+  .home-updates { background: var(--nah-color-surface); }
+  .home-pair { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 50px; align-items: center; }
+  .home-pair .home-aside { padding: 10px 0; }
+  .home-pair .home-aside .alert { border-top: 0; padding-top: 0; }
+  .home-pair .home-aside .alert .h { font-size: 24px; line-height: 1.7; margin-bottom: 20px; }
+  .home-pair .home-aside .btns { margin-top: 26px; }
+  .home-section .calc { border-radius: 16px; }
+  .home-section .calc .ttl { padding: 22px 24px; font-size: 14px; }
+  .home-section .calc .r { padding: 18px 24px; }
+  .home-section .calc .r .k .ic { margin: 0 8px 0 0; }
+  .home-section .calc .r.net { padding-block: 28px; }
+  .home-section .calc .r.net .v { font-size: 40px; letter-spacing: -.035em; }
+  .home-section.dark { background: var(--nah-color-ink); }
+  .home-section.dark .sh::before, .home-section.dark .sh .lab, .home-section.dark .sh .lede { color: var(--nah-color-muted-on-ink); }
+  .home-section.dark .sh .lede strong { color: var(--nah-color-white); }
+  .home-section.dark .btn-1 { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .home-section.dark :where(a, summary, label):focus-visible { outline-color: var(--nah-color-white); }
+  .home-section.dark .card { background: var(--nah-color-panel); border: 1px solid rgb(255 255 255 / .13); }
+  .home-section.dark .card .more { color: var(--nah-color-white); }
+  .home-section.dark .card h3 .ic { color: var(--accent); }
+  .home-promises .card { padding: 36px 30px; gap: 22px; }
+  .home-promises .card h3 { display: block; font-size: 20px; }
+  .home-promises .card h3 .ic { display: block; margin-bottom: 26px; }
+  .home-promises .card .meta { color: var(--nah-color-muted-on-ink); }
+  .home-promises .card .more { padding-top: 16px; border-top: 1px solid rgb(255 255 255 / .15); width: 100%; }
+  .home-pricing .entry { padding: 0; overflow: hidden; gap: 0; border: 1px solid var(--nah-color-line); grid-template-columns: minmax(260px, .8fr) minmax(0, 1.2fr); }
+  .home-pricing .entry > div { padding: 40px; }
+  .home-pricing .entry > div:first-child { background: var(--nah-color-surface); }
+  .home-pricing .entry .amt { font-size: 68px; letter-spacing: -.05em; margin-block: 20px; }
+  .home-pricing .entry .btns { gap: 10px; }
+  .home-pricing .entry .btn { padding-inline: 16px; font-size: 13px; }
+  .home-pricing .plans { gap: 18px; padding-top: 18px; }
+  .home-pricing .plan { background: var(--nah-color-surface); padding: 28px; border: 1px solid var(--nah-color-line); border-radius: 12px; }
+  .home-pricing .plan.pick { background: var(--nah-color-white); border: 2px solid var(--nah-color-ink); }
+  .home-pricing .plan .btn { min-width: 0; width: 100%; }
+  .home-pricing .plan .amt { font-size: 40px; }
+  .home-pricing .seg { border-radius: 6px; }
+  .home-pricing .seg label { border-radius: 3px; }
+  .home-comparison .fig { background: var(--nah-color-panel); border-color: rgb(255 255 255 / .18); }
+  .home-comparison .calc { margin-bottom: 34px; }
+  .home-comparison .tbl { border-radius: 12px; border: 1px solid rgb(255 255 255 / .2); }
+  .home-industries .inds { gap: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--nah-color-line-strong); border-radius: 16px; overflow: hidden; }
+  .home-industries .ind { display: flex; flex-direction: column; gap: 20px; padding: 40px; border: 0; border-radius: 0; background: var(--nah-color-white); }
+  .home-industries .ind:nth-child(even) { border-left: 1px solid var(--nah-color-line); }
+  .home-industries .ind:nth-child(n+3) { border-top: 1px solid var(--nah-color-line); }
+  .home-industries .ind .n { display: flex; gap: 14px; align-items: center; font-size: 23px; }
+  .home-industries .ind .n .ic { color: var(--accent-text); }
+  .home-industries .ind .p { max-width: 28em; font-size: 15px; }
+  .home-industries .ind:hover { background: var(--nah-color-surface); }
+  .home-faq > .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 0 70px; align-items: start; }
+  .home-faq .sh { display: block; grid-row: 1 / 6; padding-left: 48px; }
+  .home-faq .sh .lab { margin-bottom: 20px; }
+  .home-faq .sh .lede { margin-top: 20px; }
+  .home-faq .acc { grid-column: 2; border: 0; border-bottom: 1px solid var(--nah-color-line-strong); border-radius: 0; }
+  .home-faq .acc + .acc { margin-top: 0; }
+  .home-faq .acc > summary { padding: 26px 0; min-height: 88px; line-height: 1.7; }
+  .home-faq .acc .bd { padding: 0 24px 26px 0; color: var(--nah-color-muted); line-height: 2; }
+  .home-contact { padding-block: 110px 100px; }
+  .home-contact .sh { padding-left: 0; }
+  .home-contact .sh::before { display: none; }
+  .home-contact .sh h2 { font-size: clamp(32px, 3.8vw, 52px); line-height: 1.45; }
+  .home-contact .stats { padding-block: 12px 24px; gap: 24px; }
+  .home-contact .stat { position: relative; padding-top: 30px; gap: 20px; }
+  .home-contact .stat > .ic { position: absolute; right: 0; top: 35px; color: var(--accent); }
+  .home-contact .stat .v { font-family: var(--nah-font-family-mono); font-size: 60px; font-weight: var(--nah-font-weight-regular); }
+  .home-contact .stat .k { font-size: 14px; }
+  .home-contact .btns { margin-top: 34px; }
+  .nah-app:has(.home-content) .ftr { border-top: 1px solid rgb(255 255 255 / .2); }
+  .nah-app:has(.home-content) .ftr h4 { letter-spacing: .08em; }
+  @media (min-width: 1100px) { .home-ownership .cards .g { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (max-width: 1099px) {
+    .home-intro > .wrap { gap: 36px; }
+    .home-intro .pricebox { padding: 30px; }
+    .home-section .sh { column-gap: 36px; padding-left: 50px; }
+    .home-pair { gap: 32px; }
+    .home-index a { padding-inline: 15px; gap: 9px; font-size: 13px; }
+    .home-faq > .wrap { gap: 0 40px; }
+  }
+  @media (max-width: 768px) {
+    .home-content .home-intro { padding-block: 56px; }
+    .home-intro > .wrap, .home-pair { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .home-intro .kick { font-size: 12px; margin-bottom: 18px; }
+    .home-intro .service-intro-title { font-size: 30px; letter-spacing: -.04em; margin-bottom: 20px; }
+    .home-intro .sub { font-size: 15px; }
+    .home-intro .pricebox { padding: 28px; gap: 24px; border-radius: 14px; }
+    .home-intro .pricebox .amt { font-size: 64px; }
+    .home-intro .pricebox .alt { padding-top: 22px; }
+    .home-index .wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .home-index a { padding: 18px 12px; min-height: 74px; font-size: 12px; gap: 8px; }
+    .home-index a:nth-child(3) { border-left: 0; }
+    .home-index a:nth-child(n+3) { border-top: 1px solid var(--nah-color-line); }
+    .home-section { padding-block: 64px; }
+    .home-section .sh { display: block; padding-left: 0; padding-top: 32px; margin-bottom: 30px; }
+    .home-section .sh::before { top: 0; font-size: 13px; }
+    .home-section .sh .lab { margin-bottom: 18px; font-size: 12px; }
+    .home-section .sh h2 { font-size: 28px; line-height: 1.55; }
+    .home-section .sh .lede { font-size: 15px; margin-top: 20px; line-height: 1.95; }
+    .home-section .fig { padding: 18px 0 0; margin-block: 26px; border-radius: 12px; }
+    .home-section .cards .g { gap: 14px; }
+    .home-section .card { padding: 24px; }
+    .home-ownership .cards .g { grid-template-columns: minmax(0, 1fr); }
+    .home-cost .vs { padding: 24px 20px; gap: 23px; }
+    .home-cost .vs .row { gap: 5px; }
+    .home-cost .vs .nm { font-size: 14px; }
+    .home-cost .vs .nm em { margin-left: 0; font-size: 12px; }
+    .home-cost .vs .amtv { font-size: 23px; }
+    .home-cost .vs .bar { margin-top: 5px; height: 9px; }
+    .home-section .calc .ttl { padding: 18px; font-size: 13px; }
+    .home-section .calc .r { padding: 15px 18px; gap: 12px; }
+    .home-section .calc .r.net .v { font-size: 30px; }
+    .home-section .calc .r .k .ic { margin-right: 5px; }
+    .home-pair .home-aside { padding: 0; }
+    .home-pair .home-aside .alert .h { font-size: 21px; }
+    .home-section .alert.warn { padding: 20px; }
+    .home-pricing .entry { grid-template-columns: minmax(0, 1fr); }
+    .home-pricing .entry > div { padding: 28px; }
+    .home-pricing .entry .amt { font-size: 58px; }
+    .home-pricing .plan { padding: 26px; }
+    .home-pricing .plan .amt { font-size: 44px; }
+    .home-industries .inds { grid-template-columns: minmax(0, 1fr); }
+    .home-industries .ind { padding: 28px; gap: 14px; }
+    .home-industries .ind:nth-child(even) { border-left: 0; }
+    .home-industries .ind + .ind { border-top: 1px solid var(--nah-color-line); }
+    .home-industries .ind .n { font-size: 20px; }
+    .home-faq > .wrap { display: block; }
+    .home-faq .acc > summary { padding: 22px 0; min-height: 76px; font-size: 15px; }
+    .home-contact .sh { padding-top: 0; }
+    .home-contact .sh h2 { font-size: 32px; }
+    .home-contact .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+    .home-contact .stat .v { font-size: 46px; }
+    .home-contact .stat .k { font-size: 13px; }
+    .home-content .btns .btn { min-width: 0; max-width: 100%; }
+  }
+}

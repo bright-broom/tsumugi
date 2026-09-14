@@ -17,7 +17,7 @@ const ROOT = join(import.meta.dirname, '..');
 const STYLES = join(ROOT, 'styles');
 const PUB = join(ROOT, 'public');
 
-const PARTS = ['tokens.css', 'index.css', 'components.css', 'guide.css'];
+const PARTS = ['tokens.css', 'index.css', 'components.css', 'guide.css', 'home.css'];
 const PREAMBLE =
   '@layer base, components, screens, overrides;\n' + '@view-transition { navigation: auto; }\n';
 

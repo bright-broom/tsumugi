@@ -1,7 +1,7 @@
 /* 生成物。手で編集しない。
  * 出所: styles/design.tokens.json
  * 生成: npm run tokens
- * トークン数: 84
+ * トークン数: 85
  */
 :root {
   /* color */
@@ -38,6 +38,7 @@
   --nah-theme-main-accent-text: #0171E3;
 
   /* size */
+  --nah-size-home-container: 1280px;  /* ホーム本文。図解と比較のための広い器 */
   --nah-size-header-pc: 88px;
   --nah-size-header-mb: 72px;
   --nah-size-pad-pc: 48px;  /* PC 外側の余白 */

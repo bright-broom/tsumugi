@@ -41,6 +41,7 @@
   },
   "size": {
     "$type": "dimension",
+    "home-container": { "$value": "1280px", "$description": "ホーム本文。図解と比較のための広い器" },
     "header-pc":   { "$value": "88px" },
     "header-mb":   { "$value": "72px" },
     "pad-pc":      { "$value": "48px",  "$description": "PC 外側の余白" },

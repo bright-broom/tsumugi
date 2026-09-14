@@ -35,7 +35,7 @@ flowchart TD
 | 段階 | やること | 止まる条件 |
 |---|---|---|
 | ① `build-tokens.ts --check` | `styles/design.tokens.json` と `styles/tokens.css` が一致するか | 手で `tokens.css` を直した・`npm run tokens` を忘れた |
-| ② `build-public.ts` | `styles/` の4枚を `public/theme.css` に束ね、`robots.txt`・`sitemap.xml` を書く | — |
+| ② `build-public.ts` | `styles/` の5枚（ホーム専用の `home.css` を含む）を `public/theme.css` に束ね、`robots.txt`・`sitemap.xml` を書く | — |
 | ③ `next build` | 21ページを `out/` に書き出す（型検査を含む） | 型エラー |
 | ④ `postbuild.ts` | `data-next-head` などの印を消し、JSON-LD 以外の `<script>` と `<!-- -->` を数え、`out/_next/` を消す | 1件でもあれば |
 
@@ -61,10 +61,10 @@ flowchart TD
   out[("out/")] --> st["静的検査<br/>PASS 360"]
   out --> br["ブラウザ実測<br/>PASS 220"]
   content["src/content/<br/>config・prices"] -.->|突き合わせる| st
-  st --> full["verify-report.json<br/>PASS 592<br/>WARN 1 / FAIL 0"]
+  st --> full["verify-report.json<br/>PASS 593<br/>WARN 1 / FAIL 0"]
   br --> full
   st -.->|簡易版のとき| static["verify-report<br/>.static.json"]
-  full -.->|次のビルドで| works["works.html の<br/>「592項目」"]
+  full -.->|次のビルドで| works["works.html の<br/>「593項目」"]
 ```
 
 - **静的検査**：電話番号・JSON-LD・実行時JSなし・内部リンク・CSS変数・価格・トークンの同期・OGP画像など。**ブラウザ実測**：LCP・横スクロール・タップ領域・コントラスト・図の色・コンソールエラー

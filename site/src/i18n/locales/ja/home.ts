@@ -1,5 +1,12 @@
 /** Japanese copy: home. Keep keys stable; placeholders are named runtime values. */
 export default {
+  navigation: {
+    label: 'このページのご案内',
+    ownership: '紬の考え方',
+    pricing: '料金・プラン',
+    industries: '業種別のご案内',
+    contact: 'ご相談の流れ',
+  },
   hero: {
     heading: '変わらない志に、',
     heading2: '変えていく力を。',
