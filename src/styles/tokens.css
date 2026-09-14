@@ -54,7 +54,7 @@
   --spacing-gap: 32px;
   --spacing-gap-near: 12px;  /* 関係の近い情報 8–16px */
   --spacing-gap-group: 28px;  /* 同じカードのまとまり 24–32px */
-  --spacing-section-pc: 104px;  /* 章の切り替え 64–120px */
+  --spacing-section-pc: 72px;  /* 章の切り替え。見出しと本文が離れすぎない余白 */
   --spacing-section-mb: 56px;
   --spacing-cta-w-pc: 315px;
   --spacing-cta-h-pc: 57px;
@@ -70,12 +70,12 @@
 
   /* radius */
   --radius-media: 8px;
-  --radius-card: 12px;
-  --radius-panel: 16px;
+  --radius-card: 4px;
+  --radius-panel: 4px;
   --radius-pill: 999px;
 
   /* font */
-  --font-brand: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif CJK JP", serif;  /* ヘッダーの屋号だけに使う端末の明朝。外部フォント不要 */
+  --font-brand: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif CJK JP", serif;  /* 屋号・ブランドコピー・ページ見出しに使う端末の明朝。外部フォント不要 */
   --font-ja: YakuHanJP, "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-display: "League Gothic", Haettenschweiler, "Arial Narrow", sans-serif;  /* 短い欧文のみ。日本語本文・長い項目名には使わない */
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;

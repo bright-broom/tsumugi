@@ -218,7 +218,7 @@
   .tel {
     @apply inline-flex items-center gap-[8px] min-h-tap p-[5px_14px_5px_12px];
     border: 1.5px solid var(--color-ink);
-    @apply rounded-pill text-ink no-underline flex-[none];
+    @apply rounded-media text-ink no-underline flex-[none];
   }
   .tel:hover {
     @apply bg-ink text-white;
@@ -297,7 +297,7 @@
     @apply flex flex-wrap gap-[14px];
   }
   .btn {
-    @apply inline-flex items-center justify-center gap-[9px] min-h-cta-h-pc px-[26px] rounded-pill text-[16px] font-bold no-underline;
+    @apply inline-flex items-center justify-center gap-[9px] min-h-cta-h-pc px-[26px] rounded-media text-[15px] font-semi no-underline;
     border: 1.5px solid transparent;
     transition:
       background var(--duration-fast) ease,
@@ -327,15 +327,14 @@
 
   /* ══ C05 SectionHeading ─ 小分類、見出し、短い導入 */
   .sh {
-    @apply mb-[40px] pt-[16px];
-    border-top: 1px solid var(--color-ink);
+    @apply mb-[32px];
   }
   .sh > h2,
   .sh > .lede {
     @apply max-w-measure-read;
   }
   section.dark .sh {
-    border-top-color: var(--color-white);
+    @apply text-white;
   }
   .sh .lab {
     @apply flex items-center gap-[7px] mb-[16px] text-[12.5px] font-semi tracking-[.08em] text-muted;
@@ -376,7 +375,7 @@
   /* 既定は罫だけ。角丸の箱にすると全部が同じ強さになって階層が消える（原則F） */
   .card {
     @apply flex flex-col gap-[10px] pt-[20px];
-    border-top: 2px solid var(--color-ink);
+    border-top: 1px solid var(--color-line-strong);
   }
   section.dark .card {
     border-top-color: var(--color-white);
@@ -434,12 +433,10 @@
     @apply m-[4px_0_0] text-meta leading-[1.8] text-muted max-w-measure-read;
   }
   .flow .tags {
-    @apply flex flex-wrap gap-[8px] m-[10px_0_0];
+    @apply flex flex-wrap gap-[8px_24px] m-[10px_0_0];
   }
   .flow .tags span {
-    @apply inline-flex items-center gap-[6px] p-[3px_11px] rounded-pill;
-    border: 1px solid var(--color-line-strong);
-    @apply text-[12.5px] leading-[1.7] text-muted whitespace-nowrap;
+    @apply inline-flex items-center gap-[6px] p-[0] text-[13px] leading-[1.7] text-muted;
   }
   .flow .tags .ic {
     @apply text-muted;
@@ -633,14 +630,14 @@
 
   /* ══ C15 Disclosure ─ details。未確認・重要条件は初期状態で見せる */
   .acc {
-    border: 1px solid var(--color-line);
-    @apply rounded-card bg-white overflow-hidden;
+    border-bottom: 1px solid var(--color-line);
+    @apply rounded-[0] bg-white;
   }
   section.dark .acc {
     @apply bg-[color-mix(in_srgb,_var(--color-main)_5%,_transparent)] border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
   }
   .acc > summary {
-    @apply list-none list-outside cursor-pointer flex items-center gap-[11px] min-h-tap p-[15px_20px] text-[16px] font-semi;
+    @apply list-none list-outside cursor-pointer flex items-center gap-[11px] min-h-[64px] p-[18px_0] text-[16px] font-medium;
   }
   .acc > summary::-webkit-details-marker {
     @apply hidden;
@@ -664,7 +661,7 @@
   }
 
   .acc .bd {
-    @apply p-[0_20px_20px_51px] text-[15px];
+    @apply p-[0_28px_24px_0] text-[15px] leading-[1.9];
   }
   .acc .bd > :first-child {
     @apply mt-[0];
@@ -832,12 +829,13 @@
     @apply rounded-card bg-white;
   }
   .plan.pick {
-    border: 2px solid var(--color-ink);
+    border: 1px solid var(--color-line);
+    border-top: 3px solid var(--color-accent);
     @apply bg-white;
   }
   @container (min-width: 760px) {
     .plan.pick {
-      @apply my-[-14px] py-[calc(var(--spacing-gap-group)_+_14px)];
+      @apply my-[0] py-gap-group;
     }
   }
   .production-plans .plan.pick {
@@ -847,7 +845,7 @@
     @apply self-start text-[12px] font-bold tracking-[.06em] text-ink;
   }
   .plan .tag::before {
-    content: '▸ ';
+    content: '';
   }
   .plan .pn {
     @apply text-h3 font-bold;
@@ -1048,9 +1046,8 @@
 
   /* ── 業種の入口 */
   .inds {
-    @apply grid gap-[1px] bg-line;
-    border: 1px solid var(--color-line);
-    @apply rounded-card overflow-hidden;
+    @apply grid gap-[0] overflow-hidden;
+    border-top: 1px solid var(--color-line);
   }
   @container (min-width: 520px) {
     .inds {
@@ -1059,11 +1056,12 @@
   }
   @container (min-width: 960px) {
     .inds {
-      @apply grid-cols-[repeat(4,_1fr)];
+      @apply grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))];
     }
   }
   .ind {
     @apply bg-white p-[24px] no-underline;
+    border-bottom: 1px solid var(--color-line);
     color: inherit;
     @apply grid gap-[8px];
     align-content: start;
@@ -1094,7 +1092,7 @@
     @apply text-[14.5px] font-semi flex items-center gap-[8px];
   }
   .field .req {
-    @apply text-[11px] font-bold p-[2px_7px] rounded-pill bg-ink text-white;
+    @apply text-[12px] font-medium text-muted;
   }
   .field .hint {
     @apply text-meta text-muted;
@@ -1171,7 +1169,7 @@
   /* 仕様ページの分類見出し */
   h3.grp {
     @apply mt-[44px] pt-[12px];
-    border-top: 2px solid var(--color-ink);
+    border-top: 1px solid var(--color-line-strong);
     @apply text-[18px];
   }
   h3.grp + .dim {

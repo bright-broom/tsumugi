@@ -14,10 +14,10 @@ export const AREA = copy.area;
 export const SERVICE_NOTE = copy.serviceNote;
 export const DOMAIN = 'example.jp';
 
-export const TEL = '000-0000-0000';
+export const TEL = copy.phoneNumber;
 export const TEL_LINK = TEL.replace(/[^\d+]/g, '');
 export const TEL_HOURS = copy.phoneHours;
-export const EMAIL = 'info@example.jp';
+export const EMAIL = copy.email;
 export const LINE_URL = '';
 export const FORM_ENDPOINT = '';
 
@@ -25,7 +25,7 @@ export const LEGAL_NAME = copy.legalName;
 export const ADDRESS_REGION = copy.addressRegion;
 export const ADDRESS_CITY = copy.addressCity;
 export const ADDRESS_STREET = copy.addressStreet;
-export const POSTAL_CODE = '000-0000';
+export const POSTAL_CODE = copy.postalCode;
 
 export const RESPONSE_PROMISE = copy.responsePromise;
 export const RESPONSE_ACTUAL: string | null = null;

@@ -3,9 +3,10 @@
    一度しか使わないページ固有の余白はここに置き、トークンには上げない。
    ══════════════════════════════════════════════════════════════════ */
 @layer screens {
-  /* 暫定の承認済み画像は、文字と二柱を切り取らずヘッダー直下に置く。 */
+  /* 文字のない背景画とカタログのコピーを組み合わせ、二柱を切り取らない。 */
   .brand-hero {
     @apply relative p-[0] bg-ink text-white;
+    container-type: inline-size;
   }
   .brand-hero-artwork {
     @apply w-[100%] h-[auto] rounded-[0];
@@ -20,12 +21,14 @@
     @apply text-body;
   }
   @media (min-width: 769px) {
-    /* 画像内のコピーと同じ内容を、読み上げでは見出し・本文として届ける。 */
     .brand-hero-copy {
-      @apply absolute w-[1px] h-[1px] p-[0] m-[-1px] overflow-hidden;
-      clip-path: inset(50%);
-      @apply whitespace-nowrap;
-      border: 0;
+      @apply absolute left-[5%] top-[26%] w-[55%] p-[0];
+    }
+    .brand-hero-copy h1 {
+      @apply font-brand text-[6.4cqw] leading-[1.36] mb-[2cqw];
+    }
+    .brand-hero-copy p {
+      @apply font-brand text-[2.15cqw] leading-[1.65] m-[0];
     }
   }
 
@@ -174,10 +177,10 @@
       @apply p-[18px];
     }
     .acc > summary {
-      @apply p-[13px_16px] text-[15px];
+      @apply p-[18px_0] text-[15px];
     }
     .acc .bd {
-      @apply p-[0_16px_16px_16px];
+      @apply p-[0_20px_22px_0];
     }
     .calc .r {
       @apply p-[13px_16px];
@@ -400,50 +403,6 @@
   }
   .tbl {
     -webkit-overflow-scrolling: touch;
-  }
-
-  /* ── 読み進みの目安。ヘッダーの下端に1本。
-        スクロール駆動アニメーションなので JavaScript は要らない。
-        対応していないブラウザでは @supports ごと無視される＝ただ出ないだけ。 */
-  @supports (animation-timeline: scroll()) {
-    .hdr::after {
-      content: '';
-      @apply absolute left-[0] bottom-[-1px] h-[2px] w-[100%];
-      transform-origin: 0 50%;
-      transform: scaleX(0);
-      @apply bg-header-brass;
-      animation: nah-read linear both;
-      animation-timeline: scroll(root block);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .hdr::after {
-        @apply hidden;
-      }
-    }
-  }
-  @keyframes nah-read {
-    to {
-      transform: scaleX(1);
-    }
-  }
-
-  /* ── ページ間の遷移で、固定されているものは動かさない。
-        ヘッダーと下部CTAが毎回かぶさり直すと、紙芝居に見える。 */
-  .hdr {
-    view-transition-name: hdr;
-  }
-  .fixbar {
-    view-transition-name: fixbar;
-  }
-  ::view-transition-group(hdr),
-  ::view-transition-group(fixbar) {
-    animation: none;
-  }
-  ::view-transition-old(root) {
-    animation-duration: 120ms;
-  }
-  ::view-transition-new(root) {
-    animation-duration: 160ms;
   }
 }
 
