@@ -4,7 +4,7 @@
     @apply max-w-home-container;
   }
   .home-content .home-intro {
-    @apply bg-white text-ink py-[100px];
+    @apply bg-white text-ink py-[80px];
   }
   .home-intro > .wrap {
     @apply grid grid-cols-[minmax(0,_1.25fr)_minmax(0,_1fr)] gap-[64px] items-center;
@@ -42,7 +42,7 @@
   .home-intro .pricebox {
     @apply flex flex-col items-stretch gap-[32px] p-[40px] bg-accent text-sub;
     border: 0;
-    @apply rounded-[20px];
+    @apply rounded-[4px];
   }
   .home-intro .pricebox .amtwrap {
     @apply gap-[18px];
@@ -71,7 +71,7 @@
     @apply grid grid-cols-[repeat(4,_minmax(0,_1fr))];
   }
   .home-index a {
-    @apply flex items-center gap-[14px] min-h-[94px] p-[18px_22px] text-ink no-underline text-[14px];
+    @apply flex items-center gap-[14px] min-h-[72px] p-[18px_22px] text-ink no-underline text-[14px];
   }
   .home-index a + a {
     border-left: 1px solid var(--color-line);
@@ -83,13 +83,13 @@
     @apply bg-surface;
   }
   .home-section {
-    @apply py-[110px];
+    @apply py-[80px];
   }
   .home-section .sh {
-    @apply relative grid grid-cols-[1.15fr_1fr] gap-[20px_70px];
+    @apply relative grid grid-cols-[1.15fr_1fr] gap-[20px_56px];
     align-items: start;
     border: 0;
-    @apply p-[0] mb-[52px];
+    @apply p-[0] mb-[36px];
   }
   .home-section .sh .lab {
     @apply col-[1_/_-1] m-[0] text-[13px] text-muted tracking-[.07em];
@@ -111,15 +111,15 @@
     @apply mt-[32px];
   }
   .home-section .fig {
-    border: 1px solid var(--color-line);
-    @apply p-[32px] rounded-[16px] bg-white my-[36px];
+    border-top: 1px solid var(--color-line);
+    @apply p-[28px_0] rounded-[4px] bg-white my-[36px];
   }
   .home-section .cards .g {
     @apply gap-[24px];
   }
   .home-section .card {
-    border: 0;
-    @apply p-[26px] bg-white rounded-[12px];
+    border-top: 1px solid var(--color-line-strong);
+    @apply p-[24px_0] bg-white;
   }
   .home-section .card h3 {
     @apply leading-[1.7] text-[17px];
@@ -152,16 +152,16 @@
     @apply grid-cols-[repeat(2,_minmax(0,_1fr))];
   }
   .home-ownership .card {
-    border: 1px solid var(--color-line);
+    border-top: 1px solid var(--color-line-strong);
   }
   .home-ownership .card h3 {
-    @apply block text-balance;
+    @apply flex items-center text-balance;
   }
   .home-ownership .card h3 .ic {
-    @apply block mb-[16px];
+    @apply inline-block;
   }
   .home-cost .vs {
-    @apply p-[32px_36px] bg-surface rounded-[16px] gap-[24px];
+    @apply py-[24px] bg-surface gap-[24px];
   }
   .home-cost .vs .row {
     @apply gap-[9px_24px];
@@ -207,7 +207,7 @@
     @apply mt-[26px];
   }
   .home-section .calc {
-    @apply rounded-[16px];
+    @apply rounded-[4px];
   }
   .home-section .calc .ttl {
     @apply p-[22px_24px] text-[14px];
@@ -242,7 +242,7 @@
   }
   .home-section.dark .card {
     @apply bg-panel;
-    border: 1px solid color-mix(in srgb, var(--color-main) 13%, transparent);
+    border-top: 1px solid color-mix(in srgb, var(--color-main) 30%, transparent);
   }
   .home-section.dark .card .more {
     @apply text-white;
@@ -251,21 +251,22 @@
     @apply text-[var(--accent)];
   }
   .home-promises .card {
-    @apply p-[36px_30px] gap-[22px];
+    @apply grid grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)_auto] items-start p-[28px_0] gap-[24px];
+  }
+  .home-promises .cards .g {
+    @apply grid-cols-[minmax(0,1fr)] gap-[0];
   }
   .home-promises .card h3 {
-    @apply block text-[20px];
+    @apply flex items-center text-[20px];
   }
   .home-promises .card h3 .ic {
-    @apply block mb-[26px];
+    @apply inline-block;
   }
   .home-promises .card .meta {
     @apply text-muted-on-ink;
   }
   .home-promises .card .more {
-    @apply pt-[16px];
-    border-top: 1px solid color-mix(in srgb, var(--color-main) 15%, transparent);
-    @apply w-[100%];
+    @apply mt-[0] pt-[0];
   }
   .home-pricing .entry {
     @apply p-[0] overflow-hidden gap-[0];
@@ -293,11 +294,12 @@
   .home-pricing .plan {
     @apply bg-surface p-[28px];
     border: 1px solid var(--color-line);
-    @apply rounded-[12px];
+    @apply rounded-[4px];
   }
   .home-pricing .plan.pick {
     @apply bg-white;
-    border: 2px solid var(--color-ink);
+    border: 1px solid var(--color-line);
+    border-top: 3px solid var(--color-accent);
   }
   .home-pricing .plan .btn {
     @apply min-w-[0] w-[100%];
@@ -312,16 +314,15 @@
     @apply mb-[34px];
   }
   .home-comparison .tbl {
-    @apply rounded-[12px];
+    @apply rounded-[4px];
     border: 1px solid color-mix(in srgb, var(--color-main) 20%, transparent);
   }
   .home-industries .inds {
     @apply gap-[0] grid-cols-[repeat(2,_minmax(0,_1fr))];
-    border: 1px solid var(--color-line-strong);
-    @apply rounded-[16px] overflow-hidden;
+    border-top: 1px solid var(--color-line-strong);
   }
   .home-industries .ind {
-    @apply flex flex-col gap-[20px] p-[40px];
+    @apply flex flex-col gap-[14px] p-[28px_24px];
     border: 0;
     @apply rounded-[0] bg-white;
   }
@@ -372,7 +373,7 @@
     @apply p-[0_24px_26px_0] text-muted leading-[2];
   }
   .home-contact {
-    @apply py-[110px_100px];
+    @apply py-[72px];
   }
   .home-contact .sh {
     @apply pl-[0];
@@ -380,28 +381,8 @@
   .home-contact .sh h2 {
     @apply text-[clamp(32px,_3.8vw,_52px)] leading-[1.45];
   }
-  .home-contact .stats {
-    @apply py-[12px_24px] gap-[24px];
-  }
-  .home-contact .stat {
-    @apply relative pt-[30px] gap-[20px];
-  }
-  .home-contact .stat > .ic {
-    @apply absolute right-[0] top-[35px] text-[var(--accent)];
-  }
-  .home-contact .stat .v {
-    @apply font-mono text-[60px] font-regular;
-  }
-  .home-contact .stat .k {
-    @apply text-[14px];
-  }
   .home-contact .btns {
     @apply mt-[34px];
-  }
-  @media (min-width: 1100px) {
-    .home-ownership .cards .g {
-      @apply grid-cols-[repeat(4,_minmax(0,_1fr))];
-    }
   }
   @media (max-width: 1099px) {
     .home-intro > .wrap {
@@ -411,7 +392,7 @@
       @apply p-[30px];
     }
     .home-section .sh {
-      @apply gap-x-[36px] pl-[50px];
+      @apply gap-x-[36px];
     }
     .home-pair {
       @apply gap-[32px];
@@ -441,7 +422,7 @@
       @apply text-[15px];
     }
     .home-intro .pricebox {
-      @apply p-[28px] gap-[24px] rounded-[14px];
+      @apply p-[28px] gap-[24px] rounded-[4px];
     }
     .home-intro .pricebox .amt {
       @apply text-[64px];
@@ -477,19 +458,22 @@
       @apply text-[15px] mt-[20px] leading-[1.95];
     }
     .home-section .fig {
-      @apply p-[18px_0_0] my-[26px] rounded-[12px];
+      @apply p-[18px_0_0] my-[26px] rounded-[4px];
     }
     .home-section .cards .g {
       @apply gap-[14px];
     }
     .home-section .card {
-      @apply p-[24px];
+      @apply p-[24px_0];
+    }
+    .home-promises .card {
+      @apply grid-cols-[minmax(0,1fr)] gap-[12px];
     }
     .home-ownership .cards .g {
       @apply grid-cols-[minmax(0,_1fr)];
     }
     .home-cost .vs {
-      @apply p-[24px_20px] gap-[23px];
+      @apply py-[24px] gap-[23px];
     }
     .home-cost .vs .row {
       @apply gap-[5px];
@@ -546,7 +530,7 @@
       @apply grid-cols-[minmax(0,_1fr)];
     }
     .home-industries .ind {
-      @apply p-[28px] gap-[14px];
+      @apply p-[24px_0] gap-[14px];
     }
     .home-industries .ind:nth-child(even) {
       border-left: 0;
@@ -569,15 +553,6 @@
     .home-contact .sh h2 {
       @apply text-[32px];
     }
-    .home-contact .stats {
-      @apply grid-cols-[repeat(2,_minmax(0,_1fr))] gap-[24px];
-    }
-    .home-contact .stat .v {
-      @apply text-[46px];
-    }
-    .home-contact .stat .k {
-      @apply text-[13px];
-    }
     .home-content .btns .btn {
       @apply min-w-[0] max-w-[100%];
     }
@@ -591,9 +566,7 @@
   .home-intro .pricebox .alt li b,
   .home-contact h2,
   .home-contact .sh .lede,
-  .home-contact .sh .lede strong,
-  .home-contact .stat .k,
-  .home-contact .stat > .ic {
+  .home-contact .sh .lede strong {
     @apply text-sub;
   }
   .home-section.dark .card h3 .ic {
@@ -616,9 +589,6 @@
   }
   .home-contact .btn-2:hover {
     @apply bg-main text-sub;
-  }
-  .home-contact .stat {
-    border-color: var(--color-sub);
   }
   .home-section.home-contact :where(a, summary, label):focus-visible {
     outline-color: var(--color-sub);

@@ -1,7 +1,7 @@
 /* C24 Footer：ブランド、相談、ページ案内、事業者情報を分けた共通の終端。 */
 @layer components {
   .ftr {
-    @apply bg-surface text-ink py-[72px_28px];
+    @apply bg-surface text-ink py-[56px_28px];
   }
   .ftr > .wrap {
     @apply max-w-home-container;
@@ -26,7 +26,7 @@
     @apply m-[0];
   }
   .footer-intro {
-    @apply flex items-center justify-between gap-[40px] pb-[52px] mb-[56px];
+    @apply flex items-center justify-between gap-[40px] pb-[36px] mb-[40px];
     border-bottom: 1px solid var(--color-line-strong);
   }
   .ftr .footer-eyebrow {
@@ -61,7 +61,7 @@
     @apply font-brand text-[64px] font-regular leading-[1.1];
   }
   .footer-brand-copy {
-    @apply grid gap-[10px];
+    @apply grid gap-[0];
   }
   .footer-brand-copy span:first-child {
     @apply text-[13px] leading-[1] tracking-[.24em];
@@ -105,12 +105,12 @@
     @apply font-bold underline underline-offset-[.3em];
   }
   .footer-industries ul {
-    @apply grid gap-[10px];
+    @apply grid gap-[0];
   }
   .footer-industries a {
-    @apply flex items-center gap-[12px] p-[15px_14px] min-h-[62px] bg-white;
-    border: 1px solid var(--color-line);
-    @apply rounded-[6px] text-[13px];
+    @apply flex items-center gap-[12px] p-[12px_0] min-h-[52px];
+    border-bottom: 1px solid var(--color-line);
+    @apply text-[13px];
     transition: border-color var(--duration-fast) ease;
   }
   .footer-industries a span {
@@ -126,15 +126,10 @@
   .footer-industries a[aria-current='page'] {
     @apply border-ink no-underline;
   }
-  .footer-wordmark {
-    color: var(--color-sub);
-    @apply my-[54px_40px] font-ja text-[clamp(60px,_14.5vw,_196px)] font-medium tracking-[.045em] leading-[1.05] text-center;
-    user-select: none;
-  }
   .ftr .ftr-legal {
     @apply flex flex-wrap gap-[4px_28px];
     border-top: 1px solid var(--color-line-strong);
-    @apply pt-[20px];
+    @apply mt-[40px] pt-[20px];
   }
   .ftr-legal a {
     @apply inline-flex items-center gap-[9px] min-h-tap text-[12px] leading-[1.7];
@@ -222,9 +217,6 @@
     }
     .footer-industries a {
       @apply p-[14px_12px] text-[13px];
-    }
-    .footer-wordmark {
-      @apply my-[40px_28px] text-[clamp(49px,_13vw,_100px)] tracking-[.025em];
     }
     .ftr .ftr-legal {
       @apply grid gap-[2px] pt-[16px];

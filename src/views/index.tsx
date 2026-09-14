@@ -14,7 +14,6 @@ import Note from '@/components/Note';
 import FaqList from '@/components/FaqList';
 import Cards from '@/components/Cards';
 import Calc from '@/components/Calc';
-import Stats from '@/components/Stats';
 import Vs from '@/components/Vs';
 import Entry from '@/components/Entry';
 import Plans from '@/components/Plans';
@@ -483,14 +482,21 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           heading={copy.heading17}
           lede={format(copy.lede10, { cRESPONSEPROMISE: C.RESPONSE_PROMISE })}
         >
-          <Stats
-            items={[
-              { icon: 'receipt', value: '1', label: copy.itemsLabel },
-              { icon: 'percent', value: '2', label: copy.itemsLabel2 },
-              { icon: 'users', value: '3', label: copy.itemsLabel3 },
-              { icon: 'calculator', value: '=', label: copy.itemsLabel4 },
-            ]}
-          />
+          <ul className="consultation-topics">
+            {(
+              [
+                { icon: 'receipt', label: copy.itemsLabel },
+                { icon: 'percent', label: copy.itemsLabel2 },
+                { icon: 'users', label: copy.itemsLabel3 },
+                { icon: 'calculator', label: copy.itemsLabel4 },
+              ] as const
+            ).map((item) => (
+              <li key={item.label}>
+                <Icon name={item.icon} />
+                <span>{item.label}</span>
+              </li>
+            ))}
+          </ul>
           <p className="home-followup">
             {copy.p19}
             <strong>{copy.strong9}</strong>
