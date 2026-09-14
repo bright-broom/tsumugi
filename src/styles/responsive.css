@@ -188,9 +188,6 @@
     .calc .r.net .v {
       @apply text-[27px];
     }
-    .ctapanel {
-      @apply p-[24px];
-    }
   }
 
   /* ── 固定CTA。C18：本文・キーボード・フッターを覆わない */
@@ -361,8 +358,7 @@
     .calc .r .k em {
       @apply text-[13px];
     }
-    .field .req,
-    .field .opt {
+    .field .req {
       @apply text-[12.5px];
     }
     .tbl tbody th .dim {

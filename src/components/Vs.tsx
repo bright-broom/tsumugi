@@ -4,7 +4,7 @@ import { format } from '@/i18n/format';
 import { rnd } from '@/lib/round';
 
 /** 比較バー。いちばん高い行を100%として横幅を取る */
-export interface VsRow {
+interface VsRow {
   name: string;
   sub: string;
   amount: number;

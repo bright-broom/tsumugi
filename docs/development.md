@@ -13,7 +13,8 @@ npm run verify -- --write    # LCP実測値を src/content/measurements.ts に�
 npm run verify -- --dist <path>  # 検査するディレクトリを差し替える（既定は out/）
 npm run tokens           # src/styles/design.tokens.json → src/styles/tokens.css（--check で同期検査）
 npm run og               # OGP画像とファビコン（文面を変えたときだけ。差分をコミットする）
-npm run check            # 型・依存方向・循環・文言とルートの検査
+npm run check            # 型・依存方向・循環・文言とルート・未使用コードの検査
+npm run check:unused     # Knipで未使用ファイル・export・型・依存関係を検査
 ```
 
 ---
@@ -158,6 +159,7 @@ Node.js 24 系を使います（`.nvmrc` と `package.json` の `engines`、CI�
 | 条件付きの CSS クラス | `clsx` |
 | 外部データの構造検証 | `zod`。実測レポートの値を検証 |
 | コード検査 | ESLint 9 の最新互換版 + `eslint-config-next`。`npm run lint` |
+| 未使用コード | Knip。設定は `config/knip.config.ts`。`npm run check:unused`（checkにも含む） |
 | 単体テスト | Vitest。`npm test`／`npm run test:watch` |
 | ブラウザ実測 | Playwright。`npm run verify` |
 | 整形 | Prettier。`npm run format`／`npm run format:check`（既存ファイルの一括整形は任意） |

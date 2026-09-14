@@ -35,7 +35,7 @@ flowchart TD
 | ページ生成       | Next.js 16 / Pages Router・React 19        |
 | 型とデータ検証   | TypeScript・Zod                            |
 | 見た目とアイコン | Tailwind CSS 4・LucideのSVG                |
-| 品質確認         | ESLint・Vitest・Playwright・独自検査       |
+| 品質確認         | ESLint・Knip・Vitest・Playwright・独自検査 |
 | 開発・公開       | Node.js 24・npm 12・GitHub Actions・Vercel |
 
 正確な依存バージョンは [package.json](package.json) と [package-lock.json](package-lock.json) が正本です。TypeScriptのCLIと検査ツール用APIを併用する理由は [ADR 0003](docs/architecture/0003-modern-stack.md) にまとめています。
@@ -65,7 +65,7 @@ flowchart TD
 │   ├── verify/                 納品物の検査・ブラウザ実測
 │   ├── pricing/                事業の料金・工数モデル
 │   └── paths.ts                ルートと生成物の共通パス
-├── config/                     ESLint・Vitest・Prettierの設定
+├── config/                     ESLint・Knip・Vitest・Prettierの設定
 ├── docs/                       開発・仕様・設計判断・事業資料
 ├── .github/                    CI・Dependabot
 ├── .artifacts/                 レポート・検査画像（Git管理外）
@@ -91,7 +91,7 @@ flowchart TD
   routing --> lib["lib / 共通処理"]
 ```
 
-この境界は `npm run check` が検査します。`styles/` と `assets/` は表示資源として分けており、上のコード層には含めません。
+この境界は `npm run check` が検査します。未使用コードの再混入も同じコマンドで検出します（[ADR 0013](docs/architecture/0013-dead-code-cleanup.md)）。`styles/` と `assets/` は表示資源として分けており、上のコード層には含めません。
 
 ## 変更したいときの入口
 
@@ -206,14 +206,15 @@ flowchart TD
   browser --> shots[".artifacts/screenshots/<br/>確認画像"]
 ```
 
-| コマンド               | 確認するもの                                 |
-| ---------------------- | -------------------------------------------- |
-| `npm run check`        | 型・依存方向・文言とURL・CSSの中央管理       |
-| `npm run lint`         | コードの規約                                 |
-| `npm test`             | アプリと開発基盤の単体テスト                 |
-| `npm run test:pricing` | 事業の料金・工数モデル                       |
-| `npm run validate`     | 上記4つ → ビルド → 静的検査をまとめて実行    |
-| `npm run verify`       | 生成済みの `out/` をブラウザ実測も含めて検査 |
+| コマンド               | 確認するもの                                             |
+| ---------------------- | -------------------------------------------------------- |
+| `npm run check`        | 型・依存方向・文言とURL・CSSの中央管理・未使用コード     |
+| `npm run check:unused` | 未使用のファイル・export・型・依存関係（`check` に含む） |
+| `npm run lint`         | コードの規約                                             |
+| `npm test`             | アプリと開発基盤の単体テスト                             |
+| `npm run test:pricing` | 事業の料金・工数モデル                                   |
+| `npm run validate`     | 上記4つ → ビルド → 静的検査をまとめて実行                |
+| `npm run verify`       | 生成済みの `out/` をブラウザ実測も含めて検査             |
 
 変更を出す前は次の順で確認します。`verify` 自体はビルドを行いません。
 

@@ -68,14 +68,6 @@ export default {
   freeItemMarket4: '2.5秒以内を納品条件として保証します',
   freeItemName4: '連絡先・既存予約先の導線',
   freeItemMarket5: '外部サービスの契約・利用料は別途',
-  marketSpotName: '文章の修正',
-  marketSpotPrice: '3,000円／箇所',
-  marketSpotName2: '画像の差し替え',
-  marketSpotPrice2: '5,000円／箇所',
-  marketSpotName3: '作業時間で課金',
-  marketSpotPrice3: '10,000円／時間',
-  marketSpotName4: 'ページ追加',
-  marketSpotPrice4: '20,000円／ページ',
   unlimitedIncluded: '文章の修正・差し替え',
   unlimitedIncluded2: '写真の差し替え',
   unlimitedIncluded3: 'メニュー・料金の変更',
@@ -128,8 +120,4 @@ export default {
   careIncluded: '「守る」の内容を含む',
   portalBasic: 'ベーシック',
   portalLight: 'ライト',
-  availability:
-    '現在は公開準備中です。受付・保守等の提供条件を確認してから契約します。管理画面付きの「情報を育てる」は受付準備中です。',
-  externalNote:
-    'ドメイン・Vercel等のホスティング・フォームやCMSなどの実費は別途、顧客名義で直接契約。見積もりに利用料を含む総額を記載します。',
 } as const;
