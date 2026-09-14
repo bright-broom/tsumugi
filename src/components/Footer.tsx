@@ -101,9 +101,6 @@ export default function Footer({ file }: { file: string }) {
             </ul>
           </nav>
         </div>
-        <div className="footer-wordmark" aria-hidden="true">
-          {copy.header.roman}
-        </div>
         <nav aria-label={copy.footer.legal}>
           <ul className="ftr-legal">
             {NAV_LEGAL.map(([url, label]) => (

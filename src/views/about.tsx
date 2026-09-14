@@ -26,11 +26,11 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
       <Section>
         <div className="cards member-cards">
           {C.MEMBERS.map((m) => (
-            <div className="card" key={m.name}>
-              <div className="ttl">{m.name}</div>
+            <article className="card" key={m.role}>
+              <h2 className="member-name">{m.name}</h2>
               <div className="meta">{m.role}</div>
               <div className="desc">{m.bio}</div>
-            </div>
+            </article>
           ))}
         </div>
         <Note heading={copy.heading2}>

@@ -32,7 +32,7 @@ export default function Section({
   const cls = tone === 'dark' ? 'dark' : tone === 'tint' ? 'tint' : '';
   const mark = navKey ? NAV_IC[navKey] : undefined;
   return (
-    <section className={clsx(cls, className)} id={id}>
+    <section className={clsx(cls, h1 && 'page-intro', className)} id={id}>
       <div className={wide ? 'wrap-w' : 'wrap'}>
         {(eyebrow || heading || lede) && (
           <div className="sh">

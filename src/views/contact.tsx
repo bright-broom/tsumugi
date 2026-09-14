@@ -66,7 +66,7 @@ export default function ContactPage({ copy, route }: PageProps<'contact'>) {
         </p>
       </Section>
 
-      <Section heading={copy.heading3}>
+      <Section className="contact-form" heading={copy.heading3}>
         {disabled && (
           <Note heading={copy.heading4} kind="warn">
             <p>{copy.p3}</p>

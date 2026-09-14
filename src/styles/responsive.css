@@ -177,10 +177,10 @@
       @apply p-[18px];
     }
     .acc > summary {
-      @apply p-[13px_16px] text-[15px];
+      @apply p-[18px_0] text-[15px];
     }
     .acc .bd {
-      @apply p-[0_16px_16px_16px];
+      @apply p-[0_20px_22px_0];
     }
     .calc .r {
       @apply p-[13px_16px];
@@ -403,50 +403,6 @@
   }
   .tbl {
     -webkit-overflow-scrolling: touch;
-  }
-
-  /* ── 読み進みの目安。ヘッダーの下端に1本。
-        スクロール駆動アニメーションなので JavaScript は要らない。
-        対応していないブラウザでは @supports ごと無視される＝ただ出ないだけ。 */
-  @supports (animation-timeline: scroll()) {
-    .hdr::after {
-      content: '';
-      @apply absolute left-[0] bottom-[-1px] h-[2px] w-[100%];
-      transform-origin: 0 50%;
-      transform: scaleX(0);
-      @apply bg-header-brass;
-      animation: nah-read linear both;
-      animation-timeline: scroll(root block);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .hdr::after {
-        @apply hidden;
-      }
-    }
-  }
-  @keyframes nah-read {
-    to {
-      transform: scaleX(1);
-    }
-  }
-
-  /* ── ページ間の遷移で、固定されているものは動かさない。
-        ヘッダーと下部CTAが毎回かぶさり直すと、紙芝居に見える。 */
-  .hdr {
-    view-transition-name: hdr;
-  }
-  .fixbar {
-    view-transition-name: fixbar;
-  }
-  ::view-transition-group(hdr),
-  ::view-transition-group(fixbar) {
-    animation: none;
-  }
-  ::view-transition-old(root) {
-    animation-duration: 120ms;
-  }
-  ::view-transition-new(root) {
-    animation-duration: 160ms;
   }
 }
 

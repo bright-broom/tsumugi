@@ -183,7 +183,6 @@
   .btn,
   .tel,
   .ind,
-  .card,
   .plan,
   .fixbar a,
   .menu > summary,
@@ -199,12 +198,11 @@
   .tel:active,
   .fixbar a:active,
   .menu > summary:active {
-    transform: scale(0.97);
+    @apply opacity-[.8];
   }
   .ind:active,
-  .card:active,
   .acc > summary:active {
-    transform: scale(0.99);
+    @apply opacity-[.8];
   }
   .more:active {
     @apply opacity-[.6];

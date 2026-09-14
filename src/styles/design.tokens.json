@@ -100,8 +100,8 @@
       "$description": "同じカードのまとまり 24–32px"
     },
     "section-pc": {
-      "$value": "104px",
-      "$description": "章の切り替え 64–120px"
+      "$value": "72px",
+      "$description": "章の切り替え。見出しと本文が離れすぎない余白"
     },
     "section-mb": { "$value": "56px" },
     "cta-w-pc": { "$value": "315px" },
@@ -128,8 +128,8 @@
   "radius": {
     "$type": "dimension",
     "media": { "$value": "8px" },
-    "card": { "$value": "12px" },
-    "panel": { "$value": "16px" },
+    "card": { "$value": "4px" },
+    "panel": { "$value": "4px" },
     "pill": { "$value": "999px" }
   },
   "font": {
@@ -143,7 +143,7 @@
           "Noto Serif CJK JP",
           "serif"
         ],
-        "$description": "ヘッダーの屋号だけに使う端末の明朝。外部フォント不要"
+        "$description": "屋号・ブランドコピー・ページ見出しに使う端末の明朝。外部フォント不要"
       },
       "ja": {
         "$value": [

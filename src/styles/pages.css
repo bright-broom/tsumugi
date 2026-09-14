@@ -1,7 +1,42 @@
 /* Page-specific roles share the same Tailwind theme and cascade. */
 @layer overrides {
   .member-cards {
-    @apply grid-cols-[repeat(auto-fit,minmax(260px,1fr))];
+    @apply grid grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-[40px] mb-[32px];
+  }
+  .member-name {
+    @apply font-brand text-[28px] font-medium;
+  }
+  .member-cards .desc {
+    @apply max-w-measure-read text-[15px] leading-[1.9];
+  }
+  .page-intro {
+    @apply pb-[40px];
+  }
+  .page-intro .sh {
+    @apply pt-[0];
+  }
+  .page-intro .sh h1 {
+    @apply font-brand font-medium leading-[1.6];
+  }
+  .page-intro + section {
+    @apply pt-[40px];
+  }
+  .contact-form > .wrap {
+    @apply max-w-[816px];
+  }
+  .contact-form form {
+    @apply mt-[32px] mb-[24px];
+  }
+  .btn:disabled {
+    @apply bg-surface text-muted border-line cursor-not-allowed;
+    filter: none;
+  }
+  .consultation-topics {
+    @apply list-none p-[0] m-[28px_0] grid grid-cols-[repeat(2,minmax(0,1fr))] gap-[0_40px];
+  }
+  .consultation-topics li {
+    @apply flex items-center gap-[14px] m-[0] py-[20px] text-[16px];
+    border-top: 1px solid var(--color-sub);
   }
   .entry-lede {
     @apply mb-[12px];
@@ -34,15 +69,33 @@
 
 @layer overrides {
   .faq-index ul {
-    @apply grid grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-[12px] list-none p-[0];
+    @apply flex flex-wrap gap-[0_28px] list-none p-[0];
   }
   .faq-index a {
-    @apply flex items-center gap-[12px] min-h-[56px] p-[16px] border border-line rounded-[8px] text-ink bg-paper no-underline;
+    @apply flex items-center gap-[12px] min-h-tap py-[10px] text-ink no-underline;
+    border-bottom: 1px solid var(--color-line);
   }
   .faq-index a:hover {
     @apply bg-accent/10;
   }
   .faq-index a .ic:last-child {
     @apply ml-auto;
+  }
+}
+
+@layer overrides {
+  @media (max-width: 768px) {
+    .consultation-topics {
+      @apply grid-cols-[minmax(0,1fr)];
+    }
+    .consultation-topics li {
+      @apply py-[16px] text-[15px];
+    }
+    .page-intro {
+      @apply pt-[40px] pb-[24px];
+    }
+    .page-intro + section {
+      @apply pt-[24px];
+    }
   }
 }
