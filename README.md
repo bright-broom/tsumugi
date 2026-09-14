@@ -213,7 +213,7 @@ flowchart TD
 | `npm run lint`         | コードの規約                                             |
 | `npm test`             | アプリと開発基盤の単体テスト                             |
 | `npm run test:pricing` | 事業の料金・工数モデル                                   |
-| `npm run validate`     | 上記4つ → ビルド → 静的検査をまとめて実行                |
+| `npm run validate`     | check・lint・両単体テスト → ビルド → 静的検査            |
 | `npm run verify`       | 生成済みの `out/` をブラウザ実測も含めて検査             |
 
 変更を出す前は次の順で確認します。`verify` 自体はビルドを行いません。
