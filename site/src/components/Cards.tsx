@@ -1,6 +1,6 @@
-import { NAV_IC } from '../data/nav';
-import { ic } from '../lib/ic';
-import { raw } from '../lib/raw';
+import { NAV_IC } from '@/content/nav';
+import { ic } from '@/lib/ic';
+import { raw } from '@/lib/raw';
 
 export interface Card {
   title: string; desc: string;

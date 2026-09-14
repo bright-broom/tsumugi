@@ -1,4 +1,4 @@
-import { ICONS, type IconName } from '../data/icons';
+import { ICONS, type IconName } from '@/lib/icons';
 
 /**
  * アイコンを文字列で欲しいとき（表のセルなど、set:html に渡す場所）だけ使う。

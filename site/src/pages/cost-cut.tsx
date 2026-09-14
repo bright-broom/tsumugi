@@ -1,12 +1,12 @@
-import * as C from '../data/config';
-import * as P from '../data/prices';
-import * as D from '../lib/diagrams';
-import Base from '../layouts/Base';
-import Section from '../components/Section';
-import Table from '../components/Table';
-import Note from '../components/Note';
-import Figure from '../components/Figure';
-import Cta from '../components/Cta';
+import * as C from '@/content/config';
+import * as P from '@/content/prices';
+import * as D from '@/content/diagrams';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Table from '@/components/Table';
+import Note from '@/components/Note';
+import Figure from '@/components/Figure';
+import Cta from '@/components/Cta';
 
 export const config = { unstable_runtimeJS: false };
 

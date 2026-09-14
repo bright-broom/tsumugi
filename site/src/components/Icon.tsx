@@ -3,8 +3,8 @@
  * 大きさは px ではなく em（隣の文字に対する比）で決める ── CSS 側の .ic / .ic-sm。
  * 文字列で欲しいとき（HTML 文字列の中に混ぜる場所）は lib/ic.ts の ic() を使う。
  */
-import { ICONS, type IconName } from '../data/icons';
-import { raw } from '../lib/raw';
+import { ICONS, type IconName } from '@/lib/icons';
+import { raw } from '@/lib/raw';
 
 interface Props { name: IconName; sm?: boolean; className?: string }
 

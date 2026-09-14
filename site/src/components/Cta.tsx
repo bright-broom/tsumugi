@@ -1,5 +1,5 @@
-import * as C from '../data/config';
-import Icon from './Icon';
+import * as C from '@/content/config';
+import Icon from '@/components/Icon';
 
 interface Props { primary?: string; where?: string }
 

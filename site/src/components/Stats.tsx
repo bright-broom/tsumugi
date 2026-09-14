@@ -1,5 +1,5 @@
-import type { IconName } from '../data/icons';
-import Icon from './Icon';
+import type { IconName } from '@/lib/icons';
+import Icon from '@/components/Icon';
 
 interface Props { items: { icon: IconName; value: string | number; unit?: string; label: string }[] }
 

@@ -1,6 +1,6 @@
-import type { IconName } from '../data/icons';
-import { ic } from '../lib/ic';
-import { raw } from '../lib/raw';
+import type { IconName } from '@/lib/icons';
+import { ic } from '@/lib/ic';
+import { raw } from '@/lib/raw';
 
 /** 追える計算。金額の行を積み上げて、最後に結論を1行置く */
 interface Row { label: string; value?: string; cls?: '' | 'small' | 'sum' | 'net' | 'minus'; sub?: string; icon?: IconName }

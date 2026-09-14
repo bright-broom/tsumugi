@@ -1,4 +1,4 @@
-import { raw } from '../lib/raw';
+import { raw } from '@/lib/raw';
 
 /**
  * 比較表。2〜3列で1列目が行見出しなら、狭い画面では横に引かず縦に開く（.stack）。

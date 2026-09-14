@@ -1,4 +1,4 @@
-import { rnd } from '../lib/diagrams';
+import { rnd } from '@/lib/round';
 
 /** 比較バー。いちばん高い行を100%として横幅を取る */
 export interface VsRow { name: string; sub: string; amount: number; ours?: boolean }

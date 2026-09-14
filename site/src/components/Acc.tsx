@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { raw } from '../lib/raw';
+import { raw } from '@/lib/raw';
 
 /**
  * 詳しい説明は畳んでおく。details なので JavaScript は要らない。

@@ -3,8 +3,8 @@
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
-import * as C from '../src/data/config';
-import * as P from '../src/data/prices';
+import * as C from '@/content/config';
+import * as P from '@/content/prices';
 import { checkTokens } from '../scripts/build-tokens';
 import { rec } from './results';
 import { HTML_BUDGET_KB } from './thresholds';

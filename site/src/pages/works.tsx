@@ -1,11 +1,11 @@
 import type { GetStaticProps } from 'next';
-import * as C from '../data/config';
-import { verifyPass } from '../lib/measured';
-import Base from '../layouts/Base';
-import Section from '../components/Section';
-import Note from '../components/Note';
-import Stats from '../components/Stats';
-import Cta from '../components/Cta';
+import * as C from '@/content/config';
+import { verifyPass } from '@/lib/measured';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Note from '@/components/Note';
+import Stats from '@/components/Stats';
+import Cta from '@/components/Cta';
 
 export const config = { unstable_runtimeJS: false };
 

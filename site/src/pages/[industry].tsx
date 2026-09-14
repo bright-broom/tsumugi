@@ -1,14 +1,14 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import * as C from '../data/config';
-import * as P from '../data/prices';
-import { IND_DATA } from '../data/industries';
-import { INDUSTRIES, IND_IC } from '../data/nav';
-import { esc, raw } from '../lib/raw';
-import Base from '../layouts/Base';
-import Section from '../components/Section';
-import Note from '../components/Note';
-import Icon from '../components/Icon';
-import Cta from '../components/Cta';
+import * as C from '@/content/config';
+import * as P from '@/content/prices';
+import { IND_DATA } from '@/content/industries';
+import { INDUSTRIES, IND_IC } from '@/content/nav';
+import { esc, raw } from '@/lib/raw';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Note from '@/components/Note';
+import Icon from '@/components/Icon';
+import Cta from '@/components/Cta';
 
 export const config = { unstable_runtimeJS: false };
 

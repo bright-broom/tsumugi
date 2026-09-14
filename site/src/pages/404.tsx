@@ -1,7 +1,7 @@
-import * as C from '../data/config';
-import Base from '../layouts/Base';
-import Section from '../components/Section';
-import Cta from '../components/Cta';
+import * as C from '@/content/config';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Cta from '@/components/Cta';
 
 export const config = { unstable_runtimeJS: false };
 

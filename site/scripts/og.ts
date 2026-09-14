@@ -16,8 +16,8 @@ import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { join, resolve } from 'node:path';
 import { chromium } from 'playwright';
-import * as C from '../src/data/config';
-import * as P from '../src/data/prices';
+import * as C from '@/content/config';
+import * as P from '@/content/prices';
 
 const ROOT = join(import.meta.dirname, '..');
 const outArg = process.argv.indexOf('--out');

@@ -4,10 +4,10 @@
  */
 import Head from 'next/head';
 import type { ReactNode } from 'react';
-import * as C from '../data/config';
-import { NAV, NAV_MAIN, NAV_LEGAL, NAV_IC, INDUSTRIES } from '../data/nav';
-import { raw } from '../lib/raw';
-import Icon from '../components/Icon';
+import * as C from '@/content/config';
+import { NAV, NAV_MAIN, NAV_LEGAL, NAV_IC, INDUSTRIES } from '@/content/nav';
+import { raw } from '@/lib/raw';
+import Icon from '@/components/Icon';
 
 interface Props { file: string; title: string; desc: string; children: ReactNode }
 
