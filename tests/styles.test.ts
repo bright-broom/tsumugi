@@ -41,9 +41,9 @@ describe('Tailwind production compiler', () => {
         await buildStyles(`src/styles/${input}.css`, output);
         const css = readFileSync(output, 'utf8');
         expect(css).toContain('tailwindcss v4.');
-        expect(css).toContain('--color-main: #F7F5F0');
-        expect(css).toContain('--color-sub: #243B3B');
-        expect(css).toContain('--color-accent: #B44B35');
+        expect(css).toContain('--color-main: #FFF8ED');
+        expect(css).toContain('--color-sub: #302820');
+        expect(css).toContain('--color-accent: #FFB000');
         expect(css).not.toMatch(/@(?:apply|theme|import|source)\b/);
         if (input === 'globals') {
           expect(css).toContain('.footer-intro');

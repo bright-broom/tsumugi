@@ -71,10 +71,10 @@
     @apply text-[22px] not-italic font-semi ml-[4px];
   }
   .amt .v b {
-    @apply text-green;
+    @apply text-sub bg-accent px-[12px] rounded-[4px];
   }
   .og-icon {
-    @apply items-center justify-center bg-accent text-main;
+    @apply items-center justify-center bg-accent text-sub;
   }
   .og-icon span {
     @apply font-bold leading-[1];

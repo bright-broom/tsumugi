@@ -71,7 +71,7 @@ const faviSvg = (m: string) =>
   `<rect width="64" height="64" rx="12" fill="${tokens.color.accent.$value}"/>` +
   '<text x="32" y="33" text-anchor="middle" dominant-baseline="central" ' +
   'font-family="Hiragino Sans, Noto Sans CJK JP, Meiryo, sans-serif" ' +
-  `font-size="44" font-weight="700" fill="${tokens.color.main.$value}">${m}</text></svg>`;
+  `font-size="44" font-weight="700" fill="${tokens.color.sub.$value}">${m}</text></svg>`;
 
 const ICONS = [
   [180, 'apple-touch-icon.png'],

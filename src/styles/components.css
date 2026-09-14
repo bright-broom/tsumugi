@@ -115,7 +115,7 @@
   .header-contact {
     @apply inline-flex items-center justify-center gap-[18px] min-h-[48px] p-[10px_20px];
     border: 1px solid var(--color-accent);
-    @apply rounded-[4px] bg-accent text-main text-[13px] font-medium tracking-[.05em] whitespace-nowrap no-underline;
+    @apply rounded-[4px] bg-accent text-sub text-[13px] font-medium tracking-[.05em] whitespace-nowrap no-underline;
     transition:
       background var(--duration-fast) ease,
       color var(--duration-fast) ease;
@@ -250,7 +250,7 @@
     @apply text-white;
   }
 
-  /* 価格の面。ホームでは朱の面と生成りの文字で入口価格を示す */
+  /* 価格の面。ホームでは琥珀の面と生成りの文字で入口価格を示す */
   .pricebox {
     @apply flex flex-wrap items-center gap-[28px_40px] p-gap-group;
     border: 1px solid color-mix(in srgb, var(--color-main) 18%, transparent);
@@ -292,7 +292,7 @@
   }
 
   /* ══ C16 PrimaryAction / C17 SecondaryAction
-       主要CTA PC 315×57 / モバイル 260×48。朱の上は生成りの文字（ADR 0014） */
+       主要CTA PC 315×57 / モバイル 260×48。琥珀の上は墨の文字（ADR 0014） */
   .btns {
     @apply flex flex-wrap gap-[14px];
   }
@@ -746,7 +746,7 @@
   section.dark .calc .r.net .k .ic {
     @apply text-[var(--accent-ink)];
   }
-  /* 朱の面に載る補足。生成りの文字を薄めず、コントラストを保つ */
+  /* 琥珀の面に載る補足。墨の文字を薄めず、コントラストを保つ */
   section.dark .calc .r.net .k em {
     @apply text-[var(--accent-ink)];
   }
@@ -1157,8 +1157,8 @@
     background: var(--color-main);
     border-top-color: var(--color-line);
     @apply text-sub;
-    --fig-accent: var(--color-accent);
-    --fig-ok: var(--color-accent);
+    --fig-accent: var(--accent-text);
+    --fig-ok: var(--color-ok);
     --fig-bad: var(--color-sub);
   }
   section.dark .fig figcaption {

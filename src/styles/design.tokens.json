@@ -1,18 +1,18 @@
 {
-  "$description": "紬の3色設計。生成り70・墨20・朱10をUIの面積配分の目安にする。色の原値はmain/sub/accentだけ。src/styles/tokens.cssは生成物。",
+  "$description": "紬の3色設計。アイボリー70・エスプレッソ20・琥珀10をUIの面積配分の目安にする。色の原値はmain/sub/accentだけ。src/styles/tokens.cssは生成物。",
   "color": {
     "$type": "color",
     "main": {
-      "$value": "#F7F5F0",
-      "$description": "メイン70%：生成り。背景・余白・反転文字"
+      "$value": "#FFF8ED",
+      "$description": "メイン70%：アイボリー。背景・余白・反転文字"
     },
     "sub": {
-      "$value": "#243B3B",
-      "$description": "サブ20%：墨。本文・説明の面・構造線"
+      "$value": "#302820",
+      "$description": "サブ20%：エスプレッソ。本文・説明の面・構造線"
     },
     "accent": {
-      "$value": "#B44B35",
-      "$description": "アクセント10%：朱。主要操作・重要な数字・相談の面"
+      "$value": "#FFB000",
+      "$description": "アクセント10%：琥珀。主要操作・重要な数字・相談の面"
     },
     "header-paper": { "$value": "{color.main}" },
     "header-ink": { "$value": "{color.sub}" },
@@ -27,13 +27,13 @@
     "line": { "$value": "color-mix(in srgb, var(--color-sub) 20%, var(--color-main))" },
     "line-strong": { "$value": "color-mix(in srgb, var(--color-sub) 45%, var(--color-main))" },
     "green": { "$value": "{color.accent}" },
-    "green-deep": { "$value": "{color.accent}" },
+    "green-deep": { "$value": "color-mix(in srgb, var(--color-accent) 25%, var(--color-sub))" },
     "blue": { "$value": "{color.accent}" },
     "muted": { "$value": "color-mix(in srgb, var(--color-sub) 78%, var(--color-main))" },
     "muted-on-ink": { "$value": "color-mix(in srgb, var(--color-main) 82%, var(--color-sub))" },
     "alert": { "$value": "{color.sub}" },
     "alert-bg": { "$value": "{color.main}" },
-    "ok": { "$value": "{color.accent}" },
+    "ok": { "$value": "{color.green-deep}" },
     "ok-bg": { "$value": "{color.main}" },
     "warn": { "$value": "{color.sub}" },
     "warn-bg": { "$value": "{color.main}" }
@@ -43,18 +43,18 @@
     "campaign": {
       "accent": { "$value": "{color.accent}" },
       "accent-ink": {
-        "$value": "{color.main}",
-        "$description": "朱の面は生成りの文字。小さい文字も薄めない"
+        "$value": "{color.sub}",
+        "$description": "琥珀の面はエスプレッソの文字。小さい文字も薄めない"
       },
       "accent-text": {
-        "$value": "{color.accent}",
+        "$value": "{color.green-deep}",
         "$description": "白地に置く強調文字・リンク"
       }
     },
     "main": {
       "accent": { "$value": "{color.accent}" },
-      "accent-ink": { "$value": "{color.main}" },
-      "accent-text": { "$value": "{color.accent}" }
+      "accent-ink": { "$value": "{color.sub}" },
+      "accent-text": { "$value": "{color.green-deep}" }
     }
   },
   "size": {
