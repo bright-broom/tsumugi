@@ -1,9 +1,0 @@
----
-/**
- * 図。diagrams.ts が <figure> ごと文字列で返すので、そのまま流し込む。
- * 広い画面用（.fw）と狭い画面用（.fn）の2枚が入っていて、出し分けは CSS 側。
- */
-interface Props { svg: string }
-const { svg } = Astro.props;
----
-<Fragment set:html={svg} />

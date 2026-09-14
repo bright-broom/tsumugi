@@ -1,7 +1,0 @@
-node_modules/
-dist/
-dist-lib/
-.astro/
-prices.json
-verify-report.json
-.DS_Store

@@ -1,0 +1,254 @@
+import * as C from '@/content/config';
+import * as P from '@/content/prices';
+import * as D from '@/content/diagrams';
+import { INDUSTRIES, IND_IC } from '@/content/nav';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Table from '@/components/Table';
+import Note from '@/components/Note';
+import Acc from '@/components/Acc';
+import Cards from '@/components/Cards';
+import Calc from '@/components/Calc';
+import Stats from '@/components/Stats';
+import Vs from '@/components/Vs';
+import Entry from '@/components/Entry';
+import Plans from '@/components/Plans';
+import Figure from '@/components/Figure';
+import Icon from '@/components/Icon';
+
+export const config = { unstable_runtimeJS: false };
+
+const file = 'index.html';
+const n = (v: number) => v.toLocaleString('en-US');
+const sd = P.subsidyCalc();
+const std = P.build('standard');
+const mStd = P.monthlyAllIn('standard', 'run_standard');
+const tabelogBasic = 27_500;
+const cmp = P.compareRows();
+const one = cmp[0]!;
+const big = cmp[2]!;
+const totalSpot = 3_000 + 5_000 * 3 + 3_000 + 3_000 + 3_000;
+
+const title = `所有できるホームページ制作｜1ページ${n(P.SINGLE.price)}円から・買い切り｜${C.BRAND_T}`;
+const desc =
+  `月額制のホームページは借りた土地に建てた家と同じです。紬は1ページ${n(P.SINGLE.price)}円の買い切りから。` +
+  '払った日からドメインもソースコードもお客様の名義で、運用をやめてもサイトは残ります。全国対応。';
+
+export default function IndexPage() {
+  return (
+    <Base file={file} title={title} desc={desc}>
+      {/* 主張の1番は「借地か、所有か」。金額はその次に置く */}
+      <section className="hero"><div className="wrap">
+        <p className="kick">全国の飲食店・工務店・美容室・士業の方へ</p>
+        <h1>そのホームページ、<br />借りた土地に建っていませんか。</h1>
+        <p className="sub">いまのホームページは、土地でいえば<strong>借地権</strong>。
+          地代を払うあいだだけ建っていて、やめた日に更地にして返します。<br />
+          紬がつくるのは、<strong>所有権を持てる</strong>ホームページです。</p>
+        <div className="pricebox">
+          <span className="amtwrap">
+            <span className="pre">1ページから・買い切り</span>
+            <span className="amt tnum">{n(P.SINGLE.price)}<span className="u">円</span></span>
+          </span>
+          <ul className="alt">
+            <li><b>払った日から、ドメインもソースコードもお客様の名義</b>です</li>
+            <li>{`運用は月${n(P.run('run_light').price)}円から。`}<b>つけなくても、サイトは動き続けます</b></li>
+            <li>{`9ページの本格的な構成は${n(std.price)}円（分割なら月${n(mStd)}円）`}</li>
+          </ul>
+        </div>
+        <div className="btns">
+          <a className="btn btn-1" href={`tel:${C.TEL_LINK}`}><Icon name="phone" />{`電話する　${C.TEL}`}</a>
+          <a className="btn btn-2" href="owned.html">借地と所有のちがいを見る</a>
+        </div>
+      </div></section>
+
+      {/* 主張の中心。ここを読まずに帰る人がいないよう、金額の話より前に置く */}
+      <Section tone="tint" navKey="owned.html" eyebrow="いちばんお伝えしたいこと"
+        heading="借地権のホームページか、所有権のホームページか"
+        lede="借地は、土地を借りて<strong>自分のお金で家を建てる</strong>仕組みです。月額制のホームページで起きているのは、これと同じことです。<strong>建てるものは同じで、違うのは土地の名義だけ</strong>です。">
+        <Figure svg={D.landVsOwn()} />
+        <Cards cls="g2" items={[
+          { title: '① 住所 ── ドメイン', desc: '初日からお客様の名義で取得します。登録簿でお名前を確認できます。',
+            link: ['名義のお約束', 'terms.html'] },
+          { title: '② 建物 ── ソースコード', desc: '一式をお渡しします。他社がそのまま引き継げる状態にします。',
+            link: ['納品の中身', 'source.html'] },
+          { title: '③ 地盤 ── 置き場所', desc: '実行時のプログラムが0バイトなので、どのサーバーにも置けます。',
+            link: ['仕様を見る', 'spec.html'] },
+          { title: '④ 家具 ── 写真と原稿', desc: '撮影した元データをお渡しします。チラシにもSNSにも使えます。',
+            link: ['権利の扱い', 'terms.html'] },
+        ]} />
+        <Note heading="「所有」を、気分の話にしません">
+          <p>上の4つは、どれも<strong>その場で確かめられる形</strong>にしてあります。
+            名義は登録簿で、納品物は契約書で、置き場所は仕様で確認できます。</p>
+        </Note>
+        <div className="btns"><a className="btn btn-2" href="owned.html">
+          借地と所有のちがいを、全部見る</a></div>
+      </Section>
+
+      <Section navKey="cost-cut.html" eyebrow="では、地代はいくらですか"
+        heading="借りた場所に月27,500円、自分の場所に月28,000円"
+        lede="地代がいくらか、という話です。単体では高いか安いか判断できません。<strong>いま出ているお金と比べます。</strong>">
+        <Vs max={55_000} rows={[
+          { name: '食べログ プレミアム5', sub: '掲載料のみ＋手数料', amount: 55_000 },
+          { name: '食べログ ベーシック', sub: '掲載料のみ＋手数料', amount: 27_500 },
+          { name: '当方 スタンダード', sub: '制作費＋運用費。サイトはお客様のもの', amount: mStd, ours: true },
+          { name: '食べログ ライト', sub: '掲載料のみ', amount: 11_000 },
+        ]} />
+        <Figure svg={D.rentVsOwn(tabelogBasic, P.PORTAL_FEE_DINNER, P.run('run_standard').price)} />
+        <Note heading="手数料は、常連さんの予約にもかかります" kind="good">
+          <p>{`ディナー${P.PORTAL_FEE_DINNER}円・ランチ${P.PORTAL_FEE_LUNCH}円は`}
+            <strong>新規と常連を区別しません。</strong></p>
+        </Note>
+        <div className="btns"><a className="btn btn-2" href="cost-cut.html">
+          掲載費の見直しについて</a></div>
+        <p className="dim fine-note">
+          食べログの金額は同社の公開料金（税込）。当方は税別です。</p>
+      </Section>
+
+      <Section navKey="unlimited.html" eyebrow="よくあるお金の話" heading="「1文字直すのに5,000円」をやめます"
+        lede="文章の修正は1箇所3,000円、画像の差し替えは5,000円が相場です。1年分を積むと。">
+        <Calc title="ある1年間の、よくあるご依頼" rows={[
+          { label: 'メニューの値段を変更', value: '3,000円', cls: 'small' },
+          { label: '料理の写真を3枚差し替え', value: '15,000円', cls: 'small' },
+          { label: '臨時休業のお知らせを出す', value: '3,000円', cls: 'small' },
+          { label: 'スタッフを1人追加', value: '3,000円', cls: 'small' },
+          { label: '年末年始の営業時間を変更', value: '3,000円', cls: 'small' },
+          { label: '1年間の合計', value: `${n(totalSpot)}円`, cls: 'sum' },
+          { label: '当方の場合', value: '0円', cls: 'net', sub: '運用の月額に入っています' },
+        ]} />
+        <Note heading="お金より、毎回気にすることをやめていただきたい" kind="good">
+          <p>見積もりを待つほうが実際には重く、その日に直せないサイトは放置されます。</p>
+        </Note>
+        <div className="btns"><a className="btn btn-2" href="unlimited.html">
+          含まれる範囲を全部見る</a></div>
+      </Section>
+
+      <Section tone="dark" eyebrow="お約束は3つ" heading="他社と違うのはここです">
+        <Cards items={[
+          { title: 'サイトはお客様のものです',
+            desc: 'ドメインもソースコードも写真の元データも、初日からお客様の名義でお渡しします。',
+            link: ['借地と所有のちがい', 'owned.html'] },
+          { title: '変更は何回でも無料',
+            desc: '値段も写真も休業のお知らせも、回数の上限なし。運用の月額に入っています。',
+            link: ['含まれる範囲を見る', 'unlimited.html'] },
+          { title: 'いまの掲載費から見直す',
+            desc: '食べログは無料プランに戻してもネット予約が使えます。まず請求書を拝見します。',
+            link: ['進め方を見る', 'cost-cut.html'] },
+        ]} />
+      </Section>
+
+      <Section navKey="price.html" eyebrow="料金" heading="1ページ39,800円から、9ページ398,000円まで"
+        lede="<strong>1ページから始められます。</strong>効いたら足す、で構いません。払ったぶんは差額に充てます。">
+        <Entry />
+        <h3 style={{ margin: '44px 0 18px' }}>最初から一式で作る場合</h3>
+        <Plans feat={3} />
+        <p className="dim fine-note">すべて税別。
+          <a href="price.html">オプションと、標準で含まれるものの一覧</a></p>
+      </Section>
+
+      <Section tone="tint" navKey="price.html" eyebrow="値段の中身" heading="この金額に何が入っているか"
+        lede="高いか安いかは、中身が分からないと判断できません。">
+        <Calc title="スタンダード 9ページの中身" rows={[
+          { label: '撮影・原稿・解説記事・ドメイン・Googleマップ・ソース納品', value: '', cls: 'small',
+            sub: '単品で頼むと、撮影55,000円＋原稿148,500円＋記事99,000円' },
+          { label: '単品で積んだ場合', value: '600,000円前後', cls: 'sum' },
+          { label: 'スタンダードの価格', value: `${n(std.price)}円`, cls: 'net' },
+        ]} />
+        <Note heading="まとめてやるから安いだけで、作業は減らしていません">
+          <p>効果の根拠がないものは最初から入れていません。
+            <a href="price.html">内訳の全部</a>／<a href="spec.html">売らないと決めているもの</a></p>
+        </Note>
+      </Section>
+
+      {/* 相手の土俵（月いくら）から、こちらの土俵（総額と所有）へ移す */}
+      <Section tone="dark" navKey="price.html" eyebrow="月額制と比べる" heading="月額を止めた日に、何が残りますか"
+        lede={`月額制は、月々だけ見ると安く見えます。<strong>${P.COMPARE_MONTHS}か月の総額と、サイトがお客様のものになる時点</strong>で比べてください。`}>
+        <Figure svg={D.ownershipClock(one.sub_monthly, one.sub_total, one.our_price, one.our_run, P.COMPARE_MONTHS)} />
+        <Calc title={`1ページを${P.COMPARE_MONTHS}か月使ったとき`} rows={[
+          { label: `月額制（月${n(one.sub_monthly)}円＋初期${n(P.SUBS_MARKET[0].init)}円）`,
+            value: `${n(one.sub_total)}円`, cls: 'small', sub: `${P.SUBS_TRANSFER_MONTHS}か月未満でやめると非公開` },
+          { label: `${C.BRAND} シングル（買い切り）`, value: `${n(P.SINGLE.price)}円`, cls: 'sum',
+            sub: 'この日からお客様のもの' },
+          { label: '差', value: `${n(one.sub_total - P.SINGLE.price)}円`, cls: 'net',
+            sub: `月額制の約${Math.round(P.singleVsSubsMonths())}か月分で、ずっと自分のものになります` },
+        ]} />
+        <Table headers={['同じくらいのページ数で', '月額制（公開料金）', C.BRAND]}
+          rows={cmp.map((r) => [
+            `${r.sub_pages}ページ前後`,
+            `月${n(r.sub_monthly)}円 × ${P.COMPARE_MONTHS}か月<br><strong>${n(r.sub_total)}円</strong><br>` +
+              `<span class='dim'>${P.SUBS_TRANSFER_MONTHS}か月未満でやめるとサイトは非公開</span>`,
+            `買い切り${n(r.our_price)}円 ＋ 運用 月${n(r.our_run)}円<br><strong>${n(r.our_total)}円</strong><br>` +
+              `<span class='dim'>初日からお客様のもの。運用はいつでもやめられます</span>`,
+          ])}
+          foot={`${P.SUBS_SOURCE}。金額は税別です。<strong>${big.sub_pages}ページ前後ではこちらのほうが${n(big.diff)}円高くなります。</strong>その差の中身は下に書きました。`} />
+        <Note heading="高いほうの行を消していません" kind="good">
+          <p>{`${big.sub_pages}ページ前後だと、${P.COMPARE_MONTHS}か月で`}
+            <strong>{`${n(big.diff)}円（月あたり${n(Math.floor(big.diff / P.COMPARE_MONTHS))}円）`}</strong>
+            こちらが高くなります。差は出張撮影・取材による原稿・修正の回数制限なし・
+            Googleマップの運用です。</p>
+          <p>月額制の制作は<strong>お客様がフォームに素材を入力する</strong>
+            {`ところから始まります。撮影を単品で頼むと${n(P.OPTIONS[1].price)}円、原稿の取材は別料金です。そこが要らない方には、月額制のほうが合っています。`}</p>
+        </Note>
+      </Section>
+
+      <Section navKey="subsidy.html" eyebrow="補助金" heading={`${P.yen(sd.total)}が、実質${P.yen(sd.net)}になります`}
+        lede={`${P.SUBSIDY.name}を使うと、<strong>ご負担は${P.yen(sd.net)}</strong>になります。`}>
+        <Figure svg={D.subsidyBar(sd.total, sd.web, sd.pr, sd.grant, sd.net)} />
+        <Note heading={`採択率は${P.SUBSIDY.adoption_rate}。半分は落ちます`} kind="warn">
+          <p>「必ず通ります」とは申し上げません。
+            <strong>通らなかった場合の扱いは、契約前に書面で決めます。</strong></p>
+          <p>{`全額を立て替えたあとに入金される精算払いです。締切${P.SUBSIDY.deadline}、商工会の書類は${P.SUBSIDY.form4_deadline}まで。`}
+            <a href="subsidy.html">手順と注意点</a></p>
+        </Note>
+      </Section>
+
+      <Section tone="tint" eyebrow="業種ごとのご案内" heading="何を作るかは業種で変わります"
+        lede="<strong>数字が出ているものだけ作ります。</strong>効かないページは作りません。">
+        <div className="cq"><div className="inds">{INDUSTRIES.map(([u, nm, dd]) => (
+          <a className="ind" href={u} key={u}>
+            <span className="n"><Icon name={IND_IC[u]!} sm />{nm}</span>
+            <span className="p">{dd}</span>
+          </a>
+        ))}</div></div>
+      </Section>
+
+      <Section navKey="spec.html" eyebrow="はじめにお伝えすること" heading="盛らずに書きます"
+        lede="できないこと、やらないことを先に書きます。">
+        <Acc summary="制作事例は、まだ1件目です">
+          <p>他社の事例を自分の実績のようには見せません。
+            1件目から表示速度・マップ閲覧数・問い合わせ件数を数字のまま出します。</p>
+        </Acc>
+        <Acc summary="ポータルを、いきなりやめる提案はしません">
+          <p>準備なしにやめると売上が落ちます。3〜6か月は必ず併走し、
+            やめるべきでないお店には「やめないでください」と言います。</p>
+        </Acc>
+        <Acc summary="広告も「やめましょう」とは言いません">
+          <p>止めた実測例では、予算3.45倍に対し売上は1.07倍。
+            止めずに入札単価を下げます。</p>
+        </Acc>
+        <Acc summary="AI検索対策（LLMO）は売りません">
+          <p>Googleが公式に「不要」と明記している施策です。</p>
+        </Acc>
+        <Acc summary="新規のお客様が増えることは約束しません">
+          <p>美容室の市場は前年比5.9%縮んでいます。できるのは
+            <strong>手数料の削減と再来店の導線づくり</strong>です。</p>
+        </Acc>
+      </Section>
+
+      <Section tone="dark" heading="まず、いまの請求書を見せてください"
+        lede={`ご相談は無料。${C.RESPONSE_PROMISE}に返信します。聞くのは3つだけです。`}>
+        <Stats items={[
+          { icon: 'receipt', value: '1', label: 'いまの掲載料' },
+          { icon: 'percent', value: '2', label: '予約1件あたりの手数料' },
+          { icon: 'users', value: '3', label: 'そこ経由の月間来店数' },
+          { icon: 'calculator', value: '=', label: '新規1人あたりの獲得コスト' },
+        ]} />
+        <p style={{ marginTop: '18px' }}>この3つで<strong>その場で計算できます。</strong>
+          多くの店主が、この数字を見るのは初めてです。</p>
+        <div className="btns">
+          <a className="btn btn-1" href={`tel:${C.TEL_LINK}`}>{`電話する　${C.TEL}`}</a>
+          <a className="btn btn-2" href="contact.html">フォームで相談する</a>
+        </div>
+      </Section>
+    </Base>
+  );
+}

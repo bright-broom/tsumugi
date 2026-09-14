@@ -1,0 +1,83 @@
+import type { GetStaticProps } from 'next';
+import * as C from '@/content/config';
+import { verifyPass } from '@/lib/measured';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Note from '@/components/Note';
+import Stats from '@/components/Stats';
+import Cta from '@/components/Cta';
+
+export const config = { unstable_runtimeJS: false };
+
+interface Props { pass: string | number }
+
+// verifyPass は node:fs を使うので、ビルド時にだけ動く getStaticProps で読む
+export const getStaticProps: GetStaticProps<Props> = () => ({ props: { pass: verifyPass() } });
+
+const file = 'works.html';
+const title = `制作事例｜${C.BRAND_T}`;
+const desc =
+  'まだ1件目です。他社の事例を自分の実績のように見せることはしません。' +
+  '1件目から表示速度・マップの閲覧数・問い合わせ件数をそのまま公開します。';
+
+const lcp = C.LCP_MEASURED ? C.LCP_MEASURED.split('秒')[0]! : '—';
+
+export default function WorksPage({ pass }: Props) {
+  return (
+    <Base file={file} title={title} desc={desc}>
+      <Section
+        eyebrow="制作事例"
+        heading="事例は、これから積みます"
+        h1
+        navKey={file}
+        lede="まだ1件目です。正直に書きます。"
+      />
+
+      <Section>
+        <Note heading="他社の事例を、自分の実績のように見せることはしません">
+          <p>この業界には、制作に関わっていないサイトを実績として載せる会社があります。
+            当方はやりません。</p>
+          <p>そのかわり、1件目から<strong>次の数字をそのまま公開します。</strong></p>
+          <ul className="plain">
+            <li>納品時の表示速度（実測値）</li>
+            <li>Googleマップの閲覧数の変化（公開前後）</li>
+            <li>問い合わせ・予約の件数の変化</li>
+            <li>ポータルサイトの掲載費を見直した場合、削減できた金額</li>
+            <li>うまくいかなかったこと</li>
+          </ul>
+        </Note>
+        <Note heading="「脱ポータルの成功事例」は、どこにも公開されていません" kind="warn">
+          <p>ポータルサイトの掲載をやめたお店の売上が前後でどう変わったか、という
+            検証できるデータを探しましたが、<strong>公開されているものは
+            すべてサービス提供側の試算か一般論でした。</strong></p>
+          <p>なので当方も「事例があります」とは申し上げません。
+            構造としてこうなる、というところまでにとどめます。
+            <strong>1件目の数字が、当方の唯一の事例になります。</strong></p>
+        </Note>
+      </Section>
+
+      <Section
+        tone="tint"
+        heading="いま出せるのは、このサイト自身の数字です"
+        lede="お見せできる事例は、いまのところ<strong>このサイト1件です。</strong>自分たちのサイトなので手加減できますが、<strong>手加減しない基準で作って、数字を出しています。</strong>"
+      >
+        <Stats items={[
+          { icon: 'gauge', value: lcp, unit: '秒', label: '表示速度の実測（全ページの最大値。基準は2.5秒）' },
+          { icon: 'list-checks', value: pass, unit: '項目', label: '自動チェックに通った数。1つでも落ちたら納品しません' },
+          { icon: 'code-xml', value: '0', unit: 'バイト', label: '実行時のJavaScript' },
+          { icon: 'zap', value: '0', unit: '件', label: '外部サーバーへの読み込み（フォントも自前）' },
+        ]} />
+        <p style={{ marginTop: '22px' }}>この数字は<strong>毎回のビルドで測り直しています。</strong>
+          手で書いた値ではありません。検証スクリプトごとお渡しするので、
+          <strong>お客様のサイトでも同じ基準で測れます。</strong></p>
+        <Note heading="自分のサイトを1号案件にしたのは、逃げ場をなくすためです" kind="good">
+          <p>「速いサイトを作ります」と言いながら自社サイトが遅い会社は珍しくありません。
+            先に自分で基準を満たしておかないと、お客様に同じ基準を約束できないと考えました。</p>
+          <p>内訳は<a href="spec.html">納品する仕様</a>に全部あります。
+            ソースコードも公開しているので、<strong>本当に自分で作れるのかもそこで確認できます。</strong></p>
+        </Note>
+        <Cta primary="1件目になってみる" />
+      </Section>
+    </Base>
+  );
+}

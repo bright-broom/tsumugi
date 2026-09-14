@@ -1,0 +1,95 @@
+import * as C from '@/content/config';
+import * as P from '@/content/prices';
+import Base from '@/layouts/Base';
+import Section from '@/components/Section';
+import Stats from '@/components/Stats';
+import Flow from '@/components/Flow';
+import Table from '@/components/Table';
+import Note from '@/components/Note';
+import Acc from '@/components/Acc';
+import Cta from '@/components/Cta';
+
+export const config = { unstable_runtimeJS: false };
+
+const file = 'flow.html';
+const std = P.build('standard');
+const ways = C.LINE_URL ? 'メール・電話・LINE' : 'メールとお電話';
+const title = `制作の流れ｜ご相談から公開まで約${std.weeks}週間｜${C.BRAND_T}`;
+const desc =
+  `ご相談から公開まで約${std.weeks}週間。お客様にお時間をいただくのは取材とご確認の2回だけです。` +
+  '10の手順と、補助金を使う場合の順番の違いを先に公開しています。';
+
+export default function FlowPage() {
+  return (
+    <Base file={file} title={title} desc={desc}>
+      <Section eyebrow="制作の流れ" heading="お申し込みから公開までにやること" h1
+        lede={`スタンダード（${std.pages}ページ）で<strong>約${std.weeks}週間</strong>です。お客様にお願いするのは、取材と、ご確認の2回だけです。`}>
+        <Stats items={[
+          { icon: 'calendar-days', value: std.weeks, unit: '週間', label: 'ご契約から公開まで' },
+          { icon: 'users', value: 2, unit: '回', label: 'お客様にお時間をいただく回数' },
+          { icon: 'list-checks', value: 20, unit: '項目', label: '公開前の自動チェック' },
+          { icon: 'repeat-2', value: 0, unit: '円', label: '公開後の修正費用' },
+        ]} />
+      </Section>
+
+      <Section tone="tint" navKey={file} heading="10の手順">
+        <Flow steps={[
+          { title: 'ご相談', desc: 'オンラインか電話で30〜60分。いまの掲載費・困っていること・ホームページの有無の3つだけ伺います。', who: 'ご一緒に', when: '無料' },
+          { title: 'お見積りとご契約', desc: '解約条件・所有権の扱い・修正の範囲も、ここで書面にします。', who: 'ご一緒に', when: '3日ほど' },
+          { title: 'ドメインの取得', desc: '最初にやります。<strong>お客様の名義</strong>で取ります。', who: '当方', when: '1日', highlight: true },
+          { title: '取材と撮影', desc: 'お店でお話を伺いながら撮ります。原稿の材料もここで集めます。', who: 'ご一緒に', when: '半日〜1日' },
+          { title: '構成と原稿のご確認', desc: '作る前に、載せる内容を文字で確認していただきます。', who: 'お客様', when: '1週間' },
+          { title: '制作', desc: 'この間、お客様の作業はありません。', who: '当方', when: '2〜3週間' },
+          { title: 'できたものをご確認', desc: '直したいところは何回でも。回数の上限はありません。', who: 'お客様', when: '1週間' },
+          { title: '検証', desc: '20項目を機械でチェックします。1つでも落ちたら公開しません。', who: '当方', when: '1日' },
+          { title: '公開とお引き渡し', desc: 'ソースコード・引き継ぎの手順書・撮影した写真の元データ。', who: '当方', when: '1日', highlight: true },
+          { title: '運用', desc: `変更のご連絡は${ways}のどちらでも。月次のご報告つき。`, who: '当方', when: '毎月' },
+        ]} />
+        <p className="fine-note">お客様のお時間をいただくのは4と5・7だけです。
+          ご確認が早ければ、その分だけ公開は早まります。
+          <strong>緑の丸は、お客様のものが手元に増える手順</strong>です。</p>
+        <Note heading="止まるのは、たいてい5番です" kind="warn">
+          <p>原稿のご確認が返ってこないまま数週間、というのがいちばん多い遅れ方です。
+            <strong>叩き台はこちらで全部書きます。</strong>直すところだけ言っていただければ進みます。</p>
+        </Note>
+      </Section>
+
+      <Section eyebrow="順番が変わる場合" heading="補助金を使うときは、契約が後になります"
+        lede="補助金を使う場合は、<strong>順番が変わります。</strong>先に契約すると対象外になります。">
+        <Table
+          headers={['補助金を使わない場合', '補助金を使う場合']}
+          rows={[
+            ['ご契約 → 着手', '見積書のお渡し → <strong>申請 → 交付決定 → ご契約 → 着手</strong>'],
+            ['ご相談から公開まで約6週間', '交付決定を待つぶん、<strong>2〜3か月ほど長くなります</strong>'],
+            ['お支払いは分割か一括', '<strong>全額を立て替えたあと</strong>に補助金が入ります（精算払い）'],
+          ]}
+          foot="交付決定より前の日付の契約書・発注書は、補助の対象になりません。ここは戻せないので、必ず先にご相談ください。"
+        />
+        <div className="btns"><a className="btn btn-2" href="subsidy.html">補助金の手順と注意点</a></div>
+      </Section>
+
+      <Section eyebrow="よくいただく質問" heading="流れについて、よくお聞きすること">
+        <Acc summary="取材では何を聞かれますか？">
+          <p>創業のきっかけ、いちばん多いご注文、お客様によく聞かれること、他所と違うと思っているところ。
+            <strong>準備はいりません。</strong>話していただいたものを、こちらで文章にします。</p>
+        </Acc>
+        <Acc summary="写真は自分で用意してもいいですか？">
+          <p>もちろん構いません。お手元の写真を使って、足りないところだけ撮ります。
+            撮影がまるごと不要な場合は、その分をお見積りから引きます。</p>
+        </Acc>
+        <Acc summary="公開のあと、どこに連絡すればいいですか？">
+          <p>{`${ways}のどちらでも同じです。${C.RESPONSE_PROMISE}にご返信し、内容によってはその日のうちに直します。`}</p>
+        </Acc>
+        <Acc summary="途中でやめたくなったら？">
+          <p>制作の途中で中止される場合は、その時点までの作業分のみ精算します。
+            <strong>違約金はいただきません。</strong>そこまでに作ったものはお渡しします。</p>
+        </Acc>
+      </Section>
+
+      <Section tone="dark" heading="まずは30分、お話を聞かせてください"
+        lede={`ご相談は無料。${C.RESPONSE_PROMISE}にご返信します。`}>
+        <Cta primary="フォームで相談する" />
+      </Section>
+    </Base>
+  );
+}

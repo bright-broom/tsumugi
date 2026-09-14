@@ -1,0 +1,9 @@
+export const LCP_BUDGET_MS = 2500;
+export const TAP_MIN = 44;            // WCAG 2.5.8 の最小は24。読み手が50〜60代なので44を採用
+export const HTML_BUDGET_KB = 100;
+export const CONTRAST_BODY = 4.5;     // WCAG AA（通常テキスト）
+export const CONTRAST_LARGE = 3.0;    // WCAG AA（大きいテキスト）
+export const MOBILE_W = 390;          // ガイドの検証寸法（18 再現性）
+export const MIN_FONT_MB = 12;        // スマホでの本文・補助文字の下限（ロゴの添え字などは SMALL_TEXT の除外に入れる）
+export const IC_RATIO_MIN = 1.10;     // アイコンの高さ ÷ 隣の文字の大きさ
+export const IC_RATIO_MAX = 1.30;
