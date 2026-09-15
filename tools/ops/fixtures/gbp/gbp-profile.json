@@ -1,0 +1,24 @@
+{
+  "customerId": "sample-shop",
+  "kind": "gbp",
+  "capturedOn": "2026-09-16",
+  "capturedBy": "サンプル担当",
+  "source": "サンプル：GBP 管理画面の表示を転記",
+  "name": "サンプル　食堂",
+  "address": "〒000-0000 架空県架空市中央1-2-3",
+  "phone": "0300000001",
+  "website": "https://www.example.jp",
+  "hours": {
+    "mon": [{ "open": "11:00", "close": "15:00" }],
+    "tue": [{ "open": "11:00", "close": "15:00" }],
+    "wed": [],
+    "thu": [{ "open": "11:00", "close": "15:00" }],
+    "fri": [
+      { "open": "11:00", "close": "15:00" },
+      { "open": "17:00", "close": "21:00" }
+    ],
+    "sat": [{ "open": "11:00", "close": "20:00" }],
+    "sun": [{ "open": "11:00", "close": "20:00" }]
+  },
+  "specialHours": []
+}

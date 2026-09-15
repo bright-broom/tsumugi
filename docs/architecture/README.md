@@ -57,6 +57,8 @@
 
 - [0038 修正依頼と顧客・案件の進行は、顧客ごとのファイルと状態遷移の検査で管理する](0038-requests-and-customer-projects.md)
 
+- [0039 leadfinder は取り込んだ CSV だけを扱い、GBP は手で書き出した情報との突き合わせと承認の記録にする](0039-leadfinder-and-gbp-sync.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |

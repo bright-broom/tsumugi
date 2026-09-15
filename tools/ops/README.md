@@ -136,3 +136,40 @@ npm run --silent ops:crm -- export   --customer sample-shop --out .data/exports/
 
 - `show` は、次に進める状態と足りない前提を一覧で出す。
 - 他の顧客の情報を読めない権限は未実装（ファイルの分離と顧客 ID の照合まで）。
+
+## 営業リスト（leadfinder、`npm run ops:leads`）
+
+オーナーが用意した CSV を取り込む。自動収集・自動送信はしない（[ADR 0039](../../docs/architecture/0039-leadfinder-and-gbp-sync.md)）。台帳は `<データの置き場所>/leads/ledger.json`。
+
+```sh
+npm run --silent ops:leads -- import --file tools/ops/fixtures/leads-sample.csv --source "入力元の名前" --collected-on 2026-09-10 --retention-days 30
+npm run --silent ops:leads -- list   --industry 飲食 --area 架空市 --min-score 60 [--state needs_review] [--site portal_only]
+npm run --silent ops:leads -- review --id <見込み客ID> --state reviewed --by 担当者 --note "電話で確認した内容"
+npm run --silent ops:leads -- purge
+npm run --silent ops:leads -- export --out .data/exports/leads.csv [--include-needs-review]
+```
+
+- CSV の列：`name`（必須）、`phone`・`website`・`industry`・`area`・`rating`・`review_count`・`place_id`（任意）。
+- 取り込みごとに入力元・収集日と、保存期限（`--retention-days`）か `--no-expiry` のどちらかを必ず指定する。利用条件はオーナーが確認する。
+- 電話・URL・place_id が同じなら 1 件にまとめる。店名と地域だけが同じ候補はまとめずに要確認にする。
+- 優先度はガイドラインの配点（口コミ数 45・評価 20・電話番号 20・サイト状態 15）。口コミ数と評価の配り方は仮置きで、根拠の列に書く。
+- CRM への CSV は確認済みだけ（指定で要確認も）。保存期限を過ぎた情報が残っていれば出力せず、`purge` で place_id と確認メモ以外を捨てる。
+
+## GBP の突き合わせと承認の記録（`npm run ops:gbp`）
+
+API は使わない。GBP に投稿・返信する機能はない（[ADR 0039](../../docs/architecture/0039-leadfinder-and-gbp-sync.md)）。
+
+```sh
+npm run --silent ops:gbp -- compare --customer sample-shop --site tools/ops/fixtures/gbp/site-profile.json --gbp tools/ops/fixtures/gbp/gbp-profile.json
+npm run --silent ops:gbp -- change  --customer sample-shop --id hours-sat --field "営業時間（土）" --value "11:00-21:00" --target gbp --by 担当者
+npm run --silent ops:gbp -- change-approve --customer sample-shop --id hours-sat --by お客様
+npm run --silent ops:gbp -- change-applied --customer sample-shop --id hours-sat --by 担当者 --evidence "管理画面の表示を確認"
+npm run --silent ops:gbp -- draft   --customer sample-shop --id post-0920 --kind post --due 2026-09-20 --text-file <文面.txt> --by 担当者
+npm run --silent ops:gbp -- approve --customer sample-shop --id post-0920 --by お客様
+npm run --silent ops:gbp -- done    --customer sample-shop --id post-0920 --by 担当者 --evidence "公開後の表示を確認"
+npm run --silent ops:gbp -- due     --customer sample-shop
+```
+
+- プロフィールは店名・住所・電話・ウェブサイト・予約先・曜日ごとの営業時間・臨時営業時間を持つ（例：[fixtures/gbp/](fixtures/gbp/)）。結果は「一致」「表記ゆれ」「不一致」「片方だけ」で、不一致・片方だけがあれば終了コード 2。
+- 変更は提案 → 承認 → 反映の記録。承認のない変更は反映済みにできない。
+- 投稿・口コミ返信は下書き → 承認 → 実施の記録。承認した文面から変わっていれば実施を記録できず、文面を直すと承認は外れる。

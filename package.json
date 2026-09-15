@@ -30,6 +30,7 @@
     "ops:report": "tsx tools/ops/report/cli.ts",
     "ops:crm": "tsx tools/ops/crm/cli.ts",
     "ops:leads": "tsx tools/ops/leads/cli.ts",
+    "ops:gbp": "tsx tools/ops/gbp/cli.ts",
     "check:unused": "knip --config config/knip.config.ts"
   },
   "dependencies": {
