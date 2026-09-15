@@ -14,6 +14,20 @@ export const idSchema = z
   .string()
   .regex(/^[a-z0-9][a-z0-9-]{0,62}$/, 'ID は英小文字・数字・ハイフン（先頭は英数字、63 文字まで）');
 
+export function parseId(value: string, name: string): string {
+  const result = idSchema.safeParse(value);
+  if (!result.success) throw new OpsError(`${name}: ${result.error.issues[0]?.message}`);
+  return value;
+}
+
+/** 顧客別のファイルは中身の customerId も一致させる。取り違えたファイルを黙って読まない。 */
+export function assertCustomer(file: string, expected: string, actual: string): void {
+  if (expected !== actual)
+    throw new OpsError(
+      `${file}: 顧客 ID が一致しません（要求 ${expected}、ファイル内 ${actual}）。他の顧客のデータを混ぜません`,
+    );
+}
+
 const UNTRACKED = ['.data', '.artifacts'];
 
 /** `--data` → 環境変数 `TSUMUGI_DATA_DIR` → `<repo>/.data` の順に決める。 */

@@ -25,6 +25,7 @@
     "test:pricing": "tsx --test tools/pricing/model.test.ts",
     "report:pricing": "tsx tools/pricing/report.ts",
     "ops:estimate": "tsx tools/ops/estimate/cli.ts",
+    "ops:metrics": "tsx tools/ops/metrics/cli.ts",
     "check:unused": "knip --config config/knip.config.ts"
   },
   "dependencies": {

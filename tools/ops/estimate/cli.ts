@@ -4,7 +4,7 @@ import { renderHtml, renderMarkdown, signedYen, yen } from '../shared/document';
 import { type Args, readText, runCli } from '../shared/cli';
 import {
   OpsError,
-  idSchema,
+  parseId,
   readJson,
   readJsonIfExists,
   resolveDataDir,
@@ -45,7 +45,7 @@ const loadInput = (args: Args): EstimateInput => {
 };
 const todayOf = (args: Args) => parseDate(args.optional('today') ?? today(), '--today');
 const fileOf = (args: Args, id: string) =>
-  join(resolveDataDir(args.optional('data')), 'estimates', `${idSchema.parse(id)}.json`);
+  join(resolveDataDir(args.optional('data')), 'estimates', `${parseId(id, '--id')}.json`);
 
 runCli(USAGE, {
   quote(args) {

@@ -34,3 +34,26 @@ npm run --silent ops:estimate -- render --id <見積番号> --format md|html [--
 - 消費税は請求の回ごとに計算する（合計に一度掛けた額と 1 円ずれることがある）。
 - 書面は保存した版の金額のまま出す。保存後に料金表が変わっていれば、出力時に注意を出す。
 - 印刷用 HTML は JavaScript を含まない。PDF はブラウザの印刷で作る。
+
+## 顧客運用の指標（`npm run ops:metrics`）
+
+計測タグは入れない。顧客が同意したデータ源の集計 CSV を取り込む（[ADR 0037](../../docs/architecture/0037-customer-metrics-and-monthly-reports.md)）。
+
+1. `<データの置き場所>/metrics/<顧客ID>/sources.json` にデータ源を登録する（例：[fixtures/metrics/sources.json](fixtures/metrics/sources.json)）。指標の定義と同意の記録は必須。
+2. CSV を、そのファイルが網羅している期間と一緒に取り込む。
+
+```sh
+npm run --silent ops:metrics -- check   --customer sample-shop
+npm run --silent ops:metrics -- import  --customer sample-shop --source inquiry-intake --file <CSV> --from 2026-08-01 --to 2026-08-31
+npm run --silent ops:metrics -- summary --customer sample-shop --month 2026-08 [--json]
+npm run --silent ops:metrics -- imports --customer sample-shop
+npm run --silent ops:metrics -- remove-import --customer sample-shop --sha <先頭 8 文字以上>
+```
+
+| データ源の種類         | CSV の列                                                  | 指標                                                        |
+| ---------------------- | --------------------------------------------------------- | ----------------------------------------------------------- |
+| `server_log_aggregate` | `date,metric,dimension,value`（値の空欄は欠損）           | `page_views`・`visits`・`referrals`（`dimension` に参照元） |
+| `event_log`            | `occurred_at,metric,channel,ref`（1 行 1 件、`ref` 必須） | `inquiries`・`bookings`                                     |
+
+- 表示は「N件」（0 を含む計測値）・「未計測」（データ源がない／計測期間外）・「欠損あり」（計測しているが欠けた日がある）の 3 通り。欠損した月の途中までの値は合計として出さない。
+- 同じファイルの再取り込み、同じデータ源で期間が重なる取り込みは拒否する。

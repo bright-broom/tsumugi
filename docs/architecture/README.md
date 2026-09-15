@@ -53,6 +53,8 @@
 
 - [0036 社内ツールを tools/ops の CLI とし、見積もりは公開料金だけで計算する](0036-internal-ops-tools-and-estimates.md)
 
+- [0037 顧客運用の指標は「0・未計測・欠損」を型で分け、月次レポートは確認前の下書きとして出す](0037-customer-metrics-and-monthly-reports.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |
