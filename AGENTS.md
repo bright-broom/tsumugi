@@ -33,9 +33,10 @@ Next.js が生成した、この文書末尾のルール（このバージョン
 | 全ページに `export const config = { unstable_runtimeJS: false }` を置く | Pages Router で JS を出さない方法はこれだけ | 同上 |
 | App Router に移さない | 静的書き出しでも全ページに約173KB（gzip）の JS が載る | [ADR 0001](docs/architecture/0001-pages-router.md) |
 | `verify` に FAIL が1件でもあれば納品しない | 仕様の正本は検査コード（`tools/verify/`） | `npm run verify` の終了コード |
+| 本番の公開は `verify --mode production` の FAIL 0 が条件。仮の値・未接続の受付・契約文面の未承認のまま公開しない | 確認用のプレビューと本番を分ける | Vercel の本番配備では自動で本番モード（[ADR 0024](docs/architecture/0024-publication-gates.md)） |
 | 金額は `src/content/prices.ts` からだけ引く。`RUN` や `BUILD` を添字で引かない | 添字で引いていて、プランを足したときに全ページの月額が静かに下振れした事故がある。`docs/business/紬_事業の中身.xlsx` は写しで、Excel を直してもサイトは変わらない | `verify`「29 価格の一致」 |
 | 依存は `pages → application → views → layouts → components → content → i18n → routing → lib` の一方向。`src/` の中は `@/` で import する | 文言・事業データ・ルート・表示の責務を分ける | `npm run check`（[ADR 0004](docs/architecture/0004-content-and-routing.md)） |
-| 測っていない数字をページに書かない | 事業の規範 | `works.html` の件数は `verify-report.json` から読む |
+| 測っていない数字をページに書かない。検査していない項目を「自動検査済み」と書かない | 事業の規範 | `works.html` の件数は同じコミット・全項目・FAIL 0 の `verify-report.json` からだけ読み、LCP には記録日を添える（[ADR 0025](docs/architecture/0025-verified-build-report.md)）。仕様20項目の確認の方法は対応表の検査が止める（[ADR 0026](docs/architecture/0026-acceptance-mapping.md)） |
 | 他社名をサイトに書かない。負けている比較の行も消さない | 事業の規範 | [docs/product/messaging-and-pricing.md](docs/product/messaging-and-pricing.md) |
 
 ## 4. コマンドと合格ライン
@@ -77,7 +78,7 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 | postbuild が「区切りコメント」で落ちる | JSX で `ほか{n}項目` と書くと、React が `ほか<!-- -->5<!-- -->項目` を出す | 値を混ぜる文字列はテンプレートリテラルで1つにする |
 | `verify` の「構造化データ」「title の長さ」が全ページで落ちる | Next.js が head の要素に `data-next-head=""` を付ける | postbuild が消している。postbuild を通していない出力を検査しない |
 | 同じ入力なのにビルドのたびに HTML が変わる | 図の marker id を通し番号にしていた（ページは並列に書き出される） | 現行は `components/Figure.tsx` が SVG ごとの React `useId` で生成し Context で渡す（ADR 0023）。出力をモジュール内の可変な状態に依存させない |
-| `works.html` の検査件数が古い、または「—」 | 件数はビルド時点の `.artifacts/verification/verify-report.json`（git 管理外）を読む | `npm run build && npm run verify && npm run build` |
+| `works.html` の検査件数が「—」 | 件数は、ビルドと同じコミット・未コミットの変更なし・全項目・FAIL 0 の `.artifacts/verification/verify-report.json`（git 管理外）だけを使う | 変更をコミットしてから `npm run build && npm run verify && npm run build` |
 | `npm run og` を実行すると全 PNG が差分になる | コミット済みの画像は別のマシンで作ったもの。この Mac では日本語の書体が変わる（Noto Sans CJK JP と Hiragino Sans と見ている） | 字形の正本を決めるまで再生成しない（[docs/status.md](docs/status.md)） |
 | `node:fs` を使ったページでビルドが落ちる | ページのモジュールはクライアント用の束にも含まれる | `getStaticProps` の中だけで使う |
 | `npm run dev` の HTML に script がある | 開発サーバーはホットリロード用の JS を入れる | 0バイトの対象は `out/`。開発中の HTML で判断しない |

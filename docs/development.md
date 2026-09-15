@@ -7,9 +7,10 @@
 npm ci
 npm run dev              # http://localhost:3000 （href="terms.html" のままのリンクも踏める）
 npm run build            # トークン同期の検査 → public/ の生成 → next build → postbuild → out/
-npm run verify           # 標準仕様の検査（ブラウザ実測を含む）。FAIL 0 で納品可
+npm run verify           # 標準仕様の検査（ブラウザ実測を含む）。FAIL 0 で納品可。既定はプレビューモード
 npm run verify -- --static   # 静的検査のみ（ブラウザ不要・CI向け。結果は .artifacts/verification/verify-report.static.json）
-npm run verify -- --write    # LCP実測値を src/content/measurements.ts に書き戻す
+npm run verify -- --mode production  # 本番の公開条件で検査（VERCEL_ENV=production のときは指定しなくても本番）
+npm run verify -- --write    # LCP実測値と記録日を src/content/measurements.ts に書き戻す（コミットしてから再ビルド）
 npm run verify -- --dist <path>  # 検査するディレクトリを差し替える（既定は out/）
 npm run tokens           # src/styles/design.tokens.json → src/styles/tokens.css（--check で同期検査）
 npm run og               # OGP画像とファビコン（文面を変えたときだけ。差分をコミットする）
@@ -79,8 +80,11 @@ flowchart TD
 
 - **静的検査**：電話番号・JSON-LD・実行時JSなし・内部リンク・CSS変数・価格・トークンの同期・OGP画像など。**ブラウザ実測**：LCP・横スクロール・タップ領域・コントラスト・図の色・コンソールエラー
 - **1件でも FAIL があれば終了コード 1**（納品しない）。項目の一覧は [docs/spec.md](spec.md)
-- ページに出す件数は、**ビルドした時点**の `.artifacts/verification/verify-report.json` から取る。数字を最新にするなら `npm run build && npm run verify && npm run build`
-- 簡易版（`--static`）の結果は別のファイルに書くので、回しても件数は変わらない
+- ページに出す件数は、ビルドした時点の `.artifacts/verification/verify-report.json` のうち、**全項目・FAIL 0・ビルドと同じコミット・未コミットの変更なし**のものだけから取る。それ以外は「—」（未計測）。数字を出すなら、変更をコミットしてから `npm run build && npm run verify && npm run build`（[ADR 0025](architecture/0025-verified-build-report.md)）
+- レポートには測定日時・対象コミット（`GITHUB_SHA` → `VERCEL_GIT_COMMIT_SHA` → `git rev-parse HEAD`）と未コミットの変更の有無・成果物の指紋・種別とモード・件数・仕様20項目の受入状況が入る。画像の無いページの画像検査などは「対象なし（N/A）」として PASS に数えない
+- 簡易版（`--static`）の結果は別のファイルに書き、ページの件数には使わない
+- **プレビューと本番**：既定のプレビューは仮の設定でも通し、本番の不足を WARN 1 件にまとめる。本番モードは仮の値・空の `FORM_ENDPOINT`・承認記録や人の確認記録の不足を条件ごとに FAIL にする（[ADR 0024](architecture/0024-publication-gates.md)）
+- **仕様20項目との対応**：自動検査・人の確認・対象外の条件の対応表は `tools/verify/acceptance.ts`、人の確認の記録は `src/content/acceptance.ts`。対応漏れや、ページに出す確認の方法との食い違いは FAIL（[ADR 0026](architecture/0026-acceptance-mapping.md)）
 
 ---
 
@@ -102,8 +106,10 @@ App Router は静的書き出しでも全ページに約173KB（gzip）の JS �
 | OGP画像の文面 | `src/i18n/locales/ja/og.ts`。金額は `content/og.ts` が価格データから差し込む |
 | 連絡先・プロフィール | `src/i18n/locales/ja/config.ts`。電話番号・メール・郵便番号もここから `content/config.ts` に渡す |
 | ドメイン・送信先・公開前設定 | `src/content/config.ts` |
+| 契約・法務表示の承認記録、ソースコードの公開先 | `src/content/config.ts` の `LEGAL_APPROVALS`・`SOURCE_REPOSITORY_URL`。承認の値は確認を受けた人が記録する |
+| 仕様20項目の人の確認・外部接続の記録 | `src/content/acceptance.ts`（検査との対応表は `tools/verify/acceptance.ts`） |
 | 金額・計算 | `src/content/prices.ts`。BUILD・RUNは安定したキーで引く |
-| 実測値 | `src/content/measurements.ts`。`verify --write` が数値だけを更新する |
+| 実測値 | `src/content/measurements.ts`。`verify --write` が数値と記録日を更新する（ビルドごとの再測定ではないので、ページには記録日を添える） |
 | ページ追加・URL・アイコン・ナビ分類 | `src/routing/registry.ts` |
 | ページの構造 | `src/views/`。`PageProps<'home'>` など、当該ページ用の文言だけを描画する |
 | 暫定ヒーロー画像 | `src/assets/hero/onokoro.webp`。`build-public.ts` が `public/images/onokoro-hero.svg` に内包。コピーと代替説明は `i18n/locales/ja/home.ts` の `hero`。背景画に文字は含めず、コピーはHTMLで表示する（[ADR 0019](architecture/0019-complete-i18n.md)） |
