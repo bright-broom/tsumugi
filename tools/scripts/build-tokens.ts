@@ -21,6 +21,7 @@ export function tokenCssName(path: string[]): string {
   const namespaces = [
     ['font-family-', 'font-'],
     ['font-size-', 'text-'],
+    ['font-tracking-', 'tracking-'],
     ['font-leading-', 'leading-'],
     ['font-weight-', 'font-weight-'],
     ['size-', 'spacing-'],

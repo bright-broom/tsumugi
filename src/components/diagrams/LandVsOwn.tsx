@@ -7,6 +7,7 @@ import {
   DIM,
   ArrowLine,
   NW,
+  NARROW_MIN_TEXT,
   type Narrow,
   type DiagramCopy,
 } from '@/components/diagrams/primitives';
@@ -22,6 +23,8 @@ interface LandOpts {
   yRes?: number;
   hRes?: number;
   inset?: number;
+  /** 狭い図だけ補助文字の下限を上げる */
+  minText?: number;
 }
 function landPanel(
   copy: DiagramCopy,
@@ -45,14 +48,16 @@ function landPanel(
     yRes = 196,
     hRes = 68,
     inset = 30,
+    minText = 0,
   } = o;
+  const fs = (size: number) => Math.max(size, minText);
   const col = ok ? 'var(--fig-ok)' : 'var(--fig-bad)';
   const cx = x0 + w / 2;
   const bx = x0 + inset,
     bw = w - inset * 2;
   return (
     <>
-      {cap(x0, yCap, capText)}
+      {cap(x0, yCap, capText, fs(12))}
       <rect x={bx} y={yBld} width={bw} height={hBld} rx="8" {...BOX_F} {...BOX_S} />
       <text
         x={cx}
@@ -64,7 +69,7 @@ function landPanel(
       >
         {copy.landPanel}
       </text>
-      <text x={cx} y={yBld + 46} textAnchor="middle" fontSize="12.5" {...DIM}>
+      <text x={cx} y={yBld + 46} textAnchor="middle" fontSize={fs(12.5)} {...DIM}>
         {copy.landPanel2}
       </text>
       <rect x={x0} y={yGnd} width={w} height={hGnd} rx="6" {...BOX_F} {...BOX_S} />
@@ -72,13 +77,13 @@ function landPanel(
         x={cx}
         y={yGnd + 20}
         textAnchor="middle"
-        fontSize="13"
+        fontSize={fs(13)}
         fontWeight="700"
         fill="currentColor"
       >
         {copy.landPanel3}
       </text>
-      <text x={cx} y={yGnd + 36} textAnchor="middle" fontSize="12.5" {...DIM}>
+      <text x={cx} y={yGnd + 36} textAnchor="middle" fontSize={fs(12.5)} {...DIM}>
         {groundSub}
       </text>
       <ArrowLine
@@ -90,7 +95,7 @@ function landPanel(
         strokeWidth="1.6"
         marker="neutral"
       />
-      <text x={cx + 13} y={(yA1 + yA2) / 2 + 4} fontSize="12" {...DIM}>
+      <text x={cx + 13} y={(yA1 + yA2) / 2 + 4} fontSize={fs(12)} {...DIM}>
         {copy.landPanel4}
       </text>
       <rect
@@ -108,7 +113,7 @@ function landPanel(
       <text x={cx} y={yRes + 28} textAnchor="middle" fontSize="14.5" fontWeight="700" fill={col}>
         {resTitle}
       </text>
-      <text x={cx} y={yRes + 50} textAnchor="middle" fontSize="12.5" fill={col}>
+      <text x={cx} y={yRes + 50} textAnchor="middle" fontSize={fs(12.5)} fill={col}>
         {resSub}
       </text>
     </>
@@ -127,6 +132,7 @@ function landVsOwnNarrow(copy: DiagramCopy): Narrow {
     yRes: 184,
     hRes: 66,
     inset: 24,
+    minText: NARROW_MIN_TEXT,
   };
   const d = 282;
   const b: LandOpts = {

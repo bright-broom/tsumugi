@@ -65,10 +65,10 @@
     @apply grid gap-[7px];
   }
   .logo .roman {
-    @apply text-[13px] font-medium tracking-[.28em] leading-[1];
+    @apply text-fine font-medium tracking-[.28em] leading-[1];
   }
   .logo .s {
-    @apply text-[12px] tracking-[.1em] leading-[1.4];
+    @apply text-fine tracking-[.1em] leading-[1.4];
   }
   .nav {
     @apply ml-[auto];
@@ -115,7 +115,7 @@
   .header-contact {
     @apply inline-flex items-center justify-center gap-[18px] min-h-[48px] p-[10px_20px];
     border: 1px solid var(--color-accent);
-    @apply rounded-[4px] bg-accent text-sub text-[13px] font-medium tracking-[.05em] whitespace-nowrap no-underline;
+    @apply rounded-[4px] bg-accent text-sub text-fine font-medium tracking-[.05em] whitespace-nowrap no-underline;
     transition:
       background var(--duration-fast) ease,
       color var(--duration-fast) ease;
@@ -136,7 +136,7 @@
     @apply flex-[none];
   }
   .menu > summary {
-    @apply list-none list-outside cursor-pointer flex flex-col items-center justify-center gap-[9px] min-h-[52px] min-w-[56px] text-[12px] leading-[1] tracking-[.04em];
+    @apply list-none list-outside cursor-pointer flex flex-col items-center justify-center gap-[9px] min-h-[52px] min-w-[56px] text-fine leading-[1] tracking-[.04em];
   }
   .menu > summary::-webkit-details-marker {
     @apply hidden;
@@ -197,7 +197,7 @@
     @apply font-bold;
   }
   .menu-panel .hd {
-    @apply text-[12px] font-medium tracking-[.12em] m-[20px_0_8px] p-[0_10px_10px];
+    @apply text-fine font-medium tracking-[.12em] m-[20px_0_8px] p-[0_10px_10px];
     border-bottom: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
   }
   .menu-panel .hd:first-child {
@@ -211,7 +211,7 @@
     @apply inline-flex gap-[10px] text-[17px] px-[0];
   }
   .menu-phone p {
-    @apply m-[0] text-[12px];
+    @apply m-[0] text-fine;
   }
 
   /* ── 電話。主要CTAのひとつ。数字は必ず文字で置く */
@@ -337,7 +337,7 @@
     @apply text-white;
   }
   .sh .lab {
-    @apply flex items-center gap-[7px] mb-[16px] text-[12.5px] font-semi tracking-[.08em] text-muted;
+    @apply flex items-center gap-[7px] mb-[16px] text-fine font-semi tracking-[.08em] text-muted;
   }
   section.dark .sh .lab {
     @apply text-muted-on-ink;
@@ -436,7 +436,7 @@
     @apply flex flex-wrap gap-[8px_24px] m-[10px_0_0];
   }
   .flow .tags span {
-    @apply inline-flex items-center gap-[6px] p-[0] text-[13px] leading-[1.7] text-muted;
+    @apply inline-flex items-center gap-[6px] p-[0] text-fine leading-[1.7] text-muted;
   }
   .flow .tags .ic {
     @apply text-muted;
@@ -489,7 +489,7 @@
     @apply text-[34px] font-bold leading-[1.05] tabular-nums tracking-[-.01em];
   }
   .stat .k {
-    @apply text-[13px] leading-[1.6] text-muted;
+    @apply text-fine leading-[1.6] text-muted;
   }
   section.dark .stat .k {
     @apply text-muted-on-ink;
@@ -604,7 +604,7 @@
     }
   }
   .entry .lab {
-    @apply inline-flex items-center gap-[7px] text-[12.5px] font-bold tracking-[.06em] text-[var(--accent-text)];
+    @apply inline-flex items-center gap-[7px] text-fine font-bold tracking-[.06em] text-[var(--accent-text)];
   }
   section.dark .entry .lab {
     @apply text-[var(--accent)];
@@ -616,7 +616,7 @@
     @apply block mt-[6px];
   }
   .entry .sub2 {
-    @apply block mt-[8px] text-[13px] leading-[1.75] text-muted;
+    @apply block mt-[8px] text-fine leading-[1.75] text-muted;
   }
   section.dark .entry .sub2 {
     @apply text-muted-on-ink;
@@ -676,7 +676,7 @@
     @apply bg-[color-mix(in_srgb,_var(--color-main)_5%,_transparent)] border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
   }
   .calc .ttl {
-    @apply p-[13px_20px] bg-surface text-[13.5px] font-semi tracking-[.04em] text-muted;
+    @apply p-[13px_20px] bg-surface text-fine font-semi tracking-[.04em] text-muted;
   }
   section.dark .calc .ttl {
     @apply text-main bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)];
@@ -762,7 +762,7 @@
     @apply text-muted;
   }
   .vs .nm em {
-    @apply not-italic font-regular text-[13px] text-muted;
+    @apply not-italic font-regular text-fine text-muted;
   }
   .vs .amtv {
     @apply text-[17px] font-bold tabular-nums;
@@ -793,13 +793,13 @@
     @apply text-[var(--accent)];
   }
   .segnote {
-    @apply flex items-start gap-[10px] m-[-12px_0_26px] text-[13.5px] leading-[1.8] text-muted max-w-measure-read;
+    @apply flex items-start gap-[10px] m-[-12px_0_26px] text-fine leading-[1.8] text-muted max-w-measure-read;
   }
   .segnote > .ic {
     @apply mt-[5px];
   }
   .plan .pv .sub2 {
-    @apply block mt-[8px] text-[13px] leading-[1.75] text-muted;
+    @apply block mt-[8px] text-fine leading-[1.75] text-muted;
   }
   .plan .pv .sub2 b {
     @apply text-ink;
@@ -842,7 +842,7 @@
     @apply my-[0] py-gap-group;
   }
   .plan .tag {
-    @apply self-start text-[12px] font-bold tracking-[.06em] text-ink;
+    @apply self-start text-fine font-bold tracking-[.06em] text-ink;
   }
   .plan .tag::before {
     content: '';
@@ -909,7 +909,7 @@
     @apply border-[color-mix(in_srgb,_var(--color-main)_12%,_transparent)];
   }
   .tbl thead th {
-    @apply bg-surface text-[13.5px] font-bold whitespace-nowrap;
+    @apply bg-surface text-fine font-bold whitespace-nowrap;
   }
   section.dark .tbl thead th {
     @apply bg-[color-mix(in_srgb,_var(--color-main)_8%,_transparent)] text-white;
@@ -928,7 +928,7 @@
     @apply min-w-[8.5em];
   }
   .tbl tbody th .dim {
-    @apply block mt-[2px] text-[11.5px] leading-[1.55];
+    @apply block mt-[2px] text-fine leading-[1.55];
   }
   .tbl tbody th br {
     @apply hidden;
@@ -1087,7 +1087,7 @@
     @apply text-[var(--accent-text)];
   }
   .ind .p {
-    @apply text-[13.5px] leading-[1.7] text-muted;
+    @apply text-fine leading-[1.7] text-muted;
   }
 
   /* ══ C20 FieldGroup ─ 入力文字 16px、枠の薄さだけに依存しない */
@@ -1098,7 +1098,7 @@
     @apply text-[14.5px] font-semi flex items-center gap-[8px];
   }
   .field .req {
-    @apply text-[12px] font-medium text-muted;
+    @apply text-fine font-medium text-muted;
   }
   .field .hint {
     @apply text-meta text-muted;
@@ -1197,7 +1197,7 @@
     @apply mt-[20px];
   }
   .nav-group-title {
-    @apply mb-[8px] text-[12px] font-medium tracking-[0.08em];
+    @apply mb-[8px] text-fine font-medium tracking-[0.08em];
   }
   .menu-panel .nav-group-title {
     @apply text-muted border-b border-line pb-[8px];

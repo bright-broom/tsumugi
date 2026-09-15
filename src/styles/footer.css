@@ -30,7 +30,7 @@
     border-bottom: 1px solid var(--color-line-strong);
   }
   .ftr .footer-eyebrow {
-    @apply flex items-center gap-[9px] text-[13px] mb-[14px];
+    @apply flex items-center gap-[9px] text-fine mb-[14px];
   }
   .footer-intro h2 {
     @apply text-[clamp(28px,_3vw,_38px)] leading-[1.5] tracking-[-.035em] text-balance;
@@ -64,13 +64,13 @@
     @apply grid gap-[0];
   }
   .footer-brand-copy span:first-child {
-    @apply text-[13px] leading-[1] tracking-[.24em];
+    @apply text-fine leading-[1] tracking-[.24em];
   }
   .footer-brand-copy span:last-child {
-    @apply text-[12px] tracking-[.03em];
+    @apply text-fine tracking-[.03em];
   }
   .ftr .footer-description {
-    @apply m-[24px_0_18px] text-[13px] leading-[2] max-w-[28em];
+    @apply m-[24px_0_18px] text-fine leading-[2] max-w-[28em];
   }
   .footer-phone {
     @apply inline-flex items-center gap-[10px] min-h-[48px] text-[21px] font-medium tracking-[-.02em] tabular-nums whitespace-nowrap;
@@ -82,10 +82,10 @@
     @apply grid grid-cols-[70px_minmax(0,_1fr)] gap-[8px] items-baseline;
   }
   .footer-facts dt {
-    @apply inline-flex items-center gap-[7px] text-[12px] text-muted;
+    @apply inline-flex items-center gap-[7px] text-fine text-muted;
   }
   .footer-facts dd {
-    @apply m-[0] text-[13px] leading-[1.8];
+    @apply m-[0] text-fine leading-[1.8];
     overflow-wrap: anywhere;
   }
   .footer-facts a {
@@ -95,7 +95,7 @@
     @apply grid grid-cols-[repeat(2,_minmax(0,_1fr))] gap-[5px_24px];
   }
   .footer-links a {
-    @apply flex items-center gap-[10px] min-h-tap text-[13px] leading-[1.7];
+    @apply flex items-center gap-[10px] min-h-tap text-fine leading-[1.7];
   }
   .footer-links .ic {
     @apply text-muted;
@@ -110,7 +110,7 @@
   .footer-industries a {
     @apply flex items-center gap-[12px] p-[12px_0] min-h-[52px];
     border-bottom: 1px solid var(--color-line);
-    @apply text-[13px];
+    @apply text-fine;
     transition: border-color var(--duration-fast) ease;
   }
   .footer-industries a span {
@@ -132,23 +132,23 @@
     @apply mt-[40px] pt-[20px];
   }
   .ftr-legal a {
-    @apply inline-flex items-center gap-[9px] min-h-tap text-[12px] leading-[1.7];
+    @apply inline-flex items-center gap-[9px] min-h-tap text-fine leading-[1.7];
   }
   .ftr-legal .ic {
     @apply text-muted;
   }
   .ftr .fine {
-    @apply m-[18px_0_0] max-w-[88em] text-[12px] leading-[1.9];
+    @apply m-[18px_0_0] max-w-[88em] text-fine leading-[1.9];
   }
   .footer-bottom {
     @apply flex items-center justify-between gap-[20px] mt-[24px] pt-[20px];
     border-top: 1px solid var(--color-line-strong);
   }
   .ftr .footer-copyright {
-    @apply m-[0] text-[12px];
+    @apply m-[0] text-fine;
   }
   .footer-top {
-    @apply inline-flex items-center gap-[14px] min-h-tap text-[12px] flex-[none];
+    @apply inline-flex items-center gap-[14px] min-h-tap text-fine flex-[none];
   }
 }
 @layer screens {
@@ -216,16 +216,16 @@
       @apply text-header-ink;
     }
     .footer-industries a {
-      @apply p-[14px_12px] text-[13px];
+      @apply p-[14px_12px] text-fine;
     }
     .ftr .ftr-legal {
       @apply grid gap-[2px] pt-[16px];
     }
     .ftr-legal a {
-      @apply text-[13px];
+      @apply text-fine;
     }
     .ftr .fine {
-      @apply text-[12px] leading-[2] mt-[16px];
+      @apply text-fine leading-[2] mt-[16px];
     }
     .footer-bottom {
       @apply flex-wrap gap-[8px_16px] mt-[20px] pt-[16px];
@@ -238,6 +238,6 @@
 
 @layer overrides {
   .footer-navigation .nav-group-title {
-    @apply text-[12px] text-muted;
+    @apply text-fine text-muted;
   }
 }

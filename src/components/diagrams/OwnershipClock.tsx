@@ -8,6 +8,7 @@ import {
   BOX_S,
   DIM,
   NW,
+  NARROW_MIN_TEXT,
   c,
   type DiagramCopy,
   type Narrow,
@@ -35,25 +36,25 @@ function ownershipClockNarrow(
   };
   const s = (
     <>
-      {cap(0, 14, copy.ownershipClockNarrowLabel1)}
+      {cap(0, 14, copy.ownershipClockNarrowLabel1, NARROW_MIN_TEXT)}
       <rect x="0" y="24" width={NW} height="48" rx="8" {...BOX_F} {...BOX_S} />
-      <text x="16" y="45" fontSize="13.5" fontWeight="700" fill="currentColor">
+      <text x="16" y="45" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="currentColor">
         {format(copy.ownershipClockNarrowLabel2, { subMonthly: c(subMonthly), months: months })}
       </text>
-      <text x="16" y="63" fontSize="12.5" {...DIM}>
+      <text x="16" y="63" fontSize={NARROW_MIN_TEXT} {...DIM}>
         {format(copy.ownershipClockNarrowLabel3, { subTotal: c(subTotal) })}
       </text>
-      <text x={NW} y="84" textAnchor="end" fontSize="12.5" fontWeight="700" fill="var(--fig-ok)">
+      <text x={NW} y="94" textAnchor="end" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-ok)">
         {copy.ownershipClockNarrowLabel4}
       </text>
-      {track(112, true)}
-      <text x="0" y="148" fontSize="12.5" fontWeight="700" fill="var(--fig-bad)">
+      {track(126, true)}
+      <text x="0" y="162" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-bad)">
         {copy.ownershipClockNarrowLabel5}
       </text>
-      {cap(0, 196, copy.ownershipClockNarrowLabel6)}
+      {cap(0, 210, copy.ownershipClockNarrowLabel6, NARROW_MIN_TEXT)}
       <rect
         x="0"
-        y="206"
+        y="220"
         width={NW}
         height="48"
         rx="8"
@@ -62,22 +63,22 @@ function ownershipClockNarrow(
         stroke="var(--fig-accent)"
         strokeWidth="2"
       />
-      <text x="16" y="227" fontSize="13.5" fontWeight="700" fill="currentColor">
+      <text x="16" y="241" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="currentColor">
         {format(copy.ownershipClockNarrowLabel7, { ourPrice: c(ourPrice) })}
       </text>
-      <text x="16" y="245" fontSize="12.5" {...DIM}>
+      <text x="16" y="259" fontSize={NARROW_MIN_TEXT} {...DIM}>
         {copy.ownershipClockNarrowLabel8}
       </text>
-      <text x="0" y="266" fontSize="12.5" fontWeight="700" fill="var(--fig-ok)">
+      <text x="0" y="290" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-ok)">
         {copy.ownershipClockNarrowLabel9}
       </text>
-      {track(294, false)}
-      <text x="0" y="330" fontSize="12.5" fontWeight="700" fill="var(--fig-ok)">
+      {track(318, false)}
+      <text x="0" y="354" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-ok)">
         {copy.ownershipClockNarrowLabel10}
       </text>
     </>
   );
-  return [s, `0 0 ${NW} 342`];
+  return [s, `0 0 ${NW} 366`];
 }
 
 const flag = (x: number, y: number, ok = true) => {

@@ -51,6 +51,12 @@
 
 - [0023 図解を型付き React / SVG に移す](0023-react-diagrams.md)
 
+- [0028 文字の下限を 14px（10.5pt）に上げ、字間をトークンで開く](0028-type-floor-and-tracking.md)
+
+- [0029 ヒーローのコピーをすべての幅で絵の中に収める](0029-hero-copy-inside-artwork.md)
+
+- [0030 ヒーローの文字分離と中央管理を検査で固定する](0030-hero-copy-verification.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |
