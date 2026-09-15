@@ -51,6 +51,52 @@
 
 - [0023 図解を型付き React / SVG に移す](0023-react-diagrams.md)
 
+- [0024 公開条件の検査をプレビューと本番に分け、契約文面の承認を記録する](0024-publication-gates.md)
+
+- [0025 検査レポートを検証したビルドに紐付け、実測値に記録日を添える](0025-verified-build-report.md)
+
+- [0026 納品仕様 20 項目と受入検査を対応付け、証明にならない PASS を数えない](0026-acceptance-mapping.md)
+
+- [0027 「ソースコードも公開」の説明を、公開リポジトリと顧客への納品に分けて書く](0027-public-source-repository.md)
+
+- [0028 文字の下限を 14px（10.5pt）に上げ、字間をトークンで開く](0028-type-floor-and-tracking.md)
+
+- [0029 ヒーローのコピーをすべての幅で絵の中に収める](0029-hero-copy-inside-artwork.md)
+
+- [0030 ヒーローの文字分離と中央管理を検査で固定する](0030-hero-copy-verification.md)
+
+- [0032 問い合わせの受付を、静的サイトから分離した Web 標準のハンドラにする](0032-inquiry-intake-service.md)
+
+- [0033 二重通知を送信箱で送り、返信期限を営業日カレンダーで数える](0033-dual-notification-and-reply-deadline.md)
+
+- [0034 問い合わせ情報への権限・履歴・保持期限・削除を、窓口とデータで管理する](0034-inquiry-access-and-retention.md)
+
+- [0035 受付サービスの配備先・保存先・通知手段の候補（オーナー判断・未決）](0035-inquiry-hosting-candidates.md)
+
+- [0036 社内ツールを tools/ops の CLI とし、見積もりは公開料金だけで計算する](0036-internal-ops-tools-and-estimates.md)
+
+- [0037 顧客運用の指標は「0・未計測・欠損」を型で分け、月次レポートは確認前の下書きとして出す](0037-customer-metrics-and-monthly-reports.md)
+
+- [0038 修正依頼と顧客・案件の進行は、顧客ごとのファイルと状態遷移の検査で管理する](0038-requests-and-customer-projects.md)
+
+- [0039 leadfinder は取り込んだ CSV だけを扱い、GBP は手で書き出した情報との突き合わせと承認の記録にする](0039-leadfinder-and-gbp-sync.md)
+
+- [0040 記事・事例・対応エリア・顧客事例を共通のコレクションとして静的生成する](0040-collections.md)
+
+- [0041 事例の絞り込みを JavaScript なしの CSS で行う](0041-css-case-filter.md)
+
+- [0042 対応エリアのページは、実際に対応し固有の本文がある市区町村だけ公開する](0042-service-area-pages.md)
+
+- [0043 顧客事例は、測定期間・出所・掲載許可の記録と一緒に持つ](0043-client-work-records.md)
+
+- [0044 独自ドメインでの公開後の確認をコマンドにする](0044-live-domain-checks.md)
+
+- [0045 毎週のバックアップと復元テスト](0045-weekly-backup.md)
+
+- [0046 公開後の監視を GitHub Actions の定期実行で始める](0046-post-launch-monitoring.md)
+
+- [0047 OGP 画像の生成環境を固定し、再現性を検査する](0047-og-image-environment.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |

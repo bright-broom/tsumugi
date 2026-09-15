@@ -9,6 +9,7 @@ import {
   DIM,
   ArrowLine,
   NW,
+  NARROW_MIN_TEXT,
   type Narrow,
   type DiagramCopy,
 } from '@/components/diagrams/primitives';
@@ -27,11 +28,13 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
     [copy.steps9, copy.steps10, true],
   ];
   const h = 52,
-    gap = 22;
-  const s = [cap(0, 14, copy.subsidyTimelineNarrowLabel1)];
+    gap = 22,
+    // 着手の境目の注記を前の箱に重ねないための余白
+    breakGap = 24;
+  const s = [cap(0, 14, copy.subsidyTimelineNarrowLabel1, NARROW_MIN_TEXT)];
   let y = 26;
   const ys: number[] = [];
-  for (const [t, sub, acc] of steps) {
+  for (const [i, [t, sub, acc]] of steps.entries()) {
     ys.push(y);
     s.push(
       acc ? (
@@ -56,11 +59,11 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
       </text>,
     );
     s.push(
-      <text x="16" y={y + 40} fontSize="12.5" {...DIM}>
+      <text x="16" y={y + 40} fontSize={NARROW_MIN_TEXT} {...DIM}>
         {sub}
       </text>,
     );
-    y += h + gap;
+    y += h + gap + (i === 2 ? breakGap : 0);
   }
   const gy = ys[3]! - gap / 2;
   s.push(
@@ -75,7 +78,7 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
     />,
   );
   s.push(
-    <text x="0" y={gy - 6} fontSize="12.5" fontWeight="700" fill="var(--fig-bad)">
+    <text x="0" y={gy - 6} fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-bad)">
       {copy.subsidyTimelineNarrow}
     </text>,
   );
@@ -94,7 +97,7 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
     );
   }
   s.push(
-    <text x={NW} y={y + 6} textAnchor="end" fontSize="12.5" fontWeight="700" fill="var(--fig-ok)">
+    <text x={NW} y={y + 6} textAnchor="end" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-ok)">
       {copy.subsidyTimelineNarrow2}
     </text>,
   );
@@ -144,7 +147,7 @@ export function SubsidyTimeline({ form4, deadline }: { form4: string; deadline: 
       </text>,
     );
     s.push(
-      <text x={x + w / 2} y={y + 36} textAnchor="middle" fontSize="11.5" {...DIM}>
+      <text x={x + w / 2} y={y + 36} textAnchor="middle" fontSize="12" {...DIM}>
         {sub}
       </text>,
     );

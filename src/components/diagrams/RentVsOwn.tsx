@@ -8,6 +8,7 @@ import {
   vbox,
   vdown,
   NW,
+  NARROW_MIN_TEXT,
   c,
   type Narrow,
   type DiagramCopy,
@@ -16,7 +17,7 @@ import {
 function rentVsOwnNarrow(copy: DiagramCopy, portal: number, fee: number, run: number): Narrow {
   const s = (
     <>
-      {cap(0, 12, copy.rentVsOwnNarrowLabel1)}
+      {cap(0, 12, copy.rentVsOwnNarrowLabel1, NARROW_MIN_TEXT)}
       {vbox(24, 54, copy.rentVsOwnNarrowLabel2, '')}
       {vdown(86, 122, format(copy.rentVsOwnNarrowLabel3, { portal: c(portal) }))}
       {vbox(130, 58, copy.rentVsOwnNarrowLabel4, copy.rentVsOwnNarrowLabel5)}
@@ -36,11 +37,11 @@ function rentVsOwnNarrow(copy: DiagramCopy, portal: number, fee: number, run: nu
         strokeWidth="2.4"
         strokeLinecap="round"
       />
-      <text x={NW} y="264" textAnchor="end" fontSize="12.5" fontWeight="700" fill="var(--fig-bad)">
+      <text x={NW} y="264" textAnchor="end" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-bad)">
         {copy.rentVsOwnNarrowLabel7}
       </text>
       {vbox(276, 50, copy.rentVsOwnNarrowLabel8)}
-      {cap(0, 368, copy.rentVsOwnNarrowLabel9)}
+      {cap(0, 368, copy.rentVsOwnNarrowLabel9, NARROW_MIN_TEXT)}
       {vbox(380, 54, copy.rentVsOwnNarrowLabel2, '')}
       {vdown(442, 478, format(copy.rentVsOwnNarrowLabel10, { run: c(run) }), true)}
       {vbox(486, 58, copy.rentVsOwnNarrowLabel11, copy.rentVsOwnNarrowLabel12, true)}
@@ -50,7 +51,7 @@ function rentVsOwnNarrow(copy: DiagramCopy, portal: number, fee: number, run: nu
         x={NW / 2}
         y="674"
         textAnchor="middle"
-        fontSize="12.5"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="var(--fig-ok)"
       >

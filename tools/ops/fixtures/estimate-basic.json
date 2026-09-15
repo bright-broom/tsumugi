@@ -1,0 +1,16 @@
+{
+  "estimateId": "est-sample-001",
+  "customerLabel": "架空の商店（サンプル）",
+  "issuedOn": "2026-09-16",
+  "validUntil": "2026-10-16",
+  "production": "basic",
+  "options": [
+    { "key": "page_add", "quantity": 1 },
+    { "key": "photo_half_day", "quantity": 1 }
+  ],
+  "support": "run_basic",
+  "months": 36,
+  "payment": "deposit_acceptance",
+  "assumptions": ["写真は支給素材を使う（サンプルの前提）"],
+  "unconfirmed": ["公開日（サンプルの未確定事項）"]
+}

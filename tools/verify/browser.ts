@@ -7,11 +7,12 @@ import type { AddressInfo } from 'node:net';
 import { extname, join, resolve, sep } from 'node:path';
 import type { Page, Route } from 'playwright';
 import * as JS from './in-page';
+import { tokyoDate } from '@/lib/verification-report';
 import { SCREENSHOTS_DIR } from '../paths';
 import { rec } from './results';
 import { pages } from './static';
 import {
-  CONTRAST_BODY, CONTRAST_LARGE, IC_RATIO_MAX, IC_RATIO_MIN, LCP_BUDGET_MS, MIN_FONT_MB, MOBILE_W, TAP_MIN,
+  CONTRAST_BODY, CONTRAST_LARGE, IC_RATIO_MAX, IC_RATIO_MIN, LCP_BUDGET_MS, MIN_FIG_TEXT, MIN_FONT_MB, MOBILE_W, TAP_MIN,
 } from './thresholds';
 
 const MIME: Record<string, string> = {
@@ -46,7 +47,18 @@ function run<T>(page: Page, fn: string, arg?: unknown): Promise<T> {
 
 const need = (large: boolean) => (large ? CONTRAST_LARGE : CONTRAST_BODY);
 
-export async function checkBrowser(dist: string, root: string, writeBack: boolean): Promise<number | null> {
+/** 27 図解の文字も、SVG 上の値ではなく画面上の実寸で下限を測る（図のあるページだけ記録する） */
+async function recFigText(page: Page, f: string, width: number): Promise<void> {
+  const r = await run<{ seen: number; bad: { px: number; txt: string }[] }>(page, JS.FIG_TEXT, MIN_FIG_TEXT);
+  if (!r.seen) return;
+  rec(r.bad.length ? 'FAIL' : 'PASS', `27 図の文字の実寸 ${MIN_FIG_TEXT}px(${width}px)`, f,
+    r.bad.length ? `${r.bad.length}件: ${JSON.stringify(r.bad.slice(0, 3))}` : `${r.seen}個`);
+}
+
+/** LCP の最悪値と測ったページ数を返す。測れなかったら null */
+export async function checkBrowser(
+  dist: string, root: string, writeBack: boolean,
+): Promise<{ worstMs: number; pages: number } | null> {
   let chromium: typeof import('playwright').chromium;
   try {
     ({ chromium } = await import('playwright'));
@@ -92,6 +104,7 @@ export async function checkBrowser(dist: string, root: string, writeBack: boolea
           rec(w.ratio >= req ? 'PASS' : 'FAIL', '図のコントラスト比 AA', f,
             `最悪 ${w.ratio}:1 (必要 ${req.toFixed(1)}, ${w.size}px) 「${w.text}」`);
         }
+        await recFigText(pg, f, 1280);
       }
 
       const have = pages(dist);
@@ -139,6 +152,7 @@ export async function checkBrowser(dist: string, root: string, writeBack: boolea
         const small = await run<unknown[]>(mp, JS.SMALL_TEXT, MIN_FONT_MB);
         rec(small.length ? 'FAIL' : 'PASS', `27 文字の下限 ${MIN_FONT_MB}px`, f,
           small.length ? `${small.length}件: ${JSON.stringify(small.slice(0, 3))}` : '');
+        await recFigText(mp, f, MOBILE_W);
 
         // 28 アイコンと文字の大きさの比。
         // px で固定すると置き場所ごとに 0.88〜1.20 倍とばらつき、行の中で浮く。
@@ -178,15 +192,18 @@ export async function checkBrowser(dist: string, root: string, writeBack: boolea
       'font-display:swap のため本番でも文字はフォールバックで即描画されるが、' +
       '確定値は公開後にフィールドデータで再測定すること');
   }
-  const worst = lcps.size ? Math.max(...lcps.values()) : 0;
-  if (writeBack && lcps.size) {
-    // サイトに出る数字（/spec の LCP）を、いま測った値に揃える
-    const txt = `${(worst / 1000).toFixed(2)}秒（全${lcps.size}ページの最大値・実測）`;
+  if (!lcps.size) return null;
+  const worst = Math.max(...lcps.values());
+  if (writeBack) {
+    // サイトに出る数字（/spec・/works の LCP）を、いま測った値と記録日に揃える
+    const recordedOn = tokyoDate(new Date());
+    const txt = `${(worst / 1000).toFixed(2)}秒（全${lcps.size}ページの最大値・${recordedOn} 記録）`;
     const cfg = join(root, 'src', 'content', 'measurements.ts');
     writeFileSync(cfg, readFileSync(cfg, 'utf8')
       .replace(/^export const LCP_SECONDS = .*$/m, `export const LCP_SECONDS = ${(worst / 1000).toFixed(2)};`)
-      .replace(/^export const LCP_PAGE_COUNT = .*$/m, `export const LCP_PAGE_COUNT = ${lcps.size};`));
-    console.log(`\nmeasurements.ts の実測値 を ${txt} に更新しました。再ビルドしてください。`);
+      .replace(/^export const LCP_PAGE_COUNT = .*$/m, `export const LCP_PAGE_COUNT = ${lcps.size};`)
+      .replace(/^export const LCP_RECORDED_ON = .*$/m, `export const LCP_RECORDED_ON = '${recordedOn}';`));
+    console.log(`\nmeasurements.ts の実測値 を ${txt} に更新しました。コミットしてから再ビルドしてください。`);
   }
-  return worst;
+  return { worstMs: worst, pages: lcps.size };
 }

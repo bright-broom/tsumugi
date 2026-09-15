@@ -1,0 +1,341 @@
+/*
+ * Collections: lists and details for articles, case studies, service areas and client work,
+ * and the case filter that works without JavaScript (ADR 0041).
+ *
+ * Filter state lives in radio inputs placed before .cf-controls and .cf-list inside form.cf.
+ * Class names are positional: .cf-fN-vM is facet N value M (0 = all), .cf-lN-vM its label and
+ * .cf-iN-vM an item that has that value. FILTER_LIMITS in src/lib/collections/cases.ts must match
+ * the 3 facets x 12 values generated below; tests compare both.
+ */
+@layer overrides {
+  .entry-list {
+    @apply list-none p-[0] m-[0] grid gap-[40px_32px] grid-cols-[repeat(auto-fill,minmax(min(100%,300px),1fr))];
+  }
+  .entry-card {
+    @apply flex flex-col gap-[10px] pt-[20px];
+    border-top: 1px solid var(--color-line-strong);
+  }
+  .entry-image {
+    @apply block w-full h-auto rounded-media;
+  }
+  .entry-card .entry-image {
+    @apply object-cover aspect-[3/2];
+  }
+  .entry-kind {
+    @apply flex flex-wrap gap-[4px_12px] m-[0] text-[13px] font-semi text-muted;
+  }
+  .entry-title {
+    @apply m-[0] text-[18px] leading-[1.6];
+  }
+  .entry-summary {
+    @apply m-[0] text-[15px] leading-[1.85] text-muted;
+  }
+  .entry-dates {
+    @apply flex flex-wrap gap-[4px_20px] m-[12px_0_0] text-[14px] text-muted;
+  }
+  .entry-card .entry-dates {
+    @apply m-[0];
+  }
+  .entry-dates > span {
+    @apply inline-flex gap-[8px];
+  }
+  .entry-date-label {
+    @apply font-semi;
+  }
+  .entry-article {
+    @apply max-w-measure-read;
+  }
+  .entry-hero {
+    @apply mb-[32px];
+  }
+  .entry-body {
+    @apply text-[16px] leading-body;
+  }
+  .entry-body h2,
+  .entry-subheading {
+    @apply m-[40px_0_16px] text-[22px] leading-[1.6];
+  }
+  .entry-body p {
+    @apply m-[0_0_20px];
+  }
+  .entry-body ul,
+  .entry-points {
+    @apply m-[0_0_20px] pl-[1.4em];
+  }
+  .entry-body li + li,
+  .entry-points li + li {
+    @apply mt-[6px];
+  }
+  .entry-body figure {
+    @apply m-[28px_0];
+  }
+  .entry-body figcaption {
+    @apply mt-[8px] text-[14px] text-muted;
+  }
+  .entry-tags {
+    @apply list-none p-[0] m-[20px_0_0] flex flex-wrap gap-[8px];
+  }
+  .entry-tags li {
+    @apply inline-flex items-center min-h-[32px] p-[2px_12px] rounded-pill text-[14px];
+    border: 1px solid var(--color-line-strong);
+  }
+  .entry-facts {
+    @apply grid m-[24px_0_0] max-w-measure-read;
+  }
+  .entry-facts > div {
+    @apply grid grid-cols-[minmax(6em,max-content)_1fr] gap-[16px] py-[12px];
+    border-top: 1px solid var(--color-line);
+  }
+  .entry-facts dt {
+    @apply font-semi;
+  }
+  .entry-facts dd {
+    @apply m-[0];
+  }
+  .entry-gallery {
+    @apply list-none p-[0] m-[0] grid gap-[16px] grid-cols-[repeat(auto-fill,minmax(min(100%,240px),1fr))];
+  }
+  .entry-group + .entry-group {
+    @apply mt-[40px];
+  }
+  .entry-group .entry-subheading {
+    @apply mt-[0];
+  }
+  .entry-links {
+    @apply list-none p-[0] m-[0] flex flex-wrap gap-[8px_24px];
+  }
+  .entry-links li {
+    @apply flex items-center gap-[8px];
+  }
+  .entry-links a {
+    @apply inline-flex items-center min-h-tap min-w-tap text-[16px] font-semi;
+  }
+  .entry-note {
+    @apply mt-[32px] text-[14px] leading-[1.8] text-muted;
+  }
+  .entry-back {
+    @apply m-[32px_0];
+  }
+  .metric-value {
+    @apply block;
+  }
+  .metric-note {
+    @apply block text-[13px] leading-[1.7] text-muted;
+  }
+
+  /* ── Case filter */
+  .cf {
+    @apply relative grid gap-[28px];
+  }
+  .cf-radio {
+    @apply absolute w-[1px] h-[1px] m-[0] overflow-hidden opacity-0 pointer-events-none;
+    clip-path: inset(50%);
+  }
+  .cf-controls {
+    @apply grid gap-[20px] p-[20px] rounded-panel bg-surface;
+    border: 1px solid var(--color-line-strong);
+  }
+  .cf-facet {
+    @apply grid gap-[10px];
+  }
+  .cf-facet-title {
+    @apply m-[0] text-[14px] font-semi;
+  }
+  .cf-options {
+    @apply flex flex-wrap gap-[8px];
+  }
+  .cf-chip {
+    @apply inline-flex items-center justify-center min-h-tap min-w-tap p-[6px_16px] rounded-pill text-[15px] cursor-pointer bg-surface text-ink;
+    border: 1px solid var(--color-line-strong);
+  }
+  .cf-chip:hover {
+    @apply bg-accent/10;
+  }
+  .cf-reset {
+    @apply justify-self-start inline-flex items-center min-h-tap p-[6px_4px] text-[15px] font-semi cursor-pointer bg-transparent text-ink underline underline-offset-4;
+    border: 0;
+  }
+  .cf-empty {
+    @apply hidden m-[0] pt-[20px] text-[15px] leading-[1.85];
+    border-top: 1px solid var(--color-line-strong);
+  }
+
+  /* Hide items that lack the chosen value of any facet (AND across facets). */
+  .cf-f1-v1:checked ~ .cf-list > .cf-item:not(.cf-i1-v1),
+  .cf-f1-v2:checked ~ .cf-list > .cf-item:not(.cf-i1-v2),
+  .cf-f1-v3:checked ~ .cf-list > .cf-item:not(.cf-i1-v3),
+  .cf-f1-v4:checked ~ .cf-list > .cf-item:not(.cf-i1-v4),
+  .cf-f1-v5:checked ~ .cf-list > .cf-item:not(.cf-i1-v5),
+  .cf-f1-v6:checked ~ .cf-list > .cf-item:not(.cf-i1-v6),
+  .cf-f1-v7:checked ~ .cf-list > .cf-item:not(.cf-i1-v7),
+  .cf-f1-v8:checked ~ .cf-list > .cf-item:not(.cf-i1-v8),
+  .cf-f1-v9:checked ~ .cf-list > .cf-item:not(.cf-i1-v9),
+  .cf-f1-v10:checked ~ .cf-list > .cf-item:not(.cf-i1-v10),
+  .cf-f1-v11:checked ~ .cf-list > .cf-item:not(.cf-i1-v11),
+  .cf-f1-v12:checked ~ .cf-list > .cf-item:not(.cf-i1-v12),
+  .cf-f2-v1:checked ~ .cf-list > .cf-item:not(.cf-i2-v1),
+  .cf-f2-v2:checked ~ .cf-list > .cf-item:not(.cf-i2-v2),
+  .cf-f2-v3:checked ~ .cf-list > .cf-item:not(.cf-i2-v3),
+  .cf-f2-v4:checked ~ .cf-list > .cf-item:not(.cf-i2-v4),
+  .cf-f2-v5:checked ~ .cf-list > .cf-item:not(.cf-i2-v5),
+  .cf-f2-v6:checked ~ .cf-list > .cf-item:not(.cf-i2-v6),
+  .cf-f2-v7:checked ~ .cf-list > .cf-item:not(.cf-i2-v7),
+  .cf-f2-v8:checked ~ .cf-list > .cf-item:not(.cf-i2-v8),
+  .cf-f2-v9:checked ~ .cf-list > .cf-item:not(.cf-i2-v9),
+  .cf-f2-v10:checked ~ .cf-list > .cf-item:not(.cf-i2-v10),
+  .cf-f2-v11:checked ~ .cf-list > .cf-item:not(.cf-i2-v11),
+  .cf-f2-v12:checked ~ .cf-list > .cf-item:not(.cf-i2-v12),
+  .cf-f3-v1:checked ~ .cf-list > .cf-item:not(.cf-i3-v1),
+  .cf-f3-v2:checked ~ .cf-list > .cf-item:not(.cf-i3-v2),
+  .cf-f3-v3:checked ~ .cf-list > .cf-item:not(.cf-i3-v3),
+  .cf-f3-v4:checked ~ .cf-list > .cf-item:not(.cf-i3-v4),
+  .cf-f3-v5:checked ~ .cf-list > .cf-item:not(.cf-i3-v5),
+  .cf-f3-v6:checked ~ .cf-list > .cf-item:not(.cf-i3-v6),
+  .cf-f3-v7:checked ~ .cf-list > .cf-item:not(.cf-i3-v7),
+  .cf-f3-v8:checked ~ .cf-list > .cf-item:not(.cf-i3-v8),
+  .cf-f3-v9:checked ~ .cf-list > .cf-item:not(.cf-i3-v9),
+  .cf-f3-v10:checked ~ .cf-list > .cf-item:not(.cf-i3-v10),
+  .cf-f3-v11:checked ~ .cf-list > .cf-item:not(.cf-i3-v11),
+  .cf-f3-v12:checked ~ .cf-list > .cf-item:not(.cf-i3-v12) {
+    display: none;
+  }
+
+  .cf-f1-v0:checked ~ .cf-controls .cf-l1-v0,
+  .cf-f1-v1:checked ~ .cf-controls .cf-l1-v1,
+  .cf-f1-v2:checked ~ .cf-controls .cf-l1-v2,
+  .cf-f1-v3:checked ~ .cf-controls .cf-l1-v3,
+  .cf-f1-v4:checked ~ .cf-controls .cf-l1-v4,
+  .cf-f1-v5:checked ~ .cf-controls .cf-l1-v5,
+  .cf-f1-v6:checked ~ .cf-controls .cf-l1-v6,
+  .cf-f1-v7:checked ~ .cf-controls .cf-l1-v7,
+  .cf-f1-v8:checked ~ .cf-controls .cf-l1-v8,
+  .cf-f1-v9:checked ~ .cf-controls .cf-l1-v9,
+  .cf-f1-v10:checked ~ .cf-controls .cf-l1-v10,
+  .cf-f1-v11:checked ~ .cf-controls .cf-l1-v11,
+  .cf-f1-v12:checked ~ .cf-controls .cf-l1-v12,
+  .cf-f2-v0:checked ~ .cf-controls .cf-l2-v0,
+  .cf-f2-v1:checked ~ .cf-controls .cf-l2-v1,
+  .cf-f2-v2:checked ~ .cf-controls .cf-l2-v2,
+  .cf-f2-v3:checked ~ .cf-controls .cf-l2-v3,
+  .cf-f2-v4:checked ~ .cf-controls .cf-l2-v4,
+  .cf-f2-v5:checked ~ .cf-controls .cf-l2-v5,
+  .cf-f2-v6:checked ~ .cf-controls .cf-l2-v6,
+  .cf-f2-v7:checked ~ .cf-controls .cf-l2-v7,
+  .cf-f2-v8:checked ~ .cf-controls .cf-l2-v8,
+  .cf-f2-v9:checked ~ .cf-controls .cf-l2-v9,
+  .cf-f2-v10:checked ~ .cf-controls .cf-l2-v10,
+  .cf-f2-v11:checked ~ .cf-controls .cf-l2-v11,
+  .cf-f2-v12:checked ~ .cf-controls .cf-l2-v12,
+  .cf-f3-v0:checked ~ .cf-controls .cf-l3-v0,
+  .cf-f3-v1:checked ~ .cf-controls .cf-l3-v1,
+  .cf-f3-v2:checked ~ .cf-controls .cf-l3-v2,
+  .cf-f3-v3:checked ~ .cf-controls .cf-l3-v3,
+  .cf-f3-v4:checked ~ .cf-controls .cf-l3-v4,
+  .cf-f3-v5:checked ~ .cf-controls .cf-l3-v5,
+  .cf-f3-v6:checked ~ .cf-controls .cf-l3-v6,
+  .cf-f3-v7:checked ~ .cf-controls .cf-l3-v7,
+  .cf-f3-v8:checked ~ .cf-controls .cf-l3-v8,
+  .cf-f3-v9:checked ~ .cf-controls .cf-l3-v9,
+  .cf-f3-v10:checked ~ .cf-controls .cf-l3-v10,
+  .cf-f3-v11:checked ~ .cf-controls .cf-l3-v11,
+  .cf-f3-v12:checked ~ .cf-controls .cf-l3-v12 {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-white);
+  }
+
+  .cf-f1-v0:focus-visible ~ .cf-controls .cf-l1-v0,
+  .cf-f1-v1:focus-visible ~ .cf-controls .cf-l1-v1,
+  .cf-f1-v2:focus-visible ~ .cf-controls .cf-l1-v2,
+  .cf-f1-v3:focus-visible ~ .cf-controls .cf-l1-v3,
+  .cf-f1-v4:focus-visible ~ .cf-controls .cf-l1-v4,
+  .cf-f1-v5:focus-visible ~ .cf-controls .cf-l1-v5,
+  .cf-f1-v6:focus-visible ~ .cf-controls .cf-l1-v6,
+  .cf-f1-v7:focus-visible ~ .cf-controls .cf-l1-v7,
+  .cf-f1-v8:focus-visible ~ .cf-controls .cf-l1-v8,
+  .cf-f1-v9:focus-visible ~ .cf-controls .cf-l1-v9,
+  .cf-f1-v10:focus-visible ~ .cf-controls .cf-l1-v10,
+  .cf-f1-v11:focus-visible ~ .cf-controls .cf-l1-v11,
+  .cf-f1-v12:focus-visible ~ .cf-controls .cf-l1-v12,
+  .cf-f2-v0:focus-visible ~ .cf-controls .cf-l2-v0,
+  .cf-f2-v1:focus-visible ~ .cf-controls .cf-l2-v1,
+  .cf-f2-v2:focus-visible ~ .cf-controls .cf-l2-v2,
+  .cf-f2-v3:focus-visible ~ .cf-controls .cf-l2-v3,
+  .cf-f2-v4:focus-visible ~ .cf-controls .cf-l2-v4,
+  .cf-f2-v5:focus-visible ~ .cf-controls .cf-l2-v5,
+  .cf-f2-v6:focus-visible ~ .cf-controls .cf-l2-v6,
+  .cf-f2-v7:focus-visible ~ .cf-controls .cf-l2-v7,
+  .cf-f2-v8:focus-visible ~ .cf-controls .cf-l2-v8,
+  .cf-f2-v9:focus-visible ~ .cf-controls .cf-l2-v9,
+  .cf-f2-v10:focus-visible ~ .cf-controls .cf-l2-v10,
+  .cf-f2-v11:focus-visible ~ .cf-controls .cf-l2-v11,
+  .cf-f2-v12:focus-visible ~ .cf-controls .cf-l2-v12,
+  .cf-f3-v0:focus-visible ~ .cf-controls .cf-l3-v0,
+  .cf-f3-v1:focus-visible ~ .cf-controls .cf-l3-v1,
+  .cf-f3-v2:focus-visible ~ .cf-controls .cf-l3-v2,
+  .cf-f3-v3:focus-visible ~ .cf-controls .cf-l3-v3,
+  .cf-f3-v4:focus-visible ~ .cf-controls .cf-l3-v4,
+  .cf-f3-v5:focus-visible ~ .cf-controls .cf-l3-v5,
+  .cf-f3-v6:focus-visible ~ .cf-controls .cf-l3-v6,
+  .cf-f3-v7:focus-visible ~ .cf-controls .cf-l3-v7,
+  .cf-f3-v8:focus-visible ~ .cf-controls .cf-l3-v8,
+  .cf-f3-v9:focus-visible ~ .cf-controls .cf-l3-v9,
+  .cf-f3-v10:focus-visible ~ .cf-controls .cf-l3-v10,
+  .cf-f3-v11:focus-visible ~ .cf-controls .cf-l3-v11,
+  .cf-f3-v12:focus-visible ~ .cf-controls .cf-l3-v12 {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* The empty state needs :has(); without it the message stays hidden and filtering still works. */
+  @supports selector(:has(:is(a ~ b > c))) {
+    .cf-empty {
+      display: block;
+    }
+    .cf:has(> .cf-list > .cf-item:is(
+      .cf-f1-v0:checked ~ .cf-list > *,
+      .cf-f1-v1:checked ~ .cf-list > .cf-i1-v1,
+      .cf-f1-v2:checked ~ .cf-list > .cf-i1-v2,
+      .cf-f1-v3:checked ~ .cf-list > .cf-i1-v3,
+      .cf-f1-v4:checked ~ .cf-list > .cf-i1-v4,
+      .cf-f1-v5:checked ~ .cf-list > .cf-i1-v5,
+      .cf-f1-v6:checked ~ .cf-list > .cf-i1-v6,
+      .cf-f1-v7:checked ~ .cf-list > .cf-i1-v7,
+      .cf-f1-v8:checked ~ .cf-list > .cf-i1-v8,
+      .cf-f1-v9:checked ~ .cf-list > .cf-i1-v9,
+      .cf-f1-v10:checked ~ .cf-list > .cf-i1-v10,
+      .cf-f1-v11:checked ~ .cf-list > .cf-i1-v11,
+      .cf-f1-v12:checked ~ .cf-list > .cf-i1-v12
+    ):is(
+      .cf-f2-v0:checked ~ .cf-list > *,
+      .cf-f2-v1:checked ~ .cf-list > .cf-i2-v1,
+      .cf-f2-v2:checked ~ .cf-list > .cf-i2-v2,
+      .cf-f2-v3:checked ~ .cf-list > .cf-i2-v3,
+      .cf-f2-v4:checked ~ .cf-list > .cf-i2-v4,
+      .cf-f2-v5:checked ~ .cf-list > .cf-i2-v5,
+      .cf-f2-v6:checked ~ .cf-list > .cf-i2-v6,
+      .cf-f2-v7:checked ~ .cf-list > .cf-i2-v7,
+      .cf-f2-v8:checked ~ .cf-list > .cf-i2-v8,
+      .cf-f2-v9:checked ~ .cf-list > .cf-i2-v9,
+      .cf-f2-v10:checked ~ .cf-list > .cf-i2-v10,
+      .cf-f2-v11:checked ~ .cf-list > .cf-i2-v11,
+      .cf-f2-v12:checked ~ .cf-list > .cf-i2-v12
+    ):is(
+      .cf-f3-v0:checked ~ .cf-list > *,
+      .cf-f3-v1:checked ~ .cf-list > .cf-i3-v1,
+      .cf-f3-v2:checked ~ .cf-list > .cf-i3-v2,
+      .cf-f3-v3:checked ~ .cf-list > .cf-i3-v3,
+      .cf-f3-v4:checked ~ .cf-list > .cf-i3-v4,
+      .cf-f3-v5:checked ~ .cf-list > .cf-i3-v5,
+      .cf-f3-v6:checked ~ .cf-list > .cf-i3-v6,
+      .cf-f3-v7:checked ~ .cf-list > .cf-i3-v7,
+      .cf-f3-v8:checked ~ .cf-list > .cf-i3-v8,
+      .cf-f3-v9:checked ~ .cf-list > .cf-i3-v9,
+      .cf-f3-v10:checked ~ .cf-list > .cf-i3-v10,
+      .cf-f3-v11:checked ~ .cf-list > .cf-i3-v11,
+      .cf-f3-v12:checked ~ .cf-list > .cf-i3-v12
+    )) > .cf-empty {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,4 @@
+name,phone,website,industry,area,rating,review_count,place_id
+サンプル食堂,03-0000-0001,,飲食店,架空市,4.2,120,sample-place-001
+株式会社サンプル工務店,０３−００００−０００２,https://www.example.jp/,工務店,架空市,3.8,15,sample-place-002
+サンプル美容室,+81 3 0000 0003,https://tabelog.com/sample/0003/,美容室,架空町,,,

@@ -1,4 +1,4 @@
-import { LCP_SECONDS } from '@/content/measurements';
+import { LCP_RECORDED_ON, LCP_SECONDS } from '@/content/measurements';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
 import { format } from '@/i18n/format';
@@ -34,7 +34,12 @@ export default function SpecPage({ copy, route }: PageProps<'spec'>) {
         <Stats
           items={[
             { icon: 'list-checks', value: '20', unit: copy.itemsUnit, label: copy.itemsLabel },
-            { icon: 'gauge', value: lcpNum, unit: copy.lcpNum, label: copy.itemsLabel2 },
+            {
+              icon: 'gauge',
+              value: lcpNum,
+              unit: copy.lcpNum,
+              label: format(copy.itemsLabel2, { recordedOn: LCP_RECORDED_ON }),
+            },
             { icon: 'code-xml', value: '0', unit: copy.itemsUnit2, label: copy.itemsLabel3 },
             { icon: 'ban', value: '5', unit: copy.itemsUnit, label: copy.itemsLabel4 },
           ]}
@@ -53,6 +58,7 @@ export default function SpecPage({ copy, route }: PageProps<'spec'>) {
             {rows.map((it) => (
               <Acc summary={it.title} key={it.title}>
                 <p dangerouslySetInnerHTML={raw(it.detail)} />
+                <p className="dim">{copy.checkMethod[it.check]}</p>
               </Acc>
             ))}
           </Fragment>
@@ -94,10 +100,16 @@ export default function SpecPage({ copy, route }: PageProps<'spec'>) {
             <a href={href('owned')}>{copy.a}</a>
             {copy.p6}
           </p>
-          <p>
-            <strong>{copy.strong3}</strong>
-            {copy.p7}
-          </p>
+          {C.SOURCE_REPOSITORY_URL ? (
+            <p>
+              <strong>{copy.strong3}</strong>
+              {copy.p7}
+              <a href={C.SOURCE_REPOSITORY_URL}>{copy.a2}</a>
+              {copy.p8}
+            </p>
+          ) : (
+            <p>{copy.sourcePrivate}</p>
+          )}
         </Note>
       </Section>
 

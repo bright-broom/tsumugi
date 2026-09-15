@@ -9,6 +9,7 @@ import {
   DIM,
   ArrowLine,
   NW,
+  NARROW_MIN_TEXT,
   c,
   type Narrow,
   type DiagramCopy,
@@ -26,19 +27,19 @@ function subsidyBarNarrow(
   const gw = rnd((NW * grant) / total);
   const s = (
     <>
-      {cap(0, 12, format(copy.subsidyBarNarrowLabel1, { total: c(total) }))}
+      {cap(0, 12, format(copy.subsidyBarNarrowLabel1, { total: c(total) }), NARROW_MIN_TEXT)}
       <rect x="0" y="22" width={ww - 4} height="52" rx="7" {...BOX_F} {...BOX_S} />
       <text
         x={ww / 2 - 2}
         y="44"
         textAnchor="middle"
-        fontSize="12"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="currentColor"
       >
         {copy.subsidyBarNarrowLabel2}
       </text>
-      <text x={ww / 2 - 2} y="62" textAnchor="middle" fontSize="12.5" {...DIM}>
+      <text x={ww / 2 - 2} y="62" textAnchor="middle" fontSize={NARROW_MIN_TEXT} {...DIM}>
         {format(copy.subsidyBarNarrowLabel3, { web: c(web) })}
       </text>
       <rect x={ww} y="22" width={NW - ww} height="52" rx="7" {...BOX_F} {...BOX_S} />
@@ -46,13 +47,13 @@ function subsidyBarNarrow(
         x={ww + (NW - ww) / 2}
         y="44"
         textAnchor="middle"
-        fontSize="12"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="currentColor"
       >
         {copy.subsidyBarNarrowLabel4}
       </text>
-      <text x={ww + (NW - ww) / 2} y="62" textAnchor="middle" fontSize="12.5" {...DIM}>
+      <text x={ww + (NW - ww) / 2} y="62" textAnchor="middle" fontSize={NARROW_MIN_TEXT} {...DIM}>
         {format(copy.subsidyBarNarrowLabel5, { pr: c(pr) })}
       </text>
       <ArrowLine
@@ -64,7 +65,7 @@ function subsidyBarNarrow(
         strokeWidth="1.6"
         marker="neutral"
       />
-      {cap(0, 132, copy.subsidyBarNarrowLabel6)}
+      {cap(0, 132, copy.subsidyBarNarrowLabel6, NARROW_MIN_TEXT)}
       <rect
         x="0"
         y="142"
@@ -80,13 +81,13 @@ function subsidyBarNarrow(
         x={gw / 2 - 2}
         y="164"
         textAnchor="middle"
-        fontSize="12"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="var(--fig-ok)"
       >
         {copy.subsidyBarNarrowLabel7}
       </text>
-      <text x={gw / 2 - 2} y="182" textAnchor="middle" fontSize="12.5" fill="var(--fig-ok)">
+      <text x={gw / 2 - 2} y="182" textAnchor="middle" fontSize={NARROW_MIN_TEXT} fill="var(--fig-ok)">
         {format(copy.subsidyBarNarrowLabel8, { grant: c(grant) })}
       </text>
       <rect x={gw} y="142" width={NW - gw} height="52" rx="7" {...BOX_F} {...BOX_S} />
@@ -94,7 +95,7 @@ function subsidyBarNarrow(
         x={gw + (NW - gw) / 2}
         y="164"
         textAnchor="middle"
-        fontSize="12"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="currentColor"
       >
@@ -104,7 +105,7 @@ function subsidyBarNarrow(
         x={gw + (NW - gw) / 2}
         y="182"
         textAnchor="middle"
-        fontSize="12.5"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="currentColor"
       >

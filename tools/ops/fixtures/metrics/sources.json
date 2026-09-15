@@ -1,0 +1,31 @@
+{
+  "customerId": "sample-shop",
+  "sources": [
+    {
+      "id": "server-log",
+      "kind": "server_log_aggregate",
+      "label": "サーバーログの日次集計（サンプル）",
+      "metrics": ["page_views", "visits", "referrals"],
+      "definition": "サンプルの定義：HTML の取得だけを数え、画像・CSS と既知のボットを除く",
+      "consent": {
+        "recordedOn": "2026-07-01",
+        "recordedBy": "サンプル担当",
+        "scope": "サンプル：アクセスログの集計値だけを月次レポートに使う"
+      },
+      "coverage": { "from": "2026-07-01" }
+    },
+    {
+      "id": "inquiry-intake",
+      "kind": "event_log",
+      "label": "問い合わせ受付の記録（サンプル）",
+      "metrics": ["inquiries"],
+      "definition": "サンプルの定義：フォームと電話の受付記録。迷惑送信は除く",
+      "consent": {
+        "recordedOn": "2026-07-01",
+        "recordedBy": "サンプル担当",
+        "scope": "サンプル：件数と経路だけを使い、内容は使わない"
+      },
+      "coverage": { "from": "2026-08-01" }
+    }
+  ]
+}

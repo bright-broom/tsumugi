@@ -4,17 +4,24 @@
  *
  *   npm run verify                      静的＋ブラウザ検証（out/ を検査する）
  *   npm run verify -- --static          静的のみ（ブラウザ不要・CI向け）
- *   npm run verify -- --write           LCP実測値を src/content/measurements.ts に書き戻す
+ *   npm run verify -- --mode production 本番の公開条件で検査する（既定は preview。VERCEL_ENV=production なら本番）
+ *   npm run verify -- --write           LCP実測値と記録日を src/content/measurements.ts に書き戻す
  *   npm run verify -- --dist <path>     検査するディレクトリを差し替える
  *
  * 出力: 標準出力のレポート ＋ .artifacts/verification/verify-report.json
- *       （--static のときは verify-report.static.json。ページに出す件数は全項目の結果からだけ取るので、
- *         簡易版を回しても works.html の「581項目」が「359項目」に落ちない）
+ *       （--static のときは verify-report.static.json）。レポートには測定日時・対象コミットと未コミットの変更の有無・
+ *       成果物の指紋・検査の種別とモード・件数・仕様20項目の受入状況を入れる。
+ *       ページ（works.html）が件数を出すのは、全項目・FAIL 0・ビルドと同じコミットのレポートだけ（ADR 0025）。
  */
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { gitRunner, resolveCommit } from '@/lib/build-commit';
+import { tokyoDate } from '@/lib/verification-report';
+import { acceptanceEntries, auditAcceptance } from './acceptance';
 import { checkBrowser } from './browser';
-import { R, type Result } from './results';
+import { resolveMode } from './publication';
+import { artifactFingerprint, buildReport, printReport } from './report';
+import { R, rec } from './results';
 import { checkStatic } from './static';
 
 import { ROOT, VERIFICATION_DIR } from '../paths';
@@ -27,55 +34,32 @@ const DIST = resolve(arg('--dist', join(ROOT, 'out')));
 const STATIC_ONLY = argv.includes('--static');
 const REPORT = STATIC_ONLY ? 'verify-report.static.json' : 'verify-report.json';
 
-function report(): number {
-  const count = (level: Result['level']) => R.filter((r) => r.level === level).length;
-  const [passes, warns, fails] = [count('PASS'), count('WARN'), count('FAIL')];
-
-  // チェック名ごとに集約して、FAIL → WARN → PASS の順に表示
-  const by = new Map<string, Result[]>();
-  for (const r of R) {
-    const rows = by.get(r.check);
-    if (rows) rows.push(r);
-    else by.set(r.check, [r]);
-  }
-  const rank = (rows: Result[]) =>
-    rows.some((r) => r.level === 'FAIL') ? 0 : rows.some((r) => r.level === 'WARN') ? 1 : 2;
-  const checks = [...by.keys()].sort((a, b) => rank(by.get(a)!) - rank(by.get(b)!) || (a < b ? -1 : a > b ? 1 : 0));
-
-  const rule = (c: string) => c.repeat(74);
-  console.log('\n' + rule('='));
-  console.log('  標準仕様の自動検証レポート');
-  console.log(rule('='));
-  for (const chk of checks) {
-    const rows = by.get(chk)!;
-    const nf = rows.filter((r) => r.level === 'FAIL').length;
-    const nw = rows.filter((r) => r.level === 'WARN').length;
-    const mark = nf ? 'FAIL' : nw ? 'WARN' : ' ok ';
-    console.log(`\n[${mark}] ${chk}  (${rows.length - nf - nw}/${rows.length} pass)`);
-    const shown = rows.filter((r) => r.level !== 'PASS').slice(0, 6);
-    if (!shown.length) {
-      const sample = rows.find((r) => r.detail)?.detail;
-      if (sample) console.log(`        例: ${sample}`);
-    }
-    for (const r of shown) console.log(`        ${r.level} ${r.page}: ${r.detail}`);
-  }
-
-  const verdict = fails ? '納品不可' : '納品可';
-  console.log('\n' + rule('-'));
-  console.log(`  PASS ${passes}   WARN ${warns}   FAIL ${fails}`);
-  console.log(rule('-'));
-  console.log(`  判定: ${verdict}`);
-  if (fails) console.log('  FAIL が1件でもあれば納品しません。上の指摘を直してから再実行してください。');
-  console.log(rule('=') + '\n');
-
-  mkdirSync(VERIFICATION_DIR, { recursive: true });
-  writeFileSync(join(VERIFICATION_DIR, REPORT), JSON.stringify({
-    verdict, pass: passes, warn: warns, fail: fails,
-    results: R.map(({ level, check, page, detail }) => ({ level, check, page, detail })),
-  }, null, 2));
-  return fails ? 1 : 0;
+const modeAt = argv.indexOf('--mode');
+const modeFlag = modeAt < 0 ? undefined : argv[modeAt + 1] && !argv[modeAt + 1]!.startsWith('--') ? argv[modeAt + 1]! : null;
+const resolved = resolveMode(modeFlag, process.env);
+if ('error' in resolved) {
+  console.error(`verify: ${resolved.error}`);
+  process.exit(2);
 }
+const MODE = resolved.mode;
 
-checkStatic(DIST);
-if (!STATIC_ONLY) await checkBrowser(DIST, ROOT, argv.includes('--write'));
-process.exit(report());
+checkStatic(DIST, MODE);
+const lcp = STATIC_ONLY ? null : await checkBrowser(DIST, ROOT, argv.includes('--write'));
+for (const f of auditAcceptance(R, !STATIC_ONLY)) rec(f.level, f.check, f.page, f.detail);
+
+const measuredAt = new Date();
+const report = buildReport({
+  results: R,
+  kind: STATIC_ONLY ? 'static' : 'full',
+  mode: MODE,
+  measuredAt,
+  // 検査のあとで判定する（--write が measurements.ts を書き換えたら、未コミットの変更ありになる）
+  commit: resolveCommit(process.env, gitRunner(ROOT)),
+  artifact: artifactFingerprint(DIST),
+  lcp,
+  acceptance: acceptanceEntries(R, !STATIC_ONLY, tokyoDate(measuredAt)),
+});
+printReport(report);
+mkdirSync(VERIFICATION_DIR, { recursive: true });
+writeFileSync(join(VERIFICATION_DIR, REPORT), JSON.stringify(report, null, 2));
+process.exit(report.counts.fail ? 1 : 0);

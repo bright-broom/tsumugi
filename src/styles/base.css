@@ -47,6 +47,8 @@
   [role='button'] {
     @apply touch-manipulation;
     -webkit-tap-highlight-color: transparent;
+    /* ブラウザ既定の letter-spacing: normal を外し、本文と同じ字間にする */
+    letter-spacing: inherit;
   }
 
   /* 画面のルート。テーマは data-profile で振り替える（16 導入と運用）。
@@ -55,7 +57,7 @@
     --accent: var(--color-campaign-accent);
     --accent-ink: var(--color-campaign-accent-ink);
     --accent-text: var(--color-campaign-accent-text);
-    @apply bg-white text-ink font-ja text-body leading-body font-regular;
+    @apply bg-white text-ink font-ja text-body leading-body font-regular tracking-body;
     font-feature-settings: 'palt' 1;
   }
   .nah-app[data-profile='main'] {
@@ -69,7 +71,7 @@
   h2,
   h3,
   h4 {
-    @apply m-[0] font-bold leading-heading tracking-[.01em];
+    @apply m-[0] font-bold leading-heading tracking-heading;
   }
   h1 {
     @apply text-page-pc;
@@ -250,11 +252,6 @@
     }
     :where(a, button, summary, input, select, textarea, h1, h2, h3, [id]) {
       scroll-margin-top: calc(var(--spacing-header-mb) + 12px);
-    }
-    /* ガイド06の寸法はPC向け。手に持つ画面では補助文字の下限を上げる。
-       読み手が50〜60代である前提はタップ領域44pxと同じ根拠で、文字にも効かせる。 */
-    .nah-app {
-      --text-meta: 14px;
     }
     /* 白と補助面（生成り）の差は、屋外の画面では見分けがつかない。
        色を濃くするとガイドから外れるので、境目に髪の毛の線を1本入れて章を区切る。 */

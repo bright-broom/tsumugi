@@ -6,7 +6,7 @@ export default {
   brandReading: 'つむぎ',
   area: '全国',
   serviceNote: '打ち合わせはオンラインと電話。全国どこでもお受けします。',
-  phoneNumber: '000-0000-0000',
+  phoneNumber: '080-4560-1124',
   email: 'info@example.jp',
   postalCode: '000-0000',
   phoneHours: '平日 9:00〜18:00',
@@ -22,5 +22,5 @@ export default {
   memberRole2: '撮影・取材・集客支援',
   memberBio3: '担当者のプロフィールは準備中です。担当範囲を確認し、公開前に掲載します。',
   brandWithReading: '{brand}（{brandReading}）',
-  lcpMeasured: '{seconds}秒（全{pages}ページの最大値・実測）',
+  lcpMeasured: '{seconds}秒（全{pages}ページの最大値。{recordedOn}記録の手元での実測）',
 } as const;

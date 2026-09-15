@@ -10,6 +10,8 @@ export const BOX_F = { fill: 'currentColor', fillOpacity: '.045' } as const;
 export const BOX_S = { stroke: 'currentColor', strokeWidth: '1.4', strokeOpacity: '.55' } as const;
 export const DIM = { fill: 'currentColor', opacity: '.72' } as const;
 export const NW = 340;
+/** 狭い図（幅 NW）は 390px 幅でほぼ等倍に描かれる。補助文字をこれより小さくしない（本文の下限 --text-fine と同じ。ADR 0028） */
+export const NARROW_MIN_TEXT = 14;
 export const c = (n: number) => n.toLocaleString('en-US');
 
 export function ArrowLine({
@@ -22,8 +24,8 @@ export function ArrowLine({
   return <line {...props} markerEnd={`url(#${id})`} />;
 }
 
-export const cap = (x: number, y: number, title: string) => (
-  <text x={x} y={y} fontSize="12" fontWeight="700" {...DIM}>
+export const cap = (x: number, y: number, title: string, size = 12) => (
+  <text x={x} y={y} fontSize={size} fontWeight="700" {...DIM}>
     {title}
   </text>
 );
@@ -37,6 +39,7 @@ function Box({
   sub,
   accent,
   subOffset,
+  subSize,
 }: {
   x: number;
   y: number;
@@ -46,6 +49,7 @@ function Box({
   sub: string;
   accent: boolean;
   subOffset: number;
+  subSize: number;
 }) {
   const cx = x + w / 2;
   return (
@@ -77,7 +81,7 @@ function Box({
           >
             {title}
           </text>
-          <text x={cx} y={y + h / 2 + subOffset} textAnchor="middle" fontSize="12" {...DIM}>
+          <text x={cx} y={y + h / 2 + subOffset} textAnchor="middle" fontSize={subSize} {...DIM}>
             {sub}
           </text>
         </>
@@ -106,11 +110,11 @@ export function box(
   sub = '',
   accent = false,
 ) {
-  return <Box x={x} y={y} w={w} h={h} title={title} sub={sub} accent={accent} subOffset={18} />;
+  return <Box x={x} y={y} w={w} h={h} title={title} sub={sub} accent={accent} subOffset={18} subSize={12} />;
 }
 
 export function vbox(y: number, h: number, title: string, sub = '', accent = false) {
-  return <Box x={0} y={y} w={NW} h={h} title={title} sub={sub} accent={accent} subOffset={17} />;
+  return <Box x={0} y={y} w={NW} h={h} title={title} sub={sub} accent={accent} subOffset={17} subSize={NARROW_MIN_TEXT} />;
 }
 
 export function arrow(x1: number, y: number, x2: number, label: string, accent = false, dy = 11) {
@@ -144,7 +148,7 @@ export function vdown(y1: number, y2: number, label: string, accent = false, x =
         strokeWidth="1.6"
         marker={accent ? 'accent' : 'neutral'}
       />
-      <text x={x + 14} y={ly ?? (y1 + y2) / 2 + 4} fontSize="12" {...DIM}>
+      <text x={x + 14} y={ly ?? (y1 + y2) / 2 + 4} fontSize={NARROW_MIN_TEXT} {...DIM}>
         {label}
       </text>
     </>
