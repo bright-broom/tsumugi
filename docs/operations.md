@@ -162,7 +162,7 @@ npm run backup:restore-test -- --backup .artifacts/backup/tsumugi-<日時>-<comm
 ```
 
 - 未コミットの変更があるとバックアップは作られない。コミットしてから実行する
-- 復元テストの既定は `--deps ci --build build`（別環境での復元と同じ条件。依存のダウンロードに通信とディスクが要る）。手元のディスクが足りないときは `--deps link`（`package-lock.json` が同じときだけ既存の `node_modules` を参照。所要時間にインストールを含まない）や `--build typecheck` を使い、その条件を記録に書く
+- 復元テストの既定は `--deps ci --build build`（別環境での復元と同じ条件。依存のダウンロードに通信とディスクが要る）。手元のディスクや通信を節約するときは、`package-lock.json` が同じ場合に限り既存の `node_modules` を使う：`--deps clone`（macOS の APFS クローン。ビルドまで確かめられる）か `--deps link`（シンボリックリンク。Next.js の Turbopack がプロジェクト外を指すリンクを拒否するため `--build typecheck` まで）。どちらも所要時間にインストールを含まないので、その条件を記録に書く
 - 独立した保管先に写すときは、ディレクトリごと（3 ファイル）写す。写した先で `shasum -a 256 -c SHA256SUMS` で照合できる
 
 ### 復旧の手順（リポジトリを失ったとき）
@@ -176,7 +176,9 @@ npm run backup:restore-test -- --backup .artifacts/backup/tsumugi-<日時>-<comm
 
 | 日付 | 実行者・場所 | バックアップ（commit） | 条件（deps・build） | 結果 | 所要時間（合計） | 備考 |
 |---|---|---|---|---|---|---|
-|  |  |  |  |  |  |  |
+| 2026-09-16 | 作業エージェント・作業用の Mac（macOS 15.8） | `5d88646` | clone・build | 成功 | 15.6 秒（依存の複製 7.6・ビルド 7.6） | インストール時間を含まない。内訳は [ADR 0045](architecture/0045-weekly-backup.md#復元テストの実測) |
+| 2026-09-16 | 作業エージェント・作業用の Mac（macOS 15.8） | `5d88646` | link・typecheck | 成功 | 1.0 秒 | `link` と `build` の組み合わせは Turbopack が拒否（開始前にエラーにした） |
+| （初回の週次実行） | GitHub Actions | | ci・build | | | `npm ci` を含む所要時間をここに書く |
 
 ### 保管先の記録
 

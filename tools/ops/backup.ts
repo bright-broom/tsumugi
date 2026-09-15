@@ -93,7 +93,12 @@ export interface Manifest {
 }
 
 export const git = (cwd: string, args: readonly string[]) =>
-  execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
+  execFileSync('git', args, {
+    cwd,
+    encoding: 'utf8',
+    stdio: 'pipe',
+    maxBuffer: 256 * 1024 * 1024,
+  });
 
 export const trackedFiles = (cwd: string) =>
   git(cwd, ['ls-files', '-z']).split('\0').filter(Boolean);

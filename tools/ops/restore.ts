@@ -18,7 +18,7 @@ import {
   type Manifest,
 } from './backup';
 
-export type DepsMode = 'ci' | 'link' | 'none';
+export type DepsMode = 'ci' | 'clone' | 'link' | 'none';
 export type BuildMode = 'build' | 'typecheck' | 'none';
 
 interface RestoreStep {
@@ -59,6 +59,10 @@ const tail = (error: unknown) => {
 
 export function restoreTest(options: RestoreOptions): RestoreReport {
   const { backupDir, workDir, deps, build } = options;
+  if (deps === 'link' && build === 'build')
+    throw new Error(
+      '--deps link ではビルドを確かめられない（Next.js の Turbopack はプロジェクトの外を指す node_modules のリンクを拒否する）。--deps ci か clone を使う',
+    );
   const repo = join(workDir, 'repo');
   const steps: RestoreStep[] = [];
   const startedAt = new Date();
@@ -140,14 +144,22 @@ export function restoreTest(options: RestoreOptions): RestoreReport {
         return 'npm ci';
       }
       const source = options.sourceRoot;
-      if (!source) throw new Error('--deps link には借りる元のディレクトリが要る');
+      if (!source) throw new Error(`--deps ${deps} には借りる元のディレクトリが要る`);
       const lock = 'package-lock.json';
       if (digest(join(repo, lock)).sha256 !== digest(join(source, lock)).sha256)
         throw new Error(
           `${lock} が借りる元と違うため node_modules を共有できない（--deps ci を使う）`,
         );
+      if (deps === 'clone') {
+        if (process.platform !== 'darwin')
+          throw new Error('--deps clone は macOS（APFS のクローン）でだけ使える');
+        execFileSync('cp', ['-cR', join(source, 'node_modules'), join(repo, 'node_modules')], {
+          stdio: 'pipe',
+        });
+        return `package-lock.json が一致したため ${source}/node_modules を APFS のクローンで複製（インストール時間は含まない）`;
+      }
       symlinkSync(join(source, 'node_modules'), join(repo, 'node_modules'), 'dir');
-      return `package-lock.json が一致したため ${source}/node_modules を参照（インストール時間は含まない）`;
+      return `package-lock.json が一致したため ${source}/node_modules をシンボリックリンクで参照（インストール時間は含まない）`;
     }) &&
     run('ビルドの確認', () => {
       if (build === 'none') return '省略（--build none）';

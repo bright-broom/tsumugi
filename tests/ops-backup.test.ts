@@ -187,4 +187,10 @@ describe('バックアップと復元テスト', () => {
       '.env.local',
     );
   });
+
+  it('node_modules のシンボリックリンクとビルドの組み合わせは始める前に拒否する', () => {
+    expect(() =>
+      restoreTest({ backupDir: '.', workDir: '.', deps: 'link', build: 'build' }),
+    ).toThrow('Turbopack');
+  });
 });

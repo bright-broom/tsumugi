@@ -2,11 +2,12 @@
  * バックアップの復元テスト（#31、ADR 0045）。
  *
  *     npm run backup:restore-test -- --backup <バックアップのディレクトリ>
- *         [--work <復元先の親>] [--deps ci|link|none] [--build build|typecheck|none] [--keep] [--report <file>]
+ *         [--work <復元先の親>] [--deps ci|clone|link|none] [--build build|typecheck|none] [--keep] [--report <file>]
  *
  * 既定は、依存を npm ci で入れ直してビルドまで行う（別環境での復元と同じ条件）。
- * --deps link は package-lock.json が同じときだけこのリポジトリの node_modules を参照する（ディスク節約用。
- * 所要時間にインストールを含まない）。結果は <バックアップ>/restore-report.json に書く。
+ * ディスクや通信を節約するときは、package-lock.json が同じ場合に限り、このリポジトリの node_modules を
+ * --deps clone（macOS の APFS クローン。ビルド可）か --deps link（シンボリックリンク。Turbopack が拒否するため
+ * --build typecheck まで）で使う。どちらも所要時間にインストールを含まない。結果は <バックアップ>/restore-report.json に書く。
  */
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -34,7 +35,7 @@ const pick = <T extends string>(value: string, allowed: readonly T[], flag: stri
 try {
   if (!values.backup)
     throw new Error(
-      '使い方: npm run backup:restore-test -- --backup <dir> [--deps ci|link|none] [--build build|typecheck|none]',
+      '使い方: npm run backup:restore-test -- --backup <dir> [--deps ci|clone|link|none] [--build build|typecheck|none]',
     );
   const backupDir = resolve(values.backup);
   if (values.work) mkdirSync(resolve(values.work), { recursive: true });
@@ -44,7 +45,7 @@ try {
   const report = restoreTest({
     backupDir,
     workDir,
-    deps: pick<DepsMode>(values.deps, ['ci', 'link', 'none'], '--deps'),
+    deps: pick<DepsMode>(values.deps, ['ci', 'clone', 'link', 'none'], '--deps'),
     build: pick<BuildMode>(values.build, ['build', 'typecheck', 'none'], '--build'),
     sourceRoot: ROOT,
     keep: values.keep,
