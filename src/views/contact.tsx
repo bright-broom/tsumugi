@@ -3,6 +3,7 @@ import PhoneLink from '@/components/PhoneLink';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
 import { INDUSTRIES } from '@/content/nav';
+import { INQUIRY_FIELDS } from '@/content/inquiry';
 import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Note from '@/components/Note';
@@ -114,6 +115,19 @@ export default function ContactPage({ copy, route }: PageProps<'contact'>) {
             <textarea id="f-msg" name="message" required></textarea>
             <p className="hint">{copy.hint2}</p>
           </div>
+          {!disabled && (
+            // 迷惑投稿対策。hidden で表示・読み上げ・タブ移動から外し、値が入っていれば受付側で隔離する（ADR 0032）
+            <div hidden>
+              <label htmlFor="f-hp">{copy.honeypotLabel}</label>
+              <input
+                type="text"
+                id="f-hp"
+                name={INQUIRY_FIELDS.honeypot}
+                tabIndex={-1}
+                autoComplete="off"
+              />
+            </div>
+          )}
           {disabled ? (
             <button className="btn btn-1" type="submit" disabled>
               {copy.btn2}

@@ -11,7 +11,8 @@ const files = (directory: string): string[] =>
         ? [join(directory, entry.name)]
         : [],
   );
-const problems = files(join(root, 'src')).flatMap((file) =>
+// services/ renders user-facing HTML too, so its copy must also come from the catalog.
+const problems = ['src', 'services'].flatMap((dir) => files(join(root, dir))).flatMap((file) =>
   inspectSource(relative(root, file), readFileSync(file, 'utf8')),
 );
 if (problems.length) {

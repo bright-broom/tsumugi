@@ -1,0 +1,55 @@
+/** Japanese copy: inquiry intake responses and staff notifications. Keep keys stable; placeholders are named runtime values. */
+export default {
+  titleAccepted: 'お問い合わせを受け付けました｜{brand}',
+  headingAccepted: 'お問い合わせを受け付けました',
+  acceptedLede: '{responsePromise}に、いただいた連絡先へご返信します。',
+  receiptLabel: '受付番号',
+  receivedLabel: '受付日時',
+  deadlineLabel: 'ご返信の期限',
+  deadlineValue: '{deadline}まで',
+  deadlineFallback: '{responsePromise}',
+  acceptedKeep: '受付番号は、お電話やメールで状況をお尋ねになるときにお伝えください。',
+  duplicateNote:
+    '同じ内容のお問い合わせを、すでに受け付けています。二重には受け付けていないので、もう一度送信する必要はありません。',
+  noReplyHeading: '期限を過ぎても返信がないとき',
+  noReplyBody:
+    '返信のメールが迷惑メールに振り分けられている場合があります。お手数ですが、受付番号を添えて次の連絡先へご連絡ください。',
+  alternativesHeading: 'お電話・メールでのご連絡',
+  phoneLabel: 'お電話',
+  phoneHours: '受付時間：{hours}',
+  emailLabel: 'メール',
+  backToSite: 'サイトのトップに戻る',
+  backToContact: '相談するページに戻る',
+  titleInvalid: '入力内容を確認してください｜{brand}',
+  headingInvalid: '入力内容を確認してください',
+  invalidLede:
+    'まだ受け付けていません。次の項目を直して、もう一度送信してください。入力した内容は、このページに残っています。',
+  errorRequired: '{field}を入力してください。',
+  errorTooLong: '{field}は{max}文字以内で入力してください。',
+  errorTel: 'お電話番号は、市外局番から10桁か11桁の数字で入力してください。',
+  errorEmail: 'メールアドレスの形式を確認してください。',
+  errorIndustry: '業種は一覧から選んでください。',
+  submitAgain: 'この内容で送信する',
+  titleUnavailable: 'ただいま受け付けできません｜{brand}',
+  headingUnavailable: 'ただいま受け付けできません',
+  unavailableLede: '受付の仕組みに障害が起きていて、送信内容を保存できませんでした。',
+  unavailableNext:
+    '時間をおいてもう一度送信していただくか、お電話かメールでご連絡ください。お手数をおかけして申し訳ありません。',
+  unavailableCopyLabel: '送信しようとした内容（コピーしてお使いください）',
+  titleLimited: '少し時間をおいてください｜{brand}',
+  headingLimited: '少し時間をおいてください',
+  limitedLede:
+    '短い時間に送信が続いたため、受付を一時的に止めています。約{minutes}分後にもう一度送信してください。',
+  titleRejected: '送信を受け付けられませんでした｜{brand}',
+  headingRejected: '送信を受け付けられませんでした',
+  rejectedLede:
+    '送信の形式を確認できませんでした。相談するページのフォームから、もう一度送信してください。',
+  dateTime: '{year}年{month}月{day}日 {hour}:{minute}',
+  notificationSubject: '【問い合わせ】受付番号 {receiptId}',
+  notificationReceived: '受付日時：{received}',
+  notificationDeadline: '返信期限：{deadline}',
+  notificationNoDeadline: '返信期限：計算できませんでした（営業日カレンダーの期間を確認してください）',
+  notificationShort:
+    '問い合わせを受け付けました。受付番号 {receiptId}、返信期限 {deadline}。内容は受付の保存先で確認してください。',
+  notificationNotProvided: '（未入力）',
+} as const;
