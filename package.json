@@ -24,6 +24,7 @@
     "styles:watch": "tsx tools/scripts/build-styles.ts --watch",
     "test:pricing": "tsx --test tools/pricing/model.test.ts",
     "report:pricing": "tsx tools/pricing/report.ts",
+    "ops:estimate": "tsx tools/ops/estimate/cli.ts",
     "check:unused": "knip --config config/knip.config.ts"
   },
   "dependencies": {

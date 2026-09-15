@@ -51,6 +51,8 @@
 
 - [0023 図解を型付き React / SVG に移す](0023-react-diagrams.md)
 
+- [0036 社内ツールを tools/ops の CLI とし、見積もりは公開料金だけで計算する](0036-internal-ops-tools-and-estimates.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |
