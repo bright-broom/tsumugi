@@ -3,33 +3,56 @@
    一度しか使わないページ固有の余白はここに置き、トークンには上げない。
    ══════════════════════════════════════════════════════════════════ */
 @layer screens {
-  /* 文字のない背景画とカタログのコピーを組み合わせ、二柱を切り取らない。 */
+  /* 文字のない背景画にカタログのコピーを重ね、すべての幅でコピーを絵の中に収める（ADR 0029）。
+     区画の高さは、絵の比率を持つ ::before と、コピーの高さの大きいほう。
+     絵は区画いっぱいに cover で敷くので、コピーの下に茶色い帯はできない。
+     文字の大きさ・幅・余白は区画の幅（cqw）に連動し、ブレークポイントで跳ばない。 */
   .brand-hero {
-    @apply relative p-[0] bg-ink text-white;
+    @apply relative grid grid-cols-[minmax(0,_1fr)] p-[0] bg-ink text-white;
     container-type: inline-size;
   }
+  /* 絵の比率の高さ。狭い画面では 22rem を下限にして絵を縦に伸ばし、左右を切ってコピーの場所を作る。
+     aspect-ratio と最小の高さを併用すると最小の幅に換算されて横にはみ出すので、幅から高さを計算する */
+  .brand-hero::before {
+    content: '';
+    @apply col-[1] row-[1];
+    height: max(22rem, 100cqw * 958 / 1641);
+  }
   .brand-hero-artwork {
-    @apply w-[100%] h-[auto] rounded-[0];
+    @apply absolute inset-[0] w-[100%] h-[100%] rounded-[0] object-cover;
+    /* 左右を切る幅でも、右寄りの二柱を残す */
+    object-position: 78% 50%;
+  }
+  /* 判読性のための陰影。コピーが載る左側を暗くし、二柱に向けて薄くする。顔との重なりは許容する */
+  .brand-hero::after {
+    content: '';
+    @apply absolute inset-[0] pointer-events-none;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-ink) 58%, transparent),
+      color-mix(in srgb, var(--color-ink) 34%, transparent) 55%,
+      transparent 80%
+    );
   }
   .brand-hero-copy {
-    @apply p-[28px_var(--spacing-pad-mb)_32px];
+    --hero-inset: max(var(--spacing-pad-mb-head), 5cqw);
+    @apply relative z-[1] col-[1] row-[1] self-center py-[32px] font-brand;
+    margin-inline-start: var(--hero-inset);
+    /* PC は絵の幅の 55%。狭い画面では左右の余白を残して広げる */
+    width: min(100cqw - 2 * var(--hero-inset), max(55cqw, 26rem));
+    text-shadow:
+      0 1px 2px color-mix(in srgb, var(--color-ink) 80%, transparent),
+      0 0 0.9em color-mix(in srgb, var(--color-ink) 60%, transparent);
   }
   .brand-hero-copy h1 {
-    @apply text-hero-mb leading-hero mb-[16px];
+    @apply leading-[1.36] m-[0];
+    font-size: max(var(--text-hero-mb), 6.4cqw);
+    margin-block-end: max(12px, 2cqw);
   }
   .brand-hero-copy p {
-    @apply text-body;
-  }
-  @media (min-width: 769px) {
-    .brand-hero-copy {
-      @apply absolute left-[5%] top-[26%] w-[55%] p-[0];
-    }
-    .brand-hero-copy h1 {
-      @apply font-brand text-[6.4cqw] leading-[1.36] mb-[2cqw];
-    }
-    .brand-hero-copy p {
-      @apply font-brand text-[2.15cqw] leading-[1.65] m-[0];
-    }
+    @apply leading-[1.65] m-[0];
+    font-size: max(var(--text-body), 2.15cqw);
+    word-break: auto-phrase;
   }
 
   /* ── ヒーロー。PCは 45/67.5px、モバイルは 24/36px（06 文字と書体） */
