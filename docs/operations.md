@@ -127,6 +127,69 @@ npm run check:live -- --url https://<本番ドメイン>
 
 ---
 
+## バックアップと復元
+
+対象・除外・保管先の制約の判断は [ADR 0045](architecture/0045-weekly-backup.md)。
+
+### 何を残すか
+
+| 区分 | 対象 |
+|---|---|
+| ソース | `src/`・`tools/`・`tests/` |
+| 素材 | `src/assets/`・`public/` |
+| 文書 | `docs/`・ルートの `*.md` |
+| 設定 | ルートの設定ファイル・`config/`・`.github/`・`package-lock.json` |
+| 履歴 | HEAD までの全コミット |
+
+**残さないもの**：`.env*`（`.env.example` を除く）・`.vercel/`・`node_modules/`・生成物（`out/`・`.next/`・`.artifacts/`・ビルドが書く `public/theme.css` など）。これらが Git に追跡されていたり、秘密鍵やトークンの形の文字列があったりすると、バックアップは作られずに止まる。
+
+**このリポジトリと、その週次の成果物に置いてはいけないもの**：CMS のデータ、問い合わせの内容、顧客の非公開の素材、秘密情報。Public リポジトリの成果物はリポジトリを読める人なら取得できる。これらの保管先はオーナーが別に決める（「保管先の記録」）。
+
+### 週次の自動実行
+
+`.github/workflows/weekly-backup.yml` が毎週月曜 3:23（日本時間）に、バックアップ → 復元テスト（`npm ci` とビルドを含む） → 成果物の保存（90 日）を行う。
+
+- 結果：Actions → Weekly backup の実行一覧。ジョブの要約に各段階の秒数が出る
+- 成果物：実行の画面の Artifacts にある `tsumugi-backup-<番号>`（`repo.bundle`・`manifest.json`・`SHA256SUMS`・`restore-report.json`）
+- 失敗：GitHub の標準の Actions 失敗通知（cron を最後に変更した人に届く）
+- 月次の確認（[手動確認](#手で見るもの月に一度と公開大きな変更の直後)と同じ日）：直近 4 週の実行が成功しているか。止まっていたら Actions の画面で有効に戻す
+
+### 手元で取る・復元を試す
+
+```bash
+npm run backup                                   # .artifacts/backup/tsumugi-<日時>-<commit>/
+npm run backup:restore-test -- --backup .artifacts/backup/tsumugi-<日時>-<commit>
+```
+
+- 未コミットの変更があるとバックアップは作られない。コミットしてから実行する
+- 復元テストの既定は `--deps ci --build build`（別環境での復元と同じ条件。依存のダウンロードに通信とディスクが要る）。手元のディスクが足りないときは `--deps link`（`package-lock.json` が同じときだけ既存の `node_modules` を参照。所要時間にインストールを含まない）や `--build typecheck` を使い、その条件を記録に書く
+- 独立した保管先に写すときは、ディレクトリごと（3 ファイル）写す。写した先で `shasum -a 256 -c SHA256SUMS` で照合できる
+
+### 復旧の手順（リポジトリを失ったとき）
+
+1. 最新の成功したバックアップ（成果物か独立した保管先の写し）を取り出し、`shasum -a 256 -c SHA256SUMS` で照合する
+2. `npm run backup:restore-test -- --backup <dir> --keep` で復元と照合・ビルドまでを行い、表示された復元先を使う（または `git clone repo.bundle <dir>` で取り出し、`manifest.json` の `commit` を checkout する）
+3. 新しいリモートリポジトリを作り、復元したリポジトリを push する。Vercel・GitHub の設定（`SITE_URL`、Dependabot、ブランチの保護）はリポジトリに含まれないので、「外部設定の記録」を見て設定し直す
+4. `npm run validate && npm run verify` を通し、配備後に `npm run check:live` を実行する
+
+### 復元テストの記録
+
+| 日付 | 実行者・場所 | バックアップ（commit） | 条件（deps・build） | 結果 | 所要時間（合計） | 備考 |
+|---|---|---|---|---|---|---|
+|  |  |  |  |  |  |  |
+
+### 保管先の記録
+
+| データ | 保管先 | 公開の有無・暗号化 | 保持期間 | 決めた日・決めた人 |
+|---|---|---|---|---|
+| リポジトリ（ソース・素材・文書・設定） | GitHub の週次成果物（90 日） | 公開（Public リポジトリと同じ内容） | 90 日 | 2026-09-16（ADR 0045、仮） |
+| リポジトリの独立した写し |  |  |  |  |
+| CMS のデータ |  |  |  |  |
+| 問い合わせのデータ |  |  |  |  |
+| 顧客の非公開の素材 |  |  |  |  |
+
+---
+
 ## 公開後の監視
 
 判断と「GitHub の標準の通知で足りるか」の評価は [ADR 0046](architecture/0046-post-launch-monitoring.md)。

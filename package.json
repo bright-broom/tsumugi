@@ -26,7 +26,9 @@
     "report:pricing": "tsx tools/pricing/report.ts",
     "check:unused": "knip --config config/knip.config.ts",
     "check:live": "tsx tools/ops/cli/check-live.ts",
-    "monitor": "tsx tools/ops/cli/monitor.ts"
+    "monitor": "tsx tools/ops/cli/monitor.ts",
+    "backup": "tsx tools/ops/cli/backup.ts",
+    "backup:restore-test": "tsx tools/ops/cli/restore-test.ts"
   },
   "dependencies": {
     "clsx": "2.1.1",
