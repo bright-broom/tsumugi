@@ -12,6 +12,7 @@
     "verify": "tsx tools/verify/verify.ts",
     "tokens": "tsx tools/scripts/build-tokens.ts",
     "og": "tsx tools/scripts/og.ts",
+    "og:check": "tsx tools/ops/cli/og-check.ts",
     "lint": "eslint . --config config/eslint.config.ts --max-warnings=0",
     "test": "vitest run --config config/vitest.config.ts",
     "test:watch": "vitest --config config/vitest.config.ts",
@@ -24,7 +25,11 @@
     "styles:watch": "tsx tools/scripts/build-styles.ts --watch",
     "test:pricing": "tsx --test tools/pricing/model.test.ts",
     "report:pricing": "tsx tools/pricing/report.ts",
-    "check:unused": "knip --config config/knip.config.ts"
+    "check:unused": "knip --config config/knip.config.ts",
+    "check:live": "tsx tools/ops/cli/check-live.ts",
+    "monitor": "tsx tools/ops/cli/monitor.ts",
+    "backup": "tsx tools/ops/cli/backup.ts",
+    "backup:restore-test": "tsx tools/ops/cli/restore-test.ts"
   },
   "dependencies": {
     "clsx": "2.1.1",

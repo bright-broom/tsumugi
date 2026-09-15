@@ -83,7 +83,7 @@
 | `terms.html` の弁護士確認 | 下書きの文面を確認してもらって確定する。フリーランス法第4条（書面交付義務）への対応も同時に。新料金の支払・変更枠・修補・解除条件を確認する。自社24回分割の新規受付は行わない。確認後に `content/config.ts` の `LEGAL_APPROVALS`（terms・legal）へ版・承認日・確認者の役割・文面の SHA-256 を記録する。記録が揃うまで下書きの注意が出続け、本番モードは FAIL（ADR 0024） | `src/i18n/locales/ja/terms.ts`、ガイドライン「8.1」 |
 | `legal.html` の事業者情報 | 販売事業者名・運営責任者・所在地が仮の値。開業届／登記のあとに差し替える | `config.ts` |
 | 屋号の確認 | 商標（J-PlatPat 第42類・第35類）・同名法人（法人番号公表サイト）・ドメイン | [messaging-and-pricing.md「屋号」](product/messaging-and-pricing.md) |
-| 本番公開と独自ドメイン | Vercel へのプレビュー配備は実施。本番の事業者情報を確定し、独自ドメインを設定して公開する。`◯◯.vercel.app` のまま納品しない | [operations.md「Vercel に載せるとき」](operations.md) |
+| 本番公開と独自ドメイン | Vercel へのプレビュー配備は実施。本番の事業者情報を確定し、独自ドメインを設定して公開する。`◯◯.vercel.app` のまま納品しない。名義・DNS・Vercel のドメイン設定・公開承認は外部作業で未実施（記録欄は空欄）。公開後は `npm run check:live -- --url https://<ドメイン>` で DNS・証明書・canonical・sitemap・404・実行時 JS を確かめる（ADR 0044） | [operations.md「独自ドメインで本番公開する」](operations.md) |
 
 ### B. 公開のあとに
 
@@ -93,13 +93,15 @@
 | 仕様20項目の人の確認 | 人の確認・外部接続の確認が必要な18項目の記録を `content/acceptance.ts` に残す（GBP・通知2系統など）。自社サイトで対象外にする項目もオーナーが判断して記録する | ADR 0026 |
 | 制作事例 | 1号案件の実測値（LCP・Google ビジネスプロフィールの閲覧数・問い合わせ件数）を `works.html` に入れる | `src/views/works.tsx` |
 | 返答時間の実績 | 計測を始めてから `RESPONSE_ACTUAL` に書く（測っていない数字は書かない） | `config.ts` |
+| 公開後の監視を動かす | リポジトリ変数 `SITE_URL` を設定すると毎時の監視（死活・証明書・robots・sitemap・応答時間）が動く。Search Console の登録・実データの確認・ドメイン期限は手動。監視の担当と通知先を決める（ADR 0046） | [operations.md「公開後の監視」](operations.md) |
+| バックアップの保管先 | 週次のバックアップと復元テストは GitHub Actions で実装（成果物は 90 日、公開の内容だけ）。GitHub 以外の独立した保管先と、CMS・問い合わせのデータの非公開の保管先はオーナーが決める（ADR 0045） | [operations.md「バックアップと復元」](operations.md) |
 
 ### C. 開発の基盤
 
 | 課題 | やること | 手がかり |
 |---|---|---|
 | ヒーロー画像の本採用 | 絵と文字の分離は完了。生成した背景画自体を最終素材として採用するか判断する | [ADR 0019](architecture/0019-complete-i18n.md)、`src/assets/hero/README.md` |
-| OGPの他OSでの字形再現 | 今回の配色更新ではmacOSの既存フォント設定・Playwright Chromiumを生成環境として採用し、PNG23枚・SVG1枚を同期した（ADR 0014）。別OSでも同一画像にするには、フォントと生成環境の固定が必要 | `tools/scripts/og.ts`、[design.md「共有カード」](product/design.md) |
+| OGPの他OSでの字形再現 | 2026-09-16、macOS 15.8・Playwright 1.63.0 で一時ディレクトリに再生成し、コミット済みの PNG 23 枚・SVG 1 枚とバイト一致を確認（書体はヒラギノ角ゴシック）。この環境を正本とし、`npm run og:check` で再現性を確かめる。別 OS 用の書体（Noto Sans CJK JP など）への切り替えは全カードの字形が変わるため、オーナーの承認待ち（ADR 0047） | `tools/scripts/og.ts`、[ADR 0047](architecture/0047-og-image-environment.md) |
 | マージ済みブランチの削除 | リモートの `feat/nextjs-migration`・`refactor/directory-structure` を消す | `git push origin --delete <ブランチ名>` |
 | Next.js を上げるときの確認 | `unstable_runtimeJS` は将来の版で変わりうる。上げたら合格ラインを全部通す | [ADR 0001](architecture/0001-pages-router.md) |
 | 共通部分のパッケージ分割 | **顧客サイトが2件目になったときに**、`content/` を境に切り出す。それまではやらない | [ADR 0002](architecture/0002-directory-layers.md) |

@@ -73,6 +73,14 @@
 
 - [0035 受付サービスの配備先・保存先・通知手段の候補（オーナー判断・未決）](0035-inquiry-hosting-candidates.md)
 
+- [0044 独自ドメインでの公開後の確認をコマンドにする](0044-live-domain-checks.md)
+
+- [0045 毎週のバックアップと復元テスト](0045-weekly-backup.md)
+
+- [0046 公開後の監視を GitHub Actions の定期実行で始める](0046-post-launch-monitoring.md)
+
+- [0047 OGP 画像の生成環境を固定し、再現性を検査する](0047-og-image-environment.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |
