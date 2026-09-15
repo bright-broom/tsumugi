@@ -77,6 +77,18 @@ describe('telephone presentation', () => {
     expect(html).toContain('aria-hidden="true"');
     expect(html.replace(/<[^>]*>/g, '')).toBe(TEL);
   });
+  it('uses the confirmed business number for display and dialing (Issue #12)', () => {
+    expect(TEL).toBe('080-4560-1124');
+    expect(TEL_LINK).toBe('08045601124');
+  });
+  it.each(ALL_ROUTES)('leaves no placeholder or foreign tel: link on $file', (route) => {
+    const html = renderToStaticMarkup(<Page {...pageProps(route.id)} />);
+    const links = [...html.matchAll(/href="tel:([^"]*)"/g)].map((m) => m[1]);
+    expect(links.length).toBeGreaterThan(0);
+    expect(new Set(links)).toEqual(new Set(['08045601124']));
+    expect(html).toContain('080-4560-1124');
+    expect(html).not.toMatch(/000-0000-0000|00000000000/);
+  });
 });
 
 describe('copy regression guard', () => {

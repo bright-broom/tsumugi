@@ -34,7 +34,8 @@
 | `src/content/config.ts` の設定 | いまの値 | 影響 |
 |---|---|---|
 | `PLACEHOLDER` | `true` | 全ページの上部に「準備中」の帯が出る。`terms.html` に「弁護士確認前」の注意書きが出る |
-| `DOMAIN` / `TEL` / `EMAIL` / 住所 | `example.jp` / `000-0000-0000` / `info@example.jp` / 仮の値 | canonical・OGP・JSON-LD がすべて仮のドメインを指す |
+| `TEL` | `080-4560-1124`（確定。Issue #12 の 2026-09-15 追記） | 表示・`tel:08045601124`・JSON-LD が `i18n/locales/ja/config.ts` の1か所から出る |
+| `DOMAIN` / `EMAIL` / 住所 | `example.jp` / `info@example.jp` / 仮の値 | canonical・OGP・JSON-LD がすべて仮のドメインを指す |
 | `FORM_ENDPOINT` | 空 | 問い合わせフォームが送信できない |
 | `LINE_URL` | 空 | LINE の導線は出ない |
 | `RESPONSE_ACTUAL` | `null` | 返答時間の実績は出さない（まだ測っていない） |

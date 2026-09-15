@@ -6,7 +6,7 @@ export default {
   brandReading: 'つむぎ',
   area: '全国',
   serviceNote: '打ち合わせはオンラインと電話。全国どこでもお受けします。',
-  phoneNumber: '000-0000-0000',
+  phoneNumber: '080-4560-1124',
   email: 'info@example.jp',
   postalCode: '000-0000',
   phoneHours: '平日 9:00〜18:00',
