@@ -49,6 +49,8 @@
 
 - [0022 料金モデルも TypeScript の検査対象に含める](0022-pricing-typescript.md)
 
+- [0023 図解を型付き React / SVG に移す](0023-react-diagrams.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |

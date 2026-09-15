@@ -1,4 +1,3 @@
-import { subsidyTimeline } from '@/content/diagrams';
 import { describe, expect, it } from 'vitest';
 import { japaneseSpacing } from '@/i18n/typography';
 import { spaceHtml } from '@/i18n/html-typography';
@@ -7,14 +6,6 @@ import { getMessages } from '@/i18n/catalog';
 import * as P from '@/content/prices';
 
 describe('Japanese typography', () => {
-  it('retains short dates in diagrams when catalog dates contain spaces', () => {
-    expect(subsidyTimeline('2026 年 12 月 4 日（金）', '2026 年 12 月 15 日（火）')).toBe(
-      subsidyTimeline('2026年12月4日（金）', '2026年12月15日（火）'),
-    );
-    expect(subsidyTimeline('2026 年 12 月 4 日（金）', '2026 年 12 月 15 日（火）')).toContain(
-      '12/4',
-    );
-  });
   it.each([
     ['制作79,800円／月4,800円', '制作 79,800 円／月 4,800 円'],
     ['日本語ReactとNext.jsの3ページ', '日本語 React と Next.js の 3 ページ'],

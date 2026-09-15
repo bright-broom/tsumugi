@@ -50,8 +50,8 @@ describe('route completeness', () => {
     expect(props.copy).toEqual(getMessages()[route.template]);
     expect(Object.keys(props.messages).sort()).toEqual([
       'cta',
+      'diagrams',
       'entry',
-      'figure',
       'plans',
       'shell',
       'table',

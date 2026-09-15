@@ -2,7 +2,7 @@ import type { Messages } from '@/i18n/catalog';
 import type { RouteId, TemplateId } from '@/routing/registry';
 export type SharedMessages = Pick<
   Messages,
-  'shell' | 'cta' | 'entry' | 'plans' | 'table' | 'vs' | 'figure'
+  'shell' | 'cta' | 'entry' | 'plans' | 'table' | 'vs' | 'diagrams'
 >;
 /** Public, serializable build input; only this page and common UI copy are included. */
 export interface PageProps<K extends TemplateId> {

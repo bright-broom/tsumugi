@@ -116,7 +116,7 @@ flowchart TD
 | ページの構造・共通部品             | [src/views/](src/views/)・[src/components/](src/components/)                         |
 | 色・書体・寸法                     | [src/styles/design.tokens.json](src/styles/design.tokens.json)                       |
 | レイアウト・装飾・レスポンシブ表示 | [src/styles/](src/styles/)                                                           |
-| SVG図解の形・座標                  | [src/content/diagrams.ts](src/content/diagrams.ts)                                   |
+| SVG 図解の形・座標                 | [src/components/diagrams/](src/components/diagrams/)                                 |
 | ヒーローの元画像                   | [src/assets/hero/](src/assets/hero/)                                                 |
 | 事業の工数・収支の仮定             | [tools/pricing/](tools/pricing/)・[料金設計](docs/business/pricing-redesign-140h.md) |
 

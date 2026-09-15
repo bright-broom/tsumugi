@@ -1,3 +1,7 @@
+import { LandVsOwn } from '@/components/diagrams/LandVsOwn';
+import { RentVsOwn } from '@/components/diagrams/RentVsOwn';
+import { OwnershipClock } from '@/components/diagrams/OwnershipClock';
+import { SubsidyBar } from '@/components/diagrams/SubsidyBar';
 import Acc from '@/components/Acc';
 import type { IconName } from '@/lib/icons';
 import { pathForFile } from '@/routing/registry';
@@ -7,7 +11,6 @@ import PhoneLink from '@/components/PhoneLink';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
 import * as P from '@/content/prices';
-import * as D from '@/content/diagrams';
 import { INDUSTRIES, IND_IC } from '@/content/nav';
 import Base from '@/layouts/Base';
 import Section from '@/components/Section';
@@ -19,7 +22,6 @@ import Calc from '@/components/Calc';
 import Vs from '@/components/Vs';
 import Entry from '@/components/Entry';
 import Plans from '@/components/Plans';
-import Figure from '@/components/Figure';
 import Icon from '@/components/Icon';
 import type { PageProps } from '@/content/page-props';
 import { HOME_HERO } from '@/content/hero';
@@ -152,7 +154,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           heading={copy.heading}
           lede={copy.lede}
         >
-          <Figure svg={D.landVsOwn()} />
+          <LandVsOwn />
           <Cards cls="g2" items={copy.ownership} />
           <Note heading={copy.heading2}>
             <p>
@@ -189,12 +191,10 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               { name: copy.rowsName4, sub: copy.rowsSub3, amount: 11_000 },
             ]}
           />
-          <Figure
-            svg={D.rentVsOwn(
-              tabelogBasic,
-              P.PORTAL_FEE_DINNER,
-              P.withTax(P.supportMonthlyTotal('run_basic')),
-            )}
+          <RentVsOwn
+            portal={tabelogBasic}
+            fee={P.PORTAL_FEE_DINNER}
+            run={P.withTax(P.supportMonthlyTotal('run_basic'))}
           />
           <Note heading={copy.heading4} kind="good">
             <p>
@@ -397,8 +397,11 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               })}
             </p>
           </div>
-          <Figure
-            svg={D.ownershipClock(one.sub_monthly, one.sub_total, one.our_price, P.COMPARE_MONTHS)}
+          <OwnershipClock
+            subMonthly={one.sub_monthly}
+            subTotal={one.sub_total}
+            ourPrice={one.our_price}
+            months={P.COMPARE_MONTHS}
           />
           <Acc summary={copy.comparisonUi.detail}>
             <Table
@@ -431,7 +434,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           heading={copy.heading13}
           lede={format(copy.lede7, { pSUBSIDYName: P.SUBSIDY.name, sdNet: P.yen(sd.net) })}
         >
-          <Figure svg={D.subsidyBar(sd.total, sd.web, sd.pr, sd.grant, sd.net)} />
+          <SubsidyBar total={sd.total} web={sd.web} pr={sd.pr} grant={sd.grant} net={sd.net} />
           <Note
             heading={format(copy.heading14, { pSUBSIDYAdoptionRate: P.SUBSIDY.adoption_rate })}
             kind="warn"

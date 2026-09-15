@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-15（料金モデルの TypeScript 移行）
+- 最終更新：2026-09-15（図解 6 種類の React / SVG 移行）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -17,7 +17,7 @@
 | 構成 | ルート直下の `src/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
 | 実行時 JS | 全21ページで 0（`postbuild` と `verify` で確認） |
 | 検査 | `npm run verify`：**PASS 602 / WARN 1 / FAIL 0**。WARN は `PLACEHOLDER=true` による1件。`npm run verify -- --static`：PASS 358 / WARN 1 / FAIL 0 |
-| 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 148 件合格 |
+| 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 157 件合格 |
 | 依存の健全性 | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定。Dependabot は ESLint と Node 型定義のメジャー更新だけを除外し、既存の互換性方針を維持（ADR 0003） |
 | 動作を確かめた環境 | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一 |
 | 文言とルート | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004） |
@@ -56,7 +56,7 @@
 
 ### 未実装機能の一覧と進捗
 
-[改善計画 #55](https://github.com/bright-broom/tsumugi/issues/55) は、2026-09-15 のヒーロー・所有／料金比較・表示設定・技術基盤の要望を 9 件と既存の連絡先 Issue #12 に整理したもの。#56 の最初の単位として、料金モデル 3 ファイルの TypeScript 移行と、手書き JavaScript の再混入を防ぐ構造検査を実装・ローカル検証した。図解・装飾本文の React 化とフォント／メニューの操作方針は未完了で、#56 全体を完了扱いにはしない（[ADR 0022](architecture/0022-pricing-typescript.md)）。
+[改善計画 #55](https://github.com/bright-broom/tsumugi/issues/55) は、2026-09-15 のヒーロー・所有／料金比較・表示設定・技術基盤の要望を 9 件と既存の連絡先 Issue #12 に整理したもの。#56 の料金モデルの TypeScript 移行は PR #65 でマージ済み（[ADR 0022](architecture/0022-pricing-typescript.md)）。次の単位として、図解 6 種類の型付き React / SVG への移行を実装・ローカル検証した（[ADR 0023](architecture/0023-react-diagrams.md)）。装飾本文の React 化とフォント／メニューの操作方針は未完了で、#56 全体を完了扱いにはしない。
 
 [監査一覧 #41](https://github.com/bright-broom/tsumugi/issues/41) に、コード・仕様・提供プランを照合した **31件の個別Issue（#10〜#40）** をまとめた。優先度は P1 13件・P2 18件。各Issueに根拠のソース、完了条件、関連課題を記載し、今後の対応状況はIssueで管理する。
 
@@ -108,6 +108,14 @@
 ---
 
 ## 完了した課題
+
+### 2026-09-15 図解の React / SVG 移行（#56 の第 2 段階）
+
+図解 6 種類を `components/diagrams/` に分離し、5 ページの呼び出しを名前付き props に統一。`Figure` の HTML 文字列挿入・正規表現を撤去し、共通の文言をページの入力から Context で受け渡す。矢印 ID は SVG ごとに独立させ、未使用の定義は配信しない。
+
+Node 24.21.0 / npm 12.0.2 で validate と verify が成功。Vitest 157 件・料金モデル 10 件、静的 PASS 358 / WARN 1 / FAIL 0、全項目 PASS 602 / WARN 1 / FAIL 0。WARN は既存の公開前設定。全 21 ページの実行時 JavaScript は 0。
+
+生成物 45 / 50 ファイルと、残り 5 ページの図解以外の HTML は移行前と完全一致。矢印 ID と未使用定義の差を正規化した SVG の構造・文字・配置・色が一致し、幅 1440 / 390 / 320 px × 5 ページの全ページ PNG も 15 条件すべてでバイト一致した。TOP は 102,051 → 101,081 バイトで、ページ容量の基準は変更していない。再ビルドでも全 50 ファイルの SHA-256 が一致し、矢印 ID を含む出力の再現性を確認した。これらはローカルの結果であり、マージと公開反映は PR で確認する。
 
 ### 2026-09-15 料金モデルの TypeScript 移行（#56 の第 1 段階）
 

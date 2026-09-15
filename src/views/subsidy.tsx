@@ -1,15 +1,15 @@
+import { SubsidyBar } from '@/components/diagrams/SubsidyBar';
+import { SubsidyTimeline } from '@/components/diagrams/SubsidyTimeline';
 import { esc, raw } from '@/lib/raw';
 import { ROUTES } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
 import * as P from '@/content/prices';
-import * as D from '@/content/diagrams';
 import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Table from '@/components/Table';
 import Note from '@/components/Note';
 import Acc from '@/components/Acc';
-import Figure from '@/components/Figure';
 import Cta from '@/components/Cta';
 import type { PageProps } from '@/content/page-props';
 
@@ -46,7 +46,7 @@ export default function SubsidyPage({ copy, route }: PageProps<'subsidy'>) {
           caption={copy.caption}
           foot={format(copy.foot, { sdTotal: P.yen(sd.total) })}
         />
-        <Figure svg={D.subsidyBar(sd.total, sd.web, sd.pr, sd.grant, sd.net)} />
+        <SubsidyBar total={sd.total} web={sd.web} pr={sd.pr} grant={sd.grant} net={sd.net} />
         <Note heading={copy.heading3}>
           <p>
             {copy.p}
@@ -93,7 +93,7 @@ export default function SubsidyPage({ copy, route }: PageProps<'subsidy'>) {
       </Section>
 
       <Section eyebrow={copy.eyebrow2} heading={copy.heading8}>
-        <Figure svg={D.subsidyTimeline(S.form4_deadline, S.deadline)} />
+        <SubsidyTimeline form4={S.form4_deadline} deadline={S.deadline} />
         <Acc summary={copy.summary}>
           <ul className="plain">
             <li>
