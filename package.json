@@ -22,7 +22,8 @@
     "deploy:production": "vercel --prod",
     "styles": "tsx tools/scripts/build-styles.ts",
     "styles:watch": "tsx tools/scripts/build-styles.ts --watch",
-    "test:pricing": "node --test tools/pricing/model.test.mjs",
+    "test:pricing": "tsx --test tools/pricing/model.test.ts",
+    "report:pricing": "tsx tools/pricing/report.ts",
     "check:unused": "knip --config config/knip.config.ts"
   },
   "dependencies": {

@@ -28,13 +28,26 @@ const LAYERS = [
 ] as const;
 type Layer = (typeof LAYERS)[number];
 
-const files = (dir: string): string[] =>
+const files = (dir: string, extension = /\.tsx?$/): string[] =>
   readdirSync(dir).flatMap((name) => {
     const p = join(dir, name);
-    return statSync(p).isDirectory() ? files(p) : /\.tsx?$/.test(name) ? [p] : [];
+    return statSync(p).isDirectory() ? files(p, extension) : extension.test(name) ? [p] : [];
   });
 
 const problems: string[] = [];
+// allowJs:false excludes JavaScript from type checking; it does not prevent new JS files.
+const javascript = /\.(?:[cm]?js|jsx)$/;
+const untypedSources = [
+  ...readdirSync(ROOT, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && javascript.test(entry.name))
+    .map((entry) => join(ROOT, entry.name)),
+  ...['src', 'tools', 'config', 'tests'].flatMap((dir) => files(join(ROOT, dir), javascript)),
+];
+for (const file of untypedSources) {
+  problems.push(
+    `${relative(ROOT, file)}: 手書きソースは TypeScript (.ts / .tsx) に統一してください`,
+  );
+}
 const graph = new Map<string, string[]>();
 for (const dir of ['src', 'tools']) {
   for (const f of files(join(ROOT, dir))) {
@@ -112,7 +125,9 @@ function visit(file: string, trail: string[]) {
 for (const file of graph.keys()) visit(file, []);
 
 if (problems.length) {
-  console.error('check-structure: 依存の向きが崩れています\n  ' + problems.join('\n  '));
+  console.error(
+    'check-structure: ソースの配置・形式・依存を確認してください\n  ' + problems.join('\n  '),
+  );
   process.exit(1);
 }
 console.log(`check-structure: ${LAYERS.join(' → ')} の向きを保っています`);

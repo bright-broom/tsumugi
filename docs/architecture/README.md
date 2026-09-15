@@ -47,6 +47,8 @@
 
 - [0021 料金の読み順と和欧文の表記](0021-pricing-and-typesetting.md)
 
+- [0022 料金モデルも TypeScript の検査対象に含める](0022-pricing-typescript.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |

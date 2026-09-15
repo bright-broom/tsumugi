@@ -1,16 +1,18 @@
 # 料金再設計の判断用モデル
 
-採用した料金の写しと、未検証の経営仮定を使う判断用モデル。Node.jsの標準機能だけで実行する。
+採用した料金の写しと、未検証の経営仮定を使う判断用モデル。TypeScript で管理し、サイトと同じ型検査・lint・未使用コード検査を通す。実行には既存の `tsx` と Node.js 24 を使う。
 
 ```sh
-node --test tools/pricing/model.test.mjs
-node tools/pricing/report.mjs
+npm run test:pricing
+npm run --silent report:pricing
 ```
 
 - `proposal.json`: 採用価格の写しと仮定。140時間はユーザー指定。それ以外の時間・費用・解約率・顧客構成は未検証の入力。
-- `model.mjs`: 単価の下限、月の納品容量、本人時間を含む余力、顧客総額、解約を加味した顧客数を計算。
-- `report.mjs`: JSONレポート。工数超過時の収支は追加人員費を含まないため、`feasible: false` のケースを達成可能な利益として扱わない。
-- `model.test.mjs`: 不利な比較、工数超過、本人原価の二重計上、解約率による到達不能、入力値を検査。
+- `model.ts`: 単価の下限、月の納品容量、本人時間を含む余力、顧客総額、解約を加味した顧客数を計算。入力は型付きの計算契約で受け取り、負数・不明なプラン・比較料金の欠落は実行時にも拒否する。
+- `report.ts`: JSON レポート。`--silent` で npm のコマンド案内を抑え、出力をそのまま JSON として保存できる。工数超過時の収支は追加人員費を含まないため、`feasible: false` のケースを達成可能な利益として扱わない。
+- `model.test.ts`: 不利な比較、工数超過、本人原価の二重計上、解約率による到達不能、入力値を検査。
+
+`proposal.json` は TypeScript の JSON import で読み、計算に必要なフィールドの欠落・型の違いを `npm run check` で検出する。外部から任意の JSON を受け付ける入力機能ではない。CI の `npm run validate` はこのモデルのテストも実行する。
 
 詳細は [料金再設計](../../docs/business/pricing-redesign-140h.md)。公開料金の正本は `src/content/prices.ts` のまま。価格と作業枠はサイトのテストで正本との一致を確認する。二つを同時に正本として運用しない。
 
