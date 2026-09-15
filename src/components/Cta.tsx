@@ -1,20 +1,42 @@
-import { href } from '@/routing/registry';
-import PhoneLink from '@/components/PhoneLink';
-import { useMessages } from '@/components/ContentProvider';
+import ContactActionLink from '@/components/ContactAction';
+import { CONTACT_ACTIONS } from '@/content/contact-actions';
+import type { ContactAction } from '@/lib/storefront/contact-actions';
 
-interface Props {
-  primary?: string;
-  where?: string;
-}
+/**
+ * primary は問い合わせの導線に付けるページ固有のラベル。
+ * where で別のページへ送るときは、その行き先を表すラベル（primary）も必ず渡す。
+ */
+type Props = ({ primary?: string; where?: undefined } | { primary: string; where: string }) & {
+  /** 業種別などで優先順を変えるとき。既定は content/contact-actions.ts */
+  actions?: readonly ContactAction[];
+};
 
-export default function Cta({ primary, where = href('contact') }: Props) {
-  const copy = useMessages('cta');
+export default function Cta({ primary, where, actions = CONTACT_ACTIONS.buttons }: Props) {
+  const [first, second] = actions;
   return (
     <div className="btns">
-      <PhoneLink className="btn btn-1" />
-      <a className="btn btn-2" href={where}>
-        {primary ?? copy.cta}
-      </a>
+      {first && (
+        <ContactActionLink
+          action={first}
+          surface="button"
+          className="btn btn-1"
+          contactLabel={where === undefined ? primary : undefined}
+        />
+      )}
+      {where !== undefined ? (
+        <a className="btn btn-2" href={where}>
+          {primary}
+        </a>
+      ) : (
+        second && (
+          <ContactActionLink
+            action={second}
+            surface="button"
+            className="btn btn-2"
+            contactLabel={primary}
+          />
+        )
+      )}
     </div>
   );
 }

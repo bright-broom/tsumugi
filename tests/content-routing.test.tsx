@@ -54,6 +54,7 @@ describe('route completeness', () => {
       'entry',
       'plans',
       'shell',
+      'storefront',
       'table',
       'vs',
     ]);
