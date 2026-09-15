@@ -113,6 +113,7 @@ App Router は静的書き出しでも全ページに約173KB（gzip）の JS �
 | SVG の座標・色・図形 | `src/components/diagrams/` の型付き React / SVG。共通の枠とレスポンシブ切替は `Figure.tsx`、文字は `diagrams` カタログから props / Context 経由で受け取る（ADR 0023） |
 | CSS | `src/styles/`。トークンは `design.tokens.json` が正本 |
 | 配布ファイル | `out/`。手で編集しない |
+| 問い合わせの受付・通知・保持期限（サーバー側） | `services/inquiry/`。フォームの項目名・上限・担当者・保持期間は `src/content/inquiry.ts`、営業日は `src/content/business-calendar.ts`、結果画面と通知の文言は `i18n/locales/ja/inquiry.ts`（ADR 0032〜0034） |
 
 `pages → application → views → layouts → components → content → i18n → routing → lib`
 
@@ -176,13 +177,13 @@ TypeScript 7 の CLI と互換 API の併用理由、依存の overrides は [AD
 
 ## ディレクトリの境界
 
-すべてのコマンドはルートで実行する。`src/` にアプリ、`src/styles/` に中央管理したTailwind、`src/assets/` に公開前の元画像を置く。`public/` はそのまま配信する素材。`tools/scripts/` は開発・生成・構造検査、`tools/verify/` は納品物の検査、`tools/pricing/` は独立した事業モデル。
+すべてのコマンドはルートで実行する。`src/` にアプリ、`src/styles/` に中央管理したTailwind、`src/assets/` に公開前の元画像を置く。`public/` はそのまま配信する素材。`tools/scripts/` は開発・生成・構造検査、`tools/verify/` は納品物の検査、`tools/pricing/` は独立した事業モデル。`services/` は静的サイトとは別に配備するサーバー処理（問い合わせの受付）で、`@/content`・`@/i18n`・`@/routing`・`@/lib` だけを使い、`src/` と `tools/` からは import しない。リポジトリ直下に `api/` を作らない（Vercel が関数として自動で配備するため。ADR 0032）。
 
 ESLint・Vitest・Prettierの補助設定は `config/`、Next.js・TypeScript・npm・Vercelの探索起点となる設定はルートに残す。`@/` は引き続き `src/` を指す。検査レポートとスクリーンショットは `.artifacts/` に置き、Gitに含めない。
 
 `npm run validate` は価格モデル 10 件も検査する。モデル本体・レポート・テストは TypeScript で、`npm run check` の型検査・未使用検査と lint の対象。再計算は `npm run --silent report:pricing`。Vercel の Root Directory と GitHub Actions・Dependabotはすべてルート基準。旧 `site/` を再作成しない。
 
-手書きコードは `.ts` / `.tsx` を使う。`allowJs: false` だけでは JavaScript の追加を防げないため、ルートの設定ファイルと `src/`・`tools/`・`config/`・`tests/` 内への `.js`・`.mjs`・`.cjs`・`.jsx` の追加を構造検査で拒否する。`public/`・`out/` 等の生成物と依存パッケージ内部はこのソース検査の対象外で、公開ページへの実行時 JavaScript 混入は別途 postbuild と verify で検査する。
+手書きコードは `.ts` / `.tsx` を使う。`allowJs: false` だけでは JavaScript の追加を防げないため、ルートの設定ファイルと `src/`・`tools/`・`services/`・`config/`・`tests/` 内への `.js`・`.mjs`・`.cjs`・`.jsx` の追加を構造検査で拒否する。`public/`・`out/` 等の生成物と依存パッケージ内部はこのソース検査の対象外で、公開ページへの実行時 JavaScript 混入は別途 postbuild と verify で検査する。
 
 
 ### 和文・英数字の半角スペース
