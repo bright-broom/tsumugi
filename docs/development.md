@@ -15,6 +15,7 @@ npm run tokens           # src/styles/design.tokens.json → src/styles/tokens.c
 npm run og               # OGP画像とファビコン（文面を変えたときだけ。差分をコミットする）
 npm run check            # 型・依存方向・循環・文言とルート・未使用コードの検査
 npm run check:unused     # Knipで未使用ファイル・export・型・依存関係を検査
+npm run check:collections  # 記事・事例などの公開前チェックと入稿枠の報告（checkにも含む）
 ```
 
 ---
@@ -146,6 +147,23 @@ flowchart LR
 4. `npm run validate` と `npm run verify` を通す。URLとOGPの登録漏れ、文字の直接記述、循環、JS混入は検査で止まる。
 
 ルート・文言・レイアウトを別々に追える構成にした理由と互換性の条件は [ADR 0004](architecture/0004-content-and-routing.md)。
+
+### 記事・事例・対応エリア・顧客事例を足すとき（顧客サイト）
+
+固定の登録表には足さない。文書を足すと、公開したものだけが一覧（`/<base>.html`）と詳細（`/<base>/<slug>.html`）になる。
+
+| 変更 | 正本 |
+|---|---|
+| 記事・事例・対応エリア・顧客事例の文書 | `src/i18n/locales/ja/entries/`（articles・cases・areas・works） |
+| 一覧と詳細の共通文言（見出し・絞り込み・未計測など） | `src/i18n/locales/ja/collections.ts` |
+| URL の土台・既存ページへの添付・代替の共有カード | `src/content/collections.ts` の `COLLECTION_SETTINGS` |
+| 項目の型・公開前チェック | `src/lib/collections/`（案件で変えない） |
+
+1. 文書を `status: 'draft'` で足し、`npm run check:collections` で足りない項目を確かめる。
+2. 埋めたら `status: 'published'` にする。不足があると `npm run check` とビルドが止まる。
+3. `npm run build` で sitemap・ナビ・共有カードまで反映される。公開 0 件のコレクションはページを作らない。
+
+事例の絞り込みは JavaScript を使わない CSS 方式で、3 ファセット × 各 12 値まで（[ADR 0041](architecture/0041-css-case-filter.md)）。設計は [ADR 0040](architecture/0040-collections.md)、対応エリアの公開条件は [ADR 0042](architecture/0042-service-area-pages.md)、顧客事例の測定値と掲載許可は [ADR 0043](architecture/0043-client-work-records.md)。
 
 ## 開発ライブラリと実行環境
 
