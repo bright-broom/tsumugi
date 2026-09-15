@@ -69,6 +69,15 @@ flowchart LR
 
 `tests/fixtures/collections.ts` の架空のデータ（「架空」「テスト用」と明記。`src/` から参照しないので `out/` に出ない）で、生成・一覧・詳細・下書きの除外・sitemap・ナビ・共有カードの代替・内部リンク・h1・JS なし・入力の大きさ・追加／更新／非公開を検査する（`tests/collections.test.tsx`）。
 
+2026-09-16 に、文書の入口を一時的にフィクスチャへ差し替えて `npm run build` と `npm run verify -- --static` を通し、確認後に元へ戻した（差し替えはコミットしていない。画像はフィクスチャに実物がないため既存の `/images/onokoro-hero.svg` を指した）。
+
+- `postbuild`：32 ページ（固定 21・一覧 3・詳細 8）、実行時 script 0 件・区切りコメント 0 件
+- canonical・`og:url` は `https://example.jp/news/fixture-news-1.html` のように入れ子のパス、`og:image` は `og/index.png`（顧客事例は `og/works.png`）
+- sitemap は固定ページの後に 11 行を `lastmod` 付きで出力、フッターとメニューに一覧 3 本へのリンク
+- 静的検査：PASS 540 / WARN 2 / FAIL 0。増えた WARN は `index.html` のページ容量 100.4 KB（上限 100 KB）。一覧 3 本のリンクがメニューとフッターに加わり、全ページが少しずつ大きくなるため。**顧客サイトで一覧を 3 本とも公開する場合は、トップページの容量を先に確認する**（ナビに出す一覧を絞るか、トップページの本文を見直す）
+
+戻した後の紬のビルドは、変更前と比べて `theme.css` 以外の 49 ファイルが SHA-256 で一致し、静的検査は PASS 358 / WARN 1 / FAIL 0。
+
 ## 後続の機能への使い方
 
 - **スタッフ紹介（#19）・お客様の声（#20）**：共通の項目に、写真と掲載許可（顧客事例の `permission` と同じ形）を足した種類として載せられる。
