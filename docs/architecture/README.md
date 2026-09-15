@@ -57,6 +57,14 @@
 
 - [0030 ヒーローの文字分離と中央管理を検査で固定する](0030-hero-copy-verification.md)
 
+- [0032 問い合わせの受付を、静的サイトから分離した Web 標準のハンドラにする](0032-inquiry-intake-service.md)
+
+- [0033 二重通知を送信箱で送り、返信期限を営業日カレンダーで数える](0033-dual-notification-and-reply-deadline.md)
+
+- [0034 問い合わせ情報への権限・履歴・保持期限・削除を、窓口とデータで管理する](0034-inquiry-access-and-retention.md)
+
+- [0035 受付サービスの配備先・保存先・通知手段の候補（オーナー判断・未決）](0035-inquiry-hosting-candidates.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |

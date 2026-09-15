@@ -8,9 +8,9 @@
 
 1. `src/content/config.ts` の `PLACEHOLDER = false` にする（ページ上部の「準備中」の帯が消えます）
 2. `src/content/config.ts` の `DOMAIN` と、`src/i18n/locales/ja/config.ts` の地域・電話番号・メール・郵便番号・住所・2人のプロフィールを実際の値に
-3. `FORM_ENDPOINT` に問い合わせフォームの送信先を設定する
-   （**設定と同時に、通知をメールとLINE（またはSMS）の2系統に分けること**。
-   「問い合わせに気づかない」が最大の失注要因です）
+3. 受付サービス（`services/inquiry/`）を配備し、その URL を `FORM_ENDPOINT` に設定する。配備先・保存先・通知手段は未決（[ADR 0035](architecture/0035-inquiry-hosting-candidates.md)）
+   （**通知はメールとLINE（またはSMS）の2系統**。受付サービスは2系統の設定でないと起動しない。
+   「問い合わせに気づかない」が最大の失注要因です。保持期限と削除の手順は [inquiry-data.md](inquiry-data.md)）
 4. `LINE_URL` を設定する（未設定ならLINE導線は自動的に出ません）
 5. `npm run build && npm run verify` を実行して **FAIL 0 を確認する**
 6. `out/` をそのまま公開（Cloudflare Pages / Netlify / Vercel / S3 いずれでも動きます）
