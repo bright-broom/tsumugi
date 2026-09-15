@@ -78,9 +78,9 @@
 
 | 課題 | やること | 手がかり |
 |---|---|---|
-| 事業者情報・連絡先を実際の値にする | `content/config.ts` の `DOMAIN` と `i18n/locales/ja/config.ts` の地域・連絡先・住所・2人のプロフィールを差し替え、`PLACEHOLDER = false` にする。**false にすると `verify` が仮の値の残りを FAIL にする** | [operations.md「公開前にやること」](operations.md) |
+| 事業者情報・連絡先を実際の値にする | `content/config.ts` の `DOMAIN` と `i18n/locales/ja/config.ts` の地域・連絡先・住所・2人のプロフィールを差し替え、`PLACEHOLDER = false` にする。**本番モード（`verify --mode production`、Vercel の本番配備では自動）が仮の値の残りを条件ごとに FAIL にする**（ADR 0024） | [operations.md「公開前にやること」](operations.md) |
 | 問い合わせフォームの送信先 | 配備先・保存先・通知手段を選び、`services/inquiry/` を配備して `FORM_ENDPOINT` を設定する。通知はメールと LINE（または SMS）の2系統（受付サービスが強制する） | [ADR 0035](architecture/0035-inquiry-hosting-candidates.md)（候補と判断材料）、[inquiry-data.md](inquiry-data.md)（プライバシー表示との要判断事項） |
-| `terms.html` の弁護士確認 | 下書きの文面を確認してもらって確定する。フリーランス法第4条（書面交付義務）への対応も同時に。新料金の支払・変更枠・修補・解除条件を確認する。自社24回分割の新規受付は行わない | `src/i18n/locales/ja/terms.ts`、ガイドライン「8.1」 |
+| `terms.html` の弁護士確認 | 下書きの文面を確認してもらって確定する。フリーランス法第4条（書面交付義務）への対応も同時に。新料金の支払・変更枠・修補・解除条件を確認する。自社24回分割の新規受付は行わない。確認後に `content/config.ts` の `LEGAL_APPROVALS`（terms・legal）へ版・承認日・確認者の役割・文面の SHA-256 を記録する。記録が揃うまで下書きの注意が出続け、本番モードは FAIL（ADR 0024） | `src/i18n/locales/ja/terms.ts`、ガイドライン「8.1」 |
 | `legal.html` の事業者情報 | 販売事業者名・運営責任者・所在地が仮の値。開業届／登記のあとに差し替える | `config.ts` |
 | 屋号の確認 | 商標（J-PlatPat 第42類・第35類）・同名法人（法人番号公表サイト）・ドメイン | [messaging-and-pricing.md「屋号」](product/messaging-and-pricing.md) |
 | 本番公開と独自ドメイン | Vercel へのプレビュー配備は実施。本番の事業者情報を確定し、独自ドメインを設定して公開する。`◯◯.vercel.app` のまま納品しない | [operations.md「Vercel に載せるとき」](operations.md) |
@@ -89,7 +89,8 @@
 
 | 課題 | やること | 手がかり |
 |---|---|---|
-| LCP の実データ | サイトに載せている LCP は `measurements.ts` の数値から組み立てた `LCP_MEASURED`（手元の計測）。公開後に Search Console の実データで確かめる | `npm run verify -- --write` |
+| LCP の実データ | サイトに載せている LCP は `measurements.ts` の手元での計測（記録日 2026-09-14、旧版の検査で記録した値）で、ページには記録日を添える。現在の構成でブラウザ実測を含む `verify --write` を実行して測り直し、公開後に Search Console の実データで確かめる | `npm run verify -- --write`（ADR 0025） |
+| 仕様20項目の人の確認 | 人の確認・外部接続の確認が必要な18項目の記録を `content/acceptance.ts` に残す（GBP・通知2系統など）。自社サイトで対象外にする項目もオーナーが判断して記録する | ADR 0026 |
 | 制作事例 | 1号案件の実測値（LCP・Google ビジネスプロフィールの閲覧数・問い合わせ件数）を `works.html` に入れる | `src/views/works.tsx` |
 | 返答時間の実績 | 計測を始めてから `RESPONSE_ACTUAL` に書く（測っていない数字は書かない） | `config.ts` |
 
@@ -117,6 +118,10 @@
 受付と同じ書き込みで保存する 2 系統通知の送信箱（再試行・失敗検知・チャネルごとの重複防止）、営業日カレンダーによる返信期限と実績の集計を追加。`RESPONSE_ACTUAL` は `null` のまま（ADR 0033）。担当者 2 名の名簿の検証、履歴を必ず残す窓口、保持期限のドライランと削除、削除のお求めへの対応を追加し、情報の所在を [inquiry-data.md](inquiry-data.md) にまとめた（ADR 0034）。本番の配備先・保存先・通知手段は候補を残して未決（ADR 0035）。
 
 配備・実送信・有料サービスの契約はしていない。`FORM_ENDPOINT` は空のままで、`out/` の全ファイルは変更前と一致。ブラウザ実測を含む `verify` は作業環境の制約で未実行。プライバシー表示の文言は変更しておらず、要判断事項は ADR 0034 に記載。
+
+### 2026-09-16 公開条件・検査レポート・仕様20項目の受入（#13・#34・#35・#39・#40）
+
+`verify` にプレビューと本番のモードを設け、本番では仮の値・未接続の受付・契約文面と事業者表示の承認記録・仕様20項目の人の確認記録の不足を FAIL にした（ADR 0024）。検査レポートに測定日時・対象コミットと未コミットの変更の有無・成果物の指紋・種別を持たせ、`works.html` は同じコミット・全項目・FAIL 0 のレポートだけから件数を出す。LCP には記録日を添えた（ADR 0025）。仕様20項目と自動検査・人の確認・対象外の条件を対応付け、画像の無いページの画像検査を「対象なし」にし、仕様ページの「すべて自動」の表現を改めた（ADR 0026）。`works.html`・`spec.html` から公開リポジトリへ案内し、顧客への納品と区別した（ADR 0027）。ブラウザ実測を含む `npm run verify` は作業環境の制約で未実行。統合後に全項目を回して件数を更新する。
 
 ### 2026-09-15 図解の React / SVG 移行（#56 の第 2 段階）
 

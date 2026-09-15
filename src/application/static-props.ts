@@ -1,7 +1,7 @@
 import { getMessages } from '@/i18n/catalog';
 import { ROUTES, type RouteId } from '@/routing/registry';
 import type { AnyPageProps } from '@/content/page-props';
-import { verifyPass } from '@/lib/measured';
+import { verifiedSummary } from '@/lib/measured';
 /** Called only from getStaticProps; filesystem access stays in the build process. */
 export function pageProps(route: RouteId): AnyPageProps {
   const catalog = getMessages();
@@ -14,6 +14,6 @@ export function pageProps(route: RouteId): AnyPageProps {
     template,
     copy: catalog[template],
     messages: { shell, cta, entry, plans, table, vs, diagrams },
-    pass: route === 'works' ? verifyPass() : '',
+    verification: route === 'works' ? verifiedSummary() : null,
   } as AnyPageProps;
 }

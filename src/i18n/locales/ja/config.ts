@@ -22,5 +22,5 @@ export default {
   memberRole2: '撮影・取材・集客支援',
   memberBio3: '担当者のプロフィールは準備中です。担当範囲を確認し、公開前に掲載します。',
   brandWithReading: '{brand}（{brandReading}）',
-  lcpMeasured: '{seconds}秒（全{pages}ページの最大値・実測）',
+  lcpMeasured: '{seconds}秒（全{pages}ページの最大値。{recordedOn}記録の手元での実測）',
 } as const;
