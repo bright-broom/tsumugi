@@ -11,7 +11,7 @@ export const dateSchema = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, '日付は YYYY-MM-DD')
   .refine(isRealDate, '存在しない日付です');
-const monthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, '月は YYYY-MM');
+export const monthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, '月は YYYY-MM');
 /** 時刻はタイムゾーン付きの ISO 8601。 */
 export const timestampSchema = z.iso.datetime({ offset: true });
 

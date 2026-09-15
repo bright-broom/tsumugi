@@ -57,3 +57,52 @@ npm run --silent ops:metrics -- remove-import --customer sample-shop --sha <先�
 
 - 表示は「N件」（0 を含む計測値）・「未計測」（データ源がない／計測期間外）・「欠損あり」（計測しているが欠けた日がある）の 3 通り。欠損した月の途中までの値は合計として出さない。
 - 同じファイルの再取り込み、同じデータ源で期間が重なる取り込みは拒否する。
+
+## 修正依頼と作業時間（`npm run ops:requests`）
+
+依頼は顧客ごとに `<データの置き場所>/requests/<顧客ID>.json` に記録する（[ADR 0038](../../docs/architecture/0038-requests-and-customer-projects.md)）。
+
+```sh
+npm run --silent ops:requests -- init   --customer sample-shop --since 2026-09-01
+npm run --silent ops:requests -- add    --customer sample-shop --url https://example.jp/menu.html --selector "main h2" --x 120 --y 480 --viewport 390 --description "見出しを差し替える" --channel 電話 --by 担当者 [--attach <保管場所>] [--due 2026-09-20]
+npm run --silent ops:requests -- move   --customer sample-shop --id req-0001 --to in_progress --by 担当者
+npm run --silent ops:requests -- log    --customer sample-shop --id req-0001 --minutes 25 --by 担当者 [--date 2026-09-16]
+npm run --silent ops:requests -- move   --customer sample-shop --id req-0001 --to awaiting_review --by 担当者
+npm run --silent ops:requests -- move   --customer sample-shop --id req-0001 --to done --by 担当者
+npm run --silent ops:requests -- notice --customer sample-shop --id req-0001 --channel 電話 --by 担当者
+npm run --silent ops:requests -- list   --customer sample-shop
+npm run --silent ops:requests -- hours  --customer sample-shop --month 2026-09 --plan run_basic
+```
+
+- 状態は 受付 → 着手 → 確認待ち → 完了。確認待ちからは差し戻し（着手）もできる。
+- 月の作業時間は、月の合計を 5 分単位で切り上げる（依頼ごとには切り上げない）。3 か月平均は 3 か月とも月初から記録している場合だけ出す。
+- 完了連絡は記録だけで、送信はしない。顧客ごとのアクセス権限は未実装（オーナーのローカル環境で使う）。
+
+## 月次レポートの下書き（`npm run ops:report`）
+
+指標・修正依頼・手入力の GBP 実績から、対象月の下書きを作る（[ADR 0037](../../docs/architecture/0037-customer-metrics-and-monthly-reports.md)）。
+
+```sh
+npm run --silent ops:report -- generate --customer sample-shop --month 2026-09 --label 架空の商店 --plan run_basic [--note "確認事項"] [--format html]
+npm run --silent ops:report -- approve  --customer sample-shop --month 2026-09 --by 確認者
+npm run --silent ops:report -- status   --customer sample-shop --month 2026-09
+```
+
+GBP の実績は管理画面を見て `<データの置き場所>/gbp/<顧客ID>/performance/<YYYY-MM>.json` に転記する。
+
+```json
+{
+  "customerId": "sample-shop",
+  "month": "2026-09",
+  "source": "GBP 管理画面の実績を転記",
+  "enteredBy": "担当者",
+  "enteredOn": "2026-10-01",
+  "items": [
+    { "label": "画面の項目名", "value": 12 },
+    { "label": "確認できなかった項目", "value": null }
+  ]
+}
+```
+
+- 下書きは確認前の文書。`approve` は確認した内容の SHA-256 を記録し、作り直して内容が変われば確認は無効になる。
+- 送信・共有はしない。確認後の書面は人が渡す。
