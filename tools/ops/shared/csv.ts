@@ -43,7 +43,20 @@ function parseCsv(text: string): string[][] {
   return rows.filter((r) => !(r.length === 1 && r[0] === ''));
 }
 
-export interface CsvRecord {
+/**
+ * 表計算ソフトで開いたときに式として実行されないよう、先頭が = + - @ タブ CR のセルに ' を付ける。
+ * CRM などへ渡す CSV で使う。
+ */
+export function toCsv(rows: readonly (readonly (string | number)[])[]): string {
+  const cell = (value: string | number) => {
+    let text = String(value);
+    if (typeof value === 'string' && /^[=+\-@\t\r]/.test(text)) text = `'${text}`;
+    return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+  };
+  return rows.map((r) => r.map(cell).join(',')).join('\r\n') + '\r\n';
+}
+
+interface CsvRecord {
   line: number;
   values: Record<string, string>;
 }

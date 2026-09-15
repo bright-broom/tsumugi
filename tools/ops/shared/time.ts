@@ -38,7 +38,7 @@ export function jstDate(value: string): string {
 export const today = () => JST.format(new Date());
 export const now = () => new Date().toISOString();
 
-function addDays(date: string, days: number): string {
+export function addDays(date: string, days: number): string {
   const d = new Date(`${date}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() + days);
   return d.toISOString().slice(0, 10);
