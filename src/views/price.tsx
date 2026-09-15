@@ -1,15 +1,14 @@
+import { OwnershipClock } from '@/components/diagrams/OwnershipClock';
 import { ROUTES, href } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
 import * as P from '@/content/prices';
-import * as D from '@/content/diagrams';
 import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Table from '@/components/Table';
 import Note from '@/components/Note';
 import Entry from '@/components/Entry';
 import Plans from '@/components/Plans';
-import Figure from '@/components/Figure';
 import type { PageProps } from '@/content/page-props';
 
 export default function PricePage({ copy, route }: PageProps<'price'>) {
@@ -97,8 +96,11 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         heading={copy.comparisonTitle}
         lede={format(copy.comparisonLede, { months: P.COMPARE_MONTHS })}
       >
-        <Figure
-          svg={D.ownershipClock(one.sub_monthly, one.sub_total, one.our_price, P.COMPARE_MONTHS)}
+        <OwnershipClock
+          subMonthly={one.sub_monthly}
+          subTotal={one.sub_total}
+          ourPrice={one.our_price}
+          months={P.COMPARE_MONTHS}
         />
         <Table
           headers={[...copy.comparisonHeaders]}

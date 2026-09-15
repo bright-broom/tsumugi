@@ -1,16 +1,101 @@
+import { Children, createContext, useContext, useId, type ReactNode } from 'react';
 import { useMessages } from '@/components/ContentProvider';
-/**
- * 図。diagrams.ts が <figure> ごと文字列で返す。
- * React は包みのない生の HTML を置けないので、外側の <figure class> だけを要素にして中身を流し込む。
- * 広い画面用（.fw）と狭い画面用（.fn）の2枚が入っていて、出し分けは CSS 側。
- */
-import { raw } from '@/lib/raw';
 
-const FIGURE = /^<figure class="([^"]*)">([\s\S]*)<\/figure>$/;
+type MarkerTone = 'neutral' | 'accent';
+type Markers = Partial<Record<MarkerTone, string>>;
+const MarkerContext = createContext<Markers | null>(null);
 
-export default function Figure({ svg }: { svg: string }) {
-  const copy = useMessages('figure');
-  const m = FIGURE.exec(svg);
-  if (!m) throw new Error(copy.figure);
-  return <figure className={m[1]} dangerouslySetInnerHTML={raw(m[2]!)} />;
+/** A canvas owns its markers, even when the same diagram appears twice on a page. */
+export function useDiagramMarker(tone: MarkerTone): string {
+  const markers = useContext(MarkerContext);
+  if (!markers) throw new Error('Diagram arrows require a Figure canvas');
+  const id = markers[tone];
+  if (!id) throw new Error(`Figure does not define the ${tone} arrow`);
+  return id;
+}
+
+function Canvas({
+  children,
+  viewBox,
+  label,
+  variant,
+  arrows,
+}: {
+  children: ReactNode;
+  viewBox: string;
+  label: string;
+  variant: 'fw' | 'fn';
+  arrows: readonly MarkerTone[];
+}) {
+  const instance = useId();
+  const markers: Markers = {
+    neutral: arrows.includes('neutral') ? `dg-a${instance}` : undefined,
+    accent: arrows.includes('accent') ? `dg-p${instance}` : undefined,
+  };
+  return (
+    <MarkerContext.Provider value={markers}>
+      <svg className={variant} role="img" aria-label={label} viewBox={viewBox}>
+        {arrows.length > 0 && (
+          <defs>
+            {(['neutral', 'accent'] as const).map((tone) =>
+              markers[tone] ? (
+                <marker
+                  key={tone}
+                  id={markers[tone]}
+                  viewBox="0 0 10 10"
+                  refX="9"
+                  refY="5"
+                  markerWidth="7"
+                  markerHeight="7"
+                  orient="auto-start-reverse"
+                >
+                  <path
+                    d="M0 0 L10 5 L0 10 z"
+                    fill={tone === 'accent' ? 'var(--fig-accent)' : 'currentColor'}
+                  />
+                </marker>
+              ) : null,
+            )}
+          </defs>
+        )}
+        {Children.toArray(children)}
+      </svg>
+    </MarkerContext.Provider>
+  );
+}
+
+/** Native React/SVG output; desktop and narrow layouts share one accessible description. */
+export default function Figure({
+  wide,
+  caption,
+  label,
+  viewBox,
+  narrow,
+  arrows = [],
+}: {
+  wide: ReactNode;
+  caption: string;
+  label: string;
+  viewBox: string;
+  narrow?: readonly [children: ReactNode, viewBox: string];
+  arrows?: readonly MarkerTone[];
+}) {
+  const copy = useMessages('diagrams');
+  return (
+    <figure className={narrow ? 'fig has-narrow' : 'fig'}>
+      <Canvas variant="fw" viewBox={viewBox} label={label} arrows={arrows}>
+        {wide}
+      </Canvas>
+      {narrow ? (
+        <Canvas variant="fn" viewBox={narrow[1]} label={label} arrows={arrows}>
+          {narrow[0]}
+        </Canvas>
+      ) : (
+        <p className="fig-hint" aria-hidden="true">
+          {copy.hint}
+        </p>
+      )}
+      <figcaption>{caption}</figcaption>
+    </figure>
+  );
 }

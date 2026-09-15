@@ -1,13 +1,12 @@
+import { MoneyFlow } from '@/components/diagrams/MoneyFlow';
 import { ROUTES } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
 import * as P from '@/content/prices';
-import * as D from '@/content/diagrams';
 import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Table from '@/components/Table';
 import Note from '@/components/Note';
-import Figure from '@/components/Figure';
 import Cta from '@/components/Cta';
 import type { PageProps } from '@/content/page-props';
 
@@ -42,7 +41,7 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
             pPORTALFEEDINNER: P.PORTAL_FEE_DINNER,
           })}
         />
-        <Figure svg={D.moneyFlow(27_500, runStd)} />
+        <MoneyFlow portal={27_500} run={runStd} />
         <Note heading={copy.heading3} kind="good">
           <p>
             {copy.p}

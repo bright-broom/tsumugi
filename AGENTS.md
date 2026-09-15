@@ -76,7 +76,7 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 |---|---|---|
 | postbuild が「区切りコメント」で落ちる | JSX で `ほか{n}項目` と書くと、React が `ほか<!-- -->5<!-- -->項目` を出す | 値を混ぜる文字列はテンプレートリテラルで1つにする |
 | `verify` の「構造化データ」「title の長さ」が全ページで落ちる | Next.js が head の要素に `data-next-head=""` を付ける | postbuild が消している。postbuild を通していない出力を検査しない |
-| 同じ入力なのにビルドのたびに HTML が変わる | 図の marker id を通し番号にしていた（ページは並列に書き出される） | id は `content/diagrams.ts` が aria-label から決める。出力をモジュール内の可変な状態に依存させない |
+| 同じ入力なのにビルドのたびに HTML が変わる | 図の marker id を通し番号にしていた（ページは並列に書き出される） | 現行は `components/Figure.tsx` が SVG ごとの React `useId` で生成し Context で渡す（ADR 0023）。出力をモジュール内の可変な状態に依存させない |
 | `works.html` の検査件数が古い、または「—」 | 件数はビルド時点の `.artifacts/verification/verify-report.json`（git 管理外）を読む | `npm run build && npm run verify && npm run build` |
 | `npm run og` を実行すると全 PNG が差分になる | コミット済みの画像は別のマシンで作ったもの。この Mac では日本語の書体が変わる（Noto Sans CJK JP と Hiragino Sans と見ている） | 字形の正本を決めるまで再生成しない（[docs/status.md](docs/status.md)） |
 | `node:fs` を使ったページでビルドが落ちる | ページのモジュールはクライアント用の束にも含まれる | `getStaticProps` の中だけで使う |

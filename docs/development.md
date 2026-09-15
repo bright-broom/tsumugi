@@ -110,7 +110,7 @@ App Router は静的書き出しでも全ページに約173KB（gzip）の JS �
 | 静的生成の入口 | `src/pages/index.tsx`・`404.tsx`・`[page].tsx`。全入口に `unstable_runtimeJS: false` |
 | props の用意とテンプレート選択 | `src/application/`。ファイルシステムは `getStaticProps` からだけ読む |
 | 共通表示 | `src/layouts/`・`src/components/`。文言は `ContentProvider` で配布 |
-| SVGの座標・色・図形 | `src/content/diagrams.ts`。文字はカタログ |
+| SVG の座標・色・図形 | `src/components/diagrams/` の型付き React / SVG。共通の枠とレスポンシブ切替は `Figure.tsx`、文字は `diagrams` カタログから props / Context 経由で受け取る（ADR 0023） |
 | CSS | `src/styles/`。トークンは `design.tokens.json` が正本 |
 | 配布ファイル | `out/`。手で編集しない |
 

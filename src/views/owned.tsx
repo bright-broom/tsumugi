@@ -1,9 +1,9 @@
+import { LandVsOwn } from '@/components/diagrams/LandVsOwn';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
 import * as P from '@/content/prices';
-import * as D from '@/content/diagrams';
 import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Table from '@/components/Table';
@@ -11,7 +11,6 @@ import Note from '@/components/Note';
 import Acc from '@/components/Acc';
 import Cards from '@/components/Cards';
 import Calc from '@/components/Calc';
-import Figure from '@/components/Figure';
 import Icon from '@/components/Icon';
 import Cta from '@/components/Cta';
 import type { PageProps } from '@/content/page-props';
@@ -51,7 +50,7 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
         heading={copy.heading}
         lede={copy.lede}
       >
-        <Figure svg={D.landVsOwn()} />
+        <LandVsOwn />
         <Table
           headers={[copy.headers, copy.headers2]}
           rows={[

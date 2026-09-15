@@ -1,7 +1,6 @@
 import og from '@/i18n/locales/ja/og';
 import cta from '@/i18n/locales/ja/cta';
 import entry from '@/i18n/locales/ja/entry';
-import figure from '@/i18n/locales/ja/figure';
 import plans from '@/i18n/locales/ja/plans';
 import table from '@/i18n/locales/ja/table';
 import vs from '@/i18n/locales/ja/vs';
@@ -35,7 +34,6 @@ export const ja = {
   og,
   cta,
   entry,
-  figure,
   plans,
   table,
   vs,
