@@ -13,6 +13,11 @@ npm run verify -- --write    # LCP実測値を src/content/measurements.ts に�
 npm run verify -- --dist <path>  # 検査するディレクトリを差し替える（既定は out/）
 npm run tokens           # src/styles/design.tokens.json → src/styles/tokens.css（--check で同期検査）
 npm run og               # OGP画像とファビコン（文面を変えたときだけ。差分をコミットする）
+npm run og:check         # 一時ディレクトリに生成し public/og/ とバイト比較（macOS の正本環境で。ADR 0047）
+npm run check:live -- --url https://<ドメイン>   # 公開後の確認（--dist out で公開前のリハーサル。ADR 0044）
+npm run monitor -- --url https://<ドメイン>      # 公開後の監視と同じ確認（ADR 0046）
+npm run backup           # git bundle と目録を .artifacts/backup/ に作る（ADR 0045）
+npm run backup:restore-test -- --backup <dir>    # 別ディレクトリへの復元・照合・ビルドと所要時間の記録
 npm run check            # 型・依存方向・循環・文言とルート・未使用コードの検査
 npm run check:unused     # Knipで未使用ファイル・export・型・依存関係を検査
 ```

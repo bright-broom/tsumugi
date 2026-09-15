@@ -57,6 +57,8 @@
 
 - [0046 公開後の監視を GitHub Actions の定期実行で始める](0046-post-launch-monitoring.md)
 
+- [0047 OGP 画像の生成環境を固定し、再現性を検査する](0047-og-image-environment.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |

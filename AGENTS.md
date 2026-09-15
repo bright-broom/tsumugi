@@ -78,7 +78,7 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 | `verify` の「構造化データ」「title の長さ」が全ページで落ちる | Next.js が head の要素に `data-next-head=""` を付ける | postbuild が消している。postbuild を通していない出力を検査しない |
 | 同じ入力なのにビルドのたびに HTML が変わる | 図の marker id を通し番号にしていた（ページは並列に書き出される） | 現行は `components/Figure.tsx` が SVG ごとの React `useId` で生成し Context で渡す（ADR 0023）。出力をモジュール内の可変な状態に依存させない |
 | `works.html` の検査件数が古い、または「—」 | 件数はビルド時点の `.artifacts/verification/verify-report.json`（git 管理外）を読む | `npm run build && npm run verify && npm run build` |
-| `npm run og` を実行すると全 PNG が差分になる | コミット済みの画像は別のマシンで作ったもの。この Mac では日本語の書体が変わる（Noto Sans CJK JP と Hiragino Sans と見ている） | 字形の正本を決めるまで再生成しない（[docs/status.md](docs/status.md)） |
+| `npm run og` を実行すると全 PNG が差分になる | 字形は端末の書体で決まる。コミット済みの画像は macOS 標準のヒラギノ角ゴシック＋固定した Playwright の Chromium で再現でき、ほかの OS や Noto Sans CJK JP を入れた端末では変わる | 先に `npm run og:check`（`public/og/` を書き換えない）で一致を確かめる。書体の切り替えは未決（[ADR 0047](docs/architecture/0047-og-image-environment.md)） |
 | `node:fs` を使ったページでビルドが落ちる | ページのモジュールはクライアント用の束にも含まれる | `getStaticProps` の中だけで使う |
 | `npm run dev` の HTML に script がある | 開発サーバーはホットリロード用の JS を入れる | 0バイトの対象は `out/`。開発中の HTML で判断しない |
 | `next dev` のたびに `AGENTS.md`・`CLAUDE.md` にルールが加わる | Next.js 16 が生成・再生成する | 動かさずにコミットしておく |

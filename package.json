@@ -12,6 +12,7 @@
     "verify": "tsx tools/verify/verify.ts",
     "tokens": "tsx tools/scripts/build-tokens.ts",
     "og": "tsx tools/scripts/og.ts",
+    "og:check": "tsx tools/ops/cli/og-check.ts",
     "lint": "eslint . --config config/eslint.config.ts --max-warnings=0",
     "test": "vitest run --config config/vitest.config.ts",
     "test:watch": "vitest --config config/vitest.config.ts",
