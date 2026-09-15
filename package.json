@@ -28,6 +28,7 @@
     "ops:metrics": "tsx tools/ops/metrics/cli.ts",
     "ops:requests": "tsx tools/ops/requests/cli.ts",
     "ops:report": "tsx tools/ops/report/cli.ts",
+    "ops:crm": "tsx tools/ops/crm/cli.ts",
     "check:unused": "knip --config config/knip.config.ts"
   },
   "dependencies": {

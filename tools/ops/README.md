@@ -106,3 +106,33 @@ GBP の実績は管理画面を見て `<データの置き場所>/gbp/<顧客ID>
 
 - 下書きは確認前の文書。`approve` は確認した内容の SHA-256 を記録し、作り直して内容が変われば確認は無効になる。
 - 送信・共有はしない。確認後の書面は人が渡す。
+
+## 顧客管理と案件の進行（`npm run ops:crm`）
+
+顧客ごとに `<データの置き場所>/crm/<顧客ID>.json` に記録する（[ADR 0038](../../docs/architecture/0038-requests-and-customer-projects.md)）。
+
+```sh
+npm run --silent ops:crm -- init     --customer sample-shop --name 架空の商店 --owner 担当者 --by 担当者
+npm run --silent ops:crm -- consult  --customer sample-shop --channel 電話 --summary "作り直しの相談" --by 担当者
+npm run --silent ops:crm -- project  --customer sample-shop --project site-2026 --title サイト制作 --by 担当者
+npm run --silent ops:crm -- estimate --customer sample-shop --project site-2026 --estimate est-sample-001 --version 2 --by 担当者
+npm run --silent ops:crm -- advance  --customer sample-shop --project site-2026 --to estimate_sent --by 担当者
+npm run --silent ops:crm -- contract --customer sample-shop --project site-2026 --version 1 --status signed --signed-on 2026-09-18 --ref <書面の保管場所> --by 担当者
+npm run --silent ops:crm -- approval --customer sample-shop --project site-2026 --id copy-top --kind copy --item トップの原稿 --status approved --decided-by お客様 --decided-on 2026-09-20 --by 担当者
+npm run --silent ops:crm -- check    --customer sample-shop --project site-2026 --key verify-fail-zero --evidence <検査レポート> --by 担当者
+npm run --silent ops:crm -- handover --customer sample-shop --project site-2026 --item github_invite --permission read --ref <招待先> --by 担当者
+npm run --silent ops:crm -- show     --customer sample-shop
+npm run --silent ops:crm -- export   --customer sample-shop --out .data/exports/sample-shop.json
+```
+
+| 状態                           | 進める前提                                                                                            |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| `estimate_sent` 見積提出       | 見積の版が紐付いている                                                                                |
+| `contracted` 契約済み          | 締結済みの契約の版がある                                                                              |
+| `in_production` 制作中         | —                                                                                                     |
+| `awaiting_acceptance` 検収待ち | 原稿・写真の承認がそれぞれあり、すべて承認済み                                                        |
+| `accepted` 検収済み            | 納品チェック（検査 FAIL 0・ドメインがお客様名義・パスワード類をソースに入れていない）が根拠つきで完了 |
+| `handed_over` 引渡し済み       | ソースコード・手順書・写真の元データ・GitHub 閲覧招待（read のみ）の記録                              |
+
+- `show` は、次に進める状態と足りない前提を一覧で出す。
+- 他の顧客の情報を読めない権限は未実装（ファイルの分離と顧客 ID の照合まで）。
