@@ -180,7 +180,9 @@ TypeScript 7 の CLI と互換 API の併用理由、依存の overrides は [AD
 
 ESLint・Vitest・Prettierの補助設定は `config/`、Next.js・TypeScript・npm・Vercelの探索起点となる設定はルートに残す。`@/` は引き続き `src/` を指す。検査レポートとスクリーンショットは `.artifacts/` に置き、Gitに含めない。
 
-`npm run validate` は価格モデル9件も検査する。VercelのRoot DirectoryとGitHub Actions・Dependabotはすべてルート基準。旧 `site/` を再作成しない。
+`npm run validate` は価格モデル 10 件も検査する。モデル本体・レポート・テストは TypeScript で、`npm run check` の型検査・未使用検査と lint の対象。再計算は `npm run --silent report:pricing`。Vercel の Root Directory と GitHub Actions・Dependabotはすべてルート基準。旧 `site/` を再作成しない。
+
+手書きコードは `.ts` / `.tsx` を使う。`allowJs: false` だけでは JavaScript の追加を防げないため、ルートの設定ファイルと `src/`・`tools/`・`config/`・`tests/` 内への `.js`・`.mjs`・`.cjs`・`.jsx` の追加を構造検査で拒否する。`public/`・`out/` 等の生成物と依存パッケージ内部はこのソース検査の対象外で、公開ページへの実行時 JavaScript 混入は別途 postbuild と verify で検査する。
 
 
 ### 和文・英数字の半角スペース
