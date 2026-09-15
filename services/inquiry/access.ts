@@ -10,7 +10,7 @@ import type { ContractStatus, InquiryRecord, InquiryStore, ReplyChannel } from '
 import { withFirstReply } from './response';
 import { decideErasure, runRetention, type RetentionPolicy } from './retention';
 
-export type StaffRole = 'administrator' | 'responder';
+type StaffRole ='administrator' | 'responder';
 export interface StaffMember {
   readonly id: string;
   readonly role: StaffRole;

@@ -28,7 +28,7 @@ const addDays = (iso: string, days: number) =>
   new Date(Date.parse(iso) + days * 86_400_000).toISOString();
 
 /** 削除してよくなる時刻。契約中は null（期限なし） */
-export function retentionDueAt(record: InquiryRecord, policy: RetentionPolicy): string | null {
+function retentionDueAt(record: InquiryRecord, policy: RetentionPolicy): string | null {
   if (record.disposition === 'suspected-spam')
     return addDays(record.receivedAt, policy.suspectedSpamDays);
   switch (record.contract.status) {

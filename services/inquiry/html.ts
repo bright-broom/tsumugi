@@ -84,14 +84,15 @@ export function renderAccepted(
   return document(p, format(copy.titleAccepted, { brand: p.brand }), copy.headingAccepted, content);
 }
 
-const FIELD_IDS: Record<FieldName, string> = {
-  name: 'f-name',
-  business: 'f-biz',
-  industry: 'f-ind',
-  tel: 'f-tel',
-  email: 'f-mail',
-  message: 'f-msg',
-};
+/** 公開ページ（views/contact.tsx）と同じ id。表示順もこの並び */
+const FIELD_IDS = Object.fromEntries([
+  ['name', 'f-name'],
+  ['business', 'f-biz'],
+  ['industry', 'f-ind'],
+  ['tel', 'f-tel'],
+  ['email', 'f-mail'],
+  ['message', 'f-msg'],
+] as const) as Record<FieldName, string>;
 
 function fieldLabel(p: InquiryPresentation, field: FieldName) {
   const f = p.form;

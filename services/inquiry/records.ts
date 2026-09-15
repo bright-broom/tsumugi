@@ -5,7 +5,7 @@
 
 export type ChannelId = 'email' | 'line' | 'sms';
 export type ReplyChannel = 'tel' | 'email' | 'line' | 'sms';
-export type Disposition = 'accepted' | 'suspected-spam';
+type Disposition ='accepted' | 'suspected-spam';
 export type ContractStatus = 'prospect' | 'contracted' | 'ended';
 
 export interface InquiryFields {
@@ -50,7 +50,7 @@ export interface InquiryRecord {
   version: number;
 }
 
-export interface CreateResult {
+interface CreateResult {
   record: InquiryRecord;
   created: boolean;
 }
