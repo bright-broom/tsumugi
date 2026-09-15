@@ -1,7 +1,8 @@
 /**
- * 公開したサイトを外から確かめる検査（ADR 0044）。
+ * 公開したサイトを外から確かめる検査。
  *
- * - checkLive … 独自ドメインでの公開直後の受け入れ確認（npm run check:live）
+ * - checkLive    … 独自ドメインでの公開直後の受け入れ確認（npm run check:live、ADR 0044）
+ * - checkMonitor … 公開後の定期監視（npm run monitor、ADR 0046）
  *
  * 問い合わせはすべて Probe 経由。ここではネットワークに直接触らない。
  */
@@ -316,5 +317,46 @@ export async function checkLive(
     checkNoRuntimeJs(readable),
     await checkNotFound(probe, origin, policy.now ?? new Date()),
   );
+  return results;
+}
+
+export interface MonitorPolicy extends CertificatePolicy {
+  /** 1 ページの取得（本文の受信完了まで）がこれを超えたら WARN（ミリ秒） */
+  slowMs: number;
+}
+
+function checkResponseTimes(pages: readonly Fetched[], slowMs: number) {
+  const name = '応答時間';
+  const timed = pages.flatMap((page) =>
+    'response' in page ? [{ url: page.url, ms: page.response.ms }] : [],
+  );
+  if (!timed.length) return result('SKIP', name, '応答を受け取れたページがない');
+  const sorted = timed.map((entry) => entry.ms).sort((a, b) => a - b);
+  const median = sorted[Math.floor((sorted.length - 1) / 2)]!;
+  const detail = `${timed.length} ページ、中央値 ${median}ms・最大 ${sorted.at(-1)}ms（実行した場所からの取得時間。利用者の表示速度ではない）`;
+  const slow = timed
+    .filter((entry) => entry.ms > slowMs)
+    .map((entry) => `${pathOf(entry.url)}: ${entry.ms}ms`);
+  return slow.length
+    ? result('WARN', name, `${detail}。${slowMs}ms 超が ${slow.length} 件\n${listed(slow)}`)
+    : result('PASS', name, detail);
+}
+
+/** 公開後の定期監視で確かめる項目（#32）。死活・証明書・robots・sitemap 掲載 URL・応答時間。 */
+export async function checkMonitor(
+  site: URL,
+  probe: Probe,
+  policy: MonitorPolicy,
+): Promise<CheckResult[]> {
+  const { origin, hostname } = site;
+  const results = [
+    await checkTopPage(probe, origin),
+    await checkCertificate(probe, hostname, policy),
+    await checkRobots(probe, origin),
+  ];
+  const sitemap = await readSitemap(probe, origin);
+  results.push(sitemap.check);
+  const pages = await fetchAll(probe, sitemap.urls);
+  results.push(checkPageStatus(pages), checkResponseTimes(pages, policy.slowMs));
   return results;
 }

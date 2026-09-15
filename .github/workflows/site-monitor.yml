@@ -1,0 +1,46 @@
+# 公開後の監視（#32、ADR 0046）。リポジトリ変数 SITE_URL（例: https://<本番ドメイン>）が
+# 設定されているときだけ監視する。未設定なら依存も入れずに成功で終わる。
+# 失敗（FAIL）はジョブの失敗になり、GitHub の標準の通知（Actions の失敗通知）で知らせる。
+name: Site monitor
+on:
+  schedule:
+    - cron: '17 * * * *' # 毎時 17 分（UTC）。混み合う毎時 0 分を避ける
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: site-monitor
+  cancel-in-progress: false
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SITE_URL: ${{ vars.SITE_URL }}
+    steps:
+      - name: Check SITE_URL
+        id: gate
+        run: |
+          if [ -z "$SITE_URL" ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "リポジトリ変数 SITE_URL が未設定のため、監視は行っていません。" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - if: steps.gate.outputs.enabled == 'true'
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - if: steps.gate.outputs.enabled == 'true'
+        run: npm install --global npm@12.0.2
+      - if: steps.gate.outputs.enabled == 'true'
+        run: npm ci
+      - if: steps.gate.outputs.enabled == 'true'
+        name: Monitor
+        run: npm run monitor -- --url "$SITE_URL"

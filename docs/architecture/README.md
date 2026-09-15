@@ -53,6 +53,8 @@
 
 - [0044 独自ドメインでの公開後の確認をコマンドにする](0044-live-domain-checks.md)
 
+- [0046 公開後の監視を GitHub Actions の定期実行で始める](0046-post-launch-monitoring.md)
+
 ## 技術的な判断とその理由
 
 | 判断 | 理由 |

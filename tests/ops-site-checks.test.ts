@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { inspectHtml } from '../tools/ops/html';
 import { createProbe, distFetch, type Certificate, type Fetch } from '../tools/ops/probe';
 import { tally, type CheckResult } from '../tools/ops/results';
-import { checkLive, parseSiteUrl } from '../tools/ops/site-checks';
+import { checkLive, checkMonitor, parseSiteUrl } from '../tools/ops/site-checks';
 
 const ORIGIN = 'https://tsumugi.test';
 const NOW = new Date('2026-09-16T00:00:00Z');
@@ -209,6 +209,47 @@ describe('公開後の確認（check:live）', () => {
   ])('ドメインのトップ以外の指定を拒否する: %s', (value) =>
     expect(() => parseSiteUrl(value)).toThrow(),
   );
+});
+
+describe('公開後の監視（monitor）', () => {
+  const MONITOR = { ...POLICY, slowMs: 200 };
+
+  it('正常なら死活・証明書・robots・sitemap・掲載 URL・応答時間がすべて PASS', async () => {
+    const results = await checkMonitor(parseSiteUrl(ORIGIN), probeFor(healthySite()), MONITOR);
+    expect(results.map((entry) => [entry.status, entry.name])).toEqual([
+      ['PASS', 'トップページの応答'],
+      ['PASS', 'HTTPS の証明書'],
+      ['PASS', 'robots.txt'],
+      ['PASS', 'sitemap.xml'],
+      ['PASS', 'sitemap 掲載 URL の応答'],
+      ['PASS', '応答時間'],
+    ]);
+  });
+
+  it('しきい値を超えて遅いページを WARN で挙げる', async () => {
+    const routes = healthySite();
+    const slow: Fetch = async (url) => {
+      if (url.endsWith('/price.html')) await new Promise((done) => setTimeout(done, 350));
+      return mockFetch(routes)(url);
+    };
+    const probe = createProbe({
+      fetch: slow,
+      resolveHost: async () => ['192.0.2.10'],
+      certificate: async () => validCertificate,
+    });
+    const result = named(await checkMonitor(parseSiteUrl(ORIGIN), probe, MONITOR), '応答時間');
+    expect(result.status).toBe('WARN');
+    expect(result.detail).toMatch(/\/price\.html: \d+ms/);
+  });
+
+  it('停止中（接続できない・503）は FAIL で終了コードの根拠になる', async () => {
+    const down = healthySite();
+    down[`${ORIGIN}/`] = { status: 503, body: 'unavailable' };
+    down[`${ORIGIN}/index.html`] = { status: 503, body: 'unavailable' };
+    const results = await checkMonitor(parseSiteUrl(ORIGIN), probeFor(down), MONITOR);
+    expect(named(results, 'トップページ').status).toBe('FAIL');
+    expect(named(results, 'sitemap 掲載 URL').detail).toContain('/index.html → 503');
+  });
 });
 
 describe('out/ を読む模擬配信（リハーサル）', () => {
