@@ -176,7 +176,7 @@ TypeScript 7 の CLI と互換 API の併用理由、依存の overrides は [AD
 
 ## ディレクトリの境界
 
-すべてのコマンドはルートで実行する。`src/` にアプリ、`src/styles/` に中央管理したTailwind、`src/assets/` に公開前の元画像を置く。`public/` はそのまま配信する素材。`tools/scripts/` は開発・生成・構造検査、`tools/verify/` は納品物の検査、`tools/pricing/` は独立した事業モデル。
+すべてのコマンドはルートで実行する。`src/` にアプリ、`src/styles/` に中央管理したTailwind、`src/assets/` に公開前の元画像を置く。`public/` はそのまま配信する素材。`tools/scripts/` は開発・生成・構造検査、`tools/verify/` は納品物の検査、`tools/pricing/` は独立した事業モデル。`tools/ops/` は見積もり・指標・月次レポート・修正依頼・顧客管理・営業リスト・GBP の社内 CLI（`npm run ops:*`、使い方は [tools/ops/README.md](../tools/ops/README.md)）で、実データは git 管理外の `.data/` に置く（[ADR 0036](architecture/0036-internal-ops-tools-and-estimates.md)）。公開サイトからは読み込まない。
 
 ESLint・Vitest・Prettierの補助設定は `config/`、Next.js・TypeScript・npm・Vercelの探索起点となる設定はルートに残す。`@/` は引き続き `src/` を指す。検査レポートとスクリーンショットは `.artifacts/` に置き、Gitに含めない。
 
