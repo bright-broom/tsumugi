@@ -73,6 +73,14 @@
 
 - [0035 受付サービスの配備先・保存先・通知手段の候補（オーナー判断・未決）](0035-inquiry-hosting-candidates.md)
 
+- [0036 社内ツールを tools/ops の CLI とし、見積もりは公開料金だけで計算する](0036-internal-ops-tools-and-estimates.md)
+
+- [0037 顧客運用の指標は「0・未計測・欠損」を型で分け、月次レポートは確認前の下書きとして出す](0037-customer-metrics-and-monthly-reports.md)
+
+- [0038 修正依頼と顧客・案件の進行は、顧客ごとのファイルと状態遷移の検査で管理する](0038-requests-and-customer-projects.md)
+
+- [0039 leadfinder は取り込んだ CSV だけを扱い、GBP は手で書き出した情報との突き合わせと承認の記録にする](0039-leadfinder-and-gbp-sync.md)
+
 - [0040 記事・事例・対応エリア・顧客事例を共通のコレクションとして静的生成する](0040-collections.md)
 
 - [0041 事例の絞り込みを JavaScript なしの CSS で行う](0041-css-case-filter.md)

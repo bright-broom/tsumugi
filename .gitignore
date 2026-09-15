@@ -3,6 +3,8 @@ node_modules/
 .next/
 out/
 .artifacts/
+# 社内ツールの実データ（顧客・見込み客・売上）。公開リポジトリに入れない（ADR 0036）
+.data/
 .vercel/
 coverage/
 .env*
