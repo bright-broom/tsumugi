@@ -11,7 +11,7 @@ import { SCREENSHOTS_DIR } from '../paths';
 import { rec } from './results';
 import { pages } from './static';
 import {
-  CONTRAST_BODY, CONTRAST_LARGE, IC_RATIO_MAX, IC_RATIO_MIN, LCP_BUDGET_MS, MIN_FONT_MB, MOBILE_W, TAP_MIN,
+  CONTRAST_BODY, CONTRAST_LARGE, IC_RATIO_MAX, IC_RATIO_MIN, LCP_BUDGET_MS, MIN_FIG_TEXT, MIN_FONT_MB, MOBILE_W, TAP_MIN,
 } from './thresholds';
 
 const MIME: Record<string, string> = {
@@ -45,6 +45,14 @@ function run<T>(page: Page, fn: string, arg?: unknown): Promise<T> {
 }
 
 const need = (large: boolean) => (large ? CONTRAST_LARGE : CONTRAST_BODY);
+
+/** 27 図解の文字も、SVG 上の値ではなく画面上の実寸で下限を測る（図のあるページだけ記録する） */
+async function recFigText(page: Page, f: string, width: number): Promise<void> {
+  const r = await run<{ seen: number; bad: { px: number; txt: string }[] }>(page, JS.FIG_TEXT, MIN_FIG_TEXT);
+  if (!r.seen) return;
+  rec(r.bad.length ? 'FAIL' : 'PASS', `27 図の文字の実寸 ${MIN_FIG_TEXT}px(${width}px)`, f,
+    r.bad.length ? `${r.bad.length}件: ${JSON.stringify(r.bad.slice(0, 3))}` : `${r.seen}個`);
+}
 
 export async function checkBrowser(dist: string, root: string, writeBack: boolean): Promise<number | null> {
   let chromium: typeof import('playwright').chromium;
@@ -92,6 +100,7 @@ export async function checkBrowser(dist: string, root: string, writeBack: boolea
           rec(w.ratio >= req ? 'PASS' : 'FAIL', '図のコントラスト比 AA', f,
             `最悪 ${w.ratio}:1 (必要 ${req.toFixed(1)}, ${w.size}px) 「${w.text}」`);
         }
+        await recFigText(pg, f, 1280);
       }
 
       const have = pages(dist);
@@ -139,6 +148,7 @@ export async function checkBrowser(dist: string, root: string, writeBack: boolea
         const small = await run<unknown[]>(mp, JS.SMALL_TEXT, MIN_FONT_MB);
         rec(small.length ? 'FAIL' : 'PASS', `27 文字の下限 ${MIN_FONT_MB}px`, f,
           small.length ? `${small.length}件: ${JSON.stringify(small.slice(0, 3))}` : '');
+        await recFigText(mp, f, MOBILE_W);
 
         // 28 アイコンと文字の大きさの比。
         // px で固定すると置き場所ごとに 0.88〜1.20 倍とばらつき、行の中で浮く。

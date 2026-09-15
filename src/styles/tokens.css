@@ -1,7 +1,7 @@
 /* 生成物。手で編集しない。
  * 出所: src/styles/design.tokens.json
  * 生成: npm run tokens
- * トークン数: 88
+ * トークン数: 91
  */
 @theme static {
   /* color */
@@ -89,7 +89,10 @@
   --text-h3: 20px;
   --text-label: 14px;  /* セクションラベル 14–20px */
   --text-body: 16px;  /* 業務本文と入力は 16px */
-  --text-meta: 13px;
+  --text-fine: 14px;  /* 注記・添え字・表の補足・ボタンやラベルの下限。10.5pt（旧 12px＝9pt から +1.5pt）。これより小さい文字を作らない */
+  --text-meta: 14px;  /* 補助文。旧 PC 13px・モバイル 14px を下限にそろえる */
+  --tracking-body: 0.04em;  /* 和文の字間。palt で詰まる字面を控えめに開く。空白の挿入で代用しない */
+  --tracking-heading: 0.02em;  /* 見出し。大きい字は開きすぎない */
   --leading-hero: 1.5;
   --leading-heading: 1.5;
   --leading-body: 1.8;

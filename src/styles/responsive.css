@@ -111,7 +111,7 @@
       @apply text-[39px];
     }
     .logo .roman {
-      @apply text-[12px] tracking-[.18em];
+      @apply text-fine tracking-[.18em];
     }
     .logo .s {
       @apply hidden;
@@ -135,13 +135,21 @@
       @apply right-[20px] p-[18px_12px] max-h-[calc(100dvh_-_var(--spacing-header-mb)_-_80px)];
     }
     .draft {
-      @apply px-pad-mb-head text-[12px];
+      @apply px-pad-mb-head text-fine;
     }
     .tel {
       @apply p-[4px_12px_4px_10px];
     }
     .tel .num {
       @apply text-[15px];
+    }
+  }
+
+  /* 320px 級の画面。文字の下限を 14px に上げた分（ADR 0028）、屋号・相談・メニューの間隔だけを詰めて1行に収める */
+  @media (max-width: 359px) {
+    .hdr-in,
+    .header-actions {
+      @apply gap-[6px];
     }
   }
 
@@ -224,8 +232,21 @@
     .fig > svg {
       @apply min-w-[480px];
     }
-    /* 組み直した図があるなら、縮小も横スクロールもせずそちらを出す。
-       その場合は左右の余白も外して、文字を1pxでも大きく描く */
+    .fig-hint {
+      @apply block sticky left-[0] m-[12px_0_0] text-fine font-semi text-muted;
+    }
+    .fig-hint::before {
+      content: '↔ ';
+    }
+    section.dark .fig-hint {
+      @apply text-muted-on-ink;
+    }
+  }
+
+  /* ── 組み直した図があるなら、縮小も横スクロールもせずそちらを出す。
+        横長の図は幅 700〜776 の座標で描いてあり、1024px 未満では補助文字が画面上 14px を割る。
+        狭い図は幅 340 の座標で、390px 幅でほぼ等倍。広い画面で拡大しすぎないよう幅を抑える（ADR 0028） */
+  @media (max-width: 1023px) {
     .fig.has-narrow {
       @apply p-[18px_0_0];
     }
@@ -233,16 +254,7 @@
       @apply hidden;
     }
     .fig.has-narrow > .fn {
-      @apply block min-w-[0];
-    }
-    .fig-hint {
-      @apply block sticky left-[0] m-[12px_0_0] text-[12px] font-semi text-muted;
-    }
-    .fig-hint::before {
-      content: '↔ ';
-    }
-    section.dark .fig-hint {
-      @apply text-muted-on-ink;
+      @apply block min-w-[0] max-w-[480px] mx-[auto];
     }
   }
 
@@ -258,7 +270,7 @@
       @apply min-w-[7.5em];
     }
     .tbl-hint {
-      @apply block m-[10px_0_0] text-[12px] font-semi text-muted;
+      @apply block m-[10px_0_0] text-fine font-semi text-muted;
     }
     .tbl-hint::before {
       content: '↔ ';
@@ -303,7 +315,7 @@
       @apply min-w-[0] p-[0_0_8px] text-[15.5px] leading-[1.6];
     }
     .tblwrap.stack tbody th .dim {
-      @apply text-[13px];
+      @apply text-fine;
     }
     /* セルは block のまま。grid にすると中のリンクが grid item になって
        ブロック化し、「本文中のリンク」ではなくなってタップ領域の検査に引っかかる。 */
@@ -313,7 +325,7 @@
     }
     .tblwrap.stack tbody td[data-h]::before {
       content: attr(data-h);
-      @apply block text-[12.5px] font-semi leading-[1.7] text-muted;
+      @apply block text-fine font-semi leading-[1.7] text-muted;
     }
     .tblwrap.stack tbody td.grp {
       @apply p-[0];
@@ -333,39 +345,39 @@
         読みにくさの原因は明度差ではなく字面の小ささだった）。 */
   @media (max-width: 768px) {
     .sh .lab {
-      @apply text-[13.5px];
+      @apply text-fine;
     }
     .tel .lbl {
-      @apply text-[11.5px];
+      @apply text-fine;
     }
     .menu-panel .hd {
-      @apply text-[13px];
+      @apply text-fine;
     }
     .menu-panel a {
       @apply text-[14px];
     }
     .stat .k {
-      @apply text-[13.5px];
+      @apply text-fine;
     }
     .tbl-hint,
     .fig-hint {
-      @apply text-[13px];
+      @apply text-fine;
     }
     .pmeta,
     .sub2 {
-      @apply text-[13.5px];
+      @apply text-fine;
     }
     .calc .r.net .k {
       @apply text-[15px];
     }
     .calc .r .k em {
-      @apply text-[13px];
+      @apply text-fine;
     }
     .field .req {
-      @apply text-[12.5px];
+      @apply text-fine;
     }
     .tbl tbody th .dim {
-      @apply text-[12.5px];
+      @apply text-fine;
     }
     /* 比較バーは、名前と補足と金額が1行に詰まると読みにくい。
        名前の行と金額の行を分け、補足はその下に落とす */
@@ -379,7 +391,7 @@
       @apply text-[15.5px];
     }
     .vs .nm em {
-      @apply block text-[13px];
+      @apply block text-fine;
     }
     .vs .nm > span {
       @apply block;
