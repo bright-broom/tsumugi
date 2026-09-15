@@ -18,7 +18,8 @@ export default function TermsPage({ copy, route }: PageProps<'terms'>) {
   return (
     <Base file={file} title={title} desc={desc}>
       <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 lede={copy.lede}>
-        {C.PLACEHOLDER && (
+        {/* 承認記録（版・承認日・確認者・文面の SHA-256）が揃うまで、下書きとして案内する（ADR 0024） */}
+        {(C.PLACEHOLDER || !C.isApprovalRecorded(C.LEGAL_APPROVALS.terms)) && (
           <Note heading={copy.heading2} kind="warn">
             <p>
               {copy.p}
