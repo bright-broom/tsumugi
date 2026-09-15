@@ -18,8 +18,29 @@ import SubsidyPage from '@/views/subsidy';
 import TermsPage from '@/views/terms';
 import UnlimitedPage from '@/views/unlimited';
 import WorksPage from '@/views/works';
+import ArticleListPage from '@/views/collections/article-list';
+import ArticlePage from '@/views/collections/article';
+import CaseListPage from '@/views/collections/case-list';
+import CaseStudyPage from '@/views/collections/case-study';
+import AreaListPage from '@/views/collections/area-list';
+import AreaPage from '@/views/collections/area';
+import WorkPage from '@/views/collections/work';
 function renderPage(props: AnyPageProps) {
   switch (props.template) {
+    case 'articleList':
+      return <ArticleListPage {...props} />;
+    case 'article':
+      return <ArticlePage {...props} />;
+    case 'caseList':
+      return <CaseListPage {...props} />;
+    case 'caseStudy':
+      return <CaseStudyPage {...props} />;
+    case 'areaList':
+      return <AreaListPage {...props} />;
+    case 'area':
+      return <AreaPage {...props} />;
+    case 'work':
+      return <WorkPage {...props} />;
     case 'notFound':
       return <NotFoundPage {...props} />;
     case 'about':

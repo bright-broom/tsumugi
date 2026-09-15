@@ -29,6 +29,8 @@ import subsidy from '@/i18n/locales/ja/subsidy';
 import terms from '@/i18n/locales/ja/terms';
 import unlimited from '@/i18n/locales/ja/unlimited';
 import works from '@/i18n/locales/ja/works';
+import collections from '@/i18n/locales/ja/collections';
+import entries from '@/i18n/locales/ja/entries';
 
 export const ja = {
   og,
@@ -62,4 +64,6 @@ export const ja = {
   terms,
   unlimited,
   works,
+  collections,
+  entries,
 } as const;
