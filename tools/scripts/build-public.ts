@@ -3,13 +3,13 @@
  *
  * - theme.css   … src/styles/globals.css をTailwindでコンパイルする。CSS の正本は src/styles/（public/theme.css は手で編集しない）
  * - robots.txt  … 固定文面
- * - sitemap.xml … ページ一覧から作る。404 は載せない。並びは NAV → 法務 → 業種
+ * - sitemap.xml … ページ一覧から作る。404 は載せない。並びは NAV → 法務 → 業種 → 公開中のコレクション（content/sitemap.ts）
  */
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DOMAIN } from '@/content/config';
-import { PUBLIC_ROUTES } from '@/routing/registry';
 import { HOME_HERO, heroSvg } from '@/content/hero';
+import { sitemapXml } from '@/content/sitemap';
 import { getMessages } from '@/i18n/catalog';
 import { buildStyles } from './build-styles';
 
@@ -30,14 +30,7 @@ writeFileSync(
   `User-agent: *\nAllow: /\nSitemap: https://${DOMAIN}/sitemap.xml\n`,
 );
 
-const FILES = PUBLIC_ROUTES.map((route) => route.file);
-writeFileSync(
-  join(PUB, 'sitemap.xml'),
-  '<?xml version="1.0" encoding="UTF-8"?>\n' +
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-    FILES.map((f) => `  <url><loc>https://${DOMAIN}/${f}</loc></url>\n`).join('') +
-    '</urlset>\n',
-);
+writeFileSync(join(PUB, 'sitemap.xml'), sitemapXml());
 
 console.log(
   'public/ に theme.css / robots.txt / sitemap.xml を用意しました（CSS の正本は src/styles/）',

@@ -1,6 +1,11 @@
 import { getMessages } from '@/i18n/catalog';
 import { ALL_ROUTES, INDUSTRY_ROUTES, ROUTES, type Route } from '@/routing/registry';
 import type { IconName } from '@/lib/icons';
+import {
+  SITE_COLLECTIONS,
+  collectionNavEntries,
+  type SiteCollections,
+} from '@/content/collections';
 const copy = getMessages().nav;
 const entry = (r: Exclude<Route, { kind: 'error' }>): [string, string] => [
   r.file,
@@ -36,8 +41,19 @@ const GROUP_ROUTES = {
   readonly Extract<Route, { kind: 'main' }>['id'][]
 >;
 
-export const NAV_GROUPS = Object.entries(GROUP_ROUTES).map(([id, routes]) => ({
-  id,
-  label: copy.groups[id as keyof typeof copy.groups],
-  entries: routes.map((routeId) => ({ ...ROUTES[routeId], label: copy.labels[routeId] })),
-}));
+/** Generated collection lists follow the works page once they have published entries. */
+export function navigationGroups(site: SiteCollections = SITE_COLLECTIONS) {
+  const collections = collectionNavEntries(site);
+  return Object.entries(GROUP_ROUTES).map(([id, routes]) => ({
+    id,
+    label: copy.groups[id as keyof typeof copy.groups],
+    entries: routes.flatMap((routeId) => {
+      const { file, path, icon } = ROUTES[routeId];
+      return [
+        { id: routeId as string, file, path, icon, label: copy.labels[routeId] as string },
+        ...(routeId === 'works' ? collections : []),
+      ];
+    }),
+  }));
+}
+export const NAV_GROUPS = navigationGroups();

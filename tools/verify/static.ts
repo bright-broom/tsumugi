@@ -23,11 +23,14 @@ const all = (h: string, re: RegExp) => [...h.matchAll(re)].map((m) => m[1]!);
 /** 文字数（サロゲートペアを1文字と数える） */
 const chars = (s: string) => [...s].length;
 
-/** dist 直下の HTML（＝ページ）。名前順 */
-export function pages(dist: string): string[] {
-  return readdirSync(dist, { withFileTypes: true })
-    .filter((e) => e.isFile() && e.name.endsWith('.html'))
-    .map((e) => e.name)
+/** dist の HTML（＝ページ）。コレクションの詳細（news/<slug>.html）も含め、相対パスの名前順 */
+export function pages(dist: string, prefix = ''): string[] {
+  return readdirSync(join(dist, prefix), { withFileTypes: true })
+    .flatMap((e) =>
+      e.isDirectory() && e.name !== '_next'
+        ? pages(dist, `${prefix}${e.name}/`)
+        : e.isFile() && e.name.endsWith('.html') ? [`${prefix}${e.name}`] : [],
+    )
     .sort();
 }
 

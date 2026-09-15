@@ -9,6 +9,7 @@ import Note from '@/components/Note';
 import Stats from '@/components/Stats';
 import Cta from '@/components/Cta';
 import type { PageProps } from '@/content/page-props';
+import PublishedWorks from '@/views/collections/works-section';
 
 export default function WorksPage({ copy, route, verification }: PageProps<'works'>) {
   const file = ROUTES[route].file;
@@ -24,6 +25,7 @@ export default function WorksPage({ copy, route, verification }: PageProps<'work
   return (
     <Base file={file} title={title} desc={desc}>
       <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 navKey={file} lede={copy.lede} />
+      <PublishedWorks />
 
       <Section>
         <Note heading={copy.heading2}>
