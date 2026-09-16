@@ -24,7 +24,11 @@ describe('business calendar data', () => {
     const hhmm = (m: number) => `${Math.floor(m / 60)}:${String(m % 60).padStart(2, '0')}`;
     expect(TEL_HOURS).toContain(hhmm(BUSINESS_CALENDAR.opensAtMinutes));
     expect(TEL_HOURS).toContain(hhmm(BUSINESS_CALENDAR.closesAtMinutes));
-    expect(STORE.locations[0]!.hours.Monday).toEqual([{ opens: '08:00', closes: '22:00' }]);
+    expect(Object.keys(STORE.locations[0]!.hours)).toHaveLength(7);
+    for (const hours of Object.values(STORE.locations[0]!.hours))
+      expect(hours).toEqual([{ opens: '08:00', closes: '22:00' }]);
+    expect(calendar.isBusinessDay('2026-09-12')).toBe(true);
+    expect(calendar.isBusinessDay('2026-09-13')).toBe(true);
   });
 });
 
@@ -34,9 +38,9 @@ describe('reply deadline (one business day)', () => {
     ['before opening', '2026-09-15T07:30:00', '2026-09-15T22:00:00'],
     ['after closing', '2026-09-15T23:00:00', '2026-09-16T22:00:00'],
     ['exactly at closing', '2026-09-15T22:00:00', '2026-09-16T22:00:00'],
-    ['late on Friday', '2026-09-11T17:00:00', '2026-09-14T17:00:00'],
-    ['on Saturday', '2026-09-12T11:00:00', '2026-09-14T22:00:00'],
-    ['before the silver week holidays', '2026-09-18T10:00:00', '2026-09-24T10:00:00'],
+    ['late on Friday', '2026-09-11T17:00:00', '2026-09-12T17:00:00'],
+    ['on Saturday', '2026-09-12T11:00:00', '2026-09-13T11:00:00'],
+    ['before the silver week holidays', '2026-09-20T10:00:00', '2026-09-24T10:00:00'],
     ['on a substitute holiday', '2026-05-06T12:00:00', '2026-05-07T22:00:00'],
   ])('%s', (_, received, deadline) => {
     expect(calendar.replyDeadline(jst(received)).toISOString()).toBe(jst(deadline).toISOString());
@@ -48,8 +52,8 @@ describe('reply deadline (one business day)', () => {
   });
 
   it('counts only business minutes between two instants', () => {
-    expect(calendar.businessMinutesBetween(jst('2026-09-11T17:00:00'), jst('2026-09-14T10:00:00'))).toBe(420);
-    expect(calendar.businessMinutesBetween(jst('2026-09-12T09:00:00'), jst('2026-09-13T22:00:00'))).toBe(0);
+    expect(calendar.businessMinutesBetween(jst('2026-09-11T17:00:00'), jst('2026-09-14T10:00:00'))).toBe(2100);
+    expect(calendar.businessMinutesBetween(jst('2026-09-12T09:00:00'), jst('2026-09-13T22:00:00'))).toBe(1620);
   });
 });
 

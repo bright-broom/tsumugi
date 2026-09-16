@@ -9,7 +9,7 @@ export default {
   phoneNumber: '080-4560-1124',
   email: 'leonardodavinci.works@gmail.com',
   postalCode: '142-0054',
-  phoneHours: '平日 8:00〜22:00',
+  phoneHours: '8:00〜22:00（土日も対応）',
   emailHours: '24時間受付',
   teamHeading: '安全性と集客、両方の視点で。',
   teamIntro:
