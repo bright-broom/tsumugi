@@ -4,6 +4,8 @@ import { Fragment, type ReactNode } from 'react';
 import { format } from '@/i18n/format';
 import {
   cap,
+  DiagramIcon,
+  DiagramNode,
   BOX_F,
   BOX_S,
   DIM,
@@ -24,61 +26,67 @@ function ownershipClockNarrow(
   const track = (y: number, atEnd: boolean) => {
     const col = 'var(--fig-ok)';
     const fx = atEnd ? NW - 6 : 6;
-    const d = atEnd ? -20 : 20;
     return (
       <>
         <rect x="0" y={y} width={NW} height="10" rx="5" {...BOX_F} {...BOX_S} />
         <circle cx={fx} cy={y + 5} r="5.5" fill={col} />
         <line x1={fx} y1={y + 5} x2={fx} y2={y - 22} stroke={col} strokeWidth="2.2" />
-        <path d={`M${fx} ${y - 22} L${fx + d} ${y - 17} L${fx} ${y - 12} z`} fill={col} />
+        <DiagramIcon name="key" x={atEnd ? NW - 28 : 14} y={y - 26} size={22} accent />
       </>
     );
   };
-  const s = (
+  const panel = (own: boolean) => (
     <>
-      {cap(0, 14, copy.ownershipClockNarrowLabel1, NARROW_MIN_TEXT)}
-      <rect x="0" y="24" width={NW} height="48" rx="8" {...BOX_F} {...BOX_S} />
-      <text x="16" y="45" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="currentColor">
-        {format(copy.ownershipClockNarrowLabel2, { subMonthly: c(subMonthly), months: months })}
-      </text>
-      <text x="16" y="63" fontSize={NARROW_MIN_TEXT} {...DIM}>
-        {format(copy.ownershipClockNarrowLabel3, { subTotal: c(subTotal) })}
-      </text>
-      <text x={NW} y="94" textAnchor="end" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-ok)">
-        {copy.ownershipClockNarrowLabel4}
-      </text>
-      {track(126, true)}
-      <text x="0" y="162" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-bad)">
-        {copy.ownershipClockNarrowLabel5}
-      </text>
-      {cap(0, 210, copy.ownershipClockNarrowLabel6, NARROW_MIN_TEXT)}
-      <rect
-        x="0"
-        y="220"
-        width={NW}
-        height="48"
-        rx="8"
-        fill="var(--fig-accent)"
-        fillOpacity=".08"
-        stroke="var(--fig-accent)"
-        strokeWidth="2"
+      {cap(
+        0,
+        18,
+        own ? copy.ownershipClockNarrowLabel6 : copy.ownershipClockNarrowLabel1,
+        NARROW_MIN_TEXT,
+      )}
+      <DiagramNode
+        y={34}
+        icon={own ? 'key' : 'repeat-2'}
+        accent={own}
+        title={
+          own
+            ? format(copy.ownershipClockNarrowLabel7, { ourPrice: c(ourPrice) })
+            : format(copy.ownershipClockNarrowLabel2, { subMonthly: c(subMonthly), months })
+        }
+        sub={
+          own
+            ? copy.ownershipClockNarrowLabel8
+            : format(copy.ownershipClockNarrowLabel3, { subTotal: c(subTotal) })
+        }
       />
-      <text x="16" y="241" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="currentColor">
-        {format(copy.ownershipClockNarrowLabel7, { ourPrice: c(ourPrice) })}
+      <text
+        x={own ? 0 : NW}
+        y={140}
+        textAnchor={own ? 'start' : 'end'}
+        fontSize={NARROW_MIN_TEXT}
+        fontWeight="700"
+        fill="var(--fig-ok)"
+      >
+        {own ? copy.ownershipClockNarrowLabel9 : copy.ownershipClockNarrowLabel4}
       </text>
-      <text x="16" y="259" fontSize={NARROW_MIN_TEXT} {...DIM}>
-        {copy.ownershipClockNarrowLabel8}
-      </text>
-      <text x="0" y="290" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-ok)">
-        {copy.ownershipClockNarrowLabel9}
-      </text>
-      {track(318, false)}
-      <text x="0" y="354" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-ok)">
-        {copy.ownershipClockNarrowLabel10}
+      {track(170, !own)}
+      <text
+        x={0}
+        y={210}
+        fontSize={NARROW_MIN_TEXT}
+        fontWeight="700"
+        fill={own ? 'var(--fig-ok)' : 'currentColor'}
+      >
+        {own ? copy.ownershipClockNarrowLabel10 : copy.ownershipClockNarrowLabel5}
       </text>
     </>
   );
-  return [s, `0 0 ${NW} 366`];
+  return [
+    <>
+      {panel(false)}
+      <g transform="translate(0 254)">{panel(true)}</g>
+    </>,
+    `0 0 ${NW} 480`,
+  ];
 }
 
 const flag = (x: number, y: number, ok = true) => {
@@ -86,7 +94,7 @@ const flag = (x: number, y: number, ok = true) => {
   return (
     <Fragment key={`flag-${x}-${y}`}>
       <line x1={x} y1={y} x2={x} y2={y - 26} stroke={col} strokeWidth="2.4" />
-      <path d={`M${x} ${y - 26} L${x + 22} ${y - 20} L${x} ${y - 14} z`} fill={col} />
+      <DiagramIcon name="key" x={x + 5} y={y - 28} size={20} accent />
       <circle cx={x} cy={y} r="4.5" fill={col} />
     </Fragment>
   );
@@ -142,21 +150,24 @@ export function OwnershipClock({
     );
   }
   s.push(
-    <text key="clock-1" x="0" y="58" fontSize="13.5" fontWeight="700" fill="currentColor">
+    <DiagramIcon key="monthly-icon" name="repeat-2" x={0} y={22} size={24} />,
+    <DiagramIcon key="owned-icon" name="globe" x={0} y={140} size={24} accent />,
+    <text key="clock-1" x="0" y="58" fontSize="13.5" fontWeight="700">
       {copy.ownershipClockNarrowLabel1}
     </text>,
     <text key="clock-2" x="0" y="77" fontSize="12" {...DIM}>
       {copy.ownershipClock2}
     </text>,
-    <rect key="clock-3" x={x0} y="42" width={x1 - x0} height="44" rx="8" {...BOX_F} {...BOX_S} />,
-    <text
-      key="clock-4"
-      x={(x0 + x1) / 2}
-      y="70"
-      textAnchor="middle"
-      fontSize="13.5"
-      fill="currentColor"
-    >
+    <rect
+      key="clock-3"
+      x={x0}
+      y="42"
+      width={x1 - x0}
+      height="44"
+      rx="12"
+      className="diagram-surface"
+    />,
+    <text key="clock-4" x={(x0 + x1) / 2} y="70" textAnchor="middle" fontSize="13.5">
       {format(copy.ownershipClock3, {
         subMonthly: c(subMonthly),
         months: months,
@@ -175,13 +186,7 @@ export function OwnershipClock({
     >
       {copy.ownershipClockNarrowLabel4}
     </text>,
-    <path
-      key="clock-6"
-      d={`M${mx(12) - 8} 98 L${mx(12) + 8} 114 M${mx(12) + 8} 98 L${mx(12) - 8} 114`}
-      stroke="var(--fig-bad)"
-      strokeWidth="2.4"
-      strokeLinecap="round"
-    />,
+    <DiagramIcon key="clock-6" name="circle-x" x={mx(12) - 10} y={96} size={20} />,
     <text
       key="clock-7"
       x={mx(12) + 18}
@@ -192,7 +197,7 @@ export function OwnershipClock({
     >
       {copy.ownershipClock4}
     </text>,
-    <text key="clock-8" x="0" y="176" fontSize="13.5" fontWeight="700" fill="currentColor">
+    <text key="clock-8" x="0" y="176" fontSize="13.5" fontWeight="700">
       {copy.ownershipClockNarrowLabel6}
     </text>,
     <text key="clock-9" x="0" y="195" fontSize="12" {...DIM}>
@@ -214,25 +219,10 @@ export function OwnershipClock({
       stroke="var(--fig-accent)"
       strokeWidth="2"
     />,
-    <text
-      key="clock-12"
-      x={(x0 + x1) / 2}
-      y="188"
-      textAnchor="middle"
-      fontSize="13.5"
-      fill="currentColor"
-    >
+    <text key="clock-12" x={(x0 + x1) / 2} y="188" textAnchor="middle" fontSize="13.5">
       {format(copy.ownershipClock6, { ourPrice: c(ourPrice) })}
     </text>,
-    <path
-      key="clock-13"
-      d={`M${mx(12) - 7} 222 l6 7 l12 -14`}
-      fill="none"
-      stroke="var(--fig-ok)"
-      strokeWidth="2.4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />,
+    <DiagramIcon key="clock-13" name="check" x={mx(12) - 10} y={212} size={22} accent />,
     <text
       key="clock-14"
       x={mx(12) + 18}
@@ -246,6 +236,7 @@ export function OwnershipClock({
   );
   return (
     <Figure
+      icons={['repeat-2', 'globe', 'key', 'circle-x', 'check']}
       wide={s}
       caption={format(copy.ownershipClock8, { months: months })}
       label={format(copy.ownershipClock9, { subMonthly: c(subMonthly), months: months })}
