@@ -19,6 +19,9 @@ npm run check:live -- --url https://<ドメイン>   # 公開後の確認（--di
 npm run monitor -- --url https://<ドメイン>      # 公開後の監視と同じ確認（ADR 0046）
 npm run backup           # git bundle と目録を .artifacts/backup/ に作る（ADR 0045）
 npm run backup:restore-test -- --backup <dir>    # 別ディレクトリへの復元・照合・ビルドと所要時間の記録
+npm run check:security   # ビルド済み out/ の危険な HTML・SVG・公開ファイルを検査
+npm run audit:security   # moderate 以上の既知の依存脆弱性で停止
+npm run test:security-browser # Chromium で CSP の正常表示・攻撃遮断を検証
 npm run check            # 型・依存方向・循環・文言とルート・未使用コードの検査
 npm run check:unused     # Knipで未使用ファイル・export・型・依存関係を検査
 npm run check:collections  # 記事・事例などの公開前チェックと入稿枠の報告（checkにも含む）

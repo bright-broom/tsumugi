@@ -126,3 +126,5 @@
 - [0053 飲食店の掲載料・予約手数料は飲食店ページにまとめる](0053-restaurant-cost-comparison.md)
 
 - [0054 確定した事業者情報と契約文面の下書きを公開設定へ反映する](0054-business-publication-details.md)
+
+- [0055 静的サイト・問い合わせ・社内データ・配備経路を防御する](0055-security-hardening.md)
