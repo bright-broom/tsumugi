@@ -1,5 +1,9 @@
 /* Page-specific roles share the same Tailwind theme and cascade. */
 @layer overrides {
+  .domain-options .more {
+    overflow-wrap: anywhere;
+  }
+
   .member-cards {
     @apply grid grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-[40px] mb-[32px];
   }

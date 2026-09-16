@@ -16,7 +16,7 @@
 |---|---|
 | 構成 | ルート直下の `src/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
 | 実行時 JS | 全21ページで 0（`postbuild` と `verify` で確認） |
-| 検査 | 全項目 **PASS 572 / WARN 1 / FAIL 0**、静的 PASS 318 / WARN 1 / FAIL 0（対象なし 40 件）。WARN は本番公開条件が未設定のプレビューによるもの |
+| 検査 | 全項目 **PASS 573 / WARN 1 / FAIL 0**、静的 PASS 318 / WARN 1 / FAIL 0（対象なし 40 件）。WARN は本番公開条件が未設定のプレビューによるもの |
 | 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 480 件・料金モデル 12 件合格 |
 | 依存の健全性 | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定。Dependabot は ESLint と Node 型定義のメジャー更新だけを除外し、既存の互換性方針を維持（ADR 0003） |
 | 動作を確かめた環境 | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一 |
@@ -316,3 +316,13 @@ validate と全項目 verify は成功（Vitest 477 件・料金モデル 12 件
 ユーザーがセキュリティエンジニアとプロのマーケターの在籍を明示したため、TOP のサービス紹介と「私たちについて」に掲載した。説明文は i18n の共通設定から参照し、技術・安全性とマーケティングの両面を支援の強みとして伝える。氏名・未確認の資格・実績・成果保証は追加していない。既存の書体・レイアウト・部品を使用し、追加ライブラリはない。
 
 検証：check・lint・480 件の単体テスト・12 件の料金モデル・build が成功。全項目 PASS 572 / WARN 1 / FAIL 0、静的 PASS 318 / WARN 1 / FAIL 0。Chromium の幅 1440 / 320 px で TOP・紹介・問い合わせの専門職表示／受付時間と横はみ出しなしを確認。
+
+### 2026-09-17 ドメイン取得先の案内
+
+料金・提供範囲の `price.html#domains` に、さくらのドメイン、ムームードメイン、Cloudflare Registrar の公式 URL と選び方を掲載。「借地と所有」の外部費説明からもリンクした。お客様自身のアカウント・名義で取得し、取得・更新費は別途実費とする方針を明記。変動しやすいキャンペーン価格は固定掲載せず、更新料と追加オプションを含めて各社の最新条件を確認する案内にした。
+
+2026-09-17 に公式情報を確認：[さくらのドメイン](https://domain.sakura.ad.jp/)（電話・メールのサポートと取り扱い種類）、[ムームードメイン](https://muumuu-domain.com/)（取り扱い種類・日本語マニュアル／サポート）、[Cloudflare Registrar](https://www.cloudflare.com/domains/)（取得・更新料金に独自の上乗せなし）、[Cloudflare の登録条件](https://developers.cloudflare.com/registrar/get-started/register-domain/)（利用中は Cloudflare のネームサーバーを使用）。紹介はユーザー指定の取得先案内であり、競合制作サービスの料金比較とは区別する。
+
+既存 Cards・Section と中央管理 CSS を再利用し、新規ライブラリは不要。表示文・公式 URL は料金ページの i18n カタログにまとめた。
+
+検証：check・lint・480 件の単体テスト・12 件の料金モデル・build が成功。全項目 PASS 573 / WARN 1 / FAIL 0、静的 PASS 318 / WARN 1 / FAIL 0。幅 1440 / 390 / 320 px で公式 URL のリンク先と表示文字列、横はみ出しなしを確認し、所有ページからの案内リンクも確認。

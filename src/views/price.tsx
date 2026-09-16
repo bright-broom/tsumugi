@@ -1,3 +1,4 @@
+import Cards from '@/components/Cards';
 import { OwnershipClock } from '@/components/diagrams/OwnershipClock';
 import { ROUTES, href } from '@/routing/registry';
 import { format } from '@/i18n/format';
@@ -68,6 +69,22 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         <Note heading={copy.externalTitle}>
           <p>{copy.external}</p>
         </Note>
+      </Section>
+      <Section
+        id="domains"
+        className="domain-options"
+        heading={copy.registrars.heading}
+        lede={copy.registrars.lede}
+      >
+        <Cards
+          items={copy.registrars.providers.map((provider) => ({
+            title: provider.name,
+            desc: provider.description,
+            link: [provider.url, provider.url],
+          }))}
+        />
+        <p>{copy.registrars.conditions}</p>
+        <p className="dim">{copy.registrars.checked}</p>
       </Section>
       <Section heading={copy.paymentTitle}>
         <Table
