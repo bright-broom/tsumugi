@@ -13,7 +13,7 @@ export default {
     menu: 'メニュー',
     close: '閉じる',
     navigation: 'サイト内のご案内',
-    hours: '受付時間',
+    hours: '電話受付',
   },
   footer: {
     eyebrow: '紬へのご相談',
@@ -28,7 +28,7 @@ export default {
   hd: 'ご案内',
   hd2: '業種別のご案内',
   p: 'お店や会社のホームページ制作と、公開後の更新をお手伝いします。',
-  mk: '受付',
+  mk: '電話受付',
   mk2: '所在地',
   span4: '〒{cPOSTALCODE} {cADDRESSREGION}{cADDRESSCITY}{cADDRESSSTREET}',
   mk3: 'メール',

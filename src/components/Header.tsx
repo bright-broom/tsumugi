@@ -67,6 +67,7 @@ export default function Header({ file }: { file: string }) {
               <div className="menu-phone">
                 <PhoneLink />
                 <p>{`${copy.header.hours} ${C.TEL_HOURS}`}</p>
+                <p>{`${copy.mk3} ${C.EMAIL_HOURS}`}</p>
               </div>
             </div>
           </details>

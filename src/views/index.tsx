@@ -89,6 +89,11 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                 <strong>{copy.strong2}</strong>
                 {copy.sub4}
               </p>
+              <p>
+                <strong>{C.TEAM_HEADING}</strong>
+                <br />
+                {C.TEAM_INTRO}
+              </p>
               <div className="btns">
                 <PhoneLink className="btn btn-1" />
                 <a className="btn btn-2" href={href('owned')}>

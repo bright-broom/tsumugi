@@ -60,7 +60,7 @@ export default function Footer({ file }: { file: string }) {
               <div>
                 <dt>
                   <Icon name="mail" sm />
-                  <span>{copy.mk3}</span>
+                  <span>{`${copy.mk3}（${C.EMAIL_HOURS}）`}</span>
                 </dt>
                 <dd>
                   <a className="contact-email" href={C.EMAIL_LINK}>

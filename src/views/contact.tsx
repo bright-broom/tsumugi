@@ -61,7 +61,7 @@ export default function ContactPage({ copy, route }: PageProps<'contact'>) {
             </a>
           </p>
         )}
-        <h3>{copy.h32}</h3>
+        <h3>{`${copy.h32}（${C.EMAIL_HOURS}）`}</h3>
         <p>{copy.emailHelp}</p>
         <p>
           <a className="contact-email" href={C.EMAIL_LINK}>
