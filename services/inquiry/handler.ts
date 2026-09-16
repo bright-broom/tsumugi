@@ -28,7 +28,7 @@ export interface InquiryHandlerOptions {
   calendar: BusinessCalendar;
   channels: readonly ChannelId[];
   rateLimiter?: RateLimiter;
-  /** 指定した場合、Origin ヘッダーが別のサイトを示す送信を拒否する */
+  /** 許可するサイトの origin。省略時は presentation のサイト。再入力画面の origin も許可する */
   allowedOrigins?: readonly string[];
   /** レート制限の鍵にする接続元。配備先のヘッダーから取り出す（例: CF-Connecting-IP） */
   clientAddress?: (request: Request) => string | null;
@@ -37,7 +37,7 @@ export interface InquiryHandlerOptions {
   afterAccept?: (record: InquiryRecord) => Promise<unknown>;
   /** 応答後も処理を続けさせる仕組み（Workers の ctx.waitUntil など）。未指定なら待たずに進める */
   schedule?: (task: Promise<unknown>) => void;
-  onError?: (error: unknown, stage: 'store' | 'deadline' | 'after-accept') => void;
+  onError?: (error: unknown, stage: 'store' | 'deadline' | 'after-accept' | 'rate-limit') => void;
 }
 
 const MINUTE = 60_000;
@@ -76,6 +76,12 @@ export function createInquiryHandler(options: InquiryHandlerOptions) {
   });
   initialNotifications('INQ-CHECK', options.channels, new Date(0)); // 設定の誤りを起動時に止める
   const stylesheetOrigin = p.links.stylesheet ? new URL(p.links.stylesheet).origin : "'none'";
+  const allowedOrigins = new Set(options.allowedOrigins ?? [new URL(p.links.site).origin]);
+  for (const origin of allowedOrigins) {
+    const url = new URL(origin);
+    if (!['https:', 'http:'].includes(url.protocol) || url.origin !== origin)
+      throw new Error('Allowed origins must be exact HTTP(S) origins');
+  }
 
   const respond = (request: Request, body: string, status: number, headers: Record<string, string> = {}) =>
     new Response(body, {
@@ -84,6 +90,7 @@ export function createInquiryHandler(options: InquiryHandlerOptions) {
         'content-type': 'text/html; charset=utf-8',
         'cache-control': 'no-store',
         'x-content-type-options': 'nosniff',
+        'x-frame-options': 'DENY',
         'referrer-policy': 'no-referrer',
         'content-security-policy': `default-src 'none'; style-src ${stylesheetOrigin}; form-action ${new URL(request.url).origin}; base-uri 'none'; frame-ancestors 'none'`,
         ...headers,
@@ -95,8 +102,8 @@ export function createInquiryHandler(options: InquiryHandlerOptions) {
       return respond(request, renderRejected(p), 405, { allow: 'POST' });
 
     const origin = request.headers.get('origin');
-    // Origin: null（参照元を送らない設定など）は判定できないので拒否しない
-    if (options.allowedOrigins && origin && origin !== 'null' && !options.allowedOrigins.includes(origin))
+    // null / missing origins cannot establish an allowed browser source.
+    if (!origin || (!allowedOrigins.has(origin) && origin !== new URL(request.url).origin))
       return respond(request, renderRejected(p), 403);
 
     const type = (request.headers.get('content-type') ?? '').split(';')[0]!.trim().toLowerCase();
@@ -104,14 +111,28 @@ export function createInquiryHandler(options: InquiryHandlerOptions) {
       return respond(request, renderRejected(p), 415);
     if (Number(request.headers.get('content-length') ?? 0) > INQUIRY_LIMITS.bodyBytes)
       return respond(request, renderRejected(p), 413);
-    const body = await readBody(request, INQUIRY_LIMITS.bodyBytes);
+    let body: Uint8Array | null;
+    try {
+      body = await readBody(request, INQUIRY_LIMITS.bodyBytes);
+    } catch {
+      return respond(request, renderRejected(p), 400);
+    }
     if (!body) return respond(request, renderRejected(p), 413);
     const form = new URLSearchParams(new TextDecoder().decode(body));
+    // Reject ambiguous duplicate parameters rather than silently taking the first value.
+    if (new Set(form.keys()).size !== [...form.keys()].length)
+      return respond(request, renderRejected(p), 400);
 
     const receivedAt = now();
     if (options.rateLimiter) {
       const key = await sha256Hex(`rate:${options.clientAddress?.(request) ?? 'unknown'}`);
-      const decision = await options.rateLimiter.hit(key, receivedAt);
+      let decision;
+      try {
+        decision = await options.rateLimiter.hit(key, receivedAt);
+      } catch (error) {
+        onError(error, 'rate-limit');
+        return respond(request, renderRejected(p), 503, { 'retry-after': '60' });
+      }
       if (!decision.allowed)
         return respond(request, renderLimited(p, decision), 429, {
           'retry-after': String(decision.retryAfterSeconds),

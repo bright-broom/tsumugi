@@ -10,6 +10,7 @@ import * as JS from './in-page';
 import { tokyoDate } from '@/lib/verification-report';
 import { SCREENSHOTS_DIR } from '../paths';
 import { rec } from './results';
+import { SECURITY_HEADERS } from '../security/policy';
 import { pages } from './static';
 import {
   CONTRAST_BODY, CONTRAST_LARGE, IC_RATIO_MAX, IC_RATIO_MIN, LCP_BUDGET_MS, MIN_FIG_TEXT, MIN_FONT_MB, MOBILE_W, TAP_MIN,
@@ -30,7 +31,7 @@ function serve(dist: string): Promise<{ server: Server; base: string }> {
     if (p !== root && !p.startsWith(root + sep)) return void res.writeHead(403).end();
     if (existsSync(p) && statSync(p).isDirectory()) p = join(p, 'index.html');
     if (!existsSync(p) || !statSync(p).isFile()) return void res.writeHead(404).end();
-    res.writeHead(200, { 'content-type': MIME[extname(p)] ?? 'application/octet-stream' });
+    res.writeHead(200, { ...SECURITY_HEADERS, 'content-type': MIME[extname(p)] ?? 'application/octet-stream' });
     createReadStream(p).pipe(res);
   });
   return new Promise((ok) => {

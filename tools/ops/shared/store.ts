@@ -2,7 +2,8 @@
  * 社内ツールのデータ置き場。実データは git 管理外の `.data/` に置く（ADR 0036）。
  * 書き込み先がリポジトリの追跡対象のディレクトリになる指定は拒否する。
  */
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { z } from 'zod';
 import { ROOT } from '../../paths';
@@ -33,8 +34,12 @@ const UNTRACKED = ['.data', '.artifacts'];
 /** `--data` → 環境変数 `TSUMUGI_DATA_DIR` → `<repo>/.data` の順に決める。 */
 export function resolveDataDir(flag: string | undefined): string {
   const dir = resolve(flag ?? process.env.TSUMUGI_DATA_DIR ?? join(ROOT, '.data'));
-  const rel = relative(ROOT, dir);
-  const outside = rel.startsWith('..') || isAbsolute(rel);
+  // Resolve existing ancestors so a symlink cannot route private data into public/ or src/.
+  let ancestor = dir;
+  while (!existsSync(ancestor)) ancestor = dirname(ancestor);
+  const canonical = resolve(realpathSync(ancestor), relative(ancestor, dir));
+  const rel = relative(realpathSync(ROOT), canonical);
+  const outside = rel === '..' || rel.startsWith(`..${sep}`) || isAbsolute(rel);
   if (!outside && !UNTRACKED.includes(rel.split(sep)[0] ?? ''))
     throw new OpsError(
       `データの置き場所がリポジトリの追跡対象です: ${rel || '.'}（.data/ か .artifacts/、またはリポジトリ外を指定してください）`,
@@ -69,15 +74,17 @@ export function readJsonIfExists<T>(file: string, schema: z.ZodType<T>): T | nul
 
 /** 途中で止まっても壊れたファイルを残さないよう、一時ファイルに書いてから置き換える。 */
 export function writeJson(file: string, value: unknown): void {
-  mkdirSync(dirname(file), { recursive: true });
-  const temp = `${file}.${process.pid}.tmp`;
-  writeFileSync(temp, JSON.stringify(value, null, 2) + '\n');
-  renameSync(temp, file);
+  writeText(file, JSON.stringify(value, null, 2) + '\n');
 }
 
 export function writeText(file: string, text: string): void {
-  mkdirSync(dirname(file), { recursive: true });
-  const temp = `${file}.${process.pid}.tmp`;
-  writeFileSync(temp, text);
-  renameSync(temp, file);
+  resolveOutputFile(file);
+  mkdirSync(dirname(file), { recursive: true, mode: 0o700 });
+  const temp = `${file}.${randomUUID()}.tmp`;
+  try {
+    writeFileSync(temp, text, { flag: 'wx', mode: 0o600 });
+    renameSync(temp, file);
+  } finally {
+    rmSync(temp, { force: true });
+  }
 }

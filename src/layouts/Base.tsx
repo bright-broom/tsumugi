@@ -15,7 +15,7 @@ import type { ReactNode } from 'react';
 import * as C from '@/content/config';
 import { CONTACT_ACTIONS } from '@/content/contact-actions';
 import { STORE, STORE_AS_OF } from '@/content/store';
-import { raw } from '@/lib/raw';
+import { jsonLd } from '@/lib/raw';
 import { localBusinessJsonLd } from '@/lib/storefront/store';
 import Icon from '@/components/Icon';
 
@@ -56,7 +56,7 @@ export default function Base({ file, title, desc, og: ogPath, children }: Props)
         <meta name="twitter:card" content="summary_large_image" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={raw(JSON.stringify(structuredData, null, 2))}
+          dangerouslySetInnerHTML={jsonLd(structuredData)}
         />
       </Head>
       <div className="nah-app" data-profile={C.PROFILE} id="page-top">

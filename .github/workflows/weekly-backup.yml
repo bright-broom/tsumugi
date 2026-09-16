@@ -47,10 +47,9 @@ jobs:
               node -e 'const r=require(process.argv[1]);console.log(`- 復元テスト: ${r.ok?"成功":"失敗"}（合計 ${(r.totalMs/1000).toFixed(1)} 秒）`);for(const s of r.steps)console.log(`  - ${s.ok?"OK":"FAIL"} ${s.name}: ${(s.ms/1000).toFixed(1)} 秒`)' "$BACKUP_DIR/restore-report.json"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
-      # タグで参照している。コミット SHA への固定は Dependabot（github-actions）の更新で行う（ADR 0045）
       - name: Upload backup
         if: always() && steps.backup.outputs.dir != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: tsumugi-backup-${{ github.run_number }}
           path: ${{ steps.backup.outputs.dir }}

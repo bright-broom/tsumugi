@@ -16,7 +16,7 @@ import { INQUIRY_FIELDS, INQUIRY_LIMITS } from '@/content/inquiry';
 import { getMessages } from '@/i18n/catalog';
 import { MemoryAccessLog } from '../../services/inquiry/audit';
 import { PermanentNotificationError, type NotificationChannel, type NotificationMessage } from '../../services/inquiry/outbox';
-import { FixedWindowRateLimiter } from '../../services/inquiry/rate-limit';
+import { FixedWindowRateLimiter, type RateLimiter } from '../../services/inquiry/rate-limit';
 import { MemoryInquiryStore, type InquiryStore } from '../../services/inquiry/records';
 import { createSiteInquiryService } from '../../services/inquiry/site';
 import { clock } from './fixtures';
@@ -55,7 +55,7 @@ const valid = {
   [INQUIRY_FIELDS.message]: 'Line one\r\nLine two',
 };
 
-function setup(options: { store?: InquiryStore; rateLimit?: number } = {}) {
+function setup(options: { store?: InquiryStore; rateLimit?: number; limiter?: RateLimiter } = {}) {
   // 2026-09-15 (Tue) 10:00 JST
   const time = clock('2026-09-15T01:00:00.000Z');
   const store = options.store ?? new MemoryInquiryStore();
@@ -68,10 +68,9 @@ function setup(options: { store?: InquiryStore; rateLimit?: number } = {}) {
     notificationChannels: [email, line],
     accessLog: new MemoryAccessLog(),
     siteOrigin: 'https://site.example.invalid',
-    allowedOrigins: ['https://site.example.invalid'],
-    rateLimiter: options.rateLimit
+    rateLimiter: options.limiter ?? (options.rateLimit
       ? new FixedWindowRateLimiter({ limit: options.rateLimit, windowMs: 60_000 })
-      : undefined,
+      : undefined),
     clientAddress: () => '192.0.2.1',
     now: time.now,
     schedule: (task) => tasks.push(task),
@@ -275,6 +274,46 @@ describe('inquiry intake', () => {
     expect(await store.list()).toEqual([]);
   });
 
+  it('rejects opaque or missing origins and duplicate fields without saving', async () => {
+    const { post, service, store } = setup();
+    for (const origin of ['null', '', 'https://site.example.invalid.attacker.example'])
+      expect((await post(submissionFromRenderedForm(valid), { origin })).status).toBe(403);
+    expect((await service.handler(new Request(ENDPOINT, {
+      method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: submissionFromRenderedForm(valid),
+    }))).status).toBe(403);
+    const duplicate = submissionFromRenderedForm(valid);
+    duplicate.append(INQUIRY_FIELDS.email, 'other@example.com');
+    expect((await post(duplicate)).status).toBe(400);
+    expect(await store.list()).toEqual([]);
+  });
+
+  it('does not store an inquiry if its shared rate limiter fails', async () => {
+    const { post, store, errors } = setup({ limiter: { hit: async () => { throw new Error('secret backend detail'); } } });
+    const response = await post(submissionFromRenderedForm(valid));
+    expect(response.status).toBe(503);
+    expect(response.headers.get('retry-after')).toBe('60');
+    expect(await response.text()).not.toContain('secret backend detail');
+    expect(await store.list()).toEqual([]);
+    expect(errors).toEqual(['rate-limit']);
+  });
+
+  it('returns a controlled response when reading the body fails', async () => {
+    const { service, store } = setup();
+    const body = new ReadableStream({ start(controller) { controller.error(new Error('stream failure')); } });
+    const response = await service.handler(new Request(ENDPOINT, {
+      method: 'POST', headers: { origin: 'https://site.example.invalid', 'content-type': 'application/x-www-form-urlencoded' },
+      body, duplex: 'half',
+    } as RequestInit & { duplex: 'half' }));
+    expect(response.status).toBe(400);
+    expect(await store.list()).toEqual([]);
+  });
+
+  it('allows correcting the form from its own endpoint origin', async () => {
+    const { post } = setup();
+    expect((await post(submissionFromRenderedForm(valid), { origin: new URL(ENDPOINT).origin })).status).toBe(200);
+  });
+
   it('treats permanent provider errors as failures that are reported, not retried', async () => {
     const alerts: string[] = [];
     const store = new MemoryInquiryStore();
@@ -293,7 +332,7 @@ describe('inquiry intake', () => {
     const response = await service.handler(
       new Request(ENDPOINT, {
         method: 'POST',
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: { 'content-type': 'application/x-www-form-urlencoded', origin: new URL(ENDPOINT).origin },
         body: submissionFromRenderedForm(valid).toString(),
       }),
     );

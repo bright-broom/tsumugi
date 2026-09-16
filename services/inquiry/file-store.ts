@@ -3,7 +3,8 @@
  * 同じプロセス内の書き込みは順番に処理する。複数プロセス・本番での利用は想定しない（ADR 0032）。
  * 保存場所は Git 管理外（既定は .artifacts/inquiry/）にし、ファイルの権限は所有者だけにする。
  */
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
 import { join } from 'node:path';
 import { recordsOps, type InquiryRecord, type InquiryStore } from './records';
 
@@ -35,10 +36,14 @@ export class FileInquiryStore implements InquiryStore {
   async #write(records: InquiryRecord[]) {
     const directory = join(this.file, '..');
     await mkdir(directory, { recursive: true, mode: 0o700 });
-    const temporary = `${this.file}.${process.pid}.${Date.now()}.tmp`;
+    const temporary = `${this.file}.${randomUUID()}.tmp`;
     const body: FileShape = { format: 1, records };
-    await writeFile(temporary, `${JSON.stringify(body, null, 2)}\n`, { mode: 0o600 });
-    await rename(temporary, this.file);
+    try {
+      await writeFile(temporary, `${JSON.stringify(body, null, 2)}\n`, { flag: 'wx', mode: 0o600 });
+      await rename(temporary, this.file);
+    } finally {
+      await rm(temporary, { force: true });
+    }
   }
 
   /** 読み取りから書き込みまでを直列にする */
