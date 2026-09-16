@@ -73,7 +73,7 @@ export const RUN = [
   {
     key: 'run_light',
     name: copy.runName,
-    price: 4800,
+    price: 3900,
     minutes: 0,
     lede: copy.runLede,
     includes: [copy.runIncludes2, copy.runIncludes3, copy.runIncludes4, copy.careExclusion],

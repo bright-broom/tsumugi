@@ -35,11 +35,11 @@ describe('料金の参照と比較', () => {
     expect(supportMonthlyTotal('run_basic')).toBe(13300);
     expect(withTax(supportMonthlyTotal('run_basic'))).toBe(14630);
   });
-  it('36か月の総額は外部費を含め、不利な比較も残す', () => {
+  it('36か月の総額は保守と外部費を含めて比較する', () => {
     expect(compareRows().map(({ our_total, diff }) => [our_total, diff])).toEqual([
-      [378600, 20800],
-      [496800, -41000],
-      [696800, -21000],
+      [346200, -11600],
+      [464400, -73400],
+      [664400, -53400],
     ]);
   });
   it('運用期間ゼロでは制作費だけを比較する', () => {
