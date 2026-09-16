@@ -220,3 +220,7 @@ ESLint・Vitest・Prettierの補助設定は `config/`、Next.js・TypeScript・
 表示文言はカタログを解決するときと `i18n/format.ts` の変数差し込み時に整える。`制作{price}円` は `制作 79,800 円` になる。本文・表・図解・案内属性・OGPに共通適用する。値と単位を別の要素で出す場合は、単位のi18n文言に半角スペースを含める。Statsのように一つの文字列に組み立てる場合は共通の `japaneseSpacing` を通す。URLやコードへスペースを挿入しない。
 
 HTML文言は `i18n/html-typography.ts` がparse5でテキストと案内属性だけを扱う。全HTMLの単純置換や、SSR後だけの整形はしない。`postbuild` と全ページ描画テストが未適用の文字列を検出する。共有画像の文言変更時は `npm run og` でも同じ規則が適用される（[ADR 0021](architecture/0021-pricing-and-typesetting.md)）。
+
+### 店舗テンプレートの設定
+
+店舗・スタッフ・お客様の声は `src/content/store.ts`・`staff.ts`・`testimonials.ts`、連絡窓口の優先順は `contact-actions.ts` が入口。公開条件の検証を通し、表示文は既存 i18n カタログから参照する。未設定の店舗欄・声は表示しない。構成・部品の採用理由・検証結果・未確認事項は [ADR 0048](architecture/0048-storefront-template.md) を参照。
