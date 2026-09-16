@@ -1,5 +1,23 @@
 /** Japanese copy: industry. Keep keys stable; placeholders are named runtime values. */
 export default {
+  restaurantCosts: {
+    eyebrow2: '毎月の費用',
+    heading3: '掲載費と、自分のサイトを維持する費用',
+    lede2:
+      '掲載料と予約手数料を、サイトの維持費と並べました。<strong>費用だけでなく、そこから何件の予約が来ているか</strong>も見て判断します。',
+    rowsName: '食べログ プレミアム5',
+    rowsSub: '掲載料のみ＋手数料',
+    rowsName2: '食べログ ベーシック',
+    rowsName3: '紬「整える」＋外部費の概算',
+    rowsSub2: '制作費別。任意の支援と外部費を税込で比較',
+    rowsName4: '食べログ ライト',
+    rowsSub3: '掲載料のみ',
+    heading4: '手数料は、常連さんの予約にもかかります',
+    p3: 'ディナー{pPORTALFEEDINNER}円・ランチ{pPORTALFEELUNCH}円は',
+    strong4: '新規と常連を区別しません。',
+    btn4: '掲載費の見直しについて',
+    dim: '掲載費・紬の支援は税込換算。紬の制作費は別途。外部費は概算で、集客の役割は同一ではありません。',
+  },
   title: '{dH1}｜{cBRANDT}',
   desc: '{dName}に必要なページと、作らないものを公開しています。',
   desc2: '{planName}（{planPages}ページ）{planPrice}から。',

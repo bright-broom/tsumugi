@@ -1,3 +1,5 @@
+import { RentVsOwn } from '@/components/diagrams/RentVsOwn';
+import Vs from '@/components/Vs';
 import { pathForFile } from '@/routing/registry';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
@@ -15,6 +17,7 @@ import Cta from '@/components/Cta';
 import type { PageProps } from '@/content/page-props';
 
 export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
+  const costCopy = copy.restaurantCosts;
   const file = ROUTES[route].file;
   const d = IND_DATA[file]!;
   const plan = P.build(d.plan);
@@ -82,14 +85,60 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
         </Note>
       </Section>
 
-      <Section eyebrow={copy.eyebrow2} heading={copy.heading5}>
-        <p dangerouslySetInnerHTML={raw(d.cost)} />
-        <div className="btns">
-          <a className="btn btn-2" href={href('cost-cut')}>
-            {copy.btn}
-          </a>
-        </div>
-      </Section>
+      {route === 'restaurant' ? (
+        <Section
+          navKey={href('cost-cut')}
+          id="monthly-costs"
+          className="restaurant-cost"
+          eyebrow={costCopy.eyebrow2}
+          heading={costCopy.heading3}
+          lede={costCopy.lede2}
+        >
+          <Vs
+            max={P.PORTAL_MONTHLY.premium5}
+            rows={[
+              { name: costCopy.rowsName, sub: costCopy.rowsSub, amount: P.PORTAL_MONTHLY.premium5 },
+              { name: costCopy.rowsName2, sub: costCopy.rowsSub, amount: P.PORTAL_MONTHLY.basic },
+              {
+                name: costCopy.rowsName3,
+                sub: costCopy.rowsSub2,
+                amount: P.withTax(P.supportMonthlyTotal('run_basic')),
+                ours: true,
+              },
+              { name: costCopy.rowsName4, sub: costCopy.rowsSub3, amount: P.PORTAL_MONTHLY.light },
+            ]}
+          />
+          <RentVsOwn
+            portal={P.PORTAL_MONTHLY.basic}
+            fee={P.PORTAL_FEE_DINNER}
+            run={P.withTax(P.supportMonthlyTotal('run_basic'))}
+          />
+          <Note heading={costCopy.heading4} kind="good">
+            <p>
+              {format(costCopy.p3, {
+                pPORTALFEEDINNER: P.PORTAL_FEE_DINNER,
+                pPORTALFEELUNCH: P.PORTAL_FEE_LUNCH,
+              })}
+              <strong>{costCopy.strong4}</strong>
+            </p>
+          </Note>
+          <div className="btns">
+            <a className="btn btn-2" href={href('cost-cut')}>
+              {costCopy.btn4}
+            </a>
+          </div>
+          <p className="dim fine-note">{costCopy.dim}</p>
+        </Section>
+      ) : (
+        <Section eyebrow={copy.eyebrow2} heading={copy.heading5}>
+          <p dangerouslySetInnerHTML={raw(d.cost)} />
+          <div className="btns">
+            <a className="btn btn-2" href={href('cost-cut')}>
+              {copy.btn}
+            </a>
+          </div>
+        </Section>
+      )}
 
       <Section heading={copy.heading6}>
         <p>
