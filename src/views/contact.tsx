@@ -49,7 +49,7 @@ export default function ContactPage({ copy, route }: PageProps<'contact'>) {
       </Section>
 
       <Section tone="tint" heading={copy.heading2}>
-        <h3>{copy.h3}</h3>
+        <h3 className="sr-only">{copy.h3}</h3>
         <p>
           <PhoneLink className="tel" />
         </p>

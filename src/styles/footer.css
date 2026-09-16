@@ -79,7 +79,7 @@
     @apply m-[20px_0_0] grid gap-[8px];
   }
   .footer-facts > div {
-    @apply grid grid-cols-[70px_minmax(0,_1fr)] gap-[8px] items-baseline;
+    @apply grid grid-cols-[20px_minmax(0,_1fr)] gap-[8px] items-baseline;
   }
   .footer-facts dt {
     @apply inline-flex items-center gap-[7px] text-fine text-muted;
@@ -89,7 +89,7 @@
     overflow-wrap: anywhere;
   }
   .footer-facts a {
-    @apply inline-flex items-center min-h-tap;
+    @apply block content-center min-h-tap;
   }
   .footer-links {
     @apply grid grid-cols-[repeat(2,_minmax(0,_1fr))] gap-[5px_24px];
@@ -148,7 +148,7 @@
     @apply m-[0] text-fine;
   }
   .footer-top {
-    @apply inline-flex items-center gap-[14px] min-h-tap text-fine flex-[none];
+    @apply inline-flex items-center justify-center min-w-tap min-h-tap text-fine flex-[none];
   }
 }
 @layer screens {

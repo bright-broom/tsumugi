@@ -10,6 +10,7 @@ import { href, pathForFile } from '@/routing/registry';
 export default function Footer({ file }: { file: string }) {
   const copy = useMessages('shell');
   const current = (url: string) => (url === file ? 'page' : undefined);
+  const emailBreak = C.EMAIL.indexOf('@');
 
   return (
     <footer className="ftr" id="footer">
@@ -53,25 +54,27 @@ export default function Footer({ file }: { file: string }) {
               <div>
                 <dt>
                   <Icon name="clock" sm />
-                  <span>{copy.mk}</span>
+                  <span className="sr-only">{copy.mk}</span>
                 </dt>
                 <dd>{C.TEL_HOURS}</dd>
               </div>
               <div>
                 <dt>
                   <Icon name="mail" sm />
-                  <span>{`${copy.mk3}（${C.EMAIL_HOURS}）`}</span>
+                  <span className="sr-only">{copy.mk3}</span>
                 </dt>
                 <dd>
                   <a className="contact-email" href={C.EMAIL_LINK}>
-                    {C.EMAIL}
+                    {C.EMAIL.slice(0, emailBreak)}
+                    <wbr />
+                    {C.EMAIL.slice(emailBreak)}
                   </a>
                 </dd>
               </div>
               <div>
                 <dt>
                   <Icon name="map-pin" sm />
-                  <span>{copy.mk2}</span>
+                  <span className="sr-only">{copy.mk2}</span>
                 </dt>
                 <dd>
                   {format(copy.span4, {
@@ -119,7 +122,7 @@ export default function Footer({ file }: { file: string }) {
         <div className="footer-bottom">
           <p className="footer-copyright">{`© ${C.LEGAL_NAME}`}</p>
           <a className="footer-top" href="#page-top">
-            <span>{copy.footer.backToTop}</span>
+            <span className="sr-only">{copy.footer.backToTop}</span>
             <Icon name="arrow-up" />
           </a>
         </div>

@@ -2,6 +2,8 @@
 @layer theme, base, components, screens, overrides, utilities;
 @import './tokens.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
+/* Explicitly include the shared accessible-label utility in the central stylesheet. */
+@source inline('sr-only');
 @import './base.css';
 @import './components.css';
 @import './responsive.css';
