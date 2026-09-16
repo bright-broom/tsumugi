@@ -22,6 +22,26 @@ export const SMALL_TEXT = String.raw`
 }
 `;
 
+/** 図解の文字の画面上の実寸。SVG の font-size に表示倍率（getScreenCTM）を掛ける。
+    出していない側の図（広い図 / 狭い図の片方）は大きさ 0 なので数えない */
+export const FIG_TEXT = String.raw`
+(min) => {
+  let seen = 0;
+  const bad = [];
+  for (const t of document.querySelectorAll('.fig svg text')) {
+    if (!t.textContent.trim()) continue;
+    const r = t.getBoundingClientRect();
+    if (!r.width || !r.height) continue;
+    const m = t.getScreenCTM();
+    if (!m) continue;
+    seen++;
+    const px = parseFloat(getComputedStyle(t).fontSize) * Math.hypot(m.a, m.b);
+    if (px < min - 0.05) bad.push({px: Math.round(px * 100) / 100, txt: t.textContent.trim().slice(0, 18)});
+  }
+  return {seen, bad};
+}
+`;
+
 export const ICON_RATIO = String.raw`
 () => {
   const seen = {}, out = [];

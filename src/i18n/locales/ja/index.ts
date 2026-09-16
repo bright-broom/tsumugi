@@ -13,6 +13,7 @@ import specData from '@/i18n/locales/ja/specData';
 import shell from '@/i18n/locales/ja/shell';
 import notFound from '@/i18n/locales/ja/notFound';
 import industry from '@/i18n/locales/ja/industry';
+import inquiry from '@/i18n/locales/ja/inquiry';
 import about from '@/i18n/locales/ja/about';
 import contact from '@/i18n/locales/ja/contact';
 import costCut from '@/i18n/locales/ja/costCut';
@@ -30,6 +31,8 @@ import terms from '@/i18n/locales/ja/terms';
 import unlimited from '@/i18n/locales/ja/unlimited';
 import works from '@/i18n/locales/ja/works';
 import storefront from '@/i18n/locales/ja/storefront';
+import collections from '@/i18n/locales/ja/collections';
+import entries from '@/i18n/locales/ja/entries';
 
 export const ja = {
   og,
@@ -47,6 +50,7 @@ export const ja = {
   shell,
   notFound,
   industry,
+  inquiry,
   about,
   contact,
   costCut,
@@ -64,4 +68,6 @@ export const ja = {
   unlimited,
   works,
   storefront,
+  collections,
+  entries,
 } as const;

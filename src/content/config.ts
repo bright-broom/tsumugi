@@ -1,4 +1,4 @@
-import { LCP_SECONDS, LCP_PAGE_COUNT } from '@/content/measurements';
+import { LCP_SECONDS, LCP_PAGE_COUNT, LCP_RECORDED_ON } from '@/content/measurements';
 import { getMessages } from '@/i18n/catalog';
 const copy = getMessages().config;
 import { format } from '@/i18n/format';
@@ -48,8 +48,40 @@ export const BRAND_T = BRAND_READING
   ? format(copy.brandWithReading, { brand: BRAND, brandReading: BRAND_READING })
   : BRAND;
 
-/** LCP 実測値。`npm run verify -- --write` が書き換える。手で書かない */
+/** 手元での LCP 実測値と記録日。値は `npm run verify -- --write` が書き換える。ビルドのたびに測り直す値ではない */
 export const LCP_MEASURED = format(copy.lcpMeasured, {
   seconds: LCP_SECONDS.toFixed(2),
   pages: LCP_PAGE_COUNT,
+  recordedOn: LCP_RECORDED_ON,
 });
+
+/**
+ * 契約・法務表示の承認記録（#39、ADR 0024）。専門家の確認を受けた事業者が記録する。推測で埋めない。
+ * - version：承認した文面の版（契約書ひな形の版番号など）
+ * - approvedOn：承認日（YYYY-MM-DD）
+ * - reviewerRole：確認者の役割
+ * - catalogSha256：承認した文面（i18n カタログ）の SHA-256。現在の値は `npm run verify -- --mode production` に出る
+ * 4 つが揃うまで terms.html は「弁護士確認前」の注意を出し続け、本番モードの検査は FAIL にする。
+ * 承認のあとで文面を変えると SHA-256 が合わなくなり、プレビューでも FAIL にする。
+ */
+export type LegalDocumentId = 'terms' | 'legal';
+export interface LegalApproval {
+  version: string | null;
+  approvedOn: string | null;
+  reviewerRole: 'attorney' | 'other-expert' | null;
+  catalogSha256: string | null;
+}
+export const LEGAL_APPROVALS: Readonly<Record<LegalDocumentId, LegalApproval>> = {
+  terms: { version: null, approvedOn: null, reviewerRole: null, catalogSha256: null },
+  legal: { version: null, approvedOn: null, reviewerRole: null, catalogSha256: null },
+};
+export function isApprovalRecorded(approval: LegalApproval): boolean {
+  return Object.values(approval).every((v) => typeof v === 'string' && v.trim() !== '');
+}
+
+/**
+ * このサイト自身のソースコードの公開先（#40、ADR 0027）。2026-09-14 にオーナーが Public のままにすると承認した。
+ * 非公開にしたら null にする（works・spec の案内が「公開していません」に切り替わる）。
+ * 顧客サイトのソースコードは公開しない（契約した顧客を閲覧権限で招待する）。
+ */
+export const SOURCE_REPOSITORY_URL: string | null = 'https://github.com/bright-broom/tsumugi';

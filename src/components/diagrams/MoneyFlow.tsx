@@ -9,6 +9,7 @@ import {
   DIM,
   ArrowLine,
   NW,
+  NARROW_MIN_TEXT,
   c,
   type Narrow,
   type DiagramCopy,
@@ -19,7 +20,7 @@ function moneyFlowNarrow(copy: DiagramCopy, portal: number, run: number): Narrow
   const w1 = rnd((NW * run) / portal);
   const s = (
     <>
-      {cap(0, 12, copy.moneyFlowNarrowLabel1)}
+      {cap(0, 12, copy.moneyFlowNarrowLabel1, NARROW_MIN_TEXT)}
       <rect x="0" y="22" width={NW} height="48" rx="8" {...BOX_F} {...BOX_S} />
       <text
         x={NW / 2}
@@ -40,16 +41,16 @@ function moneyFlowNarrow(copy: DiagramCopy, portal: number, run: number): Narrow
         strokeWidth="1.6"
         marker="accent"
       />
-      <text x={NW / 2} y="130" textAnchor="middle" fontSize="12.5" {...DIM}>
+      <text x={NW / 2} y="130" textAnchor="middle" fontSize={NARROW_MIN_TEXT} {...DIM}>
         {copy.moneyFlowNarrowLabel3}
       </text>
-      {cap(0, 158, copy.moneyFlowNarrowLabel4)}
+      {cap(0, 158, copy.moneyFlowNarrowLabel4, NARROW_MIN_TEXT)}
       <rect x="0" y="168" width={w1 - 4} height="48" rx="8" {...BOX_F} {...BOX_S} />
       <text
         x={w1 / 2 - 2}
         y="190"
         textAnchor="middle"
-        fontSize="12.5"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="currentColor"
       >
@@ -59,7 +60,7 @@ function moneyFlowNarrow(copy: DiagramCopy, portal: number, run: number): Narrow
         x={w1 / 2 - 2}
         y="206"
         textAnchor="middle"
-        fontSize="12.5"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="currentColor"
       >
@@ -80,7 +81,7 @@ function moneyFlowNarrow(copy: DiagramCopy, portal: number, run: number): Narrow
         x={w1 + (NW - w1) / 2}
         y="190"
         textAnchor="middle"
-        fontSize="12.5"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="var(--fig-ok)"
       >
@@ -90,7 +91,7 @@ function moneyFlowNarrow(copy: DiagramCopy, portal: number, run: number): Narrow
         x={w1 + (NW - w1) / 2}
         y="206"
         textAnchor="middle"
-        fontSize="12.5"
+        fontSize={NARROW_MIN_TEXT}
         fontWeight="700"
         fill="var(--fig-ok)"
       >

@@ -18,7 +18,14 @@ import { join } from 'node:path';
 
 import { ROOT } from '../paths';
 const OUT = join(ROOT, 'out');
-const pages = readdirSync(OUT).filter((f) => f.endsWith('.html')).sort();
+// コレクションの詳細（news/<slug>.html など）も対象にするため、下の階層まで拾う
+const htmlFiles = (dir: string, prefix = ''): string[] =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
+    entry.isDirectory()
+      ? entry.name === '_next' ? [] : htmlFiles(join(dir, entry.name), `${prefix}${entry.name}/`)
+      : entry.name.endsWith('.html') ? [`${prefix}${entry.name}`] : [],
+  );
+const pages = htmlFiles(OUT).sort();
 
 const problems: string[] = [];
 for (const f of pages) {

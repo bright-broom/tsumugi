@@ -1,0 +1,25 @@
+{
+  "customerId": "sample-shop",
+  "kind": "site",
+  "capturedOn": "2026-09-16",
+  "capturedBy": "サンプル担当",
+  "source": "サンプル：顧客サイトの店舗情報の設定",
+  "name": "サンプル食堂",
+  "address": "架空県架空市中央1丁目2番3号",
+  "phone": "03-0000-0001",
+  "website": "https://example.jp/",
+  "bookingUrl": "https://example.com/sample-booking",
+  "hours": {
+    "mon": [{ "open": "11:00", "close": "15:00" }],
+    "tue": [{ "open": "11:00", "close": "15:00" }],
+    "wed": [],
+    "thu": [{ "open": "11:00", "close": "15:00" }],
+    "fri": [
+      { "open": "11:00", "close": "15:00" },
+      { "open": "17:00", "close": "21:00" }
+    ],
+    "sat": [{ "open": "11:00", "close": "21:00" }],
+    "sun": [{ "open": "11:00", "close": "20:00" }]
+  },
+  "specialHours": [{ "date": "2026-12-31", "ranges": [] }]
+}

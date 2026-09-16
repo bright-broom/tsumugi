@@ -10,6 +10,7 @@ import { useMessages } from '@/components/ContentProvider';
 import Head from 'next/head';
 import { LOCALE } from '@/i18n/catalog';
 import { canonical, ogImage } from '@/routing/registry';
+import { publicImageUrl } from '@/routing/collections';
 import type { ReactNode } from 'react';
 import * as C from '@/content/config';
 import { CONTACT_ACTIONS } from '@/content/contact-actions';
@@ -22,10 +23,12 @@ interface Props {
   file: string;
   title: string;
   desc: string;
+  /** Existing share image under public/og/ for generated pages; fixed pages use their own card. */
+  og?: string;
   children: ReactNode;
 }
 
-export default function Base({ file, title, desc, children }: Props) {
+export default function Base({ file, title, desc, og: ogPath, children }: Props) {
   const copy = useMessages('shell');
   title = japaneseSpacing(title);
   desc = japaneseSpacing(desc);
@@ -33,7 +36,7 @@ export default function Base({ file, title, desc, children }: Props) {
   const structuredData = localBusinessJsonLd(STORE, { asOf: STORE_AS_OF });
 
   const url = canonical(C.DOMAIN, file);
-  const og = ogImage(C.DOMAIN, file);
+  const og = ogPath ? publicImageUrl(C.DOMAIN, ogPath) : ogImage(C.DOMAIN, file);
   return (
     <>
       <Head>

@@ -10,7 +10,7 @@
     @apply grid grid-cols-[minmax(0,_1.25fr)_minmax(0,_1fr)] gap-[64px] items-center;
   }
   .home-intro .kick {
-    @apply text-muted text-[13px] mb-[24px];
+    @apply text-muted text-fine mb-[24px];
   }
   .home-intro .service-intro-title {
     @apply text-[clamp(30px,_3.4vw,_48px)] leading-[1.45] tracking-[-.045em] mb-[24px];
@@ -92,7 +92,7 @@
     @apply p-[0] mb-[36px];
   }
   .home-section .sh .lab {
-    @apply col-[1_/_-1] m-[0] text-[13px] text-muted tracking-[.07em];
+    @apply col-[1_/_-1] m-[0] text-fine text-muted tracking-[.07em];
   }
   .home-section .sh h2 {
     @apply text-[clamp(28px,_2.8vw,_38px)] leading-[1.5] tracking-[-.035em] max-w-[21em] text-balance;
@@ -286,7 +286,7 @@
     @apply gap-[10px];
   }
   .home-pricing .entry .btn {
-    @apply px-[16px] text-[13px];
+    @apply px-[16px] text-fine;
   }
   .home-pricing .plans {
     @apply gap-[18px] pt-[18px];
@@ -395,7 +395,7 @@
       @apply gap-[32px];
     }
     .home-index a {
-      @apply px-[15px] gap-[9px] text-[13px];
+      @apply px-[15px] gap-[9px] text-fine;
     }
     .home-faq > .wrap {
       @apply gap-[0_40px];
@@ -410,7 +410,7 @@
       @apply grid-cols-[minmax(0,_1fr)] gap-[32px];
     }
     .home-intro .kick {
-      @apply text-[12px] mb-[18px];
+      @apply text-fine mb-[18px];
     }
     .home-intro .service-intro-title {
       @apply text-[30px] tracking-[-.04em] mb-[20px];
@@ -431,7 +431,7 @@
       @apply grid-cols-[repeat(2,_minmax(0,_1fr))];
     }
     .home-index a {
-      @apply p-[18px_12px] min-h-[74px] text-[12px] gap-[8px];
+      @apply p-[18px_12px] min-h-[74px] text-fine gap-[8px];
     }
     .home-index a:nth-child(3) {
       border-left: 0;
@@ -446,7 +446,7 @@
       @apply block pl-[0] pt-[0] mb-[30px];
     }
     .home-section .sh .lab {
-      @apply mb-[18px] text-[12px];
+      @apply mb-[18px] text-fine;
     }
     .home-section .sh h2 {
       @apply text-[28px] leading-[1.55];
@@ -479,7 +479,7 @@
       @apply text-[14px];
     }
     .home-cost .vs .nm em {
-      @apply ml-[0] text-[12px];
+      @apply ml-[0] text-fine;
     }
     .home-cost .vs .amtv {
       @apply text-[23px];
@@ -488,7 +488,7 @@
       @apply mt-[5px] h-[9px];
     }
     .home-section .calc .ttl {
-      @apply p-[18px] text-[13px];
+      @apply p-[18px] text-fine;
     }
     .home-section .calc .r {
       @apply p-[15px_18px] gap-[12px];
@@ -634,16 +634,16 @@
     @apply mb-[8px] mt-[12px];
   }
   .scope-price p {
-    @apply m-[0] max-w-[40em] text-[13px] text-muted-on-ink;
+    @apply m-[0] max-w-[40em] text-fine text-muted-on-ink;
   }
   .scope-status {
-    @apply text-[12px] border border-[var(--color-muted-on-ink)] px-[8px] py-[4px];
+    @apply text-fine border border-[var(--color-muted-on-ink)] px-[8px] py-[4px];
   }
   .scope-price strong {
     @apply block text-[clamp(26px,_3vw,_38px)] font-semi tracking-[-.03em];
   }
   .scope-price div:last-child > span {
-    @apply block text-[13px] text-muted-on-ink mt-[4px];
+    @apply block text-fine text-muted-on-ink mt-[4px];
   }
   .comparison-overview {
     @apply mb-[36px];
@@ -668,7 +668,7 @@
     @apply block text-[clamp(30px,_3.6vw,_48px)] leading-[1.2] font-semi tracking-[-.025em];
   }
   .comparison-totals p {
-    @apply text-[13px] text-muted-on-ink mt-[18px] mb-[0];
+    @apply text-fine text-muted-on-ink mt-[18px] mb-[0];
   }
   .comparison-difference {
     @apply flex items-start gap-[14px] py-[24px];
@@ -680,10 +680,10 @@
     @apply text-[16px] font-semi;
   }
   .comparison-difference p {
-    @apply mt-[6px] mb-[0] text-[13px] text-muted-on-ink;
+    @apply mt-[6px] mb-[0] text-fine text-muted-on-ink;
   }
   .comparison-assumptions {
-    @apply text-[13px] leading-[1.8] text-muted-on-ink m-[0] max-w-[72em];
+    @apply text-fine leading-[1.8] text-muted-on-ink m-[0] max-w-[72em];
   }
   .home-comparison .acc {
     @apply mt-[28px];

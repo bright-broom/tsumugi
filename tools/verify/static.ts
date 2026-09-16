@@ -6,8 +6,11 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import * as C from '@/content/config';
 import * as P from '@/content/prices';
+import { tokyoDate } from '@/lib/verification-report';
 import { checkTokens } from '../scripts/build-tokens';
-import { rec } from './results';
+import { pendingHumanChecks } from './acceptance';
+import { evaluatePublication, publicationSnapshot, type VerifyMode } from './publication';
+import { rec, type Result } from './results';
 import { HTML_BUDGET_KB } from './thresholds';
 
 const read = (p: string) => readFileSync(p, 'utf8');
@@ -20,11 +23,14 @@ const all = (h: string, re: RegExp) => [...h.matchAll(re)].map((m) => m[1]!);
 /** 文字数（サロゲートペアを1文字と数える） */
 const chars = (s: string) => [...s].length;
 
-/** dist 直下の HTML（＝ページ）。名前順 */
-export function pages(dist: string): string[] {
-  return readdirSync(dist, { withFileTypes: true })
-    .filter((e) => e.isFile() && e.name.endsWith('.html'))
-    .map((e) => e.name)
+/** dist の HTML（＝ページ）。コレクションの詳細（news/<slug>.html）も含め、相対パスの名前順 */
+export function pages(dist: string, prefix = ''): string[] {
+  return readdirSync(join(dist, prefix), { withFileTypes: true })
+    .flatMap((e) =>
+      e.isDirectory() && e.name !== '_next'
+        ? pages(dist, `${prefix}${e.name}/`)
+        : e.isFile() && e.name.endsWith('.html') ? [`${prefix}${e.name}`] : [],
+    )
     .sort();
 }
 
@@ -38,7 +44,29 @@ function filesUnder(dir: string, root = dir, out = new Set<string>()): Set<strin
   return out;
 }
 
-export function checkStatic(dist: string): void {
+/**
+ * 07/14 画像：alt 必須・先頭画像に lazy をかけない。
+ * 画像が 0 枚のページは「対象なし（N/A）」として記録し、PASS に数えない（alt の検査が写真の掲載を証明しないため）。
+ */
+export function imageFindings(page: string, html: string): Result[] {
+  const imgs = html.match(/<img\b[^>]*>/gi) ?? [];
+  if (!imgs.length)
+    return ['07 imgのalt', '14 先頭画像にlazyを付けない'].map((check) => ({
+      level: 'N/A', check, page, detail: '対象なし（画像0枚）',
+    }));
+  const noAlt = imgs.filter((i) => !/\salt\s*=/i.test(i));
+  // HTML 属性名は大小文字を区別しない。React は fetchPriority と出力する。
+  const lazy = /\sloading\s*=\s*["']lazy["']/i.test(imgs[0]!);
+  const prio = /\sfetchpriority\s*=\s*["']high["']/i.test(imgs[0]!);
+  return [
+    { level: noAlt.length ? 'FAIL' : 'PASS', check: '07 imgのalt', page,
+      detail: noAlt.length ? `alt無し ${noAlt.length}枚` : `${imgs.length}枚すべてalt有り` },
+    { level: lazy ? 'FAIL' : 'PASS', check: '14 先頭画像にlazyを付けない', page, detail: lazy ? 'lazy が付いています' : '' },
+    { level: prio ? 'PASS' : 'WARN', check: '14 先頭画像に fetchpriority', page, detail: prio ? '' : 'fetchpriority="high" 推奨' },
+  ];
+}
+
+export function checkStatic(dist: string, mode: VerifyMode): void {
   const files = pages(dist);
   const names = filesUnder(dist);
 
@@ -169,15 +197,17 @@ export function checkStatic(dist: string): void {
     const h = html.get(n)!;
     const kb = Buffer.byteLength(h) / 1024;
 
-    // 01 電話番号：tel: リンクがあり、番号が文字で入っている
+    // 01 電話番号：tel: リンクがあり、番号が文字で入っている。上部に置く約束なので、ヘッダーの中にも tel: リンクがあること
+    //    （各画面幅で見えているかは人の確認。tools/verify/acceptance.ts）
     const tels = all(h, /href="tel:([0-9+\-]+)"/g);
     const telText = h.includes(C.TEL);
-    if (tels.length && telText) {
+    const headerTel = /href="tel:/.test(h.match(/<header\b[^>]*>([\s\S]*?)<\/header>/)?.[1] ?? '');
+    if (tels.length && telText && headerTel) {
       const same = tels.every((t) => t.replaceAll('-', '') === C.TEL_LINK);
       rec(same ? 'PASS' : 'FAIL', '01 電話番号(tel:＋文字)', n,
-        same ? `${tels.length}箇所` : `config と不一致: ${list(new Set(tels))}`);
+        same ? `${tels.length}箇所（ヘッダー内あり）` : `config と不一致: ${list(new Set(tels))}`);
     } else {
-      rec('FAIL', '01 電話番号(tel:＋文字)', n, `tel:リンク=${tels.length} / 番号の文字=${telText}`);
+      rec('FAIL', '01 電話番号(tel:＋文字)', n, `tel:リンク=${tels.length} / 番号の文字=${telText} / ヘッダー内=${headerTel}`);
     }
 
     // 02/03 営業時間・住所（フッターに文字で）
@@ -221,20 +251,8 @@ export function checkStatic(dist: string): void {
       }
     }
 
-    // 07/14 画像：alt 必須・先頭画像に lazy をかけない
-    const imgs = h.match(/<img\b[^>]*>/g) ?? [];
-    const noAlt = imgs.filter((i) => !i.includes('alt='));
-    rec(noAlt.length ? 'FAIL' : 'PASS', '07 imgのalt', n,
-      noAlt.length ? `alt無し ${noAlt.length}枚` : `${imgs.length}枚すべてalt有り`);
-    if (imgs.length) {
-      // HTML 属性名は大小文字を区別しない。React は fetchPriority と出力する。
-      const lazy = /\sloading\s*=\s*["']lazy["']/i.test(imgs[0]!);
-      const prio = /\sfetchpriority\s*=\s*["']high["']/i.test(imgs[0]!);
-      rec(lazy ? 'FAIL' : 'PASS', '14 先頭画像にlazyを付けない', n, lazy ? 'lazy が付いています' : '');
-      rec(prio ? 'PASS' : 'WARN', '14 先頭画像に fetchpriority', n, prio ? '' : 'fetchpriority="high" 推奨');
-    } else {
-      rec('PASS', '14 先頭画像にlazyを付けない', n, '画像なし（文字がLCP要素＝最速）');
-    }
+    // 07/14 画像
+    for (const f of imageFindings(n, h)) rec(f.level, f.check, f.page, f.detail);
 
     // 23 共有カード。URLを送るのが主要導線なので、真っ白なカードを出さない
     const og = h.match(/property="og:image" content="https:\/\/[^"]*?\/og\/([^"]+)"/);
@@ -291,18 +309,13 @@ export function checkStatic(dist: string): void {
   rec(lack.length ? 'FAIL' : 'PASS', '04 料金の明示', 'price.html',
     lack.length ? `欠落: ${list(lack)}` : '全プランの金額を掲載');
 
-  // 05 業種でCTAを入れ替える（業種ページが4本ある）
+  // 05 業種別ページが4本ある。業種で電話とフォームのどちらを主役にするかは、この検査では証明しない（人の確認）
   const ind = ['restaurant.html', 'koumuten.html', 'salon.html', 'shigyo.html'].filter((f) => existsSync(join(dist, f)));
-  rec(ind.length === 4 ? 'PASS' : 'FAIL', '05 業種別ページ', '-', `${ind.length}/4`);
+  rec(ind.length === 4 ? 'PASS' : 'FAIL', '05 業種別ページ', '-',
+    `${ind.length}/4（ページの有無だけ。主役にする連絡手段は人の確認）`);
 
-  // 仮の値のまま公開していないか
-  if (C.PLACEHOLDER) {
-    rec('WARN', '公開前チェック', 'config.ts', 'PLACEHOLDER=true。ブランド名・エリア・電話番号が仮の値です');
-  } else {
-    const stale = Object.entries({ TEL: C.TEL, DOMAIN: C.DOMAIN, EMAIL: C.EMAIL })
-      .filter(([, v]) => v.includes('example') || v.includes('0000'))
-      .map(([k]) => k);
-    rec(stale.length ? 'FAIL' : 'PASS', '公開前チェック', 'config.ts',
-      stale.length ? `仮の値が残っています: ${list(stale)}` : '');
-  }
+  // 公開条件。プレビューと本番で扱いを分ける（publication.ts、ADR 0024）
+  const today = tokyoDate(new Date());
+  for (const f of evaluatePublication(publicationSnapshot(pendingHumanChecks(today)), mode, today))
+    rec(f.level, f.check, f.page, f.detail);
 }

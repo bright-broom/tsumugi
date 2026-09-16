@@ -7,11 +7,13 @@
  * - lib      … 何にも依存しない小道具。どの案件でもそのまま使う
  * - content  … このサイトに固有の中身。別案件では同じ形の export を保って差し替える
  * - scripts / verify は content と lib だけを使う（部品やページには触らない）
+ * - services（配備先で動く受付などのサーバー処理）も content・i18n・routing・lib だけを使い、
+ *   services の外へ相対パスで出ない。src と tools は services を import しない（ADR 0032）
  *
  * src の中は @/ で import する。相対パスだと、置き場所を変えるたびに import を書き換えることになる。
  */
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative, sep } from 'node:path';
+import { dirname, join, relative, sep } from 'node:path';
 import ts from 'typescript';
 
 import { ROOT } from '../paths';
@@ -27,6 +29,8 @@ const LAYERS = [
   'lib',
 ] as const;
 type Layer = (typeof LAYERS)[number];
+type Source = Layer | 'tools' | 'services';
+const OUTSIDE_SRC: readonly string[] = ['content', 'i18n', 'routing', 'lib'];
 
 const files = (dir: string, extension = /\.tsx?$/): string[] =>
   readdirSync(dir).flatMap((name) => {
@@ -41,7 +45,9 @@ const untypedSources = [
   ...readdirSync(ROOT, { withFileTypes: true })
     .filter((entry) => entry.isFile() && javascript.test(entry.name))
     .map((entry) => join(ROOT, entry.name)),
-  ...['src', 'tools', 'config', 'tests'].flatMap((dir) => files(join(ROOT, dir), javascript)),
+  ...['src', 'tools', 'services', 'config', 'tests'].flatMap((dir) =>
+    files(join(ROOT, dir), javascript),
+  ),
 ];
 for (const file of untypedSources) {
   problems.push(
@@ -49,11 +55,15 @@ for (const file of untypedSources) {
   );
 }
 const graph = new Map<string, string[]>();
-for (const dir of ['src', 'tools']) {
+for (const dir of ['src', 'tools', 'services']) {
   for (const f of files(join(ROOT, dir))) {
     const rel = relative(ROOT, f).split(sep).join('/');
-    const from = rel.startsWith('src/') ? (rel.split('/')[1] as Layer) : 'tools';
-    if (from !== 'tools' && !LAYERS.includes(from))
+    const from: Source = rel.startsWith('src/')
+      ? (rel.split('/')[1] as Layer)
+      : rel.startsWith('services/')
+        ? 'services'
+        : 'tools';
+    if (from !== 'tools' && from !== 'services' && !LAYERS.includes(from))
       problems.push(`${rel}: 未定義のソース層です。配置と依存の向きを明示してください`);
     const source = ts.createSourceFile(f, readFileSync(f, 'utf8'), ts.ScriptTarget.Latest, true);
     const imports: string[] = [];
@@ -76,7 +86,14 @@ for (const dir of ['src', 'tools']) {
     collect(source);
     graph.set(rel, []);
     for (const spec of imports) {
-      if (from !== 'tools' && spec!.startsWith('.')) {
+      if (spec.startsWith('.')) {
+        const resolved = relative(ROOT, join(dirname(f), spec)).split(sep).join('/');
+        if (from === 'services' && !resolved.startsWith('services/'))
+          problems.push(`${rel}: services の外を相対パスで import している: ${spec}`);
+        if (from === 'tools' && resolved.startsWith('services/'))
+          problems.push(`${rel}: tools から services を import している: ${spec}`);
+      }
+      if (from !== 'tools' && from !== 'services' && spec!.startsWith('.')) {
         problems.push(`${rel}: 相対パスで import している（@/ を使う）: ${spec}`);
         continue;
       }
@@ -100,8 +117,8 @@ for (const dir of ['src', 'tools']) {
       if (!target) problems.push(`${rel}: import 先がありません: ${spec}`);
       else graph.get(rel)!.push(target);
       const ok =
-        from === 'tools'
-          ? ['content', 'i18n', 'routing', 'lib'].includes(to)
+        from === 'tools' || from === 'services'
+          ? OUTSIDE_SRC.includes(to)
           : LAYERS.includes(to) && LAYERS.indexOf(to) >= LAYERS.indexOf(from);
       if (!ok) problems.push(`${rel}: ${from} から ${to} を import している: ${spec}`);
     }

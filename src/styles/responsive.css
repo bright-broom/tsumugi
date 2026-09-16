@@ -3,33 +3,56 @@
    一度しか使わないページ固有の余白はここに置き、トークンには上げない。
    ══════════════════════════════════════════════════════════════════ */
 @layer screens {
-  /* 文字のない背景画とカタログのコピーを組み合わせ、二柱を切り取らない。 */
+  /* 文字のない背景画にカタログのコピーを重ね、すべての幅でコピーを絵の中に収める（ADR 0029）。
+     区画の高さは、絵の比率を持つ ::before と、コピーの高さの大きいほう。
+     絵は区画いっぱいに cover で敷くので、コピーの下に茶色い帯はできない。
+     文字の大きさ・幅・余白は区画の幅（cqw）に連動し、ブレークポイントで跳ばない。 */
   .brand-hero {
-    @apply relative p-[0] bg-ink text-white;
+    @apply relative grid grid-cols-[minmax(0,_1fr)] p-[0] bg-ink text-white;
     container-type: inline-size;
   }
+  /* 絵の比率の高さ。狭い画面では 22rem を下限にして絵を縦に伸ばし、左右を切ってコピーの場所を作る。
+     aspect-ratio と最小の高さを併用すると最小の幅に換算されて横にはみ出すので、幅から高さを計算する */
+  .brand-hero::before {
+    content: '';
+    @apply col-[1] row-[1];
+    height: max(22rem, 100cqw * 958 / 1641);
+  }
   .brand-hero-artwork {
-    @apply w-[100%] h-[auto] rounded-[0];
+    @apply absolute inset-[0] w-[100%] h-[100%] rounded-[0] object-cover;
+    /* 左右を切る幅でも、右寄りの二柱を残す */
+    object-position: 78% 50%;
+  }
+  /* 判読性のための陰影。コピーが載る左側を暗くし、二柱に向けて薄くする。顔との重なりは許容する */
+  .brand-hero::after {
+    content: '';
+    @apply absolute inset-[0] pointer-events-none;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-ink) 58%, transparent),
+      color-mix(in srgb, var(--color-ink) 34%, transparent) 55%,
+      transparent 80%
+    );
   }
   .brand-hero-copy {
-    @apply p-[28px_var(--spacing-pad-mb)_32px];
+    --hero-inset: max(var(--spacing-pad-mb-head), 5cqw);
+    @apply relative z-[1] col-[1] row-[1] self-center py-[32px] font-brand;
+    margin-inline-start: var(--hero-inset);
+    /* PC は絵の幅の 55%。狭い画面では左右の余白を残して広げる */
+    width: min(100cqw - 2 * var(--hero-inset), max(55cqw, 26rem));
+    text-shadow:
+      0 1px 2px color-mix(in srgb, var(--color-ink) 80%, transparent),
+      0 0 0.9em color-mix(in srgb, var(--color-ink) 60%, transparent);
   }
   .brand-hero-copy h1 {
-    @apply text-hero-mb leading-hero mb-[16px];
+    @apply leading-[1.36] m-[0];
+    font-size: max(var(--text-hero-mb), 6.4cqw);
+    margin-block-end: max(12px, 2cqw);
   }
   .brand-hero-copy p {
-    @apply text-body;
-  }
-  @media (min-width: 769px) {
-    .brand-hero-copy {
-      @apply absolute left-[5%] top-[26%] w-[55%] p-[0];
-    }
-    .brand-hero-copy h1 {
-      @apply font-brand text-[6.4cqw] leading-[1.36] mb-[2cqw];
-    }
-    .brand-hero-copy p {
-      @apply font-brand text-[2.15cqw] leading-[1.65] m-[0];
-    }
+    @apply leading-[1.65] m-[0];
+    font-size: max(var(--text-body), 2.15cqw);
+    word-break: auto-phrase;
   }
 
   /* ── ヒーロー。PCは 45/67.5px、モバイルは 24/36px（06 文字と書体） */
@@ -111,7 +134,7 @@
       @apply text-[39px];
     }
     .logo .roman {
-      @apply text-[12px] tracking-[.18em];
+      @apply text-fine tracking-[.18em];
     }
     .logo .s {
       @apply hidden;
@@ -135,13 +158,21 @@
       @apply right-[20px] p-[18px_12px] max-h-[calc(100dvh_-_var(--spacing-header-mb)_-_80px)];
     }
     .draft {
-      @apply px-pad-mb-head text-[12px];
+      @apply px-pad-mb-head text-fine;
     }
     .tel {
       @apply p-[4px_12px_4px_10px];
     }
     .tel .num {
       @apply text-[15px];
+    }
+  }
+
+  /* 320px 級の画面。文字の下限を 14px に上げた分（ADR 0028）、屋号・相談・メニューの間隔だけを詰めて1行に収める */
+  @media (max-width: 359px) {
+    .hdr-in,
+    .header-actions {
+      @apply gap-[6px];
     }
   }
 
@@ -224,8 +255,21 @@
     .fig > svg {
       @apply min-w-[480px];
     }
-    /* 組み直した図があるなら、縮小も横スクロールもせずそちらを出す。
-       その場合は左右の余白も外して、文字を1pxでも大きく描く */
+    .fig-hint {
+      @apply block sticky left-[0] m-[12px_0_0] text-fine font-semi text-muted;
+    }
+    .fig-hint::before {
+      content: '↔ ';
+    }
+    section.dark .fig-hint {
+      @apply text-muted-on-ink;
+    }
+  }
+
+  /* ── 組み直した図があるなら、縮小も横スクロールもせずそちらを出す。
+        横長の図は幅 700〜776 の座標で描いてあり、1024px 未満では補助文字が画面上 14px を割る。
+        狭い図は幅 340 の座標で、390px 幅でほぼ等倍。広い画面で拡大しすぎないよう幅を抑える（ADR 0028） */
+  @media (max-width: 1023px) {
     .fig.has-narrow {
       @apply p-[18px_0_0];
     }
@@ -233,16 +277,7 @@
       @apply hidden;
     }
     .fig.has-narrow > .fn {
-      @apply block min-w-[0];
-    }
-    .fig-hint {
-      @apply block sticky left-[0] m-[12px_0_0] text-[12px] font-semi text-muted;
-    }
-    .fig-hint::before {
-      content: '↔ ';
-    }
-    section.dark .fig-hint {
-      @apply text-muted-on-ink;
+      @apply block min-w-[0] max-w-[480px] mx-[auto];
     }
   }
 
@@ -258,7 +293,7 @@
       @apply min-w-[7.5em];
     }
     .tbl-hint {
-      @apply block m-[10px_0_0] text-[12px] font-semi text-muted;
+      @apply block m-[10px_0_0] text-fine font-semi text-muted;
     }
     .tbl-hint::before {
       content: '↔ ';
@@ -303,7 +338,7 @@
       @apply min-w-[0] p-[0_0_8px] text-[15.5px] leading-[1.6];
     }
     .tblwrap.stack tbody th .dim {
-      @apply text-[13px];
+      @apply text-fine;
     }
     /* セルは block のまま。grid にすると中のリンクが grid item になって
        ブロック化し、「本文中のリンク」ではなくなってタップ領域の検査に引っかかる。 */
@@ -313,7 +348,7 @@
     }
     .tblwrap.stack tbody td[data-h]::before {
       content: attr(data-h);
-      @apply block text-[12.5px] font-semi leading-[1.7] text-muted;
+      @apply block text-fine font-semi leading-[1.7] text-muted;
     }
     .tblwrap.stack tbody td.grp {
       @apply p-[0];
@@ -333,39 +368,39 @@
         読みにくさの原因は明度差ではなく字面の小ささだった）。 */
   @media (max-width: 768px) {
     .sh .lab {
-      @apply text-[13.5px];
+      @apply text-fine;
     }
     .tel .lbl {
-      @apply text-[11.5px];
+      @apply text-fine;
     }
     .menu-panel .hd {
-      @apply text-[13px];
+      @apply text-fine;
     }
     .menu-panel a {
       @apply text-[14px];
     }
     .stat .k {
-      @apply text-[13.5px];
+      @apply text-fine;
     }
     .tbl-hint,
     .fig-hint {
-      @apply text-[13px];
+      @apply text-fine;
     }
     .pmeta,
     .sub2 {
-      @apply text-[13.5px];
+      @apply text-fine;
     }
     .calc .r.net .k {
       @apply text-[15px];
     }
     .calc .r .k em {
-      @apply text-[13px];
+      @apply text-fine;
     }
     .field .req {
-      @apply text-[12.5px];
+      @apply text-fine;
     }
     .tbl tbody th .dim {
-      @apply text-[12.5px];
+      @apply text-fine;
     }
     /* 比較バーは、名前と補足と金額が1行に詰まると読みにくい。
        名前の行と金額の行を分け、補足はその下に落とす */
@@ -379,7 +414,7 @@
       @apply text-[15.5px];
     }
     .vs .nm em {
-      @apply block text-[13px];
+      @apply block text-fine;
     }
     .vs .nm > span {
       @apply block;

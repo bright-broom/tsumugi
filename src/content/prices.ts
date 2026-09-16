@@ -126,15 +126,46 @@ export function supportMonthlyTotal(key: RunKey) {
   return run(key).price + EXTERNAL_MONTHLY_ESTIMATE;
 }
 
+/** key は見積もりツールが参照する安定した識別子。firm: false は着手前に総額を確定する別見積もり（金額は目安）。 */
 export const OPTIONS = [
-  { name: copy.optionName, price: 33000, note: copy.optionNote },
-  { name: copy.buildIncludes, price: 55000, note: copy.optionNote2 },
-  { name: copy.buildIncludes14, price: 88000, note: copy.optionNote3 },
-  { name: copy.optionName2, price: 88000, note: '—' },
-  { name: copy.optionName3, price: 55000, note: copy.optionNote4 },
-  { name: copy.optionName4, price: 198000, note: copy.optionNote5 },
-  { name: copy.optionName5, price: 55000, note: copy.optionNote6 },
-  { name: copy.optionName6, price: 165000, note: '—' },
+  { key: 'page_add', name: copy.optionName, price: 33000, note: copy.optionNote, firm: true },
+  {
+    key: 'photo_half_day',
+    name: copy.buildIncludes,
+    price: 55000,
+    note: copy.optionNote2,
+    firm: false,
+  },
+  {
+    key: 'photo_full_day',
+    name: copy.buildIncludes14,
+    price: 88000,
+    note: copy.optionNote3,
+    firm: false,
+  },
+  { key: 'logo', name: copy.optionName2, price: 88000, note: '—', firm: true },
+  {
+    key: 'article_interview',
+    name: copy.optionName3,
+    price: 55000,
+    note: copy.optionNote4,
+    firm: true,
+  },
+  {
+    key: 'landing_page',
+    name: copy.optionName4,
+    price: 198000,
+    note: copy.optionNote5,
+    firm: true,
+  },
+  {
+    key: 'booking_integration',
+    name: copy.optionName5,
+    price: 55000,
+    note: copy.optionNote6,
+    firm: true,
+  },
+  { key: 'language', name: copy.optionName6, price: 165000, note: '—', firm: true },
 ] as const;
 
 // ── 月額制（サブスク型）との総額比較 ────────────────

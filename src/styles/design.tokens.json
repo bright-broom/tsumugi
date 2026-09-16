@@ -197,7 +197,25 @@
         "$value": "16px",
         "$description": "業務本文と入力は 16px"
       },
-      "meta": { "$value": "13px" }
+      "fine": {
+        "$value": "14px",
+        "$description": "注記・添え字・表の補足・ボタンやラベルの下限。10.5pt（旧 12px＝9pt から +1.5pt）。これより小さい文字を作らない"
+      },
+      "meta": {
+        "$value": "{font.size.fine}",
+        "$description": "補助文。旧 PC 13px・モバイル 14px を下限にそろえる"
+      }
+    },
+    "tracking": {
+      "$type": "dimension",
+      "body": {
+        "$value": "0.04em",
+        "$description": "和文の字間。palt で詰まる字面を控えめに開く。空白の挿入で代用しない"
+      },
+      "heading": {
+        "$value": "0.02em",
+        "$description": "見出し。大きい字は開きすぎない"
+      }
     },
     "leading": {
       "$type": "number",
