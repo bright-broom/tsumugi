@@ -6,7 +6,7 @@ import type { SpecItemId } from '@/content/spec';
  *
  * 確認していないことは書かない。対象外にする場合も、対応表の「対象外の条件」に当てはまることを
  * 確認した記録として残す。本番モードの検査（npm run verify -- --mode production）は、
- * 人の確認が必要な項目に記録が無ければ FAIL にする。
+ * 人の確認が必要な項目に記録が無ければ原則 FAIL。自社公開の例外（ADR 0056）でも未確認のまま残す。
  */
 export interface AcceptanceRecord {
   /** 確認した日（YYYY-MM-DD） */

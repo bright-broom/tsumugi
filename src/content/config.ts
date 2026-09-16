@@ -6,7 +6,7 @@ import { format } from '@/i18n/format';
  * ブランド設定 ── 連絡先と公開設定。表示用文言は i18n/locales/ja/config.ts に置く。
  */
 export const PROFILE = 'campaign' as const; // 両プロファイルとも紬の3色テーマを参照
-export const PLACEHOLDER = true; // 本番公開時に false
+export const PLACEHOLDER = false; // 2026-09-17 自社サイトの公開承認（ADR 0056）
 
 export const BRAND = copy.brand;
 export const BRAND_READING = copy.brandReading;
@@ -66,7 +66,7 @@ export const LCP_MEASURED = format(copy.lcpMeasured, {
  * - approvedOn：承認日（YYYY-MM-DD）
  * - reviewerRole：確認者の役割
  * - catalogSha256：承認した文面（i18n カタログ）の SHA-256。現在の値は `npm run verify -- --mode production` に出る
- * 4 つが揃うまで terms.html は「弁護士確認前」の注意を出し続け、本番モードの検査は FAIL にする。
+ * 4 つが揃うまで terms.html は未確認の注意を出し続ける。原則は本番 FAIL、自社公開判断の例外は ADR 0056。
  * 承認のあとで文面を変えると SHA-256 が合わなくなり、プレビューでも FAIL にする。
  */
 export type LegalDocumentId = 'terms' | 'legal';
