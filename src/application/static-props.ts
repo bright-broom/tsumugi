@@ -11,8 +11,8 @@ import {
 import { verifiedSummary } from '@/lib/measured';
 
 function sharedMessages(): SharedMessages {
-  const { shell, cta, entry, plans, table, vs, diagrams } = getMessages();
-  return { shell, cta, entry, plans, table, vs, diagrams };
+  const { shell, cta, entry, plans, table, vs, diagrams, storefront } = getMessages();
+  return { shell, cta, entry, plans, table, vs, diagrams, storefront };
 }
 
 /** Called only from getStaticProps; filesystem access stays in the build process. */

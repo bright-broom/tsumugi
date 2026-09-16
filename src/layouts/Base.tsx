@@ -1,6 +1,5 @@
 import { japaneseSpacing } from '@/i18n/typography';
-import { href } from '@/routing/registry';
-import PhoneLink from '@/components/PhoneLink';
+import ContactActionLink from '@/components/ContactAction';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useMessages } from '@/components/ContentProvider';
@@ -14,7 +13,10 @@ import { canonical, ogImage } from '@/routing/registry';
 import { publicImageUrl } from '@/routing/collections';
 import type { ReactNode } from 'react';
 import * as C from '@/content/config';
+import { CONTACT_ACTIONS } from '@/content/contact-actions';
+import { STORE, STORE_AS_OF } from '@/content/store';
 import { raw } from '@/lib/raw';
+import { localBusinessJsonLd } from '@/lib/storefront/store';
 import Icon from '@/components/Icon';
 
 interface Props {
@@ -30,32 +32,8 @@ export default function Base({ file, title, desc, og: ogPath, children }: Props)
   const copy = useMessages('shell');
   title = japaneseSpacing(title);
   desc = japaneseSpacing(desc);
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'ProfessionalService',
-    name: C.BRAND,
-    description: japaneseSpacing(copy.structuredDataDescription + copy.structuredDataDescription2),
-    url: `https://${C.DOMAIN}/`,
-    telephone: C.TEL,
-    address: {
-      '@type': 'PostalAddress',
-      addressCountry: 'JP',
-      addressRegion: C.ADDRESS_REGION,
-      addressLocality: C.ADDRESS_CITY,
-      streetAddress: C.ADDRESS_STREET,
-      postalCode: C.POSTAL_CODE,
-    },
-    areaServed: { '@type': 'Country', name: copy.areaServedName },
-    openingHoursSpecification: [
-      {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-        opens: '09:00',
-        closes: '18:00',
-      },
-    ],
-    knowsLanguage: LOCALE.language,
-  };
+  // 店舗情報の正本（content/store.ts）から作る。業種の型・臨時の営業時間も同じ正本に持つ（ADR 0048）。
+  const structuredData = localBusinessJsonLd(STORE, { asOf: STORE_AS_OF });
 
   const url = canonical(C.DOMAIN, file);
   const og = ogPath ? publicImageUrl(C.DOMAIN, ogPath) : ogImage(C.DOMAIN, file);
@@ -95,11 +73,9 @@ export default function Base({ file, title, desc, og: ogPath, children }: Props)
         <main id="main">{children}</main>
         <Footer file={file} />
         <div className="fixbar">
-          <PhoneLink />
-          <a href={C.LINE_URL || href('contact')}>
-            <Icon name="message-circle" />
-            {C.LINE_URL ? copy.a2 : copy.a3}
-          </a>
+          {CONTACT_ACTIONS.bar.map((action) => (
+            <ContactActionLink action={action} surface="bar" key={action.channel} />
+          ))}
         </div>
       </div>
     </>

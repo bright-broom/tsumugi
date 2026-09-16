@@ -30,6 +30,7 @@ import subsidy from '@/i18n/locales/ja/subsidy';
 import terms from '@/i18n/locales/ja/terms';
 import unlimited from '@/i18n/locales/ja/unlimited';
 import works from '@/i18n/locales/ja/works';
+import storefront from '@/i18n/locales/ja/storefront';
 import collections from '@/i18n/locales/ja/collections';
 import entries from '@/i18n/locales/ja/entries';
 
@@ -66,6 +67,7 @@ export const ja = {
   terms,
   unlimited,
   works,
+  storefront,
   collections,
   entries,
 } as const;

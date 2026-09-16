@@ -7,9 +7,23 @@ import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Note from '@/components/Note';
 import Cta from '@/components/Cta';
+import { useMessages } from '@/components/ContentProvider';
+import StaffList from '@/components/storefront/StaffList';
+import StoreInfo from '@/components/storefront/StoreInfo';
+import TestimonialList from '@/components/storefront/TestimonialList';
 import type { PageProps } from '@/content/page-props';
+import { STAFF } from '@/content/staff';
+import { STORE, STORE_AS_OF } from '@/content/store';
+import { TESTIMONIALS } from '@/content/testimonials';
+import { publishedStaff } from '@/lib/storefront/staff';
+import { publishableTestimonials } from '@/lib/storefront/testimonials';
 
 export default function AboutPage({ copy, route }: PageProps<'about'>) {
+  const storefront = useMessages('storefront');
+  // 顧客テンプレートの欄は、公開できるデータがあるときだけ出す（紬はどれも空）。
+  const staff = publishedStaff(STAFF);
+  const voices = publishableTestimonials(TESTIMONIALS);
+  const visitable = STORE.locations.some((location) => location.visit);
   const file = ROUTES[route].file;
   const title = format(copy.title, { cBRANDT: C.BRAND_T });
   const desc = format(copy.desc, { cRESPONSEPROMISE: C.RESPONSE_PROMISE });
@@ -25,15 +39,19 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
       />
 
       <Section>
-        <div className="cards member-cards">
-          {C.MEMBERS.map((m) => (
-            <article className="card" key={m.role}>
-              <h2 className="member-name">{m.name}</h2>
-              <div className="meta">{m.role}</div>
-              <div className="desc">{m.bio}</div>
-            </article>
-          ))}
-        </div>
+        {staff.length ? (
+          <StaffList members={staff} />
+        ) : (
+          <div className="cards member-cards">
+            {C.MEMBERS.map((m) => (
+              <article className="card" key={m.role}>
+                <h2 className="member-name">{m.name}</h2>
+                <div className="meta">{m.role}</div>
+                <div className="desc">{m.bio}</div>
+              </article>
+            ))}
+          </div>
+        )}
         <Note heading={copy.heading2}>
           <p>
             {copy.p}
@@ -100,6 +118,18 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
           </li>
         </ul>
       </Section>
+
+      {visitable && (
+        <Section heading={storefront.store.heading}>
+          <StoreInfo store={STORE} asOf={STORE_AS_OF} />
+        </Section>
+      )}
+
+      {voices.length > 0 && (
+        <Section heading={storefront.testimonials.heading}>
+          <TestimonialList testimonials={voices} business={STORE.name} />
+        </Section>
+      )}
 
       <Section heading={copy.heading6}>
         <Cta />
