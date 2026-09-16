@@ -20,7 +20,7 @@ interface Props {
 }
 
 /**
- * 連絡導線1つ（ADR 0057）。ラベルは action.channel だけから選ぶので、表示と行き先が食い違わない。
+ * 連絡導線1つ（ADR 0048）。ラベルは action.channel だけから選ぶので、表示と行き先が食い違わない。
  * 電話は PhoneLink に任せ、表示番号と発信先を1つの値から作る。
  */
 export default function ContactActionLink({ action, surface, className, contactLabel }: Props) {

@@ -29,7 +29,7 @@ export default function Base({ file, title, desc, children }: Props) {
   const copy = useMessages('shell');
   title = japaneseSpacing(title);
   desc = japaneseSpacing(desc);
-  // 店舗情報の正本（content/store.ts）から作る。業種の型・臨時の営業時間も同じ正本に持つ（ADR 0056）。
+  // 店舗情報の正本（content/store.ts）から作る。業種の型・臨時の営業時間も同じ正本に持つ（ADR 0048）。
   const structuredData = localBusinessJsonLd(STORE, { asOf: STORE_AS_OF });
 
   const url = canonical(C.DOMAIN, file);

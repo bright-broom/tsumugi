@@ -7,7 +7,7 @@ interface Props {
 }
 
 /**
- * スタッフ紹介の一覧（ADR 0058）。紬の about と同じ見た目の部品を使い、写真は同意がある人だけに付く。
+ * スタッフ紹介の一覧（ADR 0048）。紬の about と同じ見た目の部品を使い、写真は同意がある人だけに付く。
  * 各人に #staff-ID のアンカーを付け、個別の紹介へページ内で案内できるようにする。
  */
 export default function StaffList({ members, headingLevel = 2 }: Props) {

@@ -119,6 +119,18 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
         </ul>
       </Section>
 
+      {visitable && (
+        <Section heading={storefront.store.heading}>
+          <StoreInfo store={STORE} asOf={STORE_AS_OF} />
+        </Section>
+      )}
+
+      {voices.length > 0 && (
+        <Section heading={storefront.testimonials.heading}>
+          <TestimonialList testimonials={voices} business={STORE.name} />
+        </Section>
+      )}
+
       <Section heading={copy.heading6}>
         <Cta />
       </Section>

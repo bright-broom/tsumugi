@@ -1,5 +1,5 @@
 /**
- * 店舗情報の型・検査・構造化データ（ADR 0056）。
+ * 店舗情報の型・検査・構造化データ（ADR 0048）。
  *
  * 1つの正本（StoreProfile）から、画面の店舗情報と JSON-LD の両方を作る。
  * 地図は埋め込まず、地図サービスへのリンクだけを持つ（実行時 JS 0 バイトを保つ）。
@@ -30,7 +30,7 @@ export const DAYS = [
 export type DayOfWeek = (typeof DAYS)[number];
 
 /** 顧客に選んでもらう schema.org の型。LocalBusiness の下位型から、確認したものだけを足す。 */
-export const BUSINESS_TYPES = [
+const BUSINESS_TYPES = [
   'LocalBusiness',
   'ProfessionalService',
   'FoodEstablishment',
@@ -54,7 +54,7 @@ export const BUSINESS_TYPES = [
   'Store',
   'AutoRepair',
 ] as const;
-export type BusinessType = (typeof BUSINESS_TYPES)[number];
+type BusinessType = (typeof BUSINESS_TYPES)[number];
 
 /** 業種ごとの候補。先頭を既定にし、実際の業態に合わせて選び直す。 */
 export const BUSINESS_TYPES_BY_INDUSTRY: Record<
@@ -102,7 +102,7 @@ export interface PostalAddress {
 }
 
 /** 来店を受ける拠点だけが持つ。所在地の案内に必要な項目を省略させない。 */
-export interface Visit {
+interface Visit {
   access: string;
   parking: { available: boolean; note?: string };
   /** 地図サービスでその場所を開く URL（埋め込みは使わない） */
@@ -125,7 +125,7 @@ export interface StoreLocation {
   sameAs?: readonly string[];
 }
 
-export interface AreaServed {
+interface AreaServed {
   type: 'Country' | 'State' | 'City' | 'AdministrativeArea';
   name: string;
 }
@@ -215,7 +215,8 @@ function locationIssues(location: StoreLocation, path: string, today?: IsoDate):
   if (location.url !== undefined && !isHttpsUrl(location.url))
     issues.push(error('location.invalid-url', `${path}.url`));
   location.sameAs?.forEach((url, index) => {
-    if (!isHttpsUrl(url)) issues.push(error('location.invalid-same-as', `${path}.sameAs[${index}]`));
+    if (!isHttpsUrl(url))
+      issues.push(error('location.invalid-same-as', `${path}.sameAs[${index}]`));
   });
   if (location.visit) {
     if (!location.visit.access.trim())
@@ -365,7 +366,7 @@ export interface ListingSnapshot {
   profileUrl?: string;
 }
 
-export interface ListingMismatch {
+interface ListingMismatch {
   field: string;
   site: string;
   listing: string;

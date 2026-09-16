@@ -1,5 +1,5 @@
 /**
- * お客様の声の型・公開条件・依頼表示（ADR 0059）。
+ * お客様の声の型・公開条件・依頼表示（ADR 0048）。
  *
  * - 掲載許可があり、撤回されておらず、許可のあとに内容を直していない声だけを公開する。
  * - 事業者からの依頼・謝礼の有無（solicitation）は省略できない。表示の要否はここから決め、
@@ -22,11 +22,11 @@ import {
   type Photo,
 } from '@/lib/storefront/core';
 
-export type SourceKind = 'survey' | 'letter' | 'email' | 'interview' | 'reviewSite' | 'social';
-export type IncentiveKind = 'gift' | 'discount' | 'cash' | 'service' | 'other';
-export type Disclosure = 'requested' | 'incentive' | 'requestedWithIncentive';
+type SourceKind = 'survey' | 'letter' | 'email' | 'interview' | 'reviewSite' | 'social';
+type IncentiveKind = 'gift' | 'discount' | 'cash' | 'service' | 'other';
+type Disclosure = 'requested' | 'incentive' | 'requestedWithIncentive';
 
-export interface TestimonialPermission extends ConsentRecord {
+interface TestimonialPermission extends ConsentRecord {
   /** 掲載名（displayName）を出してよいか。不可なら匿名の表記にする */
   showName: boolean;
   showPhoto: boolean;
@@ -61,7 +61,7 @@ export interface PublishedTestimonial {
   incentive: IncentiveKind | null;
 }
 
-export function disclosureOf(solicitation: Testimonial['solicitation']): Disclosure | null {
+function disclosureOf(solicitation: Testimonial['solicitation']): Disclosure | null {
   if (solicitation.requested && solicitation.incentive) return 'requestedWithIncentive';
   if (solicitation.incentive) return 'incentive';
   return solicitation.requested ? 'requested' : null;

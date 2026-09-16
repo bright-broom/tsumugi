@@ -8,7 +8,7 @@ const shell = getMessages().shell;
 const OFFICE_HOURS: readonly TimeRange[] = [{ opens: '09:00', closes: '18:00' }];
 
 /**
- * 店舗情報の正本（ADR 0056）。JSON-LD（layouts/Base.tsx）と店舗情報の表示が同じ値を使う。
+ * 店舗情報の正本（ADR 0048）。JSON-LD（layouts/Base.tsx）と店舗情報の表示が同じ値を使う。
  * 連絡先・所在地の値は content/config.ts から受け取り、ここで二重に持たない。
  *
  * 紬は来店を受けないので visit を持たない（店舗情報・地図の欄は表示しない）。

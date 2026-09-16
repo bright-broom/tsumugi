@@ -6,7 +6,7 @@
 /** 設定ファイルに書く日付。`YYYY-MM-DD` で、事業者の所在地の暦として扱う。 */
 export type IsoDate = `${number}-${number}-${number}`;
 
-export type Severity = 'error' | 'warning';
+type Severity = 'error' | 'warning';
 export interface Issue {
   severity: Severity;
   code: string;
@@ -101,7 +101,8 @@ export const consentActive = (consent: ConsentRecord | null | undefined): boolea
 
 export function consentIssues(consent: ConsentRecord, path: string): Issue[] {
   const issues: Issue[] = [];
-  if (!isIsoDate(consent.grantedOn)) issues.push(error('consent.invalid-date', `${path}.grantedOn`));
+  if (!isIsoDate(consent.grantedOn))
+    issues.push(error('consent.invalid-date', `${path}.grantedOn`));
   if (!consent.recordRef.trim()) issues.push(error('consent.missing-record', `${path}.recordRef`));
   if (consent.withdrawnOn !== undefined) {
     if (!isIsoDate(consent.withdrawnOn))
@@ -140,7 +141,12 @@ export function photoIssues(photo: Photo, path: string): Issue[] {
   const alt = photo.alt.trim();
   const file = photo.src.split('/').pop() ?? '';
   if (!alt || alt === file) issues.push(error('photo.missing-alt', `${path}.alt`));
-  if (!(Number.isInteger(photo.width) && photo.width > 0 && Number.isInteger(photo.height) && photo.height > 0))
+  if (!(
+    Number.isInteger(photo.width) &&
+    photo.width > 0 &&
+    Number.isInteger(photo.height) &&
+    photo.height > 0
+  ))
     issues.push(error('photo.invalid-size', path));
   if (!photo.src.startsWith('/') && !isHttpsUrl(photo.src))
     issues.push(error('photo.invalid-src', `${path}.src`));

@@ -1,5 +1,5 @@
 /**
- * スタッフ紹介の型と公開条件（ADR 0058）。
+ * スタッフ紹介の型と公開条件（ADR 0048）。
  *
  * 公開してよいのは、status が public で、紹介文の掲載に本人の同意がある人だけ。
  * 写真は写真の同意が別にあるときだけ出す。非公開・退職はデータを消さずに status で止める。
@@ -19,7 +19,7 @@ import {
   type Photo,
 } from '@/lib/storefront/core';
 
-export type StaffStatus = 'public' | 'hidden' | 'retired';
+type StaffStatus = 'public' | 'hidden' | 'retired';
 
 export interface StaffMember {
   /** ページ内リンク（#staff-ID）に使う。英小文字・数字・ハイフン */
@@ -69,10 +69,8 @@ export function validateStaff(members: readonly StaffMember[]): Issue[] {
   for (const member of members) {
     const at = member.id;
     if (!/^[a-z0-9-]+$/.test(member.id)) issues.push(error('staff.invalid-id', at));
-    if (!member.name.trim() || !member.role.trim())
-      issues.push(error('staff.missing-text', at));
-    if (!isIsoDate(member.reviewedOn))
-      issues.push(error('staff.invalid-date', `${at}.reviewedOn`));
+    if (!member.name.trim() || !member.role.trim()) issues.push(error('staff.missing-text', at));
+    if (!isIsoDate(member.reviewedOn)) issues.push(error('staff.invalid-date', `${at}.reviewedOn`));
     if (member.consent.profile)
       issues.push(...consentIssues(member.consent.profile, `${at}.consent.profile`));
     if (member.consent.photo)
@@ -89,8 +87,7 @@ export function validateStaff(members: readonly StaffMember[]): Issue[] {
     if (member.status === 'retired' && member.retiredOn === undefined)
       issues.push(warning('staff.retired-without-date', `${at}.retiredOn`));
     if (member.retiredOn !== undefined) {
-      if (!isIsoDate(member.retiredOn))
-        issues.push(error('staff.invalid-date', `${at}.retiredOn`));
+      if (!isIsoDate(member.retiredOn)) issues.push(error('staff.invalid-date', `${at}.retiredOn`));
       else if (member.status === 'public')
         issues.push(error('staff.retired-but-public', `${at}.status`));
     }

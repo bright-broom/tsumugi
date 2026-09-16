@@ -17,7 +17,7 @@ interface Props {
 }
 
 /**
- * 来店を受ける拠点の所在地・アクセス・駐車場・地図・営業時間（ADR 0056）。
+ * 来店を受ける拠点の所在地・アクセス・駐車場・地図・営業時間（ADR 0048）。
  * 地図は埋め込まず、地図サービスへのリンクにする。値は JSON-LD と同じ正本から読む。
  */
 export default function StoreInfo({ store, asOf }: Props) {
@@ -33,13 +33,18 @@ export default function StoreInfo({ store, asOf }: Props) {
           const tel = location.telephone.replace(/[^\d+]/g, '');
           const rows: [label: string, value: ReactNode][] = [
             [copy.address, formatAddress(location.address, copy)],
-            [copy.telephone, <a href={`tel:${tel}`}>{location.telephone}</a>],
+            [
+              copy.telephone,
+              <a key="telephone" href={`tel:${tel}`}>
+                {location.telephone}
+              </a>,
+            ],
             [copy.access, visit.access],
             [copy.parking, formatParking(visit.parking, copy)],
             [
               copy.hours,
               formatWeeklyHours(location.hours, copy).map((line, index) => (
-                <span className="store-hours-line" key={line}>
+                <span key={line}>
                   {index > 0 && <br />}
                   {line}
                 </span>
@@ -50,13 +55,18 @@ export default function StoreInfo({ store, asOf }: Props) {
           if (exceptions.length)
             rows.push([
               copy.exceptions,
-              <ul className="plain">
+              <ul key="exceptions" className="plain">
                 {exceptions.map((exception) => (
                   <li key={exception.from}>{formatException(exception, copy)}</li>
                 ))}
               </ul>,
             ]);
-          rows.push([copy.map, <a href={visit.mapUrl}>{copy.mapLink}</a>]);
+          rows.push([
+            copy.map,
+            <a key="map" href={visit.mapUrl}>
+              {copy.mapLink}
+            </a>,
+          ]);
           return (
             <article className="card" id={`store-${location.id}`} key={location.id}>
               {multiple && <h3>{location.name ?? store.name}</h3>}

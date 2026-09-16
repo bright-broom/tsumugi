@@ -30,14 +30,14 @@ export const formatAddress = (address: PostalAddress, copy: StoreCopy) =>
     street: address.street,
   });
 
-export const formatRanges = (ranges: readonly TimeRange[], copy: StoreCopy) =>
+const formatRanges = (ranges: readonly TimeRange[], copy: StoreCopy) =>
   ranges
     .map((range) =>
       format(copy.timeRange, { opens: clock(range.opens), closes: clock(range.closes) }),
     )
     .join(copy.listJoin);
 
-export function formatDays(days: readonly DayOfWeek[], copy: StoreCopy): string {
+function formatDays(days: readonly DayOfWeek[], copy: StoreCopy): string {
   if (days.length === DAYS.length) return copy.everyday;
   if (days.join() === WEEKDAYS) return copy.weekdays;
   const indexes = days.map((day) => DAYS.indexOf(day));
@@ -66,7 +66,7 @@ export function formatClosedDays(
   return labels.length ? labels.join(copy.dayJoin) : copy.noClosedDays;
 }
 
-export function formatDate(value: IsoDate, copy: StoreCopy): string {
+function formatDate(value: IsoDate, copy: StoreCopy): string {
   const { year, month, day } = dateParts(value);
   return format(copy.date, { year, month, day });
 }

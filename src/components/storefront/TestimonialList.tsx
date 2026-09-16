@@ -11,7 +11,7 @@ interface Props {
 }
 
 /**
- * お客様の声の一覧（ADR 0059）。依頼・謝礼がある声には、本文より前に表示を必ず出す。
+ * お客様の声の一覧（ADR 0048）。依頼・謝礼がある声には、本文より前に表示を必ず出す。
  * 表示を消す props は持たない。data-disclosure は表示の欠落を検査するための印。
  */
 export default function TestimonialList({ testimonials, business }: Props) {

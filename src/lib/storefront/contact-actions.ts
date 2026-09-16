@@ -1,5 +1,5 @@
 /**
- * 連絡導線（CTA）の優先順と行き先（ADR 0057）。
+ * 連絡導線（CTA）の優先順と行き先（ADR 0048）。
  *
  * 表示ラベルは導線の種類（channel）だけから決め、行き先も同じ channel から作る。
  * 予約は外部の予約サービスへのリンクで実現し、独自の予約機能は持たない。
@@ -14,8 +14,7 @@ import {
   type Issue,
 } from '@/lib/storefront/core';
 
-export const CONTACT_CHANNELS = ['phone', 'contact', 'line', 'booking'] as const;
-export type ContactChannel = (typeof CONTACT_CHANNELS)[number];
+export type ContactChannel = 'phone' | 'contact' | 'line' | 'booking';
 
 export interface ContactPlan {
   /** ページ内の CTA の優先順。先頭が主ボタン */
@@ -53,7 +52,7 @@ export const CONTACT_PRESETS: Record<Industry | 'default', readonly ContactChann
 };
 
 const LINE_HOSTS = new Set(['line.me', 'lin.ee', 'page.line.me', 'liff.line.me']);
-export const isLineUrl = (value: string): boolean =>
+const isLineUrl = (value: string): boolean =>
   isHttpsUrl(value) && LINE_HOSTS.has(new URL(value).hostname);
 
 function destination(
