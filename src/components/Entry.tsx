@@ -33,7 +33,7 @@ export default function Entry({ full = false }: Props) {
           <span className="sub2">
             {format(copy.sub2, { sgWeeks: sg.weeks })}
             <br />
-            {format(copy.sub22, { pRunRunLightPrice: n(P.run('run_light').price) })}
+            {copy.sub22}
           </span>
         </div>
         <div>

@@ -222,12 +222,12 @@ export const UPDATE_NOTE = copy.unlimitedNote;
 /** ページ数の近いものどうしを並べる。当方が高い行も、そのまま出す */
 export function compareRows(months = COMPARE_MONTHS) {
   const pairs: [(typeof SUBS_MARKET)[number], number, RunKey, string, number][] = [
-    [SUBS_MARKET[0]!, SINGLE.price, 'run_light', SINGLE.name, SINGLE.pages],
-    [SUBS_MARKET[1]!, build('basic').price, 'run_light', build('basic').name, build('basic').pages],
+    [SUBS_MARKET[0]!, SINGLE.price, 'run_self', SINGLE.name, SINGLE.pages],
+    [SUBS_MARKET[1]!, build('basic').price, 'run_self', build('basic').name, build('basic').pages],
     [
       SUBS_MARKET[2]!,
       build('standard').price,
-      'run_light',
+      'run_self',
       build('standard').name,
       build('standard').pages,
     ],

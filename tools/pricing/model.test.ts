@@ -94,3 +94,12 @@ test('care reduction keeps the modeled 50% contribution floor and the 140-hour c
     customerTotal(model, { buildKey: 'entry', supportKey: 'care', months: 6 }).difference > 0,
   );
 });
+
+test('default comparison uses production only with customer-paid external costs', () => {
+  const total = customerTotal(model, { buildKey: 'entry' });
+  assert.equal(total.ourTotal, 205800);
+  assert.equal(total.difference, -152000);
+  assert.equal(customerTotal(model, { buildKey: 'core' }).ourTotal, 324000);
+  assert.equal(customerTotal(model, { buildKey: 'expand' }).ourTotal, 524000);
+  assert.equal(customerTotal(model, { buildKey: 'entry', supportKey: 'care' }).ourTotal, 346200);
+});
