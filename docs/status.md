@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-16（制作のみの料金表示・メール受付に変更）
+- 最終更新：2026-09-17（Vercel 本番ログの原因確認・図解の key 警告を修正）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -17,7 +17,7 @@
 | 構成 | ルート直下の `src/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
 | 実行時 JS | 全21ページで 0（`postbuild` と `verify` で確認） |
 | 検査 | 全項目 **PASS 572 / WARN 1 / FAIL 0**、静的 PASS 318 / WARN 1 / FAIL 0（対象なし 40 件）。WARN は本番公開条件が未設定のプレビューによるもの |
-| 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 479 件・料金モデル 12 件合格 |
+| 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 480 件・料金モデル 12 件合格 |
 | 依存の健全性 | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定。Dependabot は ESLint と Node 型定義のメジャー更新だけを除外し、既存の互換性方針を維持（ADR 0003） |
 | 動作を確かめた環境 | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一 |
 | 文言とルート | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004） |
@@ -298,3 +298,13 @@ validate と全項目 verify は成功（Vitest 477 件・料金モデル 12 件
 指定メールを全共通表示へ反映。自社の問い合わせページはフォームを表示せず、メールアプリへ渡すリンクを掲載。メール受付の公開条件を検証し、フォームの機能は顧客テンプレート用に明示設定で残した（[ADR 0051](architecture/0051-email-inquiries.md)）。受信テストは未実施。
 
 検証：Vitest 479 件・料金モデル 12 件、全項目 PASS 572 / WARN 1 / FAIL 0、静的 PASS 318 / WARN 1 / FAIL 0（対象なし 40）。入力フォーム非表示によりラベル対応の対象が 1 件減った。幅 1440 / 320 px でメールアドレスとフォーム非表示・横はみ出しなしを確認。
+
+### 2026-09-17 Vercel 本番ログの切り分け
+
+ユーザー提供ログは main の `d38473c`。TypeScript・単体テスト・静的書き出しは成功しており、最後の本番公開条件で 14 件の FAIL が出て停止した。パッケージの非推奨警告と React の key 警告は停止原因ではない。
+
+メール受付を含む PR #70 の版では EMAIL と FORM_ENDPOINT の不足が解消し、本番条件の未達は 12 件。DOMAIN、POSTAL_CODE、ADDRESS_REGION/CITY/STREET、MEMBERS[0].name、MEMBERS[1].name/bio、LEGAL_APPROVALS.terms/legal、ACCEPTANCE_RECORDS と、それらの確認後に外す PLACEHOLDER が残る。未確定の事業者情報・承認・外部接続の試験結果は推測で埋めない。プレビューの成功を本番公開の成功として扱わない。
+
+図解の React 警告は開発モードで再現し、OwnershipClock・SubsidyTimeline の配列要素と補助部品に安定した key を付けて修正。全図解について React 警告を検出する回帰テストは修正前に失敗・修正後に成功した。Vercel の本番モードや公開条件の検査は維持する。
+
+検証：通常の validate（480 件の単体テスト・12 件の料金モデル）と全項目 verify が成功。全項目 PASS 572 / WARN 1 / FAIL 0、静的 PASS 318 / WARN 1 / FAIL 0。変更前後の `out/` 50 ファイルの SHA-256 がすべて一致し、図解の見た目・文言・公開 HTML は変化していない。React の警告の再現は `NODE_ENV=development` の単体テストだけで行い、Next の本番ビルドにはこの環境変数を渡さない。

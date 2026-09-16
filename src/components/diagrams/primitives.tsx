@@ -25,7 +25,7 @@ export function ArrowLine({
 }
 
 export const cap = (x: number, y: number, title: string, size = 12) => (
-  <text x={x} y={y} fontSize={size} fontWeight="700" {...DIM}>
+  <text key={`caption-${x}-${y}`} x={x} y={y} fontSize={size} fontWeight="700" {...DIM}>
     {title}
   </text>
 );
