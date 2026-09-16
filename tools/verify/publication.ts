@@ -10,6 +10,7 @@
  */
 import { createHash } from 'node:crypto';
 import * as C from '@/content/config';
+import { OWNER_PUBLICATION, type OwnerPublication } from '@/content/publication';
 import { getMessages } from '@/i18n/catalog';
 import type { Result } from './results';
 
@@ -46,6 +47,7 @@ interface ApprovalState {
   currentSha256: string;
 }
 export interface PublicationSnapshot {
+  ownerPublication?: OwnerPublication | null;
   placeholder: boolean;
   fields: PublicationField[];
   contactMethod: typeof C.CONTACT_METHOD;
@@ -105,7 +107,7 @@ export function endpointProblem(raw: string): string | null {
   return RESERVED_DOMAIN.test(url.hostname) ? `例示用のドメイン「${url.hostname}」` : null;
 }
 
-type Family = 'flag' | 'value' | 'connection' | 'approval' | 'broken-approval' | 'acceptance';
+type Family = 'flag' | 'value' | 'connection' | 'approval' | 'broken-approval' | 'acceptance' | 'owner-publication';
 interface Condition {
   target: string;
   family: Family;
@@ -134,12 +136,34 @@ function approvalCondition(state: ApprovalState, today: string): Condition {
   return { target, family: 'approval', problem: null };
 }
 
+function ownerPublicationProblem(snapshot: PublicationSnapshot, today: string): string | null {
+  const record = snapshot.ownerPublication;
+  if (!record) return null;
+  if (!DATE.test(record.authorizedOn) || Number.isNaN(Date.parse(record.authorizedOn)) ||
+      new Date(record.authorizedOn).toISOString().slice(0, 10) !== record.authorizedOn || record.authorizedOn > today)
+    return '公開承認の日付が不正です';
+  if (!record.evidence.trim() || !/^[a-f0-9]{64}$/.test(record.ownerNameSha256) ||
+      record.domain !== snapshot.fields.find((f) => f.key === 'DOMAIN')?.value ||
+      record.ownerNameSha256 !== createHash('sha256').update(snapshot.fields.find((f) => f.key === 'LEGAL_NAME')?.value ?? '').digest('hex'))
+    return '公開承認の対象ドメイン・事業者・根拠が現在の設定と一致しません';
+  for (const id of ['terms', 'legal'] as const) {
+    const document = snapshot.approvals.find((a) => a.id === id);
+    if (!document || record.documentHashes[id] !== document.currentSha256)
+      return `公開承認後に ${id} の文面が変わりました。公開判断を更新してください`;
+  }
+  if (snapshot.humanChecksPending.some((id) => !record.deferredChecks.includes(id)))
+    return '公開承認に記録していない未確認項目があります';
+  return null;
+}
+
 /** 公開条件の判定。today は日本時間の YYYY-MM-DD */
 export function evaluatePublication(
   snapshot: PublicationSnapshot,
   mode: VerifyMode,
   today: string,
 ): Result[] {
+  const ownerProblem = ownerPublicationProblem(snapshot, today);
+  const ownerAuthorized = !!snapshot.ownerPublication && !ownerProblem;
   const conditions: Condition[] = [
     {
       target: 'PLACEHOLDER',
@@ -163,18 +187,25 @@ export function evaluatePublication(
         : null,
     },
   ];
+  if (snapshot.ownerPublication)
+    conditions.push({ target: 'OWNER_PUBLICATION', family: 'owner-publication', problem: ownerProblem });
+
+  const deferred = (c: Condition): boolean => ownerAuthorized && (
+    c.family === 'acceptance' || (c.family === 'approval' && snapshot.approvals.some((a) =>
+      c.target === `LEGAL_APPROVALS.${a.id}` && Object.values(a.record).every((v) => v === null)))
+  );
 
   if (mode === 'production')
     return conditions.map((c) => ({
-      level: c.problem ? 'FAIL' : 'PASS',
+      level: c.problem ? (deferred(c) ? 'WARN' : 'FAIL') : 'PASS',
       check: '公開条件（本番）',
       page: c.target,
-      detail: c.problem ?? '',
+      detail: c.problem ? `${c.problem}${deferred(c) ? '。オーナー指示で自社サイトを公開。確認済み・納品検収済みを意味しません（ADR 0056）' : ''}` : '',
     }));
 
   const unmet = conditions.filter((c) => c.problem);
   const out: Result[] = unmet
-    .filter((c) => c.family === 'broken-approval' || (!snapshot.placeholder && c.family === 'value'))
+    .filter((c) => c.family === 'broken-approval' || c.family === 'owner-publication' || (!snapshot.placeholder && c.family === 'value'))
     .map((c) => ({
       level: 'FAIL',
       check: c.family === 'broken-approval' ? '契約文面の承認' : '公開前チェック',
@@ -182,14 +213,14 @@ export function evaluatePublication(
       detail: c.problem!,
     }));
   const rest = unmet.filter(
-    (c) => c.family !== 'broken-approval' && (snapshot.placeholder || c.family !== 'value'),
+    (c) => c.family !== 'broken-approval' && c.family !== 'owner-publication' && (snapshot.placeholder || c.family !== 'value'),
   );
   if (rest.length)
     out.push({
       level: 'WARN',
       check: '公開前チェック',
       page: 'config.ts',
-      detail: `プレビューとして検査。本番の公開条件を満たしていない ${rest.length} 件：${rest.map((c) => c.target).join('・')}（詳細は --mode production）`,
+      detail: `${ownerAuthorized ? 'オーナー指示による自社公開。未確認の記録' : 'プレビューとして検査。本番の公開条件を満たしていない'} ${rest.length} 件：${rest.map((c) => c.target).join('・')}（詳細は --mode production）`,
     });
   else if (!out.length)
     out.push({ level: 'PASS', check: '公開前チェック', page: 'config.ts', detail: '本番の公開条件をすべて満たしています' });
@@ -205,6 +236,7 @@ export function catalogSha256(id: C.LegalDocumentId): string {
 export function publicationSnapshot(humanChecksPending: string[]): PublicationSnapshot {
   const text = (key: string, value: string): PublicationField => ({ key, kind: 'text', value });
   return {
+    ownerPublication: OWNER_PUBLICATION,
     placeholder: C.PLACEHOLDER,
     fields: [
       { key: 'DOMAIN', kind: 'domain', value: C.DOMAIN },

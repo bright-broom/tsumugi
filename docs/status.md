@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-17（セキュリティ強化。サイトの本番反映は確認待ち）
+- 最終更新：2026-09-17（オーナー指示による自社公開。ローカル本番検証済み、配備確認待ち）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -16,8 +16,8 @@
 |---|---|
 | 構成 | ルート直下の `src/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
 | 実行時 JS | 全21ページで 0（`postbuild` と `verify` で確認） |
-| 検査 | 全項目 **PASS 575 / WARN 1 / FAIL 0**、静的 PASS 318 / WARN 1 / FAIL 0（対象なし 40 件）。WARN は未設定の本番公開条件。TOP の容量警告は飲食店向け比較の移動で解消（ADR 0053） |
-| 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 507 件・料金モデル 12 件合格 |
+| 検査 | 本番全項目 **PASS 586 / WARN 3 / FAIL 0**、静的プレビュー PASS 318 / WARN 1 / FAIL 0（対象なし 40 件）。本番 WARN は専門家確認 2 件・受入確認記録の未実施（ADR 0056）。準備中の帯の解除によりブラウザの検査対象が 4 件減少。 |
+| 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 516 件・料金モデル 12 件合格 |
 | 依存の健全性 | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定。Dependabot は ESLint と Node 型定義のメジャー更新だけを除外し、既存の互換性方針を維持（ADR 0003） |
 | 動作を確かめた環境 | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一 |
 | 文言とルート | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004） |
@@ -33,11 +33,11 @@
 
 | `src/content/config.ts` の設定 | いまの値 | 影響 |
 |---|---|---|
-| `PLACEHOLDER` | `true` | 全ページの上部に「準備中」の帯が出る。`terms.html` に「弁護士確認前」の注意書きが出る |
+| `PLACEHOLDER` | `false` | 全体の準備中表示を解除。利用規約の未確認の注意は保持 |
 | `TEL` | `080-4560-1124`（確定。Issue #12 の 2026-09-15 追記） | 表示・`tel:08045601124`・JSON-LD が `i18n/locales/ja/config.ts` の1か所から出る |
 | `DOMAIN` / 住所 | `tsumugi-six.vercel.app` / ユーザー指定の品川区の住所 | canonical・OGP・JSON-LD・サイトマップ・共通表示を同期（ADR 0054） |
 | `LEGAL_NAME` / 担当者 | `作田 敏希` / `Toshiki`・`Yuka` | 法定表示は正式氏名、紹介は指定の表示名。紹介文と契約文面を作成（ADR 0054） |
-| 公開前の確認 | 本番静的 PASS 331 / FAIL 4 | 利用規約・法定表示の専門家確認記録、受入確認記録、その後の `PLACEHOLDER=false` が残る |
+| 公開判断 | オーナーが自社サイトの公開を指示（ADR 0056） | 専門家確認・受入確認は未実施のまま WARN に残す。対象・文面・未確認項目の変更は再判断が必要 |
 | `EMAIL` | `leonardodavinci.works@gmail.com`（ユーザー指定） | 問い合わせ・フッター・法定表示に共通反映 |
 | `CONTACT_METHOD` / `FORM_ENDPOINT` | `email` / 空 | 自社サイトはメール受付。フォームは非表示。顧客テンプレート用の受付サービスは保持（ADR 0051） |
 | `LINE_URL` | 空 | LINE の導線は出ない |
@@ -116,16 +116,16 @@ open の 42 件を分担して対応し、6 本のブランチをこのブラン
 
 残りはオーナーの判断が要るもの：画面つきで顧客に開放する場合のホスティングと認証・顧客ごとの権限、営業リストの入力元と利用条件、GBP の API 連携か手作業かと責任者、計測データの同意の取り方、外部費の確定額を見積に入れる形、見積書の発行者欄。詳細は各 ADR の「残したこと」。
 
-### A. 公開を止めているもの
+### A. 公開と公開後に残る確認（自社公開は ADR 0056）
 
 | 課題 | やること | 手がかり |
 |---|---|---|
-| 事業者情報・連絡先を実際の値にする | `content/config.ts` の `DOMAIN` と `i18n/locales/ja/config.ts` の地域・連絡先・住所・2人のプロフィールを差し替え、`PLACEHOLDER = false` にする。**本番モード（`verify --mode production`、Vercel の本番配備では自動）が仮の値の残りを条件ごとに FAIL にする**（ADR 0024） | [operations.md「公開前にやること」](operations.md) |
+| 事業者情報・連絡先を実際の値にする | 指定の地域・連絡先・住所・2 人のプロフィールを反映し、`PLACEHOLDER = false` に設定済み。**本番モード（`verify --mode production`、Vercel の本番配備では自動）が仮の値の残りを条件ごとに FAIL にする**（ADR 0024） | [operations.md「公開前にやること」](operations.md) |
 | 顧客テンプレートでフォームを採用する場合の送信先（自社サイトはメール受付） | 配備先・保存先・通知手段を選び、`services/inquiry/` を配備して `FORM_ENDPOINT` を設定する。通知はメールと LINE（または SMS）の2系統（受付サービスが強制する） | [ADR 0035](architecture/0035-inquiry-hosting-candidates.md)（候補と判断材料）、[inquiry-data.md](inquiry-data.md)（プライバシー表示との要判断事項） |
-| `terms.html` の弁護士確認 | 下書きの文面を確認してもらって確定する。フリーランス法第4条（書面交付義務）への対応も同時に。新料金の支払・変更枠・修補・解除条件を確認する。自社24回分割の新規受付は行わない。確認後に `content/config.ts` の `LEGAL_APPROVALS`（terms・legal）へ版・承認日・確認者の役割・文面の SHA-256 を記録する。記録が揃うまで下書きの注意が出続け、本番モードは FAIL（ADR 0024） | `src/i18n/locales/ja/terms.ts`、ガイドライン「8.1」 |
-| `legal.html` の事業者情報 | 販売事業者名・運営責任者・所在地が仮の値。開業届／登記のあとに差し替える | `config.ts` |
+| `terms.html` の弁護士確認 | 下書きの文面を確認してもらって確定する。フリーランス法第4条（書面交付義務）への対応も同時に。新料金の支払・変更枠・修補・解除条件を確認する。自社24回分割の新規受付は行わない。確認後に `content/config.ts` の `LEGAL_APPROVALS`（terms・legal）へ版・承認日・確認者の役割・文面の SHA-256 を記録する。記録が揃うまで下書きの注意を保持する。紬の自社公開では未確認を WARN に残す（ADR 0056）、顧客納品では FAIL（ADR 0024） | `src/i18n/locales/ja/terms.ts`、ガイドライン「8.1」 |
+| `legal.html` の事業者情報 | 指定された正式氏名・住所を反映済み。専門家確認は未実施 | `config.ts`、ADR 0054・0056 |
 | 屋号の確認 | 商標（J-PlatPat 第42類・第35類）・同名法人（法人番号公表サイト）・ドメイン | [messaging-and-pricing.md「屋号」](product/messaging-and-pricing.md) |
-| 本番公開と独自ドメイン | Vercel へのプレビュー配備は実施。本番の事業者情報を確定し、独自ドメインを設定して公開する。`◯◯.vercel.app` のまま納品しない。名義・DNS・Vercel のドメイン設定・公開承認は外部作業で未実施（記録欄は空欄）。公開後は `npm run check:live -- --url https://<ドメイン>` で DNS・証明書・canonical・sitemap・404・実行時 JS を確かめる（ADR 0044） | [operations.md「独自ドメインで本番公開する」](operations.md) |
+| 本番公開と独自ドメイン | Vercel へのプレビュー配備は実施。紬の自社サイトは指定された Vercel URL で公開する。顧客納品の独自ドメイン条件と区別する。自社の公開指示は ADR 0056 に記録。独自ドメインの取得・DNS 設定は今回対象外。公開後は `npm run check:live -- --url https://<ドメイン>` で DNS・証明書・canonical・sitemap・404・実行時 JS を確かめる（ADR 0044） | [operations.md「独自ドメインで本番公開する」](operations.md) |
 
 ### B. 公開のあとに
 
@@ -377,8 +377,14 @@ TOP の「毎月の費用」を `restaurant.html#monthly-costs` へ移動。料�
 
 公開サイトの CSP 等の不足、問い合わせの Origin 検査、JSON-LD の安全な出力、社内データの権限・保存パス・CSV、CI の認証と依存チェックを修正。公開ファイル 50 件の安全性検査と、実ブラウザで攻撃を拒否する検証を追加（[ADR 0055](architecture/0055-security-hardening.md)）。
 
-検証：型・lint・Vitest 507 件・料金モデル 12 件・ビルド成功。CSP 適用下でも全項目 PASS 575 / WARN 1 / FAIL 0。21 ページで通常表示の CSP 違反なし、不正 script・イベント・frame・form を遮断。依存の既知の脆弱性は今回 0 件。
+検証：型・lint・Vitest 516 件・料金モデル 12 件・ビルド成功。CSP 適用下でも全項目 PASS 575 / WARN 1 / FAIL 0。21 ページで通常表示の CSP 違反なし、不正 script・イベント・frame・form を遮断。依存の既知の脆弱性は今回 0 件。
 
 GitHub の実設定では脆弱性通知・Dependabot の修正 PR を有効化し、main に PR・GitHub Actions の validate 成功を必須とする保護を設定して再確認。強制 push・削除を禁止し、管理者にも適用。secret scanning と push protection は有効、未解決の secret scanning alert は 0 件だった。
 
 サイトの保護ヘッダーとコードは PR・配備待ち。本番の契約文面等の確認条件は緩めていない。受付サービスは未配備。アカウント MFA、配備先 WAF・共有レート制限・認証・保存暗号化・既存データの権限は、このコード検証によって有効性が確認されたものではない。
+
+### 2026-09-17 オーナー指示による自社サイトの公開（ADR 0056）
+
+「公開できるようにして」という指示を受け、紬の自社サイトの公開判断を専門家確認・顧客の納品検収から分離した。専門家確認・人の確認は空のまま保持し、対象ドメイン・事業者・文面のハッシュ・未確認項目が公開判断の記録に一致するときだけ WARN とする。仮の値・未接続フォーム・セキュリティ不備は停止条件を維持。準備中の帯を解除し、利用規約の下書き表示を保持する。
+
+ローカル検証：型・lint・Vitest 516 件、料金モデル 12 件、ビルド・公開 50 ファイルの安全性検査が成功。本番全項目 PASS 586 / WARN 3 / FAIL 0。Chromium で全 21 ページに CSP 違反がなく、注入した script・イベント・iframe・form の遮断を確認。実機・実通話・メールの実送受信は実施していない。CI を本番モードへ変更。配備の完了は Vercel と公開 URL で別途確認する。

@@ -108,7 +108,7 @@ export function printReport(report: VerificationReport): void {
   console.log('\n' + rule('-'));
   console.log(`  PASS ${pass}   WARN ${warn}   FAIL ${fail}   （対象なし ${notApplicable}）`);
   console.log(rule('-'));
-  console.log(`  判定: ${report.verdict === 'blocked' ? '納品不可' : '納品可'}`);
+  console.log(`  判定: ${report.verdict === 'blocked' ? '納品不可' : '自動検査合格（未確認事項・公開条件は上記参照）'}`);
   if (fail) console.log('  FAIL が1件でもあれば納品しません。上の指摘を直してから再実行してください。');
   console.log(rule('=') + '\n');
 }

@@ -1,5 +1,7 @@
 # 紬サイト ── Next.js + React + TypeScript
 
+> 自社サイトの公開：2026-09-17 のオーナー指示により [ADR 0056](architecture/0056-owner-authorized-publication.md) を適用。専門家確認・受入確認の未実施分は WARN に残す。顧客テンプレートでは `OWNER_PUBLICATION=null` に戻し、従来の納品条件を適用する。紬は Vercel URL・メール受付で公開し、独自ドメインやフォームの導入を前提にしない。
+
 サービスサイト本体。21ページ、**実行時 JavaScript 0バイト**。
 ここには**コードを触るときの決まり**だけを書く。引き継ぎの入口は [AGENTS.md](../AGENTS.md)、いまの状態と残課題は [docs/status.md](status.md)。理由や経緯は [docs/](README.md)（技術の判断は [docs/architecture/](architecture/README.md)）。全体の図は [リポジトリ直下の README](../README.md)。
 

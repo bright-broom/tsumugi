@@ -16,7 +16,7 @@ import {
 } from '../tools/verify/publication';
 import type { Result } from '../tools/verify/results';
 
-const TODAY = '2026-09-16';
+const TODAY = '2026-09-17';
 const HASH = 'f'.repeat(64);
 
 /** 公開条件をすべて満たした設定（テスト用の架空の値） */
@@ -193,12 +193,14 @@ describe('いまの設定', () => {
     expect(failed(evaluatePublication(snapshot, 'preview', TODAY))).toEqual([]);
   });
 
-  it('仮の設定のままでは本番の検査を通らない', () => {
-    if (C.PLACEHOLDER) expect(failed(evaluatePublication(snapshot, 'production', TODAY))).toContain('PLACEHOLDER');
-    // 承認の値は推測で埋めない。記録が無ければ本番は FAIL
+  it('自社公開の指示は専門家確認や納品検収の完了に置き換えない', () => {
+    const results = evaluatePublication(snapshot, 'production', TODAY);
+    expect(failed(results)).toEqual([]);
+    expect(results.filter((r) => r.level === 'WARN').map((r) => r.page))
+      .toEqual(['LEGAL_APPROVALS.terms', 'LEGAL_APPROVALS.legal', 'ACCEPTANCE_RECORDS']);
+    expect(C.PLACEHOLDER).toBe(false);
     for (const id of ['terms', 'legal'] as const)
-      if (!C.isApprovalRecorded(C.LEGAL_APPROVALS[id]))
-        expect(failed(evaluatePublication(snapshot, 'production', TODAY))).toContain(`LEGAL_APPROVALS.${id}`);
+      expect(C.isApprovalRecorded(C.LEGAL_APPROVALS[id])).toBe(false);
   });
 
   it('承認の対象は文面ごとの SHA-256 で区別する', () => {
@@ -229,4 +231,61 @@ it('公開中の問い合わせはメールアドレスを表示し、フォー�
   expect(html).toContain('leonardodavinci.works@gmail.com</a>');
   expect(html).not.toContain('<form');
   expect(html).not.toContain('送信（未設定）');
+});
+
+
+describe('自社公開の承認の範囲', () => {
+  const snapshot = () => publicationSnapshot(pendingHumanChecks(TODAY));
+
+  it('公開承認を削除すると専門家・受入確認を再び必須にする', () => {
+    expect(failed(evaluatePublication({ ...snapshot(), ownerPublication: null }, 'production', TODAY)))
+      .toEqual(['LEGAL_APPROVALS.terms', 'LEGAL_APPROVALS.legal', 'ACCEPTANCE_RECORDS']);
+  });
+
+  it.each(['DOMAIN', 'LEGAL_NAME'])('別の %s へ承認を持ち越さない', (key) => {
+    const state = snapshot();
+    state.fields = state.fields.map((f) => f.key === key ? { ...f, value: 'other-company.jp' } : f);
+    expect(failed(evaluatePublication(state, 'production', TODAY))).toContain('OWNER_PUBLICATION');
+    expect(failed(evaluatePublication(state, 'preview', TODAY))).toContain('OWNER_PUBLICATION');
+  });
+
+  it.each(['2026-02-30', '2027-01-01', 'invalid'])('不正・未来の日付 %s は拒否する', (authorizedOn) => {
+    const state = snapshot();
+    state.ownerPublication = { ...state.ownerPublication!, authorizedOn };
+    expect(failed(evaluatePublication(state, 'production', TODAY))).toContain('OWNER_PUBLICATION');
+  });
+
+  it('文面変更・未確認項目の追加・根拠の欠落は公開判断の更新を求める', () => {
+    const changed = snapshot();
+    changed.approvals[0]!.currentSha256 = HASH;
+    const extra = snapshot();
+    extra.humanChecksPending.push('new-check');
+    const noEvidence = snapshot();
+    noEvidence.ownerPublication = { ...noEvidence.ownerPublication!, evidence: '' };
+    for (const state of [changed, extra, noEvidence])
+      expect(failed(evaluatePublication(state, 'production', TODAY))).toContain('OWNER_PUBLICATION');
+  });
+
+  it('準備中・仮の連絡先・未接続フォームは承認があっても停止する', () => {
+    const draft = snapshot();
+    draft.placeholder = true;
+    expect(failed(evaluatePublication(draft, 'production', TODAY))).toContain('PLACEHOLDER');
+    const phone = snapshot();
+    phone.fields = phone.fields.map((f) => f.key === 'TEL' ? { ...f, value: '000-0000-0000' } : f);
+    expect(failed(evaluatePublication(phone, 'production', TODAY))).toContain('TEL');
+    const form = snapshot();
+    form.contactMethod = 'form';
+    expect(failed(evaluatePublication(form, 'production', TODAY))).toContain('FORM_ENDPOINT');
+  });
+
+  it('不完全・破損した専門家確認記録を警告へ下げない', () => {
+    for (const record of [
+      { version: 'v1', approvedOn: null, reviewerRole: null, catalogSha256: null },
+      { version: 'v1', approvedOn: TODAY, reviewerRole: 'attorney', catalogSha256: HASH },
+    ] satisfies C.LegalApproval[]) {
+      const state = snapshot();
+      state.approvals[0]!.record = record;
+      expect(failed(evaluatePublication(state, 'production', TODAY))).toContain('LEGAL_APPROVALS.terms');
+    }
+  });
 });

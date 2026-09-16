@@ -1,5 +1,7 @@
 # 標準仕様の検査（納品の条件）
 
+> 自社サイトの公開：2026-09-17 のオーナー指示により [ADR 0056](architecture/0056-owner-authorized-publication.md) を適用。専門家確認・受入確認の未実施分は WARN に残す。顧客テンプレートでは `OWNER_PUBLICATION=null` に戻し、従来の納品条件を適用する。紬は Vercel URL・メール受付で公開し、独自ドメインやフォームの導入を前提にしない。
+
 **仕様の正本はコード**（`tools/verify/`、`npm run verify`）。この文書はその一覧で、ずれていたらコードに合わせて直す。
 
 > 文中のコードのパス（`src/…` `tools/scripts/…` `tools/verify/` `src/styles/` `public/` `out/`）は リポジトリルートからの相対。
@@ -135,3 +137,7 @@
 ### 2026-09-17 事業者情報と本番公開条件
 
 全項目 **PASS 575 / WARN 1 / FAIL 0**、静的プレビュー **PASS 318 / WARN 1 / FAIL 0**。Vitest 484 件・料金モデル 12 件。本番静的は **PASS 331 / WARN 0 / FAIL 4**。指定された正式氏名・住所・Vercel URL・紹介文を反映し、契約文面を下書きとして整備した。確認記録の不足を検知する公開条件は維持する（[ADR 0054](architecture/0054-business-publication-details.md)）。
+
+### 2026-09-17：自社公開の承認
+
+本番全項目 **PASS 586 / WARN 3 / FAIL 0**、静的プレビュー **PASS 318 / WARN 1 / FAIL 0**。Vitest 516 件・料金モデル 12 件。準備中の帯の解除でブラウザの検査対象が 4 件減少し、本番条件を個別に集計するためプレビューとは件数が異なる。WARN は未実施の専門家確認 2 件と受入確認記録。検査の完了と人の確認を区別する（[ADR 0056](architecture/0056-owner-authorized-publication.md)）。

@@ -33,7 +33,7 @@ Next.js が生成した、この文書末尾のルール（このバージョン
 | 全ページに `export const config = { unstable_runtimeJS: false }` を置く | Pages Router で JS を出さない方法はこれだけ | 同上 |
 | App Router に移さない | 静的書き出しでも全ページに約173KB（gzip）の JS が載る | [ADR 0001](docs/architecture/0001-pages-router.md) |
 | `verify` に FAIL が1件でもあれば納品しない | 仕様の正本は検査コード（`tools/verify/`） | `npm run verify` の終了コード |
-| 本番の公開は `verify --mode production` の FAIL 0 が条件。仮の値・未接続の受付・契約文面の未承認のまま公開しない | 確認用のプレビューと本番を分ける | Vercel の本番配備では自動で本番モード（[ADR 0024](docs/architecture/0024-publication-gates.md)） |
+| 本番の公開は `verify --mode production` の FAIL 0 が条件。仮の値・未接続の受付を公開しない。専門家・受入確認は原則必須。紬の自社公開のみ、明示されたオーナー判断の範囲で未確認を WARN に残す（[ADR 0056](docs/architecture/0056-owner-authorized-publication.md)） | 確認用のプレビューと本番を分ける | Vercel の本番配備では自動で本番モード（[ADR 0024](docs/architecture/0024-publication-gates.md)） |
 | 金額は `src/content/prices.ts` からだけ引く。`RUN` や `BUILD` を添字で引かない | 添字で引いていて、プランを足したときに全ページの月額が静かに下振れした事故がある。`docs/business/紬_事業の中身.xlsx` は写しで、Excel を直してもサイトは変わらない | `verify`「29 価格の一致」 |
 | 依存は `pages → application → views → layouts → components → content → i18n → routing → lib` の一方向。`src/` の中は `@/` で import する | 文言・事業データ・ルート・表示の責務を分ける | `npm run check`（[ADR 0004](docs/architecture/0004-content-and-routing.md)） |
 | 測っていない数字をページに書かない。検査していない項目を「自動検査済み」と書かない | 事業の規範 | `works.html` の件数は同じコミット・全項目・FAIL 0 の `verify-report.json` からだけ読み、LCP には記録日を添える（[ADR 0025](docs/architecture/0025-verified-build-report.md)）。仕様20項目の確認の方法は対応表の検査が止める（[ADR 0026](docs/architecture/0026-acceptance-mapping.md)） |
@@ -56,8 +56,8 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 
 1. `npm run check`・`npm run lint`・`npm test` が通る
 2. `npm run build` が通る（postbuild が「実行時の script 0件・区切りコメント 0件」を出す）
-3. `npm run verify` が **PASS 575 / WARN 1 / FAIL 0**（対象なし 40 件。WARN は未設定の本番公開条件。TOP の容量警告は ADR 0053 で解消）
-   - 検査項目やページを増減すると 575 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
+3. `npm run verify -- --mode production` が **PASS 586 / WARN 3 / FAIL 0**（対象なし 40 件。WARN は自社公開で記録した専門家・受入確認の未実施。ADR 0056）
+   - 検査項目やページを増減すると 586 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
 4. 見た目を変えないはずの変更（リファクタリング）では、`out/` の全ファイルのハッシュが変更前と同じ。HTML/CSSの生成方式自体を変更する場合は、変更対象以外のハッシュ一致と、同じブラウザでのPC・モバイルの画面比較で確かめ、差分の理由をADRに記録する（[ADR 0009](docs/architecture/0009-global-tailwind.md)）
 
 ## 5. 進め方

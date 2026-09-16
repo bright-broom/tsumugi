@@ -23,6 +23,7 @@
 | 技術的な判断と、その記録（ADR） | [architecture/README.md](architecture/README.md) |
 | 公開前にやること・顧客サイトの作り方・デプロイ | [operations.md](operations.md) |
 | セキュリティ対策・検証範囲・配備時の注意 | [architecture/0055-security-hardening.md](architecture/0055-security-hardening.md) |
+| 自社サイトの公開承認と未確認事項の扱い | [architecture/0056-owner-authorized-publication.md](architecture/0056-owner-authorized-publication.md) |
 | 問い合わせ情報の所在・保持期限・削除の手順 | [inquiry-data.md](inquiry-data.md) |
 | Python／Astro から Next.js への移行 | [history/2026-09-migration.md](history/2026-09-migration.md) |
 | コードを触るとき（コマンド・書き方・置き場所の決まり） | [../docs/development.md](development.md) |
