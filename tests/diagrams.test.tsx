@@ -54,7 +54,7 @@ describe('React diagrams', () => {
     (_, diagram) => {
       const html = render(diagram());
       const document = parseFragment(html);
-      const svgs = elements(document, 'svg');
+      const svgs = elements(document, 'svg').filter((svg) => attr(svg, 'role') === 'img');
       expect(elements(document, 'figure')).toHaveLength(1);
       expect(elements(document, 'figcaption')).toHaveLength(1);
       expect(svgs.map((svg) => attr(svg, 'class'))).toEqual(['fw', 'fn']);
@@ -63,6 +63,19 @@ describe('React diagrams', () => {
         expect(attr(svg, 'role')).toBe('img');
         expect(attr(svg, 'aria-label')).toBeTruthy();
         expect(elements(svg, 'text').length).toBeGreaterThan(0);
+        const icons = elements(svg, 'use').filter((child) =>
+          attr(child, 'class')?.includes('diagram-icon'),
+        );
+        expect(icons.length).toBeGreaterThanOrEqual(4);
+        for (const icon of icons) {
+          expect(attr(icon, 'aria-hidden')).toBe('true');
+          expect(attr(icon, 'focusable')).toBe('false');
+          const symbol = elements(document, 'symbol').find(
+            (node) => `#${attr(node, 'id')}` === attr(icon, 'href'),
+          );
+          expect(symbol).toBeDefined();
+          expect(attr(elements(symbol!, 'svg')[0]!, 'stroke-width')).toBe('1.65');
+        }
         const ids = elements(svg, 'marker').map((marker) => attr(marker, 'id'));
         const used = elements(svg, 'line').flatMap((line) => {
           const reference = attr(line, 'marker-end');
@@ -88,7 +101,7 @@ describe('React diagrams', () => {
     const allIds = elements(document, 'marker').map((marker) => attr(marker, 'id'));
     expect(allIds).toHaveLength(8);
     expect(new Set(allIds).size).toBe(allIds.length);
-    for (const svg of elements(document, 'svg')) {
+    for (const svg of elements(document, 'svg').filter((svg) => attr(svg, 'role') === 'img')) {
       const ids = elements(svg, 'marker').map((marker) => attr(marker, 'id'));
       const references = elements(svg, 'line').flatMap((line) => attr(line, 'marker-end') ?? []);
       expect(references.length).toBeGreaterThan(0);
@@ -97,6 +110,55 @@ describe('React diagrams', () => {
     // An unrelated render must not advance a global counter or affect the output.
     render(<MoneyFlow portal={10_000} run={5_000} />);
     expect(render(content)).toBe(html);
+  });
+
+  it('shares Lucide symbols across responsive layouts without collisions between figures', () => {
+    const document = parseFragment(
+      render(
+        <>
+          <LandVsOwn />
+          <LandVsOwn />
+          <RentVsOwn portal={27_500} fee={220} run={16_000} />
+        </>,
+      ),
+    );
+    const ids = elements(document, 'symbol').map((node) => attr(node, 'id'));
+    expect(ids.length).toBe(new Set(ids).size);
+    for (const figure of elements(document, 'figure')) {
+      const symbols = elements(figure, 'symbol');
+      const localIds = symbols.map((node) => `#${attr(node, 'id')}`);
+      const uses = elements(figure, 'use');
+      expect(uses.length).toBeGreaterThan(symbols.length);
+      for (const use of uses) expect(localIds).toContain(attr(use, 'href'));
+      for (const id of localIds) expect(uses.some((use) => attr(use, 'href') === id)).toBe(true);
+    }
+  });
+
+  it('keeps exact cost proportions while giving small segments independent label space', () => {
+    const document = parseFragment(
+      render(<SubsidyBar total={1_000} web={10} pr={990} grant={250} net={750} />),
+    );
+    for (const [index, svg] of elements(document, 'svg')
+      .filter((node) => attr(node, 'role') === 'img')
+      .entries()) {
+      const w = index === 0 ? 700 : 340;
+      const bars = elements(svg, 'rect').filter((node) =>
+        attr(node, 'class')?.includes('diagram-band'),
+      );
+      expect(bars.map((bar) => Number(attr(bar, 'width')))).toEqual([
+        w * 0.01,
+        w * 0.99,
+        w * 0.25,
+        w * 0.75,
+      ]);
+      expect(bars.map((bar) => Number(attr(bar, 'x')))).toEqual([0, w * 0.01, 0, w * 0.25]);
+      const legends = elements(svg, 'text').filter(
+        (node) => attr(node, 'text-anchor') === 'middle',
+      );
+      expect(legends.every((node) => [w / 4, w * 0.75].includes(Number(attr(node, 'x'))))).toBe(
+        true,
+      );
+    }
   });
 
   it('uses copy passed through the provider, including a replacement caption', () => {

@@ -272,11 +272,12 @@ export const SUBSIDY = {
 };
 
 // ── ポータルサイトの掲載料（公開されている料金を税込に換算） ──
+export const PORTAL_MONTHLY = { premium5: 55_000, basic: 27_500, light: 11_000 } as const;
 export const PORTAL_TABELOG: [name: string, monthly: number][] = [
   [copy.portal, 110_000],
-  [copy.portal2, 55_000],
-  [copy.portalBasic, 27_500],
-  [copy.portalLight, 11_000],
+  [copy.portal2, PORTAL_MONTHLY.premium5],
+  [copy.portalBasic, PORTAL_MONTHLY.basic],
+  [copy.portalLight, PORTAL_MONTHLY.light],
   [copy.portal3, 0],
 ];
 export const PORTAL_FEE_DINNER = 220; // 税込・1人あたり

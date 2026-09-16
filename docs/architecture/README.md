@@ -120,3 +120,7 @@
 - [0050 制作のみ・保守契約なしを基本の料金表示にする](0050-production-only-default.md)
 
 - [0051 自社サイトの問い合わせをメールで受け付ける](0051-email-inquiries.md)
+
+- [0052 図解を Lucide の線画と共通の表示部品で統一する](0052-lucide-diagrams.md)
+
+- [0053 飲食店の掲載料・予約手数料は飲食店ページにまとめる](0053-restaurant-cost-comparison.md)

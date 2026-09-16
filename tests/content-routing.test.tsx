@@ -140,7 +140,9 @@ describe('hero catalog', () => {
     expect(html).toContain('alt="Artwork description"');
     expect(html).not.toContain(getMessages().home.hero.heading);
     // 背景画のファイルも同じカタログの代替説明だけを持つ（Issue #36：コピーの変更だけで全表示が同期する）
-    expect(heroSvg(replacement.artworkAlt, '')).toContain('<title id="title">Artwork description</title>');
+    expect(heroSvg(replacement.artworkAlt, '')).toContain(
+      '<title id="title">Artwork description</title>',
+    );
   });
 
   it('exposes each hero string once, so assistive technology reads it once (Issue #36)', () => {
@@ -187,4 +189,24 @@ describe('adopted tariff presentation', () => {
     expect(html).toContain('139,000');
     expect(html).not.toContain('type="radio"');
   });
+});
+
+it('keeps restaurant listing and booking comparisons on the restaurant page only', () => {
+  const heading = getMessages().industry.restaurantCosts.heading3;
+  for (const route of ['index', 'restaurant', 'koumuten', 'salon', 'shigyo'] as const) {
+    const html = renderToStaticMarkup(<Page {...pageProps(route)} />);
+    if (route === 'restaurant') {
+      expect(html.split(heading)).toHaveLength(2);
+      for (const amount of ['55,000 円', '27,500 円', '14,630 円', '11,000 円', '220 円', '110 円'])
+        expect(html).toContain(amount);
+      expect(html).toContain('手数料は、常連さんの予約にもかかります');
+      expect(html).toContain('制作費別。任意の支援と外部費を税込で比較');
+      expect(html).toContain('id="monthly-costs"');
+      expect(html).toContain('自分のサイト');
+    } else {
+      expect(html).not.toContain(heading);
+      expect(html).not.toContain('手数料は、常連さんの予約にもかかります');
+      expect(html).not.toContain('id="monthly-costs"');
+    }
+  }
 });

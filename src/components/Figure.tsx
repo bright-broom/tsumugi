@@ -1,9 +1,19 @@
 import { Children, createContext, useContext, useId, type ReactNode } from 'react';
+import { ICONS, type IconName } from '@/lib/icons';
 import { useMessages } from '@/components/ContentProvider';
 
 type MarkerTone = 'neutral' | 'accent';
 type Markers = Partial<Record<MarkerTone, string>>;
 const MarkerContext = createContext<Markers | null>(null);
+
+const GlyphContext = createContext<Partial<Record<IconName, string>> | null>(null);
+
+export function useDiagramGlyph(name: IconName): string {
+  const glyphs = useContext(GlyphContext);
+  const id = glyphs?.[name];
+  if (!id) throw new Error(`Figure does not define the ${name} icon`);
+  return id;
+}
 
 /** A canvas owns its markers, even when the same diagram appears twice on a page. */
 export function useDiagramMarker(tone: MarkerTone): string {
@@ -72,6 +82,7 @@ export default function Figure({
   viewBox,
   narrow,
   arrows = [],
+  icons = [],
 }: {
   wide: ReactNode;
   caption: string;
@@ -79,23 +90,54 @@ export default function Figure({
   viewBox: string;
   narrow?: readonly [children: ReactNode, viewBox: string];
   arrows?: readonly MarkerTone[];
+  icons?: readonly IconName[];
 }) {
   const copy = useMessages('diagrams');
+  const instance = useId();
+  const glyphs = Object.fromEntries(icons.map((name, i) => [name, `di${instance}${i}`]));
   return (
-    <figure className={narrow ? 'fig has-narrow' : 'fig'}>
-      <Canvas variant="fw" viewBox={viewBox} label={label} arrows={arrows}>
-        {wide}
-      </Canvas>
-      {narrow ? (
-        <Canvas variant="fn" viewBox={narrow[1]} label={label} arrows={arrows}>
-          {narrow[0]}
+    <GlyphContext.Provider value={glyphs}>
+      <figure className={narrow ? 'fig has-narrow' : 'fig'}>
+        {icons.length > 0 && (
+          <svg
+            className="diagram-symbols"
+            width="0"
+            height="0"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <defs>
+              {icons.map((name) => {
+                const Glyph = ICONS[name];
+                return (
+                  <symbol key={name} id={glyphs[name]} viewBox="0 0 24 24">
+                    <Glyph
+                      xmlns={undefined}
+                      size={24}
+                      strokeWidth={1.65}
+                      aria-hidden="true"
+                      focusable="false"
+                    />
+                  </symbol>
+                );
+              })}
+            </defs>
+          </svg>
+        )}
+        <Canvas variant="fw" viewBox={viewBox} label={label} arrows={arrows}>
+          {wide}
         </Canvas>
-      ) : (
-        <p className="fig-hint" aria-hidden="true">
-          {copy.hint}
-        </p>
-      )}
-      <figcaption>{caption}</figcaption>
-    </figure>
+        {narrow ? (
+          <Canvas variant="fn" viewBox={narrow[1]} label={label} arrows={arrows}>
+            {narrow[0]}
+          </Canvas>
+        ) : (
+          <p className="fig-hint" aria-hidden="true">
+            {copy.hint}
+          </p>
+        )}
+        <figcaption>{caption}</figcaption>
+      </figure>
+    </GlyphContext.Provider>
   );
 }

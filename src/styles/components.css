@@ -1156,6 +1156,41 @@
   .fig.has-narrow {
     overflow-x: visible;
   }
+  .fig > svg[role='img'] {
+    @apply fill-current text-[14px];
+  }
+  .diagram-muted {
+    opacity: 0.72;
+  }
+  .diagram-surface {
+    @apply fill-current stroke-current;
+    fill-opacity: 0.025;
+    stroke-opacity: 0.22;
+    stroke-width: 1;
+  }
+  .diagram-surface.is-accent {
+    fill: var(--fig-accent);
+    stroke: var(--fig-accent);
+    fill-opacity: 0.075;
+    stroke-opacity: 0.65;
+  }
+  .diagram-band {
+    @apply fill-current;
+    fill-opacity: 0.22;
+  }
+  .diagram-band.is-secondary {
+    fill-opacity: 0.42;
+  }
+  .diagram-band.is-accent {
+    fill: var(--fig-accent);
+    fill-opacity: 0.85;
+  }
+  .fig > .diagram-symbols {
+    @apply absolute w-[0] min-w-[0] h-[0] overflow-hidden;
+  }
+  .diagram-icon {
+    overflow: visible;
+  }
   .fig figcaption {
     @apply mt-[18px] pt-[14px];
     border-top: 1px solid var(--color-line);

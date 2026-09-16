@@ -1,5 +1,4 @@
 import { LandVsOwn } from '@/components/diagrams/LandVsOwn';
-import { RentVsOwn } from '@/components/diagrams/RentVsOwn';
 import { OwnershipClock } from '@/components/diagrams/OwnershipClock';
 import { SubsidyBar } from '@/components/diagrams/SubsidyBar';
 import Acc from '@/components/Acc';
@@ -19,7 +18,6 @@ import Note from '@/components/Note';
 import FaqList from '@/components/FaqList';
 import Cards from '@/components/Cards';
 import Calc from '@/components/Calc';
-import Vs from '@/components/Vs';
 import Entry from '@/components/Entry';
 import Plans from '@/components/Plans';
 import Icon from '@/components/Icon';
@@ -32,7 +30,6 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
   const sd = P.subsidyCalc();
   const std = P.build('standard');
   const mStd = P.run('run_basic').price;
-  const tabelogBasic = 27_500;
   const cmp = P.compareRows();
   const one = cmp[0]!;
   const scopeIcons: IconName[] = ['route', 'file-text', 'code-xml', 'pen-line', 'key'];
@@ -173,49 +170,6 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               {copy.btn3}
             </a>
           </div>
-        </Section>
-
-        <Section
-          navKey={href('cost-cut')}
-          className="home-section home-cost"
-          eyebrow={copy.eyebrow2}
-          heading={copy.heading3}
-          lede={copy.lede2}
-        >
-          <Vs
-            max={55_000}
-            rows={[
-              { name: copy.rowsName, sub: copy.rowsSub, amount: 55_000 },
-              { name: copy.rowsName2, sub: copy.rowsSub, amount: 27_500 },
-              {
-                name: copy.rowsName3,
-                sub: copy.rowsSub2,
-                amount: P.withTax(P.supportMonthlyTotal('run_basic')),
-                ours: true,
-              },
-              { name: copy.rowsName4, sub: copy.rowsSub3, amount: 11_000 },
-            ]}
-          />
-          <RentVsOwn
-            portal={tabelogBasic}
-            fee={P.PORTAL_FEE_DINNER}
-            run={P.withTax(P.supportMonthlyTotal('run_basic'))}
-          />
-          <Note heading={copy.heading4} kind="good">
-            <p>
-              {format(copy.p3, {
-                pPORTALFEEDINNER: P.PORTAL_FEE_DINNER,
-                pPORTALFEELUNCH: P.PORTAL_FEE_LUNCH,
-              })}
-              <strong>{copy.strong4}</strong>
-            </p>
-          </Note>
-          <div className="btns">
-            <a className="btn btn-2" href={href('cost-cut')}>
-              {copy.btn4}
-            </a>
-          </div>
-          <p className="dim fine-note">{copy.dim}</p>
         </Section>
 
         <Section

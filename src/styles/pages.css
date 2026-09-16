@@ -103,3 +103,53 @@
     }
   }
 }
+
+@layer components {
+  .restaurant-cost .vs {
+    @apply py-[24px] bg-surface gap-[24px];
+  }
+  .restaurant-cost .vs .row {
+    @apply gap-[9px_24px];
+  }
+  .restaurant-cost .vs .nm {
+    @apply text-[16px];
+  }
+  .restaurant-cost .vs .nm em {
+    @apply ml-[14px];
+  }
+  .restaurant-cost .vs .amtv {
+    @apply text-[24px] tracking-[-.025em];
+  }
+  .restaurant-cost .vs .bar {
+    @apply h-[12px] rounded-[3px] bg-white;
+  }
+  .restaurant-cost .vs .row.ours .amtv {
+    @apply text-[var(--accent-text)];
+  }
+  .restaurant-cost .vs .bar i {
+    @apply rounded-[3px] bg-muted;
+  }
+  .restaurant-cost .vs .row.ours .bar i {
+    @apply bg-[var(--accent)];
+  }
+  @media (max-width: 768px) {
+    .restaurant-cost .vs {
+      @apply py-[24px] gap-[23px];
+    }
+    .restaurant-cost .vs .row {
+      @apply gap-[5px];
+    }
+    .restaurant-cost .vs .nm {
+      @apply text-[14px];
+    }
+    .restaurant-cost .vs .nm em {
+      @apply ml-[0] text-fine;
+    }
+    .restaurant-cost .vs .amtv {
+      @apply text-[23px];
+    }
+    .restaurant-cost .vs .bar {
+      @apply mt-[5px] h-[9px];
+    }
+  }
+}
