@@ -177,7 +177,7 @@ describe('store hours and structured data', () => {
     ]);
     expect(upcomingExceptions(shop.locations[0], '2026-09-22')).toEqual([]);
     expect(formatWeeklyHours(shop.locations[0].hours, messages.storefront.store)).toEqual([
-      '平日 8:00〜22:00',
+      '毎日 8:00〜22:00',
     ]);
     expect(html).not.toMatch(/<script|<iframe|undefined/);
   });
@@ -223,6 +223,8 @@ describe('store hours and structured data', () => {
       'hours.Wednesday',
       'hours.Thursday',
       'hours.Friday',
+      'hours.Saturday',
+      'hours.Sunday',
     ]);
   });
 });

@@ -39,6 +39,8 @@ export const STORE = defineStore({
         Wednesday: OFFICE_HOURS,
         Thursday: OFFICE_HOURS,
         Friday: OFFICE_HOURS,
+        Saturday: OFFICE_HOURS,
+        Sunday: OFFICE_HOURS,
       },
     },
   ],

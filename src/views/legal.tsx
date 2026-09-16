@@ -5,6 +5,7 @@ import * as P from '@/content/prices';
 import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Table from '@/components/Table';
+import Note from '@/components/Note';
 import type { PageProps } from '@/content/page-props';
 
 export default function LegalPage({ copy, route }: PageProps<'legal'>) {
@@ -16,7 +17,7 @@ export default function LegalPage({ copy, route }: PageProps<'legal'>) {
   const yen = (n: number) => n.toLocaleString('en-US');
   const rows: [string, string][] = [
     [copy.rows, C.LEGAL_NAME],
-    [copy.rows2, C.MEMBERS[0]!.name],
+    [copy.rows2, C.LEGAL_NAME],
     [
       copy.rows3,
       format(copy.rows4, {
@@ -52,6 +53,11 @@ export default function LegalPage({ copy, route }: PageProps<'legal'>) {
   return (
     <Base file={file} title={title} desc={desc}>
       <Section heading={copy.heading} h1 lede={copy.lede}>
+        {!C.isApprovalRecorded(C.LEGAL_APPROVALS.legal) && (
+          <Note heading={copy.draftHeading} kind="warn">
+            <p>{copy.draftNote}</p>
+          </Note>
+        )}
         <Table headers={['', '']} rows={rows} />
       </Section>
     </Base>

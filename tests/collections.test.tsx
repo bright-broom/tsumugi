@@ -12,6 +12,7 @@ import {
   type CollectionSource,
 } from '@/content/collections';
 import { NAV_GROUPS, navigationGroups } from '@/content/nav';
+import { DOMAIN } from '@/content/config';
 import { sitemapXml } from '@/content/sitemap';
 import { getMessages } from '@/i18n/catalog';
 import { FILTER_LIMITS, matchesSelection, type CaseStudy } from '@/lib/collections/cases';
@@ -42,7 +43,9 @@ describe('this site (no collection content)', () => {
     expect(sitemapXml()).toBe(
       '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-        PUBLIC_ROUTES.map((route) => `  <url><loc>https://example.jp/${route.file}</loc></url>\n`).join('') +
+        PUBLIC_ROUTES.map(
+          (route) => `  <url><loc>https://${DOMAIN}/${route.file}</loc></url>\n`,
+        ).join('') +
         '</urlset>\n',
     );
     expect(NAV_GROUPS.flatMap((group) => group.entries)).toHaveLength(13);
@@ -100,7 +103,7 @@ describe('generated routes (fictional fixture)', () => {
   });
 
   it('adds generated pages to the sitemap with canonical URLs and last modification dates', () => {
-    const xml = sitemapXml(site);
+    const xml = sitemapXml(site, 'example.jp');
     for (const file of files(fixtureSource))
       expect(xml.split(`<loc>https://example.jp/${file}</loc>`)).toHaveLength(2);
     expect(xml).toContain(

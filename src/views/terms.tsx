@@ -30,6 +30,13 @@ export default function TermsPage({ copy, route }: PageProps<'terms'>) {
         )}
       </Section>
 
+      <Section heading={copy.agreement.heading}>
+        <Table
+          headers={[copy.headers, copy.headers2]}
+          rows={copy.agreement.rows.map(([label, detail]) => [label, detail])}
+        />
+      </Section>
+
       <Section tone="tint" navKey={file} heading={copy.heading3}>
         <Table
           headers={[copy.headers, copy.headers2]}

@@ -13,7 +13,6 @@ export default {
     menu: 'メニュー',
     close: '閉じる',
     navigation: 'サイト内のご案内',
-    hours: '電話受付',
   },
   footer: {
     eyebrow: '紬へのご相談',

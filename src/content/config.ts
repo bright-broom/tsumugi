@@ -12,7 +12,7 @@ export const BRAND = copy.brand;
 export const BRAND_READING = copy.brandReading;
 export const AREA = copy.area;
 export const SERVICE_NOTE = copy.serviceNote;
-export const DOMAIN = 'example.jp';
+export const DOMAIN = 'tsumugi-six.vercel.app';
 
 export const TEL = copy.phoneNumber;
 export const TEL_LINK = TEL.replace(/[^\d+]/g, '');

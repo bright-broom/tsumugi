@@ -95,7 +95,8 @@ export function printReport(report: VerificationReport): void {
     const mark = nf ? 'FAIL' : nw ? 'WARN' : np ? ' ok ' : 'n/a ';
     const na = rows.length - nf - nw - np;
     console.log(`\n[${mark}] ${chk}  (${np}/${rows.length} pass${na ? `・対象なし ${na}` : ''})`);
-    const shown = rows.filter((r) => r.level === 'FAIL' || r.level === 'WARN').slice(0, 6);
+    // CI ログだけでも全原因を解決できるよう、要対応の項目は省略しない。
+    const shown = rows.filter((r) => r.level === 'FAIL' || r.level === 'WARN');
     if (!shown.length) {
       const sample = rows.find((r) => r.detail)?.detail;
       if (sample) console.log(`        例: ${sample}`);

@@ -131,3 +131,7 @@
 ## 2026-09-17：飲食店向け費用比較の配置変更
 
 全項目 **PASS 575 / WARN 1 / FAIL 0**、静的 **PASS 318 / WARN 1 / FAIL 0**（対象なし 40）。Vitest 483 件・料金モデル 12 件。TOP から飲食店ページへ料金表・予約手数料・図解・注記を移し、他業種への混入を回帰検査。幅 1440 / 390 / 320 px で確認。TOP は 95.3 KiB になり、100 KiB の容量検査を満たした。検査基準は変更していない（[ADR 0053](architecture/0053-restaurant-cost-comparison.md)）。
+
+### 2026-09-17 事業者情報と本番公開条件
+
+全項目 **PASS 575 / WARN 1 / FAIL 0**、静的プレビュー **PASS 318 / WARN 1 / FAIL 0**。Vitest 484 件・料金モデル 12 件。本番静的は **PASS 331 / WARN 0 / FAIL 4**。指定された正式氏名・住所・Vercel URL・紹介文を反映し、契約文面を下書きとして整備した。確認記録の不足を検知する公開条件は維持する（[ADR 0054](architecture/0054-business-publication-details.md)）。
