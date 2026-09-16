@@ -1,7 +1,7 @@
 /**
  * 返信期限を数えるための営業日カレンダー（ADR 0033）。外部から取得せず、設定データとして持つ。
  *
- * - 営業時間は i18n/locales/ja/config.ts の phoneHours（平日 9:00〜18:00）と揃える。
+ * - 営業時間は i18n/locales/ja/config.ts の phoneHours（平日 8:00〜22:00）と揃える。
  * - 祝日は「国民の祝日に関する法律」による日付。振替休日・国民の休日を含む。
  *   春分の日・秋分の日は前年 2 月の官報（暦要項）で決まるため、年を足すときは内閣府の一覧と照合する。
  * - 年末年始などの独自の休業日は事業判断なので closures に足す（いまは未設定）。
@@ -10,8 +10,8 @@
 export const BUSINESS_CALENDAR = {
   /** 日本標準時（夏時間なし） */
   utcOffsetMinutes: 9 * 60,
-  opensAtMinutes: 9 * 60,
-  closesAtMinutes: 18 * 60,
+  opensAtMinutes: 8 * 60,
+  closesAtMinutes: 22 * 60,
   /** 0 = 日曜、6 = 土曜 */
   closedWeekdays: [0, 6],
   holidays: [

@@ -168,5 +168,6 @@ export default {
   btn: '制作の流れを見る',
   heading13: '契約書の確認から、お手伝いします',
   lede8: '名義や納品物が分からない場合も、そのままご相談ください。',
-  primary: 'フォームで相談する',
+  primary: 'メールで相談する',
+  registrarsLink: 'ドメイン取得のおすすめサービスを見る',
 } as const;

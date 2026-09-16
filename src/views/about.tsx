@@ -38,7 +38,8 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
         lede={format(copy.lede, { cSERVICENOTE: C.SERVICE_NOTE })}
       />
 
-      <Section>
+      <Section heading={C.TEAM_HEADING}>
+        <p>{C.TEAM_INTRO}</p>
         {staff.length ? (
           <StaffList members={staff} />
         ) : (

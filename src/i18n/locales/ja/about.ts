@@ -1,9 +1,9 @@
 /** Japanese copy: about. Keep keys stable; placeholders are named runtime values. */
 export default {
   title: '私たちについて｜{cBRANDT}',
-  desc: '小規模事業者に絞って2人でやっています。全国対応。ご連絡から{cRESPONSEPROMISE}にご返信します。',
+  desc: 'セキュリティエンジニアとプロのマーケターが在籍。全国の小規模事業者を支援。ご連絡から{cRESPONSEPROMISE}にご返信します。',
   eyebrow: '私たちについて',
-  heading: '制作と公開後の支援を、2人で担当します',
+  heading: '技術とマーケティングで、事業を支えます',
   lede: '小規模な事業者の方を対象に、ホームページの制作と更新をお手伝いしています。<br>{cSERVICENOTE}',
   heading2: '担当者のご紹介について',
   p: '現在、プロフィールを準備しています。公開前に、',

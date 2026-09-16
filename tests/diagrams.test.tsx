@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { parseFragment, type DefaultTreeAdapterMap } from 'parse5';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { ContentProvider } from '@/components/ContentProvider';
 import Figure from '@/components/Figure';
 import { LandVsOwn } from '@/components/diagrams/LandVsOwn';
@@ -40,6 +40,15 @@ const diagrams = [
 ] satisfies [string, () => ReactNode][];
 
 describe('React diagrams', () => {
+  it('renders every diagram without React key warnings', () => {
+    const errors = vi.spyOn(console, 'error');
+    try {
+      for (const [, diagram] of diagrams) render(diagram());
+      expect(errors.mock.calls).toEqual([]);
+    } finally {
+      errors.mockRestore();
+    }
+  });
   it.each(diagrams)(
     '%s keeps both responsive SVG layouts, caption and accessible labels',
     (_, diagram) => {

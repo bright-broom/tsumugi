@@ -139,6 +139,11 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
             },
           ]}
         />
+        <p>
+          <a className="btn btn-2" href={href('price', 'domains')}>
+            {copy.registrarsLink}
+          </a>
+        </p>
         <Note heading={copy.heading9} kind="good">
           <p>
             {copy.p8}

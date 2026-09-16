@@ -39,6 +39,7 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
     s.push(
       acc ? (
         <rect
+          key={`step-box-${i}`}
           x="0"
           y={y}
           width={NW}
@@ -50,16 +51,32 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
           strokeWidth="2"
         />
       ) : (
-        <rect x="0" y={y} width={NW} height={h} rx="8" {...BOX_F} {...BOX_S} />
+        <rect
+          key={`step-box-${i}`}
+          x="0"
+          y={y}
+          width={NW}
+          height={h}
+          rx="8"
+          {...BOX_F}
+          {...BOX_S}
+        />
       ),
     );
     s.push(
-      <text x="16" y={y + 22} fontSize="14" fontWeight="700" fill="currentColor">
+      <text
+        key={`step-title-${i}`}
+        x="16"
+        y={y + 22}
+        fontSize="14"
+        fontWeight="700"
+        fill="currentColor"
+      >
         {t}
       </text>,
     );
     s.push(
-      <text x="16" y={y + 40} fontSize={NARROW_MIN_TEXT} {...DIM}>
+      <text key={`step-detail-${i}`} x="16" y={y + 40} fontSize={NARROW_MIN_TEXT} {...DIM}>
         {sub}
       </text>,
     );
@@ -68,6 +85,7 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
   const gy = ys[3]! - gap / 2;
   s.push(
     <line
+      key="timeline-note-1"
       x1="0"
       y1={gy}
       x2={NW}
@@ -78,7 +96,14 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
     />,
   );
   s.push(
-    <text x="0" y={gy - 6} fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-bad)">
+    <text
+      key="timeline-note-2"
+      x="0"
+      y={gy - 6}
+      fontSize={NARROW_MIN_TEXT}
+      fontWeight="700"
+      fill="var(--fig-bad)"
+    >
       {copy.subsidyTimelineNarrow}
     </text>,
   );
@@ -86,6 +111,7 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
     if (i === 2) continue;
     s.push(
       <ArrowLine
+        key={`step-arrow-${i}`}
         x1="20"
         y1={ys[i]! + h + 3}
         x2="20"
@@ -97,7 +123,15 @@ function subsidyTimelineNarrow(copy: DiagramCopy, form4: string, deadline: strin
     );
   }
   s.push(
-    <text x={NW} y={y + 6} textAnchor="end" fontSize={NARROW_MIN_TEXT} fontWeight="700" fill="var(--fig-ok)">
+    <text
+      key="timeline-note-3"
+      x={NW}
+      y={y + 6}
+      textAnchor="end"
+      fontSize={NARROW_MIN_TEXT}
+      fontWeight="700"
+      fill="var(--fig-ok)"
+    >
       {copy.subsidyTimelineNarrow2}
     </text>,
   );
@@ -120,6 +154,7 @@ export function SubsidyTimeline({ form4, deadline }: { form4: string; deadline: 
     s.push(
       i >= 3 ? (
         <rect
+          key={`step-box-${i}`}
           x={x}
           y={y}
           width={w}
@@ -131,11 +166,21 @@ export function SubsidyTimeline({ form4, deadline }: { form4: string; deadline: 
           strokeWidth="2"
         />
       ) : (
-        <rect x={x} y={y} width={w} height={bh} rx="8" {...BOX_F} {...BOX_S} />
+        <rect
+          key={`step-box-${i}`}
+          x={x}
+          y={y}
+          width={w}
+          height={bh}
+          rx="8"
+          {...BOX_F}
+          {...BOX_S}
+        />
       ),
     );
     s.push(
       <text
+        key={`step-title-${i}`}
         x={x + w / 2}
         y={y + 20}
         textAnchor="middle"
@@ -147,13 +192,21 @@ export function SubsidyTimeline({ form4, deadline }: { form4: string; deadline: 
       </text>,
     );
     s.push(
-      <text x={x + w / 2} y={y + 36} textAnchor="middle" fontSize="12" {...DIM}>
+      <text
+        key={`step-detail-${i}`}
+        x={x + w / 2}
+        y={y + 36}
+        textAnchor="middle"
+        fontSize="12"
+        {...DIM}
+      >
         {sub}
       </text>,
     );
     if (i < steps.length - 1) {
       s.push(
         <ArrowLine
+          key={`step-arrow-${i}`}
           x1={x + w + 3}
           y1={y + bh / 2}
           x2={steps[i + 1]![0] - 4}
@@ -168,6 +221,7 @@ export function SubsidyTimeline({ form4, deadline }: { form4: string; deadline: 
   const gx = 474;
   s.push(
     <line
+      key="timeline-note-4"
       x1={gx}
       y1="46"
       x2={gx}
@@ -179,6 +233,7 @@ export function SubsidyTimeline({ form4, deadline }: { form4: string; deadline: 
   );
   s.push(
     <text
+      key="timeline-note-5"
       x={gx - 10}
       y="40"
       textAnchor="end"
@@ -191,6 +246,7 @@ export function SubsidyTimeline({ form4, deadline }: { form4: string; deadline: 
   );
   s.push(
     <text
+      key="timeline-note-6"
       x={gx - 10}
       y="58"
       textAnchor="end"
@@ -202,7 +258,14 @@ export function SubsidyTimeline({ form4, deadline }: { form4: string; deadline: 
     </text>,
   );
   s.push(
-    <text x={gx + 10} y="186" fontSize="12.5" fontWeight="700" fill="var(--fig-ok)">
+    <text
+      key="timeline-note-7"
+      x={gx + 10}
+      y="186"
+      fontSize="12.5"
+      fontWeight="700"
+      fill="var(--fig-ok)"
+    >
       {copy.subsidyTimeline3}
     </text>,
   );

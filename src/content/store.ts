@@ -5,7 +5,7 @@ import { dateInZone } from '@/lib/storefront/core';
 import { defineStore, type TimeRange } from '@/lib/storefront/store';
 
 const shell = getMessages().shell;
-const OFFICE_HOURS: readonly TimeRange[] = [{ opens: '09:00', closes: '18:00' }];
+const OFFICE_HOURS: readonly TimeRange[] = [{ opens: '08:00', closes: '22:00' }];
 
 /**
  * 店舗情報の正本（ADR 0048）。JSON-LD（layouts/Base.tsx）と店舗情報の表示が同じ値を使う。
