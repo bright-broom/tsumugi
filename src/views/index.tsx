@@ -386,7 +386,16 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
             <div className="comparison-difference">
               <Icon name="scale" />
               <div>
-                <strong>{format(copy.comparisonUi.difference, { difference: n(one.diff) })}</strong>
+                <strong>
+                  {one.diff === 0
+                    ? copy.comparisonUi.differenceSame
+                    : format(
+                        one.diff < 0
+                          ? copy.comparisonUi.differenceLower
+                          : copy.comparisonUi.difference,
+                        { difference: n(Math.abs(one.diff)) },
+                      )}
+                </strong>
                 <p>{copy.rowsSub8}</p>
               </div>
             </div>

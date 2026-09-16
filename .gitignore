@@ -19,3 +19,6 @@ public/images/onokoro-hero.svg
 # Legacy output names must never become tracked again.
 shot-*.png
 verify-report*.json
+
+# Temporary LibreOffice document locks.
+.~lock.*#

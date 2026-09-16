@@ -13,8 +13,8 @@ test('140 hours includes sales and reserves; full owner-time cost is not double 
   assert.equal(p.deliveryCapacity, 84);
   assert.equal(p.hours, 69.5);
   assert.equal(p.headroom, 14.5);
-  assert.equal(p.revenue, 979600);
-  assert.equal(p.mrr, 383600);
+  assert.equal(p.revenue, 970600);
+  assert.equal(p.mrr, 374600);
   assert.equal(p.clients, 32);
   assert.equal(p.surplusAfterOwnerTime, p.revenue - p.variableCash - 750000);
 });
@@ -40,10 +40,10 @@ test('price floor detects high acquisition costs, instead of subsidizing them fr
   assert.ok(high.minimumPrice > 198000);
 });
 test('comparison includes external hosting costs and retains unfavorable rows', () => {
-  assert.equal(customerTotal(model, { buildKey: 'entry', supportKey: 'care' }).difference, 20800);
-  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).ourTotal, 496800);
-  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).difference, -41000);
-  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).breakEvenMonth, 30);
+  assert.equal(customerTotal(model, { buildKey: 'entry', supportKey: 'care' }).difference, -11600);
+  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).ourTotal, 464400);
+  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).difference, -73400);
+  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).breakEvenMonth, 27);
   assert.equal(
     customerTotal(model, { buildKey: 'core', supportKey: 'improve' }).breakEvenMonth,
     null,
@@ -80,4 +80,17 @@ test('a missing comparison tariff is rejected instead of returning NaN', () => {
     name: 'RangeError',
     message: 'missing comparison price: core',
   });
+});
+test('care reduction keeps the modeled 50% contribution floor and the 140-hour capacity', () => {
+  const care = model.support.find((p) => p.key === 'care');
+  assert.ok(care);
+  const unit = unitEconomics(care, model.assumptions);
+  assert.equal(care.price, 3900);
+  assert.equal(unit.minimumPrice, 3830);
+  assert.ok(unit.margin !== null && unit.margin >= model.assumptions.targetContributionMargin);
+  assert.equal(unit.contribution, 1983);
+  assert.equal(portfolio(model).headroom, 14.5);
+  assert.ok(
+    customerTotal(model, { buildKey: 'entry', supportKey: 'care', months: 6 }).difference > 0,
+  );
 });

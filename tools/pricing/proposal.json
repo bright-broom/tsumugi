@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-14",
+  "version": "2026-09-16",
   "status": "adopted-in-project-pending-release",
   "currency": "JPY",
   "tax": "exclusive",
@@ -56,7 +56,7 @@
     {
       "key": "care",
       "name": "守る",
-      "price": 4800,
+      "price": 3900,
       "workMinutes": 0,
       "hours": 0.3,
       "cashCost": 300

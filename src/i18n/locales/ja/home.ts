@@ -132,6 +132,8 @@ export default {
     total: '{months}か月の総額・税別',
     detail: 'ページ数ごとの比較と、試算の条件を見る',
     difference: '紬のほうが{difference}円高い試算です。',
+    differenceLower: '紬のほうが{difference}円安い試算です。',
+    differenceSame: '試算上の総額は同額です。',
   },
   rowsValue6: '{stdPrice}円',
   a3: '対応しない施策',
