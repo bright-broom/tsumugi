@@ -30,7 +30,7 @@ export interface ContactPlan {
 export interface ContactEndpoints {
   /** tel: に続ける番号（数字と +） */
   telLink: string;
-  /** サイト内の問い合わせページ */
+  /** 問い合わせページ、または信頼できる設定から作った mailto: */
   contactPath: string;
 }
 

@@ -7,7 +7,7 @@ export default {
   area: '全国',
   serviceNote: '打ち合わせはオンラインと電話。全国どこでもお受けします。',
   phoneNumber: '080-4560-1124',
-  email: 'info@example.jp',
+  email: 'leonardodavinci.works@gmail.com',
   postalCode: '000-0000',
   phoneHours: '平日 9:00〜18:00',
   addressRegion: '（都道府県）',

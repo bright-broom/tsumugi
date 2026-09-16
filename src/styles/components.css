@@ -1091,6 +1091,10 @@
   }
 
   /* ══ C20 FieldGroup ─ 入力文字 16px、枠の薄さだけに依存しない */
+  .contact-email {
+    overflow-wrap: anywhere;
+  }
+
   .field {
     @apply grid gap-[7px] mb-[22px];
   }

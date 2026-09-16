@@ -18,7 +18,10 @@ const CONTACT_PLAN = defineContactPlan({
   bookingUrl: '',
 });
 
-const endpoints = { telLink: C.TEL_LINK, contactPath: href('contact') };
+const endpoints = {
+  telLink: C.TEL_LINK,
+  contactPath: C.CONTACT_METHOD === 'email' ? C.EMAIL_LINK : href('contact'),
+};
 
 export const CONTACT_ACTIONS = {
   buttons: resolveContactActions(CONTACT_PLAN.order, CONTACT_PLAN, endpoints),

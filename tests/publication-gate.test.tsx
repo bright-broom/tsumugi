@@ -35,6 +35,7 @@ function ready(overrides: Partial<PublicationSnapshot> = {}): PublicationSnapsho
       { key: 'MEMBERS[0].name', kind: 'text', value: '見本 太郎' },
       { key: 'MEMBERS[0].bio', kind: 'text', value: '設計と実装を担当します。' },
     ],
+    contactMethod: 'form',
     formEndpoint: 'https://forms.shop-fixture.jp/inquiry',
     approvals: [
       {
@@ -213,4 +214,19 @@ describe('いまの設定', () => {
     if (C.PLACEHOLDER || !C.isApprovalRecorded(C.LEGAL_APPROVALS.terms))
       expect(html).toContain(getMessages().terms.heading2);
   });
+});
+
+it('メール受付はフォーム送信先を要求せず、有効なメール窓口を要求する', () => {
+  const snapshot = ready({ contactMethod: 'email', formEndpoint: '' });
+  expect(failed(evaluatePublication(snapshot, 'production', TODAY))).toEqual([]);
+  expect(failed(evaluatePublication({ ...snapshot, fields: withField('EMAIL', '') }, 'production', TODAY)))
+    .toEqual(['EMAIL', 'CONTACT_EMAIL']);
+});
+
+it('公開中の問い合わせはメールアドレスを表示し、フォームを開かない', () => {
+  const html = renderToStaticMarkup(<Page {...pageProps('contact')} />);
+  expect(html).toContain('href="mailto:leonardodavinci.works@gmail.com"');
+  expect(html).toContain('leonardodavinci.works@gmail.com</a>');
+  expect(html).not.toContain('<form');
+  expect(html).not.toContain('送信（未設定）');
 });

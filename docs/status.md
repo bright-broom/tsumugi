@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-16（制作のみ・保守契約なしを基本表示に変更）
+- 最終更新：2026-09-16（制作のみの料金表示・メール受付に変更）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -16,8 +16,8 @@
 |---|---|
 | 構成 | ルート直下の `src/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。21ページを `out/` に静的書き出し |
 | 実行時 JS | 全21ページで 0（`postbuild` と `verify` で確認） |
-| 検査 | 全項目 **PASS 573 / WARN 1 / FAIL 0**、静的 PASS 319 / WARN 1 / FAIL 0（対象なし 40 件）。WARN は本番公開条件が未設定のプレビューによるもの |
-| 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 477 件・料金モデル 12 件合格 |
+| 検査 | 全項目 **PASS 572 / WARN 1 / FAIL 0**、静的 PASS 318 / WARN 1 / FAIL 0（対象なし 40 件）。WARN は本番公開条件が未設定のプレビューによるもの |
+| 型・依存・文言 | `npm run check` が通る。ESLint エラー・警告 0、Vitest 479 件・料金モデル 12 件合格 |
 | 依存の健全性 | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定。Dependabot は ESLint と Node 型定義のメジャー更新だけを除外し、既存の互換性方針を維持（ADR 0003） |
 | 動作を確かめた環境 | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一 |
 | 文言とルート | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004） |
@@ -35,8 +35,9 @@
 |---|---|---|
 | `PLACEHOLDER` | `true` | 全ページの上部に「準備中」の帯が出る。`terms.html` に「弁護士確認前」の注意書きが出る |
 | `TEL` | `080-4560-1124`（確定。Issue #12 の 2026-09-15 追記） | 表示・`tel:08045601124`・JSON-LD が `i18n/locales/ja/config.ts` の1か所から出る |
-| `DOMAIN` / `EMAIL` / 住所 | `example.jp` / `info@example.jp` / 仮の値 | canonical・OGP・JSON-LD がすべて仮のドメインを指す |
-| `FORM_ENDPOINT` | 空 | 問い合わせフォームが送信できない。受付サービス（`services/inquiry/`）は実装済み・未配備（ADR 0032） |
+| `DOMAIN` / 住所 | `example.jp` / 仮の値 | canonical・OGP・JSON-LD は仮のドメインを指す |
+| `EMAIL` | `leonardodavinci.works@gmail.com`（ユーザー指定） | 問い合わせ・フッター・法定表示に共通反映 |
+| `CONTACT_METHOD` / `FORM_ENDPOINT` | `email` / 空 | 自社サイトはメール受付。フォームは非表示。顧客テンプレート用の受付サービスは保持（ADR 0051） |
 | `LINE_URL` | 空 | LINE の導線は出ない |
 | `RESPONSE_ACTUAL` | `null` | 返答時間の実績は出さない（まだ測っていない） |
 | 制作事例 | 顧客事例0件・自社サイト1件 | `works.html` は自社サイトの実測を公開し、顧客事例は今後掲載 |
@@ -118,7 +119,7 @@ open の 42 件を分担して対応し、6 本のブランチをこのブラン
 | 課題 | やること | 手がかり |
 |---|---|---|
 | 事業者情報・連絡先を実際の値にする | `content/config.ts` の `DOMAIN` と `i18n/locales/ja/config.ts` の地域・連絡先・住所・2人のプロフィールを差し替え、`PLACEHOLDER = false` にする。**本番モード（`verify --mode production`、Vercel の本番配備では自動）が仮の値の残りを条件ごとに FAIL にする**（ADR 0024） | [operations.md「公開前にやること」](operations.md) |
-| 問い合わせフォームの送信先 | 配備先・保存先・通知手段を選び、`services/inquiry/` を配備して `FORM_ENDPOINT` を設定する。通知はメールと LINE（または SMS）の2系統（受付サービスが強制する） | [ADR 0035](architecture/0035-inquiry-hosting-candidates.md)（候補と判断材料）、[inquiry-data.md](inquiry-data.md)（プライバシー表示との要判断事項） |
+| 顧客テンプレートでフォームを採用する場合の送信先（自社サイトはメール受付） | 配備先・保存先・通知手段を選び、`services/inquiry/` を配備して `FORM_ENDPOINT` を設定する。通知はメールと LINE（または SMS）の2系統（受付サービスが強制する） | [ADR 0035](architecture/0035-inquiry-hosting-candidates.md)（候補と判断材料）、[inquiry-data.md](inquiry-data.md)（プライバシー表示との要判断事項） |
 | `terms.html` の弁護士確認 | 下書きの文面を確認してもらって確定する。フリーランス法第4条（書面交付義務）への対応も同時に。新料金の支払・変更枠・修補・解除条件を確認する。自社24回分割の新規受付は行わない。確認後に `content/config.ts` の `LEGAL_APPROVALS`（terms・legal）へ版・承認日・確認者の役割・文面の SHA-256 を記録する。記録が揃うまで下書きの注意が出続け、本番モードは FAIL（ADR 0024） | `src/i18n/locales/ja/terms.ts`、ガイドライン「8.1」 |
 | `legal.html` の事業者情報 | 販売事業者名・運営責任者・所在地が仮の値。開業届／登記のあとに差し替える | `config.ts` |
 | 屋号の確認 | 商標（J-PlatPat 第42類・第35類）・同名法人（法人番号公表サイト）・ドメイン | [messaging-and-pricing.md「屋号」](product/messaging-and-pricing.md) |
@@ -291,3 +292,9 @@ GitHub Actions・Dependabot・npm・Vercelをルート基準へ統一。出力50
 TOP の主価格を制作 79,800 円、紬への月額 0 円に変更。共有の制作カード・入口案内・料金ページを揃え、任意保守 月 3,900 円は追加プランとして残した。比較の既定値は保守なしとし、外部費込み 36 か月の参考総額 205,800 円と、制作費を分けて案内する。社内試算・事業資料・Excel の比較条件も同期（[ADR 0050](architecture/0050-production-only-default.md)）。
 
 validate と全項目 verify は成功（Vitest 477 件・料金モデル 12 件、PASS 573 / WARN 1 / FAIL 0）。幅 1440 / 390 / 320 px で主価格と横はみ出しなしを確認。Excel の全 113 数式は再計算済み・エラーなし。ローカルの変更であり、公開状態は PR と配備先で別途確認する。
+
+### 2026-09-16 メールでの問い合わせに変更
+
+指定メールを全共通表示へ反映。自社の問い合わせページはフォームを表示せず、メールアプリへ渡すリンクを掲載。メール受付の公開条件を検証し、フォームの機能は顧客テンプレート用に明示設定で残した（[ADR 0051](architecture/0051-email-inquiries.md)）。受信テストは未実施。
+
+検証：Vitest 479 件・料金モデル 12 件、全項目 PASS 572 / WARN 1 / FAIL 0、静的 PASS 318 / WARN 1 / FAIL 0（対象なし 40）。入力フォーム非表示によりラベル対応の対象が 1 件減った。幅 1440 / 320 px でメールアドレスとフォーム非表示・横はみ出しなしを確認。

@@ -86,5 +86,5 @@ export default {
   p8: 'そこまでに作ったものはお渡しします。',
   heading6: '作りたいものを、お聞かせください',
   lede3: 'ご相談は無料。{cRESPONSEPROMISE}にご返信します。',
-  primary: 'フォームで相談する',
+  primary: 'メールで相談する',
 } as const;
