@@ -48,6 +48,7 @@ interface ApprovalState {
 export interface PublicationSnapshot {
   placeholder: boolean;
   fields: PublicationField[];
+  contactMethod: typeof C.CONTACT_METHOD;
   formEndpoint: string;
   approvals: ApprovalState[];
   /** 人の確認・外部接続の確認が必要なのに、記録が無い仕様の項目 */
@@ -150,7 +151,9 @@ export function evaluatePublication(
       family: 'value' as const,
       problem: placeholderProblem(f.kind, f.value),
     })),
-    { target: 'FORM_ENDPOINT', family: 'connection', problem: endpointProblem(snapshot.formEndpoint) },
+    snapshot.contactMethod === 'form'
+      ? { target: 'FORM_ENDPOINT', family: 'connection', problem: endpointProblem(snapshot.formEndpoint) }
+      : { target: 'CONTACT_EMAIL', family: 'connection', problem: placeholderProblem('email', snapshot.fields.find((field) => field.key === 'EMAIL')?.value ?? '') },
     ...snapshot.approvals.map((a) => approvalCondition(a, today)),
     {
       target: 'ACCEPTANCE_RECORDS',
@@ -214,6 +217,7 @@ export function publicationSnapshot(humanChecksPending: string[]): PublicationSn
       text('LEGAL_NAME', C.LEGAL_NAME),
       ...C.MEMBERS.flatMap((m, i) => [text(`MEMBERS[${i}].name`, m.name), text(`MEMBERS[${i}].bio`, m.bio)]),
     ],
+    contactMethod: C.CONTACT_METHOD,
     formEndpoint: C.FORM_ENDPOINT,
     approvals: (Object.keys(C.LEGAL_APPROVALS) as C.LegalDocumentId[]).map((id) => ({
       id,

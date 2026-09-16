@@ -110,7 +110,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                   {copy.li}
                 </li>
                 <li>
-                  {format(copy.li2, { pRunRunLightPrice: n(P.run('run_light').price) })}
+                  {copy.li2}
                   <b>{copy.b2}</b>
                 </li>
                 <li>{format(copy.li3, { stdPrice: n(std.price), mStd: n(mStd) })}</li>
@@ -363,7 +363,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           <div className="comparison-overview">
             <p className="comparison-period">
               <Icon name="calendar-days" sm />
-              {format(copy.comparisonUi.total, { months: P.COMPARE_MONTHS })}
+              {copy.comparisonUi.total}
             </p>
             <div className="comparison-totals">
               <div>
@@ -371,6 +371,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                   <Icon name="repeat-2" />
                   {copy.comparisonUi.other}
                 </h3>
+                <p>{format(copy.comparisonUi.otherPeriod, { months: P.COMPARE_MONTHS })}</p>
                 <strong className="tnum">{P.yen(one.sub_total)}</strong>
                 <p>{format(copy.rowsSub6, { pSUBSTRANSFERMONTHS: P.SUBS_TRANSFER_MONTHS })}</p>
               </div>
@@ -379,8 +380,14 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                   <Icon name="key" />
                   {copy.comparisonUi.ours}
                 </h3>
-                <strong className="tnum">{P.yen(one.our_total)}</strong>
+                <strong className="tnum">{P.yen(one.our_price)}</strong>
                 <p>{copy.rowsSub7}</p>
+                <p>
+                  {format(copy.comparisonUi.ownPeriod, {
+                    months: P.COMPARE_MONTHS,
+                    total: n(one.our_total),
+                  })}
+                </p>
               </div>
             </div>
             <div className="comparison-difference">
@@ -401,7 +408,6 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
             </div>
             <p className="comparison-assumptions">
               {format(copy.comparison.assumptions, {
-                care: n(one.our_run),
                 external: n(one.our_external),
               })}
             </p>

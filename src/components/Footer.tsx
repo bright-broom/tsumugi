@@ -63,7 +63,9 @@ export default function Footer({ file }: { file: string }) {
                   <span>{copy.mk3}</span>
                 </dt>
                 <dd>
-                  <a href={`mailto:${C.EMAIL}`}>{C.EMAIL}</a>
+                  <a className="contact-email" href={C.EMAIL_LINK}>
+                    {C.EMAIL}
+                  </a>
                 </dd>
               </div>
               <div>

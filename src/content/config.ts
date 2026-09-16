@@ -19,7 +19,9 @@ export const TEL_LINK = TEL.replace(/[^\d+]/g, '');
 export const TEL_HOURS = copy.phoneHours;
 export const EMAIL = copy.email;
 export const LINE_URL = '';
+export const CONTACT_METHOD: 'email' | 'form' = 'email';
 export const FORM_ENDPOINT = '';
+export const EMAIL_LINK = `mailto:${EMAIL}`;
 
 export const LEGAL_NAME = copy.legalName;
 export const ADDRESS_REGION = copy.addressRegion;

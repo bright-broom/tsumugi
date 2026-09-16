@@ -124,7 +124,6 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         />
         <p className="fine-note">
           {format(copy.comparison.assumptions, {
-            care: n(P.run('run_light').price),
             external: n(P.EXTERNAL_MONTHLY_ESTIMATE),
           })}
         </p>

@@ -4,7 +4,7 @@ export default {
   pn: '{sgName}　{sgPages}ページ',
   u: ' 円',
   sub2: '買い切り・税別／約{sgWeeks}週間が目安',
-  sub22: '保守は任意で月{pRunRunLightPrice}円から。外部費は別途。',
+  sub22: '保守契約なしで利用できます。紬への月額0円。外部実費は別途。',
   dim: '含まれないもの：{sgNotIncludesJoin}',
   more: 'ほか{rest}項目',
   btn: '1ページで相談する',

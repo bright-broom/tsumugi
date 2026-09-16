@@ -149,7 +149,7 @@ export function portfolio(model: PricingModel, options: PortfolioOptions = {}) {
 }
 export function customerTotal(model: PricingModel, options: CustomerTotalOptions = {}) {
   const build = byKey(model.builds, options.buildKey ?? 'core');
-  const support = byKey(model.support, options.supportKey ?? 'care');
+  const support = byKey(model.support, options.supportKey ?? 'self');
   const months = options.months ?? 36;
   if (!Number.isInteger(months) || months < 0)
     throw new RangeError('months must be a nonnegative integer');

@@ -5,6 +5,7 @@ const ENDPOINT = 'https://inquiry.example.invalid/submit';
 // Only this test module sees a configured endpoint; the published build keeps FORM_ENDPOINT empty.
 vi.mock('@/content/config', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/content/config')>()),
+  CONTACT_METHOD: 'form',
   FORM_ENDPOINT: 'https://inquiry.example.invalid/submit',
 }));
 
