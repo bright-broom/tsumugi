@@ -228,7 +228,7 @@ it('メール受付はフォーム送信先を要求せず、有効なメール�
 it('公開中の問い合わせはメールアドレスを表示し、フォームを開かない', () => {
   const html = renderToStaticMarkup(<Page {...pageProps('contact')} />);
   expect(html).toContain('href="mailto:leonardodavinci.works@gmail.com"');
-  expect(html).toContain('leonardodavinci.works@gmail.com</a>');
+  expect(html.replace(/<[^>]*>/g, '')).toContain('leonardodavinci.works@gmail.com');
   expect(html).not.toContain('<form');
   expect(html).not.toContain('送信（未設定）');
 });

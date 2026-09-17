@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import Cards from '@/components/Cards';
 import { OwnershipClock } from '@/components/diagrams/OwnershipClock';
 import { ROUTES, href } from '@/routing/registry';
@@ -30,15 +31,19 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         h1
         navKey={ROUTES[route].file}
       >
+        <PageIndex page="price" />
+
+        <div id="production">
+          <Entry full />
+        </div>
         <Note heading={copy.preparationTitle} kind="warn">
           <p>{copy.availability}</p>
         </Note>
-        <Entry full />
         <h3 className="pricing-subheading">{copy.production}</h3>
         <Plans />
         <p>{copy.deliveryNote}</p>
       </Section>
-      <Section tone="tint" heading={copy.supportTitle} lede={copy.supportLede}>
+      <Section id="support" tone="tint" heading={copy.supportTitle} lede={copy.supportLede}>
         <div className="cq">
           <div className="plans support-plans">
             {P.RUN.map((r) => (
@@ -86,7 +91,7 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         <p>{copy.registrars.conditions}</p>
         <p className="dim">{copy.registrars.checked}</p>
       </Section>
-      <Section heading={copy.paymentTitle}>
+      <Section id="payment" heading={copy.paymentTitle}>
         <Table
           headers={[...copy.paymentHeaders]}
           rows={P.productionPlans().map((p) => {
@@ -109,6 +114,7 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         </a>
       </Section>
       <Section
+        id="comparison"
         tone="tint"
         heading={copy.comparisonTitle}
         lede={format(copy.comparisonLede, { months: P.COMPARE_MONTHS })}
@@ -153,7 +159,7 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
           </p>
         </Note>
       </Section>
-      <Section heading={copy.optionsTitle}>
+      <Section id="options" heading={copy.optionsTitle}>
         <Table
           headers={[...copy.includedHeaders]}
           rows={P.FREE_ITEMS.map((f) => [f.name, f.market])}

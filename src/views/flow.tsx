@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
 import { format } from '@/i18n/format';
@@ -28,6 +29,7 @@ export default function FlowPage({ copy, route }: PageProps<'flow'>) {
         h1
         lede={format(copy.lede, { stdPages: std.pages, stdWeeks: std.weeks })}
       >
+        <PageIndex page="flow" />
         <Stats
           items={[
             {
@@ -48,7 +50,7 @@ export default function FlowPage({ copy, route }: PageProps<'flow'>) {
         />
       </Section>
 
-      <Section tone="tint" navKey={file} heading={copy.heading2}>
+      <Section reading id="process" tone="tint" navKey={file} heading={copy.heading2}>
         <Flow
           steps={[
             {
@@ -129,7 +131,7 @@ export default function FlowPage({ copy, route }: PageProps<'flow'>) {
         </Note>
       </Section>
 
-      <Section eyebrow={copy.eyebrow2} heading={copy.heading4} lede={copy.lede2}>
+      <Section id="subsidy-flow" eyebrow={copy.eyebrow2} heading={copy.heading4} lede={copy.lede2}>
         <Table
           headers={[copy.headers, copy.headers2]}
           rows={[
@@ -146,7 +148,7 @@ export default function FlowPage({ copy, route }: PageProps<'flow'>) {
         </div>
       </Section>
 
-      <Section eyebrow={copy.eyebrow3} heading={copy.heading5}>
+      <Section id="preparation" eyebrow={copy.eyebrow3} heading={copy.heading5}>
         <Acc summary={copy.summary}>
           <p>
             {copy.p3}

@@ -132,3 +132,5 @@
 - [0056 自社サイトの公開判断を専門家確認・顧客の納品検収から分ける](0056-owner-authorized-publication.md)
 
 - [0057 TOP を料金・用途から読み進められる構成にする](0057-home-layout.md)
+
+- [0058 全ページを目的に応じた読みやすいレイアウトへ揃える](0058-interior-page-layout.md)

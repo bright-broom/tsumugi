@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { ROUTES } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
@@ -15,9 +16,11 @@ export default function SourcePage({ copy, route }: PageProps<'source'>) {
 
   return (
     <Base file={file} title={title} desc={desc}>
-      <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 lede={copy.lede} />
+      <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 lede={copy.lede}>
+        <PageIndex page="source" />
+      </Section>
 
-      <Section heading={copy.heading2}>
+      <Section reading id="delivery" heading={copy.heading2}>
         <Table
           headers={[copy.headers, copy.headers2]}
           rows={[
@@ -37,7 +40,7 @@ export default function SourcePage({ copy, route }: PageProps<'source'>) {
         </Note>
       </Section>
 
-      <Section tone="tint" eyebrow={copy.eyebrow2} heading={copy.heading4}>
+      <Section reading id="handover" tone="tint" eyebrow={copy.eyebrow2} heading={copy.heading4}>
         <p>{copy.p4}</p>
         <Table
           headers={[copy.headers3, copy.headers2]}
@@ -55,7 +58,7 @@ export default function SourcePage({ copy, route }: PageProps<'source'>) {
         </Note>
       </Section>
 
-      <Section eyebrow={copy.eyebrow3} heading={copy.heading6}>
+      <Section reading id="formats" eyebrow={copy.eyebrow3} heading={copy.heading6}>
         <Table
           headers={[copy.headers4, copy.headers5, copy.headers6]}
           rows={[
@@ -73,7 +76,7 @@ export default function SourcePage({ copy, route }: PageProps<'source'>) {
         </Note>
       </Section>
 
-      <Section heading={copy.heading8}>
+      <Section reading heading={copy.heading8}>
         <Cta />
       </Section>
     </Base>

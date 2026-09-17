@@ -9,7 +9,7 @@ import { useMessages } from '@/components/ContentProvider';
  */
 import Head from 'next/head';
 import { LOCALE } from '@/i18n/catalog';
-import { canonical, ogImage } from '@/routing/registry';
+import { ALL_ROUTES, ROUTES, canonical, ogImage } from '@/routing/registry';
 import { publicImageUrl } from '@/routing/collections';
 import type { ReactNode } from 'react';
 import * as C from '@/content/config';
@@ -54,10 +54,7 @@ export default function Base({ file, title, desc, og: ogPath, children }: Props)
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={jsonLd(structuredData)}
-        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(structuredData)} />
       </Head>
       <div className="nah-app" data-profile={C.PROFILE} id="page-top">
         <a className="skip" href="#main">
@@ -70,7 +67,14 @@ export default function Base({ file, title, desc, og: ogPath, children }: Props)
           </div>
         )}
         <Header file={file} />
-        <main id="main">{children}</main>
+        <main
+          id="main"
+          className={file === ROUTES.index.file ? undefined : 'interior-content'}
+          data-page={file}
+          data-kind={ALL_ROUTES.find((route) => route.file === file)?.kind}
+        >
+          {children}
+        </main>
         <Footer file={file} />
         <div className="fixbar">
           {CONTACT_ACTIONS.bar.map((action) => (

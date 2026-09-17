@@ -1,5 +1,6 @@
 /** Japanese copy: contact. Keep keys stable; placeholders are named runtime values. */
 export default {
+  consultationHeading: 'ご相談の前に',
   title: '相談する｜{cBRANDT}',
   desc: 'ご相談は無料です。{cRESPONSEPROMISE}にご返信します。お電話は{cTEL}（{cTELHOURS}）。',
   eyebrow: '相談する',

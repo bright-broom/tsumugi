@@ -32,7 +32,7 @@ export default function FaqPage({ copy, route }: PageProps<'faq'>) {
       </Section>
 
       {copy.groups.map((group) => (
-        <Section id={`faq-group-${group.id}`} heading={group.title} key={group.id}>
+        <Section reading id={`faq-group-${group.id}`} heading={group.title} key={group.id}>
           <FaqList entries={group.entries} />
         </Section>
       ))}

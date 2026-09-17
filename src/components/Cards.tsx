@@ -1,8 +1,10 @@
 import { NAV_IC } from '@/content/nav';
 import { ic } from '@/lib/ic';
 import { raw } from '@/lib/raw';
+import type { IconName } from '@/lib/icons';
 
 interface Card {
+  icon?: IconName;
   title: string;
   desc: string;
   link?: readonly [label: string, href: string];
@@ -17,7 +19,7 @@ export default function Cards({ items, cls = 'g3' }: Props) {
     <div className="cards">
       <div className={`g ${cls}`}>
         {items.map((it, i) => {
-          const mark = it.link && NAV_IC[it.link[1]];
+          const mark = it.icon ?? (it.link && NAV_IC[it.link[1]]);
           return (
             <div className="card" key={i}>
               {/* 見出しは HTML 文字列なので、章の目印も文字列にして前に足す */}

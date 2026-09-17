@@ -14,6 +14,8 @@ interface Props {
   wide?: boolean;
   navKey?: string;
   h1?: boolean;
+  /** Long-form pages keep their section heading beside the reading column. */
+  reading?: boolean;
   children?: ReactNode;
 }
 
@@ -27,12 +29,16 @@ export default function Section({
   wide = false,
   navKey,
   h1 = false,
+  reading = false,
   children,
 }: Props) {
   const cls = tone === 'dark' ? 'dark' : tone === 'tint' ? 'tint' : '';
   const mark = navKey ? NAV_IC[navKey] : undefined;
   return (
-    <section className={clsx(cls, h1 && 'page-intro', className)} id={id}>
+    <section
+      className={clsx(cls, h1 && 'page-intro', reading && 'reading-section', className)}
+      id={id}
+    >
       <div className={wide ? 'wrap-w' : 'wrap'}>
         {(eyebrow || heading || lede) && (
           <div className="sh">
@@ -51,7 +57,7 @@ export default function Section({
             {lede && <p className="lede" dangerouslySetInnerHTML={raw(lede)} />}
           </div>
         )}
-        {children}
+        {reading ? <div className="section-body">{children}</div> : children}
       </div>
     </section>
   );

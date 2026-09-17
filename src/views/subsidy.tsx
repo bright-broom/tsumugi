@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { SubsidyBar } from '@/components/diagrams/SubsidyBar';
 import { SubsidyTimeline } from '@/components/diagrams/SubsidyTimeline';
 import { esc, raw } from '@/lib/raw';
@@ -37,16 +38,19 @@ export default function SubsidyPage({ copy, route }: PageProps<'subsidy'>) {
           sCap: P.yen(S.cap),
           sWebCap: P.yen(S.web_cap),
         })}
-      />
+      >
+        <PageIndex page="subsidy" />
+      </Section>
 
-      <Section heading={copy.heading2}>
+      <Section id="package" heading={copy.heading2}>
+        <SubsidyBar total={sd.total} web={sd.web} pr={sd.pr} grant={sd.grant} net={sd.net} />
         <Table
           headers={[copy.headers, copy.headers2, copy.headers3]}
           rows={S.package.map(([k, d, a]) => [k, d, a.toLocaleString('en-US')])}
           caption={copy.caption}
           foot={format(copy.foot, { sdTotal: P.yen(sd.total) })}
         />
-        <SubsidyBar total={sd.total} web={sd.web} pr={sd.pr} grant={sd.grant} net={sd.net} />
+
         <Note heading={copy.heading3}>
           <p>
             {copy.p}
@@ -57,7 +61,7 @@ export default function SubsidyPage({ copy, route }: PageProps<'subsidy'>) {
         </Note>
       </Section>
 
-      <Section tone="tint" heading={copy.heading4}>
+      <Section id="conditions" tone="tint" heading={copy.heading4}>
         <Note heading={copy.heading5} kind="bad">
           <p
             dangerouslySetInnerHTML={raw(
@@ -92,7 +96,7 @@ export default function SubsidyPage({ copy, route }: PageProps<'subsidy'>) {
         </Note>
       </Section>
 
-      <Section eyebrow={copy.eyebrow2} heading={copy.heading8}>
+      <Section id="schedule" eyebrow={copy.eyebrow2} heading={copy.heading8}>
         <SubsidyTimeline form4={S.form4_deadline} deadline={S.deadline} />
         <Acc summary={copy.summary}>
           <ul className="plain">
@@ -131,7 +135,7 @@ export default function SubsidyPage({ copy, route }: PageProps<'subsidy'>) {
         </Note>
       </Section>
 
-      <Section tone="tint" heading={copy.heading10}>
+      <Section id="support" tone="tint" heading={copy.heading10}>
         <p>
           {copy.p15}
           <strong>{copy.strong9}</strong>

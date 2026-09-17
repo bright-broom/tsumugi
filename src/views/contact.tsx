@@ -1,3 +1,4 @@
+import Icon from '@/components/Icon';
 import { ROUTES } from '@/routing/registry';
 import PhoneLink from '@/components/PhoneLink';
 import { format } from '@/i18n/format';
@@ -28,46 +29,64 @@ export default function ContactPage({ copy, route }: PageProps<'contact'>) {
         navKey={file}
         lede={format(copy.lede, { cRESPONSEPROMISE: C.RESPONSE_PROMISE })}
       >
+        <div className="contact-channels">
+          <div className="contact-channel contact-channel-email">
+            <h2>
+              <Icon name="mail" />
+              {copy.h32}
+            </h2>
+            <p className="contact-hours">{C.EMAIL_HOURS}</p>
+            <a className="contact-email" href={C.EMAIL_LINK}>
+              <span>
+                {C.EMAIL.split('@')[0]}
+                <wbr />
+                {`@${C.EMAIL.split('@')[1]}`}
+              </span>
+              <Icon name="arrow-up-right" sm />
+            </a>
+            <p>{copy.emailHelp}</p>
+          </div>
+          <div className="contact-channel">
+            <h2 className="sr-only">{copy.h3}</h2>
+            <PhoneLink className="contact-phone" />
+            <p className="contact-hours">{format(copy.p2, { cTELHOURS: C.TEL_HOURS })}</p>
+            {C.LINE_URL && (
+              <a className="btn btn-2" href={C.LINE_URL}>
+                {copy.btn}
+              </a>
+            )}
+          </div>
+        </div>
+      </Section>
+
+      <Section heading={copy.consultationHeading} className="contact-preparation">
         <p>
           {copy.p}
           <strong>{copy.strong}</strong>
         </p>
         <ol className="steps">
           <li>
-            <b>{copy.b}</b>
+            <b>
+              <Icon name="globe" />
+              {copy.b}
+            </b>
             <div className="d">{copy.d}</div>
           </li>
           <li>
-            <b>{copy.b2}</b>
+            <b>
+              <Icon name="receipt" />
+              {copy.b2}
+            </b>
             <div className="d">{copy.d2}</div>
           </li>
           <li>
-            <b>{copy.b3}</b>
+            <b>
+              <Icon name="message-circle" />
+              {copy.b3}
+            </b>
             <div className="d">{copy.d3}</div>
           </li>
         </ol>
-      </Section>
-
-      <Section tone="tint" heading={copy.heading2}>
-        <h3 className="sr-only">{copy.h3}</h3>
-        <p>
-          <PhoneLink className="tel" />
-        </p>
-        <p>{format(copy.p2, { cTELHOURS: C.TEL_HOURS })}</p>
-        {C.LINE_URL && (
-          <p>
-            <a className="btn btn-2" href={C.LINE_URL}>
-              {copy.btn}
-            </a>
-          </p>
-        )}
-        <h3>{`${copy.h32}（${C.EMAIL_HOURS}）`}</h3>
-        <p>{copy.emailHelp}</p>
-        <p>
-          <a className="contact-email" href={C.EMAIL_LINK}>
-            {C.EMAIL}
-          </a>
-        </p>
       </Section>
 
       {C.CONTACT_METHOD === 'form' && (

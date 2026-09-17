@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { LCP_RECORDED_ON, LCP_SECONDS } from '@/content/measurements';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
@@ -24,37 +25,12 @@ export default function WorksPage({ copy, route, verification }: PageProps<'work
 
   return (
     <Base file={file} title={title} desc={desc}>
-      <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 navKey={file} lede={copy.lede} />
+      <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 navKey={file} lede={copy.lede}>
+        <PageIndex page="works" />
+      </Section>
       <PublishedWorks />
 
-      <Section>
-        <Note heading={copy.heading2}>
-          <p>{copy.p}</p>
-          <p>
-            {copy.p2}
-            <strong>{copy.strong}</strong>
-          </p>
-          <ul className="plain">
-            <li>{copy.li}</li>
-            <li>{copy.li2}</li>
-            <li>{copy.li3}</li>
-            <li>{copy.li4}</li>
-            <li>{copy.li5}</li>
-          </ul>
-        </Note>
-        <Note heading={copy.heading3} kind="warn">
-          <p>
-            {copy.p3}
-            <strong>{copy.strong2}</strong>
-          </p>
-          <p>
-            {copy.p4}
-            <strong>{copy.strong3}</strong>
-          </p>
-        </Note>
-      </Section>
-
-      <Section tone="tint" heading={copy.heading4} lede={copy.lede2}>
+      <Section id="evidence" tone="tint" heading={copy.heading4} lede={copy.lede2}>
         <Stats
           items={[
             {
@@ -100,6 +76,32 @@ export default function WorksPage({ copy, route, verification }: PageProps<'work
           </p>
         </Note>
         <Cta primary={copy.primary} />
+      </Section>
+      <Section id="policy" className="works-policy">
+        <Note heading={copy.heading2}>
+          <p>{copy.p}</p>
+          <p>
+            {copy.p2}
+            <strong>{copy.strong}</strong>
+          </p>
+          <ul className="plain">
+            <li>{copy.li}</li>
+            <li>{copy.li2}</li>
+            <li>{copy.li3}</li>
+            <li>{copy.li4}</li>
+            <li>{copy.li5}</li>
+          </ul>
+        </Note>
+        <Note heading={copy.heading3} kind="warn">
+          <p>
+            {copy.p3}
+            <strong>{copy.strong2}</strong>
+          </p>
+          <p>
+            {copy.p4}
+            <strong>{copy.strong3}</strong>
+          </p>
+        </Note>
       </Section>
     </Base>
   );
