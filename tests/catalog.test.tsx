@@ -54,7 +54,7 @@ describe('complete plan catalog', () => {
       node.attrs.some((a) => a.name === 'data-status' && a.value === 'preparing'),
     );
     expect(concepts).toHaveLength(4);
-    expect(preparing).toHaveLength(1);
+    expect(preparing).toHaveLength(2);
     for (const node of [...concepts, ...preparing]) {
       expect(
         elements(node).filter((child) => ['a', 'button', 'form'].includes(child.tagName)),
@@ -66,4 +66,13 @@ describe('complete plan catalog', () => {
       expect(html).toContain(`id="${anchor}"`);
     expect(html).not.toMatch(/hourlyCost|economic_surplus|機会費用|受注率|粗利率/);
   });
+});
+
+it('多言語の提供状態を料金表とプラン比較の両方に表示する', () => {
+  for (const page of ['price', 'plans'] as const) {
+    const html = renderToStaticMarkup(<Page {...pageProps(page)} />);
+    expect(html).toContain('対応言語・翻訳範囲・表示品質');
+    expect(html).toContain('165,000');
+    expect(html).toContain('受付準備中');
+  }
 });

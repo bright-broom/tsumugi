@@ -1,5 +1,8 @@
+import { spawnSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, existsSync, rmSync, writeFileSync } from 'node:fs';
 import { BUILD, EXTERNAL_MONTHLY_ESTIMATE, OPTIONS, oursTotal, run } from '@/content/prices';
 import { renderHtml, renderMarkdown } from '../../tools/ops/shared/document';
 import { estimateDocument } from '../../tools/ops/estimate/document';
@@ -8,6 +11,7 @@ import {
   type PriceCatalog,
   appendVersion,
   calculateEstimate,
+  catalogFingerprint,
   diffVersions,
   estimateInputSchema,
   siteCatalog,
@@ -181,5 +185,121 @@ describe('顧客向け書面', () => {
     expect(md).toContain('写真は支給素材を使う（サンプルの前提）');
     expect(md).toContain('公開日（サンプルの未確定事項）');
     expect(md).toContain('目安（別見積もり）');
+  });
+});
+
+describe('提供準備状態と見積の発行', () => {
+  const language = input({ options: [{ key: 'language', quantity: 1 }] });
+  const ready = (): PriceCatalog => ({
+    ...siteCatalog(),
+    options: siteCatalog().options.map((o) => ({ ...o, preparing: false })),
+  });
+
+  it('金額確定の多言語も準備中なら試算に留め、保存を拒否する', () => {
+    expect(siteCatalog().options.find((o) => o.key === 'language')).toMatchObject({
+      price: 165000,
+      firm: true,
+      preparing: true,
+    });
+    expect(calculateEstimate(language).optionsSubtotal).toBe(165000);
+    expect(calculateEstimate(language).blockers).toHaveLength(1);
+    expect(() => appendVersion(null, language, saveOpts)).toThrow('受付準備中');
+  });
+
+  it('提供状態が欠けたカタログも発行を許可しない', () => {
+    const catalog = JSON.parse(JSON.stringify(siteCatalog())) as PriceCatalog;
+    Reflect.deleteProperty(
+      catalog.options.find((o) => o.key === 'page_add')!,
+      'preparing',
+    );
+    expect(
+      calculateEstimate(input({ options: [{ key: 'page_add', quantity: 1 }] }), catalog).blockers,
+    ).toHaveLength(1);
+  });
+
+  it('金額が目安でも提供可能なら従来どおり保存できる', () => {
+    const file = appendVersion(
+      null,
+      input({ options: [{ key: 'photo_half_day', quantity: 1 }] }),
+      saveOpts,
+    );
+    expect(file.versions[0]!.result.blockers).toEqual([]);
+    expect(file.versions[0]!.result.provisional).toBe(true);
+  });
+
+  it('保存済み見積の再出力でも現在の準備状態を確認し、履歴は変更しない', () => {
+    const saved = appendVersion(null, language, { ...saveOpts, catalog: ready() });
+    const before = JSON.stringify(saved);
+    expect(() => estimateDocument(saved.versions[0]!, { today: saveOpts.today })).toThrow(
+      '受付準備中',
+    );
+    expect(JSON.stringify(saved)).toBe(before);
+  });
+
+  it('状態の変更を指紋に含め、同じ入力でも料金表更新後は新しい版を残せる', () => {
+    expect(catalogFingerprint(ready())).not.toBe(catalogFingerprint(siteCatalog()));
+    const original = appendVersion(null, input(), saveOpts);
+    const old = JSON.stringify(original.versions[0]);
+    const updated = { ...siteCatalog(), externalMonthly: siteCatalog().externalMonthly + 1 };
+    const next = appendVersion(original, input(), { ...saveOpts, catalog: updated });
+    expect(next.versions).toHaveLength(2);
+    expect(JSON.stringify(next.versions[0])).toBe(old);
+    expect(() => appendVersion(next, input(), { ...saveOpts, catalog: updated })).toThrow(
+      '同じ内容',
+    );
+  });
+
+  it('現行価格へ書き換えず、保存時の金額を両形式で維持する', () => {
+    const oldCatalog = { ...siteCatalog(), externalMonthly: 1234 };
+    const saved = appendVersion(null, input(), { ...saveOpts, catalog: oldCatalog }).versions[0]!;
+    const document = estimateDocument(saved, { today: saveOpts.today });
+    expect(renderMarkdown(document)).toContain('1,234');
+    expect(renderHtml(document)).toContain('1,234');
+  });
+
+  it('CLIの保存拒否・旧版の再出力拒否で既存ファイルを上書きしない', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'estimate-readiness-'));
+    const inputPath = join(dir, 'input.json');
+    const out = join(dir, 'existing.md');
+    const cli = (...args: string[]) =>
+      spawnSync(
+        process.execPath,
+        [
+          '--import',
+          'tsx',
+          'tools/ops/estimate/cli.ts',
+          ...args,
+          '--data',
+          dir,
+          '--today',
+          saveOpts.today,
+        ],
+        { encoding: 'utf8' },
+      );
+    try {
+      writeFileSync(inputPath, JSON.stringify(language));
+      const quote = cli('quote', '--input', inputPath);
+      expect(quote.status).toBe(0);
+      expect(JSON.parse(quote.stdout).blockers).toHaveLength(1);
+      expect(cli('save', '--input', inputPath).status).toBe(1);
+      expect(existsSync(join(dir, 'estimates'))).toBe(false);
+      writeFileSync(inputPath, JSON.stringify(input()));
+      expect(cli('save', '--input', inputPath).status).toBe(0);
+      const savedPath = join(dir, 'estimates', language.estimateId + '.json');
+      const historical = JSON.stringify(
+        appendVersion(null, language, { ...saveOpts, catalog: ready() }),
+      );
+      writeFileSync(savedPath, historical);
+      writeFileSync(out, 'keep existing output');
+      for (const format of ['md', 'html']) {
+        const result = cli('render', '--id', language.estimateId, '--format', format, '--out', out);
+        expect(result.status).toBe(1);
+        expect(result.stderr).toContain('受付準備中');
+        expect(readFileSync(out, 'utf8')).toBe('keep existing output');
+        expect(readFileSync(savedPath, 'utf8')).toBe(historical);
+      }
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

@@ -1,7 +1,8 @@
 /** 見積書の中身（Markdown と印刷用 HTML で共通）。保存した版の金額をそのまま出す。 */
+import { OpsError } from '../shared/store';
 import { BRAND } from '@/content/config';
 import { type Block, type DocumentModel, signedYen, yen } from '../shared/document';
-import { type Certainty, type EstimateVersion, diffVersions } from './model';
+import { type Certainty, type EstimateVersion, calculateEstimate, diffVersions } from './model';
 
 const CERTAINTY: Record<Certainty, string> = {
   fixed: '確定',
@@ -14,6 +15,9 @@ export function estimateDocument(
   options: { today: string; previous?: EstimateVersion },
 ): DocumentModel {
   const { input, result } = version;
+  // 金額は保存時のまま。提供状態だけは再出力時にも現行の正本で確認する。
+  const blockers = [...result.blockers, ...calculateEstimate(input).blockers];
+  if (blockers.length) throw new OpsError([...new Set(blockers)].join('\n'));
   const blocks: Block[] = [
     { kind: 'paragraph', text: `${input.customerLabel} 様` },
     {

@@ -18,7 +18,14 @@ import { dateSchema, timestampSchema } from '../shared/time';
 
 export interface PriceCatalog {
   production: readonly { key: string; name: string; price: number; preparing: boolean }[];
-  options: readonly { key: string; name: string; price: number; firm: boolean; note: string }[];
+  options: readonly {
+    key: string;
+    name: string;
+    price: number;
+    firm: boolean;
+    note: string;
+    preparing: boolean;
+  }[];
   support: readonly { key: string; name: string; price: number }[];
   externalMonthly: number;
   supportTerm: string;
@@ -33,7 +40,14 @@ export function siteCatalog(): PriceCatalog {
       price: p.price,
       preparing: 'preparing' in p && p.preparing,
     })),
-    options: OPTIONS.map(({ key, name, price, firm, note }) => ({ key, name, price, firm, note })),
+    options: OPTIONS.map(({ key, name, price, firm, note, preparing }) => ({
+      key,
+      name,
+      price,
+      firm,
+      note,
+      preparing,
+    })),
     support: RUN.map(({ key, name, price }) => ({ key, name, price })),
     externalMonthly: EXTERNAL_MONTHLY_ESTIMATE,
     supportTerm: RUN_TERM,
@@ -45,7 +59,7 @@ export const catalogFingerprint = (c: PriceCatalog) =>
   sha256(
     JSON.stringify([
       c.production.map((p) => [p.key, p.price, p.preparing]),
-      c.options.map((o) => [o.key, o.price, o.firm]),
+      c.options.map((o) => [o.key, o.price, o.firm, o.preparing]),
       c.support.map((s) => [s.key, s.price]),
       c.externalMonthly,
     ]),
@@ -148,7 +162,7 @@ export function calculateEstimate(
       certainty: 'fixed',
       basis: `prices.ts productionPlans() key=${production.key}`,
     });
-    if (production.preparing)
+    if (production.preparing !== false)
       blockers.push(`「${production.name}」は受付準備中のため、見積書として発行できません`);
   }
 
@@ -169,6 +183,10 @@ export function calculateEstimate(
       certainty: option.firm ? 'fixed' : 'reference',
       basis: `prices.ts OPTIONS key=${option.key}`,
     });
+    if (option.preparing !== false)
+      blockers.push(
+        `「${option.name}」は受付準備中または提供状態が未確認のため、見積書として発行できません`,
+      );
     if (!option.firm) notes.push(`${option.name}：金額は目安です。${option.note}`);
   }
   if (input.options.length) notes.push('オプションの請求時期は、ご契約時に確定します');
@@ -290,7 +308,11 @@ export function appendVersion(
   if (file && file.estimateId !== input.estimateId)
     throw new OpsError(`見積番号が違います: ${file.estimateId} と ${input.estimateId}`);
   const last = file?.versions.at(-1);
-  if (last && JSON.stringify(last.input) === JSON.stringify(input))
+  if (
+    last &&
+    last.catalogFingerprint === catalogFingerprint(catalog) &&
+    JSON.stringify(last.input) === JSON.stringify(input)
+  )
     throw new OpsError(`第${last.version}版と同じ内容です。新しい版は作りません`);
   return {
     estimateId: input.estimateId,
