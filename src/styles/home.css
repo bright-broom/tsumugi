@@ -1,8 +1,56 @@
 /* TOP の読み順と強弱。ブランド画像と日常の事業案内を分ける（ADR 0057）。 */
 @layer screens {
-  .brand-hero::before { height: clamp(22rem, 52cqw, 680px); }
-  .brand-hero-copy h1 { font-size: clamp(32px, 5.5cqw, 80px); }
-  .brand-hero-copy p { font-size: clamp(16px, 1.8cqw, 26px); }
+  /* 2:1 の SVG とコピーを同じマスへ。PC は絵全体を保持し、縦長画面だけ左右を切る（ADR 0061）。 */
+  .brand-hero {
+    @apply p-[0] bg-ink text-white;
+  }
+  .brand-hero-stage {
+    @apply relative grid grid-cols-[minmax(0,1fr)] w-[100%] max-w-[1920px] mx-[auto] overflow-hidden;
+    container-type: inline-size;
+  }
+  .brand-hero-stage::before {
+    content: '';
+    @apply col-[1] row-[1];
+    height: clamp(380px, 50cqw, 720px);
+  }
+  .brand-hero-artwork {
+    @apply absolute top-[0] right-[0] w-[auto] max-w-none h-[100%] rounded-[0] object-contain object-right-top;
+  }
+  .brand-hero-stage::after {
+    content: '';
+    @apply absolute inset-[0] pointer-events-none;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-ink) 58%, transparent),
+      color-mix(in srgb, var(--color-ink) 34%, transparent) 55%,
+      transparent 80%
+    );
+  }
+  .brand-hero-copy {
+    --hero-inset: max(var(--spacing-pad-mb-head), 5cqw);
+    @apply relative z-[1] col-[1] row-[1] self-center py-[32px] font-brand;
+    margin-inline-start: var(--hero-inset);
+    width: min(100cqw - 2 * var(--hero-inset), max(55cqw, 26rem));
+    text-shadow:
+      0 1px 2px color-mix(in srgb, var(--color-ink) 80%, transparent),
+      0 0 0.9em color-mix(in srgb, var(--color-ink) 60%, transparent);
+  }
+  .brand-hero-copy h1 {
+    @apply leading-[1.36] m-[0];
+    font-size: clamp(32px, 5.5cqw, 80px);
+    margin-block-end: clamp(12px, 2cqw, 32px);
+  }
+  .brand-hero-copy p {
+    @apply leading-[1.65] m-[0];
+    font-size: clamp(16px, 1.8cqw, 26px);
+    word-break: auto-phrase;
+  }
+  @media (max-width: 768px) {
+    .brand-hero-artwork {
+      @apply w-[100%] object-cover;
+      object-position: 78% 0%;
+    }
+  }
   .home-content .wrap { @apply max-w-home-container; }
   .home-content .btn { @apply rounded-[4px] text-[15px] gap-[10px]; }
   .home-content .btn-1 { @apply bg-accent text-sub border-accent; }
