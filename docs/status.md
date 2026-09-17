@@ -19,7 +19,9 @@
 - 架空の例は通常変更 13 分＋修補 40 分＝実作業 53 分、変更枠消費 15 分。月次下書きに内訳を明示し、修補だけでは超過扱いにしない。
 - 公開出力 52 ファイル中 51 ファイルのハッシュが一致。works.html だけが未コミット状態の証跡表示条件により変化。公開価格・販売状態・サイトの UI は未変更。
 - 証跡：`.artifacts/warranty/validate.log`、`output-comparison.json`、`sample-result.json`、`sample-report.md/html`（Git 管理外、架空データ）。本番全項目の検証とリモート反映の結果は下に追記する。
-- 開始時 PR #80 は OPEN、main は `b4aa125`。この変更は PR #80 の上に積む独立 PR とし、main に入ったとは扱わない。監査 C03（商品提供可否と見積発行）、訂正履歴・自動移行・請求は未実装のまま。
+- 開始時 PR #80 は OPEN、main は `b4aa125`。作業中に PR #80 は MERGED（main `85fa5a3`）を確認。この工数修正は main 向けの独立 PR とする。監査 C03（商品提供可否と見積発行）、訂正履歴・自動移行・請求は未実装のまま。
+
+コミット後の検証：`535ac07d73996c70dbcfdefa584404e399dd45ff` のクリーンな状態で build → production verify → build が成功。**PASS 600 / WARN 3 / FAIL 0**、22 ページ・実行時 JS 0。既存の専門家確認 2 件と受入確認の WARN を維持。証跡は `.artifacts/warranty/committed-verify-report.json`、`production.log`、`verified-build.log`。この追記は文書のみで、検証対象コミットと区別する。文書内のローカルリンク 146 件も存在を確認した。リモート CI とこの工数修正の main 反映は PR 上で別途確認する。
 
 ### Principal Engineer 視点の監査と監視修正（2026-09-18）
 
