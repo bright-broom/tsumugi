@@ -14,25 +14,41 @@ export default function Footer({ file }: { file: string }) {
 
   return (
     <footer className="ftr" id="footer">
-      <div className="wrap">
-        <div className="footer-intro">
-          <div>
+      <div className="footer-intro">
+        <div className="wrap footer-intro-inner">
+          <div className="footer-invitation">
             <p className="footer-eyebrow">
               <Icon name="handshake" sm />
               {copy.footer.eyebrow}
             </p>
             <h2>
               <span>{copy.footer.heading}</span>
-              <wbr />
               <span>{copy.footer.heading2}</span>
             </h2>
           </div>
-          <a className="footer-contact" href={href('contact')}>
-            <Icon name="message-circle" />
-            <span>{copy.header.contact}</span>
-            <Icon name="arrow-right" />
-          </a>
+          <div className="footer-channels">
+            <div className="footer-channel">
+              <PhoneLink className="footer-phone" />
+              <p>{C.TEL_HOURS}</p>
+            </div>
+            <div className="footer-channel">
+              <a className="footer-email" href={C.EMAIL_LINK}>
+                <Icon name="mail" />
+                <span>
+                  {C.EMAIL.slice(0, emailBreak)}
+                  <wbr />
+                  {C.EMAIL.slice(emailBreak)}
+                </span>
+                <span className="footer-email-arrow">
+                  <Icon name="arrow-up-right" />
+                </span>
+              </a>
+              <p>{C.EMAIL_HOURS}</p>
+            </div>
+          </div>
         </div>
+      </div>
+      <div className="wrap footer-directory">
         <div className="footer-grid">
           <div className="footer-company">
             <a className="footer-brand" href={href('index')} aria-label={C.BRAND_T}>
@@ -49,28 +65,7 @@ export default function Footer({ file }: { file: string }) {
               <br />
               {C.SERVICE_NOTE}
             </p>
-            <PhoneLink className="footer-phone" />
             <dl className="footer-facts">
-              <div>
-                <dt>
-                  <Icon name="clock" sm />
-                  <span className="sr-only">{copy.mk}</span>
-                </dt>
-                <dd>{C.TEL_HOURS}</dd>
-              </div>
-              <div>
-                <dt>
-                  <Icon name="mail" sm />
-                  <span className="sr-only">{copy.mk3}</span>
-                </dt>
-                <dd>
-                  <a className="contact-email" href={C.EMAIL_LINK}>
-                    {C.EMAIL.slice(0, emailBreak)}
-                    <wbr />
-                    {C.EMAIL.slice(emailBreak)}
-                  </a>
-                </dd>
-              </div>
               <div>
                 <dt>
                   <Icon name="map-pin" sm />
@@ -88,24 +83,22 @@ export default function Footer({ file }: { file: string }) {
             </dl>
           </div>
           <nav className="footer-navigation" aria-label={copy.footer.navigation}>
-            <h3>{copy.hd}</h3>
             <NavigationGroups file={file} surface="footer" />
           </nav>
-          <nav className="footer-industries" aria-label={copy.hd2}>
-            <h3>{copy.hd2}</h3>
-            <ul>
-              {INDUSTRIES.map(([url, label]) => (
-                <li key={url}>
-                  <a href={pathForFile(url)} aria-current={current(url)}>
-                    <Icon name={NAV_IC[url]!} />
-                    <span>{label}</span>
-                    <Icon name="arrow-right" sm />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
         </div>
+        <nav className="footer-industries" aria-label={copy.hd2}>
+          <h3>{copy.hd2}</h3>
+          <ul>
+            {INDUSTRIES.map(([url, label]) => (
+              <li key={url}>
+                <a href={pathForFile(url)} aria-current={current(url)}>
+                  <Icon name={NAV_IC[url]!} />
+                  <span>{label}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <nav aria-label={copy.footer.legal}>
           <ul className="ftr-legal">
             {NAV_LEGAL.map(([url, label]) => (
