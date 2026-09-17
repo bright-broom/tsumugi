@@ -2,7 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { checkInlineStyles, checkStyleSources } from '../tools/scripts/check-styles';
+import {
+  checkInlineStyles,
+  checkStyleSources,
+  checkDesignValues,
+} from '../tools/scripts/check-styles';
 import { buildStyles } from '../tools/scripts/build-styles';
 
 describe('central style boundary', () => {
@@ -55,4 +59,25 @@ describe('Tailwind production compiler', () => {
       rmSync(scratch, { recursive: true, force: true });
     }
   }, 15000);
+});
+
+describe('design change boundaries', () => {
+  it('rejects duplicated common sizes but permits geometry and named tokens', () => {
+    expect(
+      checkDesignValues('.card { @apply text-[14px] rounded-[4px]; }', 'cards.css'),
+    ).toHaveLength(2);
+    expect(
+      checkDesignValues('.card { @apply text-fine rounded-card w-[24px]; }', 'cards.css'),
+    ).toEqual([]);
+    expect(checkDesignValues('/* text-[14px] */', 'cards.css')).toEqual([]);
+  });
+  it('requires shared actions even inside conditional class names', () => {
+    expect(checkInlineStyles('<a className="btn btn-1" href="#" />')).not.toHaveLength(0);
+    expect(
+      checkInlineStyles('<a className={active ? "btn btn-1" : "btn btn-2"} />'),
+    ).not.toHaveLength(0);
+    expect(
+      checkInlineStyles('<ActionLink variant="primary" href="#" className="catalog-plan-cta" />'),
+    ).toEqual([]);
+  });
 });

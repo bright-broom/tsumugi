@@ -1,0 +1,45 @@
+@layer components {
+  /* ══ 入口の商品。3プランの上に置く1枚。
+        月額制の「1ページ 月◯◯円」に、同じ土俵（1ページ）で買い切りをぶつける場所。
+        プランの枠に入れると3つの中の一番安いものに見えてしまうので、別の器にする。 */
+  .entry {
+    @apply grid gap-[22px_36px] grid-cols-[1fr] p-gap-group;
+    border: 1.5px solid var(--color-ink);
+    @apply rounded-panel bg-white;
+  }
+  section.dark .entry {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_5%,_transparent)] border-[color-mix(in_srgb,_var(--color-main)_40%,_transparent)];
+  }
+  section.tint .entry {
+    @apply bg-white;
+  }
+  @media (min-width: 820px) {
+    .entry {
+      @apply grid-cols-[minmax(230px,_290px)_1fr];
+    }
+  }
+  .entry .lab {
+    @apply inline-flex items-center gap-[7px] text-fine font-bold tracking-[.06em] text-[var(--accent-text)];
+  }
+  section.dark .entry .lab {
+    @apply text-[var(--accent)];
+  }
+  .entry .pn {
+    @apply mt-[8px] text-h3 font-bold;
+  }
+  .entry .amt {
+    @apply block mt-[6px];
+  }
+  .entry .sub2 {
+    @apply block mt-[8px] text-fine leading-[1.75] text-muted;
+  }
+  section.dark .entry .sub2 {
+    @apply text-muted-on-ink;
+  }
+  .entry ul {
+    @apply m-[0_0_16px];
+  }
+  .entry .btns {
+    @apply mt-[0];
+  }
+}

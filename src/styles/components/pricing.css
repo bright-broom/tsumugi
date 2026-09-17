@@ -1,0 +1,206 @@
+@layer components {
+  /* ── 計算の面。桁を揃える（12 他アプリへの画面構成） */
+  .calc {
+    border: 1px solid var(--color-line);
+    @apply rounded-card overflow-hidden bg-white;
+  }
+  section.dark .calc {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_5%,_transparent)] border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
+  }
+  .calc .ttl {
+    @apply p-[13px_20px] bg-surface text-fine font-semi tracking-[.04em] text-muted;
+  }
+  section.dark .calc .ttl {
+    @apply text-main bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)];
+  }
+  .calc .r {
+    @apply flex justify-between items-center gap-[20px] p-[15px_20px];
+    border-bottom: 1px solid var(--color-line);
+  }
+  section.dark .calc .r {
+    @apply border-[color-mix(in_srgb,_var(--color-main)_12%,_transparent)];
+  }
+  .calc .r:last-child {
+    border-bottom: none;
+  }
+  .calc .r .k {
+    @apply flex items-start gap-[10px] min-w-[0];
+  }
+  .calc .r .k .ic {
+    @apply mt-[4px] text-muted;
+  }
+  .calc .r .k em {
+    @apply not-italic block mt-[2px] text-meta text-muted;
+  }
+  section.dark .calc .r .k em {
+    @apply text-muted-on-ink;
+  }
+  .calc .r .v {
+    @apply text-[19px] font-bold tabular-nums whitespace-nowrap;
+  }
+  .calc .r.small {
+    @apply text-[14.5px] py-[11px];
+  }
+  .calc .r.small .v {
+    @apply text-compact;
+  }
+  .calc .r.sum {
+    @apply bg-surface;
+  }
+  section.dark .calc .r.sum {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)];
+  }
+  .calc .r.minus .v {
+    @apply text-ok;
+  }
+  .calc .r.net {
+    @apply bg-ink text-white py-[20px];
+  }
+  .calc .r.net .k {
+    @apply text-muted-on-ink text-fine;
+  }
+  .calc .r.net .k em {
+    @apply text-muted-on-ink;
+  }
+  .calc .r.net .k .ic {
+    @apply text-[var(--accent)];
+  }
+  .calc .r.net .v {
+    @apply text-[34px];
+  }
+  section.dark .calc .r.net {
+    @apply bg-[var(--accent)] text-[var(--accent-ink)];
+  }
+  section.dark .calc .r.net .k,
+  section.dark .calc .r.net .k .ic {
+    @apply text-[var(--accent-ink)];
+  }
+  /* 琥珀の面に載る補足。墨の文字を薄めず、コントラストを保つ */
+  section.dark .calc .r.net .k em {
+    @apply text-[var(--accent-ink)];
+  }
+
+  /* ── 比較バー。いま払っている金額を基準に並べる */
+  .vs {
+    @apply grid gap-[10px];
+  }
+  .vs .row {
+    @apply grid grid-cols-[1fr_auto] gap-[6px_18px] items-center;
+  }
+  .vs .nm {
+    @apply flex items-center gap-[9px] text-compact font-semi;
+  }
+  .vs .nm .ic {
+    @apply text-muted;
+  }
+  .vs .nm em {
+    @apply not-italic font-regular text-fine text-muted;
+  }
+  .vs .amtv {
+    @apply text-[17px] font-bold tabular-nums;
+  }
+  .vs .bar {
+    @apply col-[1_/_-1] h-[10px] rounded-pill bg-line overflow-hidden;
+  }
+  .vs .bar i {
+    @apply block h-[100%] bg-line-strong rounded-[inherit];
+  }
+  .vs .row.ours .bar i {
+    @apply bg-[var(--accent)];
+  }
+  .vs .row.ours .nm {
+    @apply text-[var(--accent-text)];
+  }
+  .vs .row.ours .nm .ic {
+    @apply text-[var(--accent-text)];
+  }
+  section.dark .vs .bar {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_16%,_transparent)];
+  }
+  section.dark .vs .bar i {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_50%,_transparent)];
+  }
+  section.dark .vs .row.ours .nm,
+  section.dark .vs .row.ours .nm .ic {
+    @apply text-[var(--accent)];
+  }
+  .segnote {
+    @apply flex items-start gap-[10px] m-[-12px_0_26px] text-fine leading-[1.8] text-muted max-w-measure-read;
+  }
+  .segnote > .ic {
+    @apply mt-[5px];
+  }
+  .plan .pv .sub2 {
+    @apply block mt-[8px] text-fine leading-[1.75] text-muted;
+  }
+  .plan .pv .sub2 b {
+    @apply text-ink;
+  }
+  .plan .flex {
+    @apply flex-[1];
+  }
+
+  /* ── プラン。一つの判断領域に主役を一つだけ置く（原則A） */
+  .plans {
+    @apply grid gap-gap grid-cols-[1fr];
+  }
+  @container (min-width: 760px) {
+    .plans {
+      @apply grid-cols-[repeat(3,_1fr)] items-stretch;
+    }
+  }
+  @container (min-width: 760px) {
+    .plans.production-plans,
+    .plans.support-plans {
+      @apply grid-cols-2;
+    }
+  }
+  .plan {
+    @apply flex flex-col gap-[14px] p-gap-group;
+    border: 1px solid var(--color-line);
+    @apply rounded-card bg-white;
+  }
+  .plan.pick {
+    border: 1px solid var(--color-line);
+    border-top: 3px solid var(--color-accent);
+    @apply bg-white;
+  }
+  @container (min-width: 760px) {
+    .plan.pick {
+      @apply my-[0] py-gap-group;
+    }
+  }
+  .production-plans .plan.pick {
+    @apply my-[0] py-gap-group;
+  }
+  .plan .tag {
+    @apply self-start text-fine font-bold tracking-[.06em] text-ink;
+  }
+  .plan .tag::before {
+    content: '';
+  }
+  .plan .pn {
+    @apply text-h3 font-bold;
+  }
+  .plan .pmeta {
+    @apply text-meta text-muted mt-[-8px];
+  }
+  .plan .pv .amt {
+    @apply text-[38px];
+  }
+  .plan .pv .amt .u {
+    @apply text-compact;
+  }
+  .plan .why {
+    @apply text-[14.5px] leading-[1.75] text-muted;
+  }
+  .plan ul {
+    @apply list-none list-outside m-[0] p-[0] grid gap-[9px];
+  }
+  .plan ul li {
+    @apply flex items-start gap-[9px] m-[0] text-[14.5px] leading-[1.7];
+  }
+  .plan ul li .ic {
+    @apply shrink-0 mt-[4px] text-muted;
+  }
+}

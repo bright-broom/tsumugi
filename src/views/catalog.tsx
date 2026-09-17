@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import type { ReactNode } from 'react';
 import Base from '@/layouts/Base';
 import Section from '@/components/Section';
@@ -130,10 +131,10 @@ export default function CatalogPage({ copy, route }: PageProps<'catalog'>) {
       >
         <div className="catalog-hero-body">
           <div className="catalog-hero-action">
-            <a className="btn btn-1" href="#production">
+            <ActionLink variant="primary" href="#production">
               {copy.heroLink}
               <Icon name="arrow-down" sm />
-            </a>
+            </ActionLink>
             <p>{copy.heroNote}</p>
           </div>
           <div className="catalog-stages">
@@ -209,13 +210,14 @@ export default function CatalogPage({ copy, route }: PageProps<'catalog'>) {
                   {copy.preparing}
                 </p>
               ) : (
-                <a
-                  className={`btn ${featured ? 'btn-1' : 'btn-2'} catalog-plan-cta`}
+                <ActionLink
+                  variant={featured ? 'primary' : 'secondary'}
+                  className="catalog-plan-cta"
                   href={href('contact')}
                 >
                   {copy.consult}
                   <Icon name="arrow-right" sm />
-                </a>
+                </ActionLink>
               )}
             </article>
           ))}
@@ -314,10 +316,10 @@ export default function CatalogPage({ copy, route }: PageProps<'catalog'>) {
             <h3>{copy.support.rulesTitle}</h3>
             <p>{copy.support.rules}</p>
           </div>
-          <a className="btn btn-2" href={href('unlimited')}>
+          <ActionLink variant="secondary" href={href('unlimited')}>
             {copy.support.scopeLink}
             <Icon name="arrow-up-right" sm />
-          </a>
+          </ActionLink>
         </div>
         <aside className="catalog-technical" data-status={P.PROPOSED_PRICES.technical.status}>
           <div>
@@ -417,10 +419,10 @@ export default function CatalogPage({ copy, route }: PageProps<'catalog'>) {
           })}
         </p>
         <p className="catalog-caption">{copy.total.note}</p>
-        <a className="btn btn-2" href={href('price', 'domains')}>
+        <ActionLink variant="secondary" href={href('price', 'domains')}>
           {copy.total.domainsLink}
           <Icon name="arrow-up-right" sm />
-        </a>
+        </ActionLink>
       </Section>
 
       <Section
@@ -445,10 +447,10 @@ export default function CatalogPage({ copy, route }: PageProps<'catalog'>) {
             <h3>{copy.conditions.contactTitle}</h3>
             <p>{copy.conditions.contactDetail}</p>
           </div>
-          <a className="btn btn-1" href={href('contact')}>
+          <ActionLink variant="primary" href={href('contact')}>
             {copy.conditions.contactLink}
             <Icon name="arrow-right" sm />
-          </a>
+          </ActionLink>
         </div>
       </Section>
     </Base>

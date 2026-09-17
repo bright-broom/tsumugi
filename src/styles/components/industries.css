@@ -1,0 +1,41 @@
+@layer components {
+  /* ── 業種の入口 */
+  .inds {
+    @apply grid gap-[0] overflow-hidden;
+    border-top: 1px solid var(--color-line);
+  }
+  @container (min-width: 520px) {
+    .inds {
+      @apply grid-cols-[repeat(2,_1fr)];
+    }
+  }
+  @container (min-width: 960px) {
+    .inds {
+      @apply grid-cols-[repeat(auto-fit,_minmax(220px,_1fr))];
+    }
+  }
+  .ind {
+    @apply bg-white p-[24px] no-underline;
+    border-bottom: 1px solid var(--color-line);
+    color: inherit;
+    @apply grid gap-[8px];
+    align-content: start;
+    @apply min-h-[130px];
+  }
+  .ind:hover {
+    @apply bg-surface;
+  }
+  .ind .n {
+    @apply flex items-center gap-[8px] text-[17px] font-bold;
+  }
+  .ind .n::after {
+    content: '→';
+    @apply ml-[auto] text-muted font-[400];
+  }
+  .ind:hover .n::after {
+    @apply text-[var(--accent-text)];
+  }
+  .ind .p {
+    @apply text-fine leading-[1.7] text-muted;
+  }
+}

@@ -55,7 +55,7 @@
     @apply inline-flex items-center gap-[14px] min-h-tap text-[28px] font-medium tracking-[.02em] tabular-nums whitespace-nowrap;
   }
   .footer-email {
-    @apply flex items-center gap-[14px] min-h-tap text-[18px] leading-[1.7];
+    @apply flex items-center gap-[14px] min-h-tap text-lead leading-[1.7];
   }
   .footer-email > span:first-of-type {
     @apply min-w-[0];
@@ -177,7 +177,7 @@
       @apply text-[24px];
     }
     .footer-email {
-      @apply text-[16px] gap-[10px];
+      @apply text-body gap-[10px];
     }
     .footer-grid {
       @apply grid-cols-[minmax(0,1fr)] gap-[36px];

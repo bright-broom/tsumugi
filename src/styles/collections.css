@@ -25,13 +25,13 @@
     @apply flex flex-wrap gap-[4px_12px] m-[0] text-[13px] font-semi text-muted;
   }
   .entry-title {
-    @apply m-[0] text-[18px] leading-[1.6];
+    @apply m-[0] text-lead leading-[1.6];
   }
   .entry-summary {
-    @apply m-[0] text-[15px] leading-[1.85] text-muted;
+    @apply m-[0] text-compact leading-[1.85] text-muted;
   }
   .entry-dates {
-    @apply flex flex-wrap gap-[4px_20px] m-[12px_0_0] text-[14px] text-muted;
+    @apply flex flex-wrap gap-[4px_20px] m-[12px_0_0] text-fine text-muted;
   }
   .entry-card .entry-dates {
     @apply m-[0];
@@ -49,7 +49,7 @@
     @apply mb-[32px];
   }
   .entry-body {
-    @apply text-[16px] leading-body;
+    @apply text-body leading-body;
   }
   .entry-body h2,
   .entry-subheading {
@@ -70,13 +70,13 @@
     @apply m-[28px_0];
   }
   .entry-body figcaption {
-    @apply mt-[8px] text-[14px] text-muted;
+    @apply mt-[8px] text-fine text-muted;
   }
   .entry-tags {
     @apply list-none p-[0] m-[20px_0_0] flex flex-wrap gap-[8px];
   }
   .entry-tags li {
-    @apply inline-flex items-center min-h-[32px] p-[2px_12px] rounded-pill text-[14px];
+    @apply inline-flex items-center min-h-[32px] p-[2px_12px] rounded-pill text-fine;
     border: 1px solid var(--color-line-strong);
   }
   .entry-facts {
@@ -108,10 +108,10 @@
     @apply flex items-center gap-[8px];
   }
   .entry-links a {
-    @apply inline-flex items-center min-h-tap min-w-tap text-[16px] font-semi;
+    @apply inline-flex items-center min-h-tap min-w-tap text-body font-semi;
   }
   .entry-note {
-    @apply mt-[32px] text-[14px] leading-[1.8] text-muted;
+    @apply mt-[32px] text-fine leading-[1.8] text-muted;
   }
   .entry-back {
     @apply m-[32px_0];
@@ -139,24 +139,24 @@
     @apply grid gap-[10px];
   }
   .cf-facet-title {
-    @apply m-[0] text-[14px] font-semi;
+    @apply m-[0] text-fine font-semi;
   }
   .cf-options {
     @apply flex flex-wrap gap-[8px];
   }
   .cf-chip {
-    @apply inline-flex items-center justify-center min-h-tap min-w-tap p-[6px_16px] rounded-pill text-[15px] cursor-pointer bg-surface text-ink;
+    @apply inline-flex items-center justify-center min-h-tap min-w-tap p-[6px_16px] rounded-pill text-compact cursor-pointer bg-surface text-ink;
     border: 1px solid var(--color-line-strong);
   }
   .cf-chip:hover {
     @apply bg-accent/10;
   }
   .cf-reset {
-    @apply justify-self-start inline-flex items-center min-h-tap p-[6px_4px] text-[15px] font-semi cursor-pointer bg-transparent text-ink underline underline-offset-4;
+    @apply justify-self-start inline-flex items-center min-h-tap p-[6px_4px] text-compact font-semi cursor-pointer bg-transparent text-ink underline underline-offset-4;
     border: 0;
   }
   .cf-empty {
-    @apply hidden m-[0] pt-[20px] text-[15px] leading-[1.85];
+    @apply hidden m-[0] pt-[20px] text-compact leading-[1.85];
     border-top: 1px solid var(--color-line-strong);
   }
 
@@ -292,49 +292,53 @@
     .cf-empty {
       display: block;
     }
-    .cf:has(> .cf-list > .cf-item:is(
-      .cf-f1-v0:checked ~ .cf-list > *,
-      .cf-f1-v1:checked ~ .cf-list > .cf-i1-v1,
-      .cf-f1-v2:checked ~ .cf-list > .cf-i1-v2,
-      .cf-f1-v3:checked ~ .cf-list > .cf-i1-v3,
-      .cf-f1-v4:checked ~ .cf-list > .cf-i1-v4,
-      .cf-f1-v5:checked ~ .cf-list > .cf-i1-v5,
-      .cf-f1-v6:checked ~ .cf-list > .cf-i1-v6,
-      .cf-f1-v7:checked ~ .cf-list > .cf-i1-v7,
-      .cf-f1-v8:checked ~ .cf-list > .cf-i1-v8,
-      .cf-f1-v9:checked ~ .cf-list > .cf-i1-v9,
-      .cf-f1-v10:checked ~ .cf-list > .cf-i1-v10,
-      .cf-f1-v11:checked ~ .cf-list > .cf-i1-v11,
-      .cf-f1-v12:checked ~ .cf-list > .cf-i1-v12
-    ):is(
-      .cf-f2-v0:checked ~ .cf-list > *,
-      .cf-f2-v1:checked ~ .cf-list > .cf-i2-v1,
-      .cf-f2-v2:checked ~ .cf-list > .cf-i2-v2,
-      .cf-f2-v3:checked ~ .cf-list > .cf-i2-v3,
-      .cf-f2-v4:checked ~ .cf-list > .cf-i2-v4,
-      .cf-f2-v5:checked ~ .cf-list > .cf-i2-v5,
-      .cf-f2-v6:checked ~ .cf-list > .cf-i2-v6,
-      .cf-f2-v7:checked ~ .cf-list > .cf-i2-v7,
-      .cf-f2-v8:checked ~ .cf-list > .cf-i2-v8,
-      .cf-f2-v9:checked ~ .cf-list > .cf-i2-v9,
-      .cf-f2-v10:checked ~ .cf-list > .cf-i2-v10,
-      .cf-f2-v11:checked ~ .cf-list > .cf-i2-v11,
-      .cf-f2-v12:checked ~ .cf-list > .cf-i2-v12
-    ):is(
-      .cf-f3-v0:checked ~ .cf-list > *,
-      .cf-f3-v1:checked ~ .cf-list > .cf-i3-v1,
-      .cf-f3-v2:checked ~ .cf-list > .cf-i3-v2,
-      .cf-f3-v3:checked ~ .cf-list > .cf-i3-v3,
-      .cf-f3-v4:checked ~ .cf-list > .cf-i3-v4,
-      .cf-f3-v5:checked ~ .cf-list > .cf-i3-v5,
-      .cf-f3-v6:checked ~ .cf-list > .cf-i3-v6,
-      .cf-f3-v7:checked ~ .cf-list > .cf-i3-v7,
-      .cf-f3-v8:checked ~ .cf-list > .cf-i3-v8,
-      .cf-f3-v9:checked ~ .cf-list > .cf-i3-v9,
-      .cf-f3-v10:checked ~ .cf-list > .cf-i3-v10,
-      .cf-f3-v11:checked ~ .cf-list > .cf-i3-v11,
-      .cf-f3-v12:checked ~ .cf-list > .cf-i3-v12
-    )) > .cf-empty {
+    .cf:has(
+        > .cf-list
+          > .cf-item:is(
+            .cf-f1-v0:checked ~ .cf-list > *,
+            .cf-f1-v1:checked ~ .cf-list > .cf-i1-v1,
+            .cf-f1-v2:checked ~ .cf-list > .cf-i1-v2,
+            .cf-f1-v3:checked ~ .cf-list > .cf-i1-v3,
+            .cf-f1-v4:checked ~ .cf-list > .cf-i1-v4,
+            .cf-f1-v5:checked ~ .cf-list > .cf-i1-v5,
+            .cf-f1-v6:checked ~ .cf-list > .cf-i1-v6,
+            .cf-f1-v7:checked ~ .cf-list > .cf-i1-v7,
+            .cf-f1-v8:checked ~ .cf-list > .cf-i1-v8,
+            .cf-f1-v9:checked ~ .cf-list > .cf-i1-v9,
+            .cf-f1-v10:checked ~ .cf-list > .cf-i1-v10,
+            .cf-f1-v11:checked ~ .cf-list > .cf-i1-v11,
+            .cf-f1-v12:checked ~ .cf-list > .cf-i1-v12
+          ):is(
+            .cf-f2-v0:checked ~ .cf-list > *,
+            .cf-f2-v1:checked ~ .cf-list > .cf-i2-v1,
+            .cf-f2-v2:checked ~ .cf-list > .cf-i2-v2,
+            .cf-f2-v3:checked ~ .cf-list > .cf-i2-v3,
+            .cf-f2-v4:checked ~ .cf-list > .cf-i2-v4,
+            .cf-f2-v5:checked ~ .cf-list > .cf-i2-v5,
+            .cf-f2-v6:checked ~ .cf-list > .cf-i2-v6,
+            .cf-f2-v7:checked ~ .cf-list > .cf-i2-v7,
+            .cf-f2-v8:checked ~ .cf-list > .cf-i2-v8,
+            .cf-f2-v9:checked ~ .cf-list > .cf-i2-v9,
+            .cf-f2-v10:checked ~ .cf-list > .cf-i2-v10,
+            .cf-f2-v11:checked ~ .cf-list > .cf-i2-v11,
+            .cf-f2-v12:checked ~ .cf-list > .cf-i2-v12
+          ):is(
+            .cf-f3-v0:checked ~ .cf-list > *,
+            .cf-f3-v1:checked ~ .cf-list > .cf-i3-v1,
+            .cf-f3-v2:checked ~ .cf-list > .cf-i3-v2,
+            .cf-f3-v3:checked ~ .cf-list > .cf-i3-v3,
+            .cf-f3-v4:checked ~ .cf-list > .cf-i3-v4,
+            .cf-f3-v5:checked ~ .cf-list > .cf-i3-v5,
+            .cf-f3-v6:checked ~ .cf-list > .cf-i3-v6,
+            .cf-f3-v7:checked ~ .cf-list > .cf-i3-v7,
+            .cf-f3-v8:checked ~ .cf-list > .cf-i3-v8,
+            .cf-f3-v9:checked ~ .cf-list > .cf-i3-v9,
+            .cf-f3-v10:checked ~ .cf-list > .cf-i3-v10,
+            .cf-f3-v11:checked ~ .cf-list > .cf-i3-v11,
+            .cf-f3-v12:checked ~ .cf-list > .cf-i3-v12
+          )
+      )
+      > .cf-empty {
       display: none;
     }
   }

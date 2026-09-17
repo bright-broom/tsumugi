@@ -1,5 +1,7 @@
 # 紬サイト ── Next.js + React + TypeScript
 
+> 大幅なデザイン変更の編集場所・部品の使い方・全ページ比較は [リデザイン手順](product/redesign-guide.md) を参照。
+
 > 自社サイトの公開：2026-09-17 のオーナー指示により [ADR 0056](architecture/0056-owner-authorized-publication.md) を適用。専門家確認・受入確認の未実施分は WARN に残す。顧客テンプレートでは `OWNER_PUBLICATION=null` に戻し、従来の納品条件を適用する。紬は Vercel URL・メール受付で公開し、独自ドメインやフォームの導入を前提にしない。
 
 サービスサイト本体。21ページ、**実行時 JavaScript 0バイト**。
@@ -45,21 +47,21 @@ flowchart TD
   s4 -.->|script が残れば| stop
 ```
 
-| 段階 | やること | 止まる条件 |
-|---|---|---|
-| ① `build-tokens.ts --check` | `src/styles/design.tokens.json` と `src/styles/tokens.css` が一致するか | 手で `tokens.css` を直した・`npm run tokens` を忘れた |
-| ② `build-public.ts` | `src/styles/globals.css` を Tailwind CLI で `public/theme.css` にコンパイルし、`robots.txt`・`sitemap.xml` を書く | CSSコンパイル失敗 |
-| ③ `next build` | 21ページを `out/` に書き出す（型検査を含む） | 型エラー |
-| ④ `postbuild.ts` | `data-next-head` などの印を消し、JSON-LD 以外の `<script>` と `<!-- -->` を数え、`out/_next/` を消す | 1件でもあれば |
+| 段階                        | やること                                                                                                          | 止まる条件                                            |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| ① `build-tokens.ts --check` | `src/styles/design.tokens.json` と `src/styles/tokens.css` が一致するか                                           | 手で `tokens.css` を直した・`npm run tokens` を忘れた |
+| ② `build-public.ts`         | `src/styles/globals.css` を Tailwind CLI で `public/theme.css` にコンパイルし、`robots.txt`・`sitemap.xml` を書く | CSSコンパイル失敗                                     |
+| ③ `next build`              | 22ページを `out/` に書き出す（型検査を含む）                                                                      | 型エラー                                              |
+| ④ `postbuild.ts`            | `data-next-head` などの印を消し、JSON-LD 以外の `<script>` と `<!-- -->` を数え、`out/_next/` を消す              | 1件でもあれば                                         |
 
 ### CSS の中央管理（Tailwind CSS 4.3.3）
 
 ```mermaid
 flowchart LR
-  json["design.tokens.json<br/>88トークン"] -->|npm run tokens| tcss["tokens.css<br/>Tailwind @theme"]
+  json["design.tokens.json<br/>共通トークン"] -->|npm run tokens| tcss["tokens.css<br/>Tailwind @theme"]
   tcss --> entry["globals.css<br/>唯一の公開CSS入口"]
   parts["base・components・responsive<br/>home・footer・pages"] --> entry
-  entry -->|Tailwind CLI| theme["public/theme.css<br/>全21ページで共有"]
+  entry -->|Tailwind CLI| theme["public/theme.css<br/>全22ページで共有"]
   tcss --> og["og.css<br/>画像生成専用"]
 ```
 
@@ -111,26 +113,26 @@ App Router は静的書き出しでも全ページに約173KB（gzip）の JS �
 
 ## 編集する場所と書き方
 
-| 変更 | 正本 |
-|---|---|
-| 本文・見出し・SEO・共通文言・図のラベル | `src/i18n/locales/ja/`。ページ名・用途別の名前空間 |
-| OGP画像の文面 | `src/i18n/locales/ja/og.ts`。金額は `content/og.ts` が価格データから差し込む |
-| 連絡先・プロフィール | `src/i18n/locales/ja/config.ts`。電話番号・メール・郵便番号もここから `content/config.ts` に渡す |
-| ドメイン・送信先・公開前設定 | `src/content/config.ts` |
-| 契約・法務表示の承認記録、ソースコードの公開先 | `src/content/config.ts` の `LEGAL_APPROVALS`・`SOURCE_REPOSITORY_URL`。承認の値は確認を受けた人が記録する |
-| 仕様20項目の人の確認・外部接続の記録 | `src/content/acceptance.ts`（検査との対応表は `tools/verify/acceptance.ts`） |
-| 金額・計算 | `src/content/prices.ts`。BUILD・RUNは安定したキーで引く |
-| 実測値 | `src/content/measurements.ts`。`verify --write` が数値と記録日を更新する（ビルドごとの再測定ではないので、ページには記録日を添える） |
-| ページ追加・URL・アイコン・ナビ分類 | `src/routing/registry.ts` |
-| ページの構造 | `src/views/`。`PageProps<'home'>` など、当該ページ用の文言だけを描画する |
-| 暫定ヒーロー画像 | `src/assets/hero/onokoro.webp`。`build-public.ts` が `public/images/onokoro-hero.svg` に内包。コピーと代替説明は `i18n/locales/ja/home.ts` の `hero`。背景画に文字は含めず、コピーはHTMLで表示する（[ADR 0019](architecture/0019-complete-i18n.md)） |
-| 静的生成の入口 | `src/pages/index.tsx`・`404.tsx`・`[page].tsx`。全入口に `unstable_runtimeJS: false` |
-| props の用意とテンプレート選択 | `src/application/`。ファイルシステムは `getStaticProps` からだけ読む |
-| 共通表示 | `src/layouts/`・`src/components/`。文言は `ContentProvider` で配布 |
-| SVG の座標・色・図形 | `src/components/diagrams/` の型付き React / SVG。共通の枠とレスポンシブ切替は `Figure.tsx`、文字は `diagrams` カタログから props / Context 経由で受け取る（ADR 0023） |
-| CSS | `src/styles/`。トークンは `design.tokens.json` が正本 |
-| 配布ファイル | `out/`。手で編集しない |
-| 問い合わせの受付・通知・保持期限（サーバー側） | `services/inquiry/`。フォームの項目名・上限・担当者・保持期間は `src/content/inquiry.ts`、営業日は `src/content/business-calendar.ts`、結果画面と通知の文言は `i18n/locales/ja/inquiry.ts`（ADR 0032〜0034） |
+| 変更                                           | 正本                                                                                                                                                                                                                                                 |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 本文・見出し・SEO・共通文言・図のラベル        | `src/i18n/locales/ja/`。ページ名・用途別の名前空間                                                                                                                                                                                                   |
+| OGP画像の文面                                  | `src/i18n/locales/ja/og.ts`。金額は `content/og.ts` が価格データから差し込む                                                                                                                                                                         |
+| 連絡先・プロフィール                           | `src/i18n/locales/ja/config.ts`。電話番号・メール・郵便番号もここから `content/config.ts` に渡す                                                                                                                                                     |
+| ドメイン・送信先・公開前設定                   | `src/content/config.ts`                                                                                                                                                                                                                              |
+| 契約・法務表示の承認記録、ソースコードの公開先 | `src/content/config.ts` の `LEGAL_APPROVALS`・`SOURCE_REPOSITORY_URL`。承認の値は確認を受けた人が記録する                                                                                                                                            |
+| 仕様20項目の人の確認・外部接続の記録           | `src/content/acceptance.ts`（検査との対応表は `tools/verify/acceptance.ts`）                                                                                                                                                                         |
+| 金額・計算                                     | `src/content/prices.ts`。BUILD・RUNは安定したキーで引く                                                                                                                                                                                              |
+| 実測値                                         | `src/content/measurements.ts`。`verify --write` が数値と記録日を更新する（ビルドごとの再測定ではないので、ページには記録日を添える）                                                                                                                 |
+| ページ追加・URL・アイコン・ナビ分類            | `src/routing/registry.ts`                                                                                                                                                                                                                            |
+| ページの構造                                   | `src/views/`。`PageProps<'home'>` など、当該ページ用の文言だけを描画する                                                                                                                                                                             |
+| 暫定ヒーロー画像                               | `src/assets/hero/onokoro.webp`。`build-public.ts` が `public/images/onokoro-hero.svg` に内包。コピーと代替説明は `i18n/locales/ja/home.ts` の `hero`。背景画に文字は含めず、コピーはHTMLで表示する（[ADR 0019](architecture/0019-complete-i18n.md)） |
+| 静的生成の入口                                 | `src/pages/index.tsx`・`404.tsx`・`[page].tsx`。全入口に `unstable_runtimeJS: false`                                                                                                                                                                 |
+| props の用意とテンプレート選択                 | `src/application/`。ファイルシステムは `getStaticProps` からだけ読む                                                                                                                                                                                 |
+| 共通表示                                       | `src/layouts/`・`src/components/`。文言は `ContentProvider` で配布                                                                                                                                                                                   |
+| SVG の座標・色・図形                           | `src/components/diagrams/` の型付き React / SVG。共通の枠とレスポンシブ切替は `Figure.tsx`、文字は `diagrams` カタログから props / Context 経由で受け取る（ADR 0023）                                                                                |
+| CSS                                            | `src/styles/`。トークンは `design.tokens.json` が正本                                                                                                                                                                                                |
+| 配布ファイル                                   | `out/`。手で編集しない                                                                                                                                                                                                                               |
+| 問い合わせの受付・通知・保持期限（サーバー側） | `services/inquiry/`。フォームの項目名・上限・担当者・保持期間は `src/content/inquiry.ts`、営業日は `src/content/business-calendar.ts`、結果画面と通知の文言は `i18n/locales/ja/inquiry.ts`（ADR 0032〜0034）                                         |
 
 `pages → application → views → layouts → components → content → i18n → routing → lib`
 
@@ -169,12 +171,12 @@ flowchart LR
 
 固定の登録表には足さない。文書を足すと、公開したものだけが一覧（`/<base>.html`）と詳細（`/<base>/<slug>.html`）になる。
 
-| 変更 | 正本 |
-|---|---|
-| 記事・事例・対応エリア・顧客事例の文書 | `src/i18n/locales/ja/entries/`（articles・cases・areas・works） |
-| 一覧と詳細の共通文言（見出し・絞り込み・未計測など） | `src/i18n/locales/ja/collections.ts` |
-| URL の土台・既存ページへの添付・代替の共有カード | `src/content/collections.ts` の `COLLECTION_SETTINGS` |
-| 項目の型・公開前チェック | `src/lib/collections/`（案件で変えない） |
+| 変更                                                 | 正本                                                            |
+| ---------------------------------------------------- | --------------------------------------------------------------- |
+| 記事・事例・対応エリア・顧客事例の文書               | `src/i18n/locales/ja/entries/`（articles・cases・areas・works） |
+| 一覧と詳細の共通文言（見出し・絞り込み・未計測など） | `src/i18n/locales/ja/collections.ts`                            |
+| URL の土台・既存ページへの添付・代替の共有カード     | `src/content/collections.ts` の `COLLECTION_SETTINGS`           |
+| 項目の型・公開前チェック                             | `src/lib/collections/`（案件で変えない）                        |
 
 1. 文書を `status: 'draft'` で足し、`npm run check:collections` で足りない項目を確かめる。
 2. 埋めたら `status: 'published'` にする。不足があると `npm run check` とビルドが止まる。
@@ -187,19 +189,19 @@ flowchart LR
 Node.js 24 系を使います（`.nvmrc` と `package.json` の `engines`、CI、Vercel で共通）。
 初回は `nvm install && nvm use`、`npm install --global npm@12.0.2`、続けて `npm ci` を実行してください。npm 12.0.2 は `packageManager`・CI・Vercel のインストール指定で統一しています。
 
-| 用途 | ライブラリ／コマンド |
-|---|---|
-| コンパイルと型検査 | TypeScript 7.0.2（`@typescript/native` の `tsc`） |
-| 検査ツール用の互換 API | `typescript` は `@typescript/typescript6` 6.0.3 の npm alias |
-| React のアイコン | `lucide-react`。SVG はビルド時に描画 |
-| 条件付きの CSS クラス | `clsx` |
-| 外部データの構造検証 | `zod`。実測レポートの値を検証 |
-| コード検査 | ESLint 9 の最新互換版 + `eslint-config-next`。`npm run lint` |
-| 未使用コード | Knip。設定は `config/knip.config.ts`。`npm run check:unused`（checkにも含む） |
-| 単体テスト | Vitest。`npm test`／`npm run test:watch` |
-| ブラウザ実測 | Playwright。`npm run verify` |
-| 整形 | Prettier。`npm run format`／`npm run format:check`（既存ファイルの一括整形は任意） |
-| 配備 | Vercel CLI。`npm run deploy:preview`／`npm run deploy:production` |
+| 用途                   | ライブラリ／コマンド                                                               |
+| ---------------------- | ---------------------------------------------------------------------------------- |
+| コンパイルと型検査     | TypeScript 7.0.2（`@typescript/native` の `tsc`）                                  |
+| 検査ツール用の互換 API | `typescript` は `@typescript/typescript6` 6.0.3 の npm alias                       |
+| React のアイコン       | `lucide-react`。SVG はビルド時に描画                                               |
+| 条件付きの CSS クラス  | `clsx`                                                                             |
+| 外部データの構造検証   | `zod`。実測レポートの値を検証                                                      |
+| コード検査             | ESLint 9 の最新互換版 + `eslint-config-next`。`npm run lint`                       |
+| 未使用コード           | Knip。設定は `config/knip.config.ts`。`npm run check:unused`（checkにも含む）      |
+| 単体テスト             | Vitest。`npm test`／`npm run test:watch`                                           |
+| ブラウザ実測           | Playwright。`npm run verify`                                                       |
+| 整形                   | Prettier。`npm run format`／`npm run format:check`（既存ファイルの一括整形は任意） |
+| 配備                   | Vercel CLI。`npm run deploy:preview`／`npm run deploy:production`                  |
 
 `npm run validate` は型・依存方向・lint・単体テスト・ビルド・静的検査をまとめて実行します。
 CI は追加で Chromium の実測検査も行います。テストや設定ファイルも TypeScript で管理します。
@@ -207,7 +209,6 @@ Vercel は リポジトリルートを Root Directory に設定し、`vercel.jso
 
 ESLint 10 は Next.js が使う React/import/a11y プラグインのサポート範囲外のため、9.39.5 を使います。
 TypeScript 7 の CLI と互換 API の併用理由、依存の overrides は [ADR 0003](architecture/0003-modern-stack.md) を参照してください。
-
 
 ## ディレクトリの境界
 
@@ -218,7 +219,6 @@ ESLint・Vitest・Prettierの補助設定は `config/`、Next.js・TypeScript・
 `npm run validate` は価格モデル 10 件も検査する。モデル本体・レポート・テストは TypeScript で、`npm run check` の型検査・未使用検査と lint の対象。再計算は `npm run --silent report:pricing`。Vercel の Root Directory と GitHub Actions・Dependabotはすべてルート基準。旧 `site/` を再作成しない。
 
 手書きコードは `.ts` / `.tsx` を使う。`allowJs: false` だけでは JavaScript の追加を防げないため、ルートの設定ファイルと `src/`・`tools/`・`services/`・`config/`・`tests/` 内への `.js`・`.mjs`・`.cjs`・`.jsx` の追加を構造検査で拒否する。`public/`・`out/` 等の生成物と依存パッケージ内部はこのソース検査の対象外で、公開ページへの実行時 JavaScript 混入は別途 postbuild と verify で検査する。
-
 
 ### 和文・英数字の半角スペース
 

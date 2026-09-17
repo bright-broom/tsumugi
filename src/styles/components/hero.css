@@ -1,0 +1,64 @@
+@layer components {
+  /* ══ C03 OutcomeHero ─ メディア（ここでは無彩色の面）、短い価値、主要CTA */
+  .hero {
+    @apply bg-ink text-white py-pad-hero;
+  }
+  .hero .wrap {
+    @apply grid gap-gap;
+  }
+  .hero .kick {
+    @apply inline-flex items-center gap-[7px] m-[0] text-label font-semi text-muted-on-ink;
+  }
+  .hero h1,
+  .hero .service-intro-title {
+    @apply text-hero-pc leading-hero tracking-[-.01em] font-bold max-w-[20em];
+    word-break: auto-phrase; /* 日本語を文節で折る。未対応でも通常の折り返しになる */
+  }
+  .hero .sub {
+    @apply text-[17px] leading-body text-muted-on-ink max-w-[34em] m-[0];
+  }
+  .hero .sub strong {
+    @apply text-white;
+  }
+
+  /* 価格の面。ホームでは琥珀の面と生成りの文字で入口価格を示す */
+  .pricebox {
+    @apply flex flex-wrap items-center gap-[28px_40px] p-gap-group;
+    border: 1px solid color-mix(in srgb, var(--color-main) 18%, transparent);
+    @apply rounded-panel bg-[color-mix(in_srgb,_var(--color-main)_4.5%,_transparent)];
+  }
+  .amtwrap {
+    @apply flex flex-col gap-[4px];
+  }
+  .amtwrap .pre {
+    @apply inline-flex items-center gap-[6px] text-meta text-muted-on-ink;
+  }
+  .amt {
+    @apply text-[54px] leading-[1.05] font-bold tabular-nums tracking-[-.02em];
+  }
+  .amt .u {
+    @apply text-[19px] font-semi ml-[4px] tracking-[0];
+  }
+  .pricebox .alt {
+    @apply list-none list-outside m-[0] p-[0] grid gap-[9px] min-w-[15em];
+  }
+  .pricebox .alt li {
+    @apply relative pl-[16px] m-[0] text-fine leading-[1.7] text-muted-on-ink;
+  }
+  .pricebox .alt li::before {
+    content: '';
+    @apply absolute left-[0] top-[.78em] w-[8px] h-[1.5px] bg-[var(--accent)];
+  }
+  .pricebox .alt li b {
+    @apply text-white font-semi;
+  }
+
+  /* ══ C04 DisplayTitle ─ 短い欧文のみ。日本語や長い項目名には使わない */
+  .display {
+    @apply font-display font-regular;
+    text-transform: uppercase;
+    @apply tracking-[.01em] leading-[.9];
+    transform: scaleX(var(--ratio-display-correction));
+    transform-origin: left center;
+  }
+}

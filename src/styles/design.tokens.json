@@ -14,34 +14,82 @@
       "$value": "#FFB000",
       "$description": "アクセント10%：琥珀。主要操作・重要な数字・相談の面"
     },
-    "header-paper": { "$value": "{color.main}" },
-    "header-ink": { "$value": "{color.sub}" },
-    "header-brass": { "$value": "{color.accent}" },
-    "white": { "$value": "{color.main}" },
-    "ink": { "$value": "{color.sub}" },
-    "panel": { "$value": "{color.sub}" },
-    "black": { "$value": "{color.sub}" },
-    "surface": { "$value": "{color.main}" },
-    "field": { "$value": "{color.main}" },
-    "paper": { "$value": "{color.main}" },
-    "line": { "$value": "color-mix(in srgb, var(--color-sub) 20%, var(--color-main))" },
-    "line-strong": { "$value": "color-mix(in srgb, var(--color-sub) 45%, var(--color-main))" },
-    "green": { "$value": "{color.accent}" },
-    "green-deep": { "$value": "color-mix(in srgb, var(--color-accent) 25%, var(--color-sub))" },
-    "blue": { "$value": "{color.accent}" },
-    "muted": { "$value": "color-mix(in srgb, var(--color-sub) 78%, var(--color-main))" },
-    "muted-on-ink": { "$value": "color-mix(in srgb, var(--color-main) 82%, var(--color-sub))" },
-    "alert": { "$value": "{color.sub}" },
-    "alert-bg": { "$value": "{color.main}" },
-    "ok": { "$value": "{color.green-deep}" },
-    "ok-bg": { "$value": "{color.main}" },
-    "warn": { "$value": "{color.sub}" },
-    "warn-bg": { "$value": "{color.main}" }
+    "header-paper": {
+      "$value": "{color.main}"
+    },
+    "header-ink": {
+      "$value": "{color.sub}"
+    },
+    "header-brass": {
+      "$value": "{color.accent}"
+    },
+    "white": {
+      "$value": "{color.main}"
+    },
+    "ink": {
+      "$value": "{color.sub}"
+    },
+    "panel": {
+      "$value": "{color.sub}"
+    },
+    "black": {
+      "$value": "{color.sub}"
+    },
+    "surface": {
+      "$value": "{color.main}"
+    },
+    "field": {
+      "$value": "{color.main}"
+    },
+    "paper": {
+      "$value": "{color.main}"
+    },
+    "line": {
+      "$value": "color-mix(in srgb, var(--color-sub) 20%, var(--color-main))"
+    },
+    "line-strong": {
+      "$value": "color-mix(in srgb, var(--color-sub) 45%, var(--color-main))"
+    },
+    "green": {
+      "$value": "{color.accent}"
+    },
+    "green-deep": {
+      "$value": "color-mix(in srgb, var(--color-accent) 25%, var(--color-sub))"
+    },
+    "blue": {
+      "$value": "{color.accent}"
+    },
+    "muted": {
+      "$value": "color-mix(in srgb, var(--color-sub) 78%, var(--color-main))"
+    },
+    "muted-on-ink": {
+      "$value": "color-mix(in srgb, var(--color-main) 82%, var(--color-sub))"
+    },
+    "alert": {
+      "$value": "{color.sub}"
+    },
+    "alert-bg": {
+      "$value": "{color.main}"
+    },
+    "ok": {
+      "$value": "{color.green-deep}"
+    },
+    "ok-bg": {
+      "$value": "{color.main}"
+    },
+    "warn": {
+      "$value": "{color.sub}"
+    },
+    "warn-bg": {
+      "$value": "{color.main}"
+    }
   },
   "theme": {
     "$type": "color",
     "campaign": {
-      "accent": { "$value": "{color.accent}" },
+      "accent": {
+        "$value": "{color.accent}"
+      },
       "accent-ink": {
         "$value": "{color.sub}",
         "$description": "琥珀の面はエスプレッソの文字。小さい文字も薄めない"
@@ -52,9 +100,15 @@
       }
     },
     "main": {
-      "accent": { "$value": "{color.accent}" },
-      "accent-ink": { "$value": "{color.sub}" },
-      "accent-text": { "$value": "{color.green-deep}" }
+      "accent": {
+        "$value": "{color.accent}"
+      },
+      "accent-ink": {
+        "$value": "{color.sub}"
+      },
+      "accent-text": {
+        "$value": "{color.green-deep}"
+      }
     }
   },
   "size": {
@@ -63,8 +117,12 @@
       "$value": "1280px",
       "$description": "ホーム本文。図解と比較のための広い器"
     },
-    "header-pc": { "$value": "88px" },
-    "header-mb": { "$value": "72px" },
+    "header-pc": {
+      "$value": "88px"
+    },
+    "header-mb": {
+      "$value": "72px"
+    },
     "pad-pc": {
       "$value": "48px",
       "$description": "PC 外側の余白"
@@ -85,12 +143,16 @@
       "$value": "1104px",
       "$description": "3列 × 間隔32px の器"
     },
-    "measure-wide": { "$value": "1048px" },
+    "measure-wide": {
+      "$value": "1048px"
+    },
     "measure-read": {
       "$value": "720px",
       "$description": "本文の読み幅の上限"
     },
-    "gap": { "$value": "32px" },
+    "gap": {
+      "$value": "32px"
+    },
     "gap-near": {
       "$value": "12px",
       "$description": "関係の近い情報 8–16px"
@@ -103,19 +165,37 @@
       "$value": "72px",
       "$description": "章の切り替え。見出しと本文が離れすぎない余白"
     },
-    "section-mb": { "$value": "56px" },
-    "cta-w-pc": { "$value": "315px" },
-    "cta-h-pc": { "$value": "57px" },
-    "cta-w-mb": { "$value": "260px" },
-    "cta-h-mb": { "$value": "48px" },
+    "section-mb": {
+      "$value": "56px"
+    },
+    "cta-w-pc": {
+      "$value": "315px"
+    },
+    "cta-h-pc": {
+      "$value": "57px"
+    },
+    "cta-w-mb": {
+      "$value": "260px"
+    },
+    "cta-h-mb": {
+      "$value": "48px"
+    },
     "tap": {
       "$value": "44px",
       "$description": "本ガイドの推奨。WCAG AA の必須値ではない"
     },
-    "field-h": { "$value": "48px" },
-    "card-w": { "$value": "318px" },
-    "card-media-h": { "$value": "369px" },
-    "bp": { "$value": "768px" },
+    "field-h": {
+      "$value": "48px"
+    },
+    "card-w": {
+      "$value": "318px"
+    },
+    "card-media-h": {
+      "$value": "369px"
+    },
+    "bp": {
+      "$value": "768px"
+    },
     "cq-4": {
       "$value": "960px",
       "$description": "配置領域がこれ以上なら4列"
@@ -123,26 +203,52 @@
     "cq-2": {
       "$value": "520px",
       "$description": "これ以上なら2列、未満は1列"
+    },
+    "interior-section-pc": {
+      "$value": "72px",
+      "$description": "下層ページの章間（PC）"
+    },
+    "interior-section-mb": {
+      "$value": "44px",
+      "$description": "下層ページの章間（モバイル）"
+    },
+    "intro-top-pc": {
+      "$value": "64px",
+      "$description": "下層ページ先頭の上余白"
+    },
+    "intro-bottom-pc": {
+      "$value": "48px",
+      "$description": "下層ページ先頭の下余白"
+    },
+    "intro-top-mb": {
+      "$value": "40px",
+      "$description": "下層ページ先頭の上余白（モバイル）"
+    },
+    "intro-bottom-mb": {
+      "$value": "32px",
+      "$description": "下層ページ先頭の下余白（モバイル）"
     }
   },
   "radius": {
     "$type": "dimension",
-    "media": { "$value": "8px" },
-    "card": { "$value": "4px" },
-    "panel": { "$value": "4px" },
-    "pill": { "$value": "999px" }
+    "media": {
+      "$value": "8px"
+    },
+    "card": {
+      "$value": "4px"
+    },
+    "panel": {
+      "$value": "4px"
+    },
+    "pill": {
+      "$value": "999px"
+    }
   },
   "font": {
     "family": {
       "$type": "fontFamily",
       "brand": {
-        "$value": [
-          "Hiragino Mincho ProN",
-          "Yu Mincho",
-          "YuMincho",
-          "Noto Serif CJK JP",
-          "serif"
-        ],
+        "$value": ["Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif CJK JP", "serif"],
         "$description": "屋号・ブランドコピー・ページ見出しに使う端末の明朝。外部フォント不要"
       },
       "ja": {
@@ -158,37 +264,40 @@
         ]
       },
       "display": {
-        "$value": [
-          "League Gothic",
-          "Haettenschweiler",
-          "Arial Narrow",
-          "sans-serif"
-        ],
+        "$value": ["League Gothic", "Haettenschweiler", "Arial Narrow", "sans-serif"],
         "$description": "短い欧文のみ。日本語本文・長い項目名には使わない"
       },
       "mono": {
-        "$value": [
-          "ui-monospace",
-          "SFMono-Regular",
-          "Menlo",
-          "Consolas",
-          "monospace"
-        ]
+        "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"]
       }
     },
     "size": {
       "$type": "dimension",
-      "display-pc": { "$value": "145px" },
-      "display-mb": { "$value": "90px" },
-      "hero-pc": { "$value": "45px" },
-      "hero-mb": { "$value": "24px" },
+      "display-pc": {
+        "$value": "145px"
+      },
+      "display-mb": {
+        "$value": "90px"
+      },
+      "hero-pc": {
+        "$value": "45px"
+      },
+      "hero-mb": {
+        "$value": "24px"
+      },
       "page-pc": {
         "$value": "42px",
         "$description": "ページ見出し 28–42px"
       },
-      "page-mb": { "$value": "28px" },
-      "h2": { "$value": "28px" },
-      "h3": { "$value": "20px" },
+      "page-mb": {
+        "$value": "28px"
+      },
+      "h2": {
+        "$value": "28px"
+      },
+      "h3": {
+        "$value": "20px"
+      },
       "label": {
         "$value": "14px",
         "$description": "セクションラベル 14–20px"
@@ -204,6 +313,14 @@
       "meta": {
         "$value": "{font.size.fine}",
         "$description": "補助文。旧 PC 13px・モバイル 14px を下限にそろえる"
+      },
+      "compact": {
+        "$value": "15px",
+        "$description": "カード本文・ボタン・説明の標準。本文より一段小さい文字"
+      },
+      "lead": {
+        "$value": "18px",
+        "$description": "カード見出し・強調説明"
       }
     },
     "tracking": {
@@ -219,16 +336,30 @@
     },
     "leading": {
       "$type": "number",
-      "hero": { "$value": 1.5 },
-      "heading": { "$value": 1.5 },
-      "body": { "$value": 1.8 }
+      "hero": {
+        "$value": 1.5
+      },
+      "heading": {
+        "$value": 1.5
+      },
+      "body": {
+        "$value": 1.8
+      }
     },
     "weight": {
       "$type": "fontWeight",
-      "regular": { "$value": 400 },
-      "medium": { "$value": 500 },
-      "semi": { "$value": 600 },
-      "bold": { "$value": 700 }
+      "regular": {
+        "$value": 400
+      },
+      "medium": {
+        "$value": 500
+      },
+      "semi": {
+        "$value": 600
+      },
+      "bold": {
+        "$value": 700
+      }
     }
   },
   "motion": {

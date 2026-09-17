@@ -1,0 +1,113 @@
+@layer components {
+  /* ── 数値の面。写真がないので、整ったデータ面を主役にする（原則C） */
+  .stats {
+    @apply grid gap-[28px_40px] grid-cols-[repeat(auto-fit,_minmax(150px,_1fr))];
+  }
+  .stat {
+    @apply grid gap-[4px];
+    align-content: start;
+    @apply pt-[16px];
+    border-top: 1px solid var(--color-line-strong);
+  }
+  section.dark .stat {
+    border-top-color: color-mix(in srgb, var(--color-main) 30%, transparent);
+  }
+  .stat .v {
+    @apply text-[34px] font-bold leading-[1.05] tabular-nums tracking-[-.01em];
+  }
+  .stat .k {
+    @apply text-fine leading-[1.6] text-muted;
+  }
+  section.dark .stat .k {
+    @apply text-muted-on-ink;
+  }
+
+  /* ── 状態の面。ブランド色と意味を分離し、文字とアイコンを併用する（原則E） */
+  /* 既定と good は面を持たせない。罫と見出しだけで足りる */
+  .alert {
+    @apply flex items-start gap-[12px] p-[20px_0_0];
+    border-top: 1px solid var(--color-line-strong);
+    @apply text-compact leading-[1.85];
+  }
+  .alert > .ic {
+    @apply mt-[5px];
+  }
+  .alert .bd {
+    @apply min-w-[0];
+  }
+  .alert .h {
+    @apply block mb-[8px] font-bold text-body;
+  }
+  section.dark .alert {
+    border-top-color: color-mix(in srgb, var(--color-main) 30%, transparent);
+  }
+  .alert.good {
+    border-top-color: var(--color-ink);
+  }
+  section.dark .alert.good {
+    border-top-color: var(--color-white);
+  }
+  /* 状態を示すものだけ面を持つ */
+  .alert.warn,
+  .alert.bad {
+    @apply p-[20px_22px];
+    border-top: none;
+    border-left: 3px solid;
+    @apply rounded-media;
+  }
+  .alert.warn {
+    @apply bg-warn-bg;
+    border-left-color: var(--color-warn);
+  }
+  .alert.warn {
+    @apply text-[var(--color-sub)];
+  }
+  .alert.warn .ic,
+  .alert.warn .h {
+    @apply text-warn;
+  }
+  .alert.bad {
+    @apply bg-alert-bg;
+    border-left-color: var(--color-alert);
+  }
+  .alert.bad {
+    @apply text-[var(--color-sub)];
+  }
+  .alert.bad .ic,
+  .alert.bad .h {
+    @apply text-alert;
+  }
+  section.dark .alert.warn,
+  section.dark .alert.bad {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)] text-white;
+  }
+  section.dark .alert.warn {
+    border-left-color: var(--color-main);
+  }
+  section.dark .alert.warn .ic,
+  section.dark .alert.warn .h {
+    @apply text-[var(--color-main)];
+  }
+  section.dark .alert.bad {
+    border-left-color: var(--color-main);
+  }
+  section.dark .alert.bad .ic,
+  section.dark .alert.bad .h {
+    @apply text-[var(--color-main)];
+  }
+  .alert + .alert,
+  .alert + .acc,
+  .acc + .acc,
+  .acc + .alert {
+    @apply mt-[20px];
+  }
+  .lede + .alert,
+  .tbl + .alert,
+  .calc + .alert,
+  .fig + .alert,
+  .plans + .alert,
+  .cq + .alert,
+  .vs + .alert {
+    @apply mt-[32px];
+  }
+}

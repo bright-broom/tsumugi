@@ -1,0 +1,75 @@
+@layer components {
+  /* ══ 手順の縦軸。
+        4列の表でも中身は同じだが、390px では横に引かないと「だれが」「目安」が見えなかった。
+        手順は時間の並びなので、縦に積むほうが形が意味に合っている。
+        これで横スクロールの領域がひとつ減る。 */
+  .flow {
+    @apply list-none list-outside m-[0] p-[0];
+  }
+  .flow > li {
+    @apply relative m-[0] p-[0_0_22px_52px];
+  }
+  .flow > li::before {
+    /* 節と節をつなぐ縦線 */
+    content: '';
+    @apply absolute left-[15px] top-[34px] bottom-[0] w-[2px] bg-line;
+  }
+  .flow > li:last-child {
+    @apply pb-[0];
+  }
+  .flow > li:last-child::before {
+    @apply hidden;
+  }
+  .flow .num {
+    @apply absolute left-[0] top-[1px] w-[32px] h-[32px] rounded-[50%] inline-flex items-center justify-center text-fine font-bold tabular-nums bg-surface text-ink;
+    border: 1px solid var(--color-line-strong);
+  }
+  .flow > li.acc-step .num {
+    @apply bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--accent)];
+  }
+  .flow b {
+    @apply block text-[17px] leading-[1.5];
+  }
+  .flow .d {
+    @apply m-[4px_0_0] text-meta leading-[1.8] text-muted max-w-measure-read;
+  }
+  .flow .tags {
+    @apply flex flex-wrap gap-[8px_24px] m-[10px_0_0];
+  }
+  .flow .tags span {
+    @apply inline-flex items-center gap-[6px] p-[0] text-fine leading-[1.7] text-muted;
+  }
+  .flow .tags .ic {
+    @apply text-muted;
+  }
+  section.dark .flow > li::before {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_18%,_transparent)];
+  }
+  section.dark .flow .num {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)] text-white border-[color-mix(in_srgb,_var(--color-main)_24%,_transparent)];
+  }
+  section.dark .flow .d,
+  section.dark .flow .tags span {
+    @apply text-muted-on-ink;
+  }
+  section.dark .flow .tags span {
+    @apply border-[color-mix(in_srgb,_var(--color-main)_24%,_transparent)];
+  }
+
+  /* 章の末尾に置く但し書き。本文より一段落として、幅も本文に合わせる */
+  .fine-note {
+    @apply mt-[14px] text-meta leading-[1.8] max-w-measure-read;
+  }
+  .card a.more::after {
+    content: ' →';
+  }
+  a.more {
+    @apply inline-flex items-center min-h-tap text-fine font-semi;
+  }
+  a.more::after {
+    content: ' →';
+  }
+  .plan a.more {
+    @apply mt-[-4px];
+  }
+}

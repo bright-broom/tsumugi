@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import Icon from '@/components/Icon';
 import { href } from '@/routing/registry';
 import { useMessages } from '@/components/ContentProvider';
@@ -40,9 +41,9 @@ export default function Plans({ feat = 6 }: { feat?: number }) {
             {p.preparing ? (
               <p className="pmeta">{copy.preparing}</p>
             ) : (
-              <a className="btn btn-1" href={href('contact')}>
+              <ActionLink variant="primary" href={href('contact')}>
                 {copy.a}
-              </a>
+              </ActionLink>
             )}
           </div>
         ))}

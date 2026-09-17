@@ -1,0 +1,43 @@
+@layer components {
+  /* ── アイコン。装飾なので読み上げない（build.py が aria-hidden を付ける）
+        大きさは px ではなく隣の文字に対する比（em）で決める。
+        同じ .ic-sm が 12.5px の章ラベルにも 17px の見出しにも入るため、
+        px で固定すると場所ごとに 0.88〜1.20 倍とばらつき、行の中で浮いて見えていた。
+        em にすると比が常に一定になり、文字の大きさを変えても付いてくる。 */
+  .ic {
+    @apply w-[1.25em] h-[1.25em] flex-[none] align-[-.22em];
+  }
+  .ic-sm {
+    @apply w-[1.15em] h-[1.15em] align-[-.19em];
+  }
+  /* 線の太さも見た目で合わせる。小さく描くほど線は細く見えるので、太さを戻す。
+     狙いは「描画後の線幅を約1.5pxに揃える」こと（stroke = 1.5 × 24 ÷ 実寸px）。 */
+  .ic {
+    @apply stroke-[2.1];
+  }
+  .ic-sm {
+    @apply stroke-[2.3];
+  }
+  .icb {
+    @apply w-[40px] h-[40px] flex-[none] inline-flex items-center justify-center rounded-media bg-surface text-ink;
+  }
+  .icb .ic {
+    @apply w-[22px] h-[22px] align-[0] stroke-[1.9];
+  }
+  section.dark .icb {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)] text-white;
+  }
+
+  /* ── 本文へ移動 */
+  .skip {
+    @apply absolute left-[-9999px] top-[0] z-[100] bg-ink text-white p-[12px_18px] no-underline;
+  }
+  .skip:focus {
+    @apply left-[8px] top-[8px];
+  }
+
+  /* ── 準備中の帯 */
+  .draft {
+    @apply bg-warn-bg text-warn text-meta font-semi p-[5px_var(--spacing-pad-pc)] flex items-center justify-center gap-[8px];
+  }
+}

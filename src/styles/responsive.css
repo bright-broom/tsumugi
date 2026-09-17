@@ -19,7 +19,7 @@
     /* 前置きは手に持つ画面でいちばん飛ばされる。大きくして、白に寄せて、改行は外す */
     /* 新しい色は足さない。生成りと墨を混ぜて作る（トークンから導出する） */
     .hero .sub {
-      @apply text-[16px];
+      @apply text-body;
       color: color-mix(in oklab, var(--color-white) 86%, var(--color-ink));
     }
     .hero .sub br {
@@ -29,7 +29,7 @@
       @apply text-[42px];
     }
     .amt .u {
-      @apply text-[16px];
+      @apply text-body;
     }
     .pricebox {
       @apply p-[20px] gap-[20px];
@@ -111,7 +111,7 @@
       @apply p-[4px_12px_4px_10px];
     }
     .tel .num {
-      @apply text-[15px];
+      @apply text-compact;
     }
   }
 
@@ -126,7 +126,7 @@
   /* ── 主要CTA。PC 315×57 → モバイル 260×48 */
   @media (max-width: 768px) {
     .btn {
-      @apply min-h-cta-h-mb px-[20px] text-[15px];
+      @apply min-h-cta-h-mb px-[20px] text-compact;
     }
     .btn-1 {
       @apply min-w-[min(var(--spacing-cta-w-mb),_100%)];
@@ -155,7 +155,7 @@
       @apply p-[18px];
     }
     .acc > summary {
-      @apply p-[18px_0] text-[15px];
+      @apply p-[18px_0] text-compact;
     }
     .acc .bd {
       @apply p-[0_20px_22px_0];
@@ -184,7 +184,7 @@
       border-top: 1px solid var(--color-line);
     }
     .fixbar a {
-      @apply inline-flex items-center justify-center gap-[7px] min-h-cta-h-mb rounded-pill text-[15px] font-bold no-underline;
+      @apply inline-flex items-center justify-center gap-[7px] min-h-cta-h-mb rounded-pill text-compact font-bold no-underline;
     }
     .fixbar a:first-child {
       @apply bg-ink text-white;
@@ -233,7 +233,7 @@
   @media (max-width: 768px) {
     .tbl th,
     .tbl td {
-      @apply p-[11px_14px] text-[14px];
+      @apply p-[11px_14px] text-fine;
     }
     .tbl tbody th,
     .tbl thead th:first-child {
@@ -324,7 +324,7 @@
       @apply text-fine;
     }
     .menu-panel a {
-      @apply text-[14px];
+      @apply text-fine;
     }
     .stat .k {
       @apply text-fine;
@@ -338,7 +338,7 @@
       @apply text-fine;
     }
     .calc .r.net .k {
-      @apply text-[15px];
+      @apply text-compact;
     }
     .calc .r .k em {
       @apply text-fine;

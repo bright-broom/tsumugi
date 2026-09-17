@@ -1,0 +1,54 @@
+@layer components {
+  /* ── 手順 */
+  ol.steps {
+    @apply list-none list-outside;
+    counter-reset: s;
+    @apply m-[0] p-[0] grid gap-[2px];
+  }
+  ol.steps li {
+    counter-increment: s;
+    @apply m-[0] grid grid-cols-[auto_1fr] gap-[4px_16px] p-[20px_0];
+    border-top: 1px solid var(--color-line);
+  }
+  section.dark ol.steps li {
+    @apply border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
+  }
+  ol.steps li::before {
+    content: counter(s, decimal-leading-zero);
+    @apply row-[1_/_span_2] font-display text-[30px] leading-[.95] text-[var(--accent-text)];
+  }
+  section.dark ol.steps li::before {
+    @apply text-[var(--accent)];
+  }
+  ol.steps li b {
+    @apply text-[17px];
+  }
+  ol.steps li .d {
+    @apply text-compact leading-[1.8] text-muted;
+  }
+  section.dark ol.steps li .d {
+    @apply text-muted-on-ink;
+  }
+
+  ul.plain {
+    @apply list-none list-outside p-[0] grid gap-[12px];
+  }
+  ul.plain li {
+    @apply relative pl-[18px] m-[0] text-compact leading-[1.85];
+  }
+  .entry ul.plain li {
+    @apply flex items-start gap-[9px] pl-[0];
+  }
+  .entry ul.plain li .ic {
+    @apply mt-[6px];
+  }
+  .entry ul.plain li::before {
+    content: none;
+  }
+  ul.plain li::before {
+    content: '';
+    @apply absolute left-[0] top-[.78em] w-[8px] h-[1.5px];
+    background: currentColor;
+    @apply opacity-[.5];
+  }
+}

@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import PageIndex from '@/components/PageIndex';
 import Cards from '@/components/Cards';
 import { OwnershipClock } from '@/components/diagrams/OwnershipClock';
@@ -70,9 +71,9 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         </div>
         <Note heading={copy.scopeTitle}>
           <p>{copy.scope}</p>
-          <a className="btn btn-2" href={href('unlimited')}>
+          <ActionLink variant="secondary" href={href('unlimited')}>
             {copy.scopeLink}
-          </a>
+          </ActionLink>
         </Note>
         <Note heading={copy.externalTitle}>
           <p>{copy.external}</p>
@@ -112,9 +113,9 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
           ]}
           caption={copy.upgradeNote}
         />
-        <a className="btn btn-2" href={href('terms')}>
+        <ActionLink variant="secondary" href={href('terms')}>
           {copy.termsLink}
-        </a>
+        </ActionLink>
       </Section>
       <Section
         id="comparison"

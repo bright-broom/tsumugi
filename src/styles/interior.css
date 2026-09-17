@@ -4,7 +4,7 @@
     @apply max-w-home-container;
   }
   .interior-content > section {
-    @apply py-[72px];
+    @apply py-interior-section-pc;
   }
   .interior-content > section + section {
     @apply border-t border-line;
@@ -13,7 +13,7 @@
     @apply border-t-[0];
   }
   .interior-content .btn {
-    @apply rounded-[4px] text-[15px] gap-[10px];
+    @apply rounded-card text-compact gap-[10px];
   }
   .interior-content .btns {
     @apply gap-[12px] mt-[28px];
@@ -22,7 +22,7 @@
     @apply grid grid-cols-[1.1fr_1fr] gap-[16px_64px] items-start mb-[36px];
   }
   .interior-content .sh .lab {
-    @apply col-[1_/-1] text-[14px] mb-[0];
+    @apply col-[1_/-1] text-fine mb-[0];
   }
   .interior-content .sh h2 {
     @apply text-[clamp(26px,2.5vw,34px)] leading-[1.55] tracking-[.015em] text-balance;
@@ -32,7 +32,7 @@
     word-break: auto-phrase;
   }
   .interior-content .sh .lede {
-    @apply text-[16px] leading-[2] m-[0] pt-[6px] text-muted;
+    @apply text-body leading-[2] m-[0] pt-[6px] text-muted;
   }
   .interior-content .sh h2:last-child {
     @apply col-[1_/-1];
@@ -41,7 +41,7 @@
     @apply text-muted-on-ink;
   }
   .interior-content .page-intro {
-    @apply pt-[64px] pb-[48px];
+    @apply pt-intro-top-pc pb-intro-bottom-pc;
   }
   .interior-content .page-intro .sh {
     @apply gap-[24px_64px] mb-[32px];
@@ -65,23 +65,23 @@
     @apply mt-[0];
   }
   .interior-content .alert {
-    @apply text-[15px] leading-[1.95];
+    @apply text-compact leading-[1.95];
   }
   .interior-content .alert .h {
-    @apply text-[18px] leading-[1.65];
+    @apply text-lead leading-[1.65];
   }
   .interior-content .alert.warn,
   .interior-content .alert.bad {
-    @apply rounded-[4px];
+    @apply rounded-card;
   }
   .interior-content .card {
     @apply pt-[24px] gap-[14px];
   }
   .interior-content .card h3 {
-    @apply text-[18px] leading-[1.6];
+    @apply text-lead leading-[1.6];
   }
   .interior-content .card .meta {
-    @apply text-[15px] leading-[1.95];
+    @apply text-compact leading-[1.95];
   }
   .interior-content .cards {
     @apply mb-[28px];
@@ -96,7 +96,7 @@
     @apply mt-[0];
   }
   .interior-content .acc > summary {
-    @apply min-h-[72px] py-[22px] text-[16px] leading-[1.7];
+    @apply min-h-[72px] py-[22px] text-body leading-[1.7];
   }
   .interior-content .acc .bd {
     @apply leading-[2];
@@ -108,7 +108,7 @@
     @apply mt-[0];
   }
   .interior-content .tbl {
-    @apply rounded-[4px];
+    @apply rounded-card;
   }
   .interior-content .tbl th,
   .interior-content .tbl td {
@@ -145,7 +145,7 @@
     @apply m-[0] min-w-[0];
   }
   .page-index a {
-    @apply flex items-center justify-between gap-[12px] min-h-[64px] py-[16px] text-ink text-[14px] font-medium no-underline;
+    @apply flex items-center justify-between gap-[12px] min-h-[64px] py-[16px] text-ink text-fine font-medium no-underline;
   }
   .page-index a .ic {
     @apply shrink-0 text-[var(--accent-text)];
@@ -171,7 +171,7 @@
     @apply text-[27px] text-left;
   }
   .interior-content .reading-section .sh .lede {
-    @apply mt-[16px] text-[15px];
+    @apply mt-[16px] text-compact;
   }
   .section-body {
     @apply min-w-[0];
@@ -189,7 +189,7 @@
     @apply max-w-[960px] mx-auto;
   }
   .interior-content[data-page='spec.html'] .grp {
-    @apply mt-[40px] mb-[12px] text-[20px];
+    @apply mt-[40px] mb-[12px] text-h3;
   }
   .interior-content[data-page='spec.html'] .grp:first-child {
     @apply mt-[0];
@@ -215,7 +215,7 @@
     @apply row-[2_/_span_2] text-[clamp(30px,3vw,44px)] leading-[1.6] m-[0];
   }
   .interior-content > .hero .sub {
-    @apply text-[16px] leading-[2] m-[0];
+    @apply text-body leading-[2] m-[0];
   }
   .interior-content > .hero .btns {
     @apply mt-[0] items-start;
@@ -235,7 +235,7 @@
 
   /* Pricing: the starting plan stays dominant; ongoing support reads as a separate choice. */
   .interior-content .entry {
-    @apply grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] p-[0] gap-[0] border border-line rounded-[4px] overflow-hidden;
+    @apply grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] p-[0] gap-[0] border border-line rounded-card overflow-hidden;
   }
   .interior-content .entry > div {
     @apply p-[32px];
@@ -259,13 +259,13 @@
     @apply mt-[32px];
   }
   .interior-content .plan {
-    @apply rounded-[4px] p-[28px] gap-[18px];
+    @apply rounded-card p-[28px] gap-[18px];
   }
   .interior-content .plan .pv .amt {
     @apply text-[42px];
   }
   .interior-content .plan .why {
-    @apply text-[15px] leading-[1.9];
+    @apply text-compact leading-[1.9];
   }
   .interior-content .plan .btn {
     @apply min-w-[0] w-full;
@@ -280,7 +280,7 @@
     @apply text-[22px];
   }
   .interior-content .support-plans ul li {
-    @apply text-[15px] leading-[1.85];
+    @apply text-compact leading-[1.85];
   }
   .interior-content .domain-options .card {
     @apply border-t-[2px];
@@ -294,16 +294,16 @@
     @apply flex flex-col items-start justify-center p-[32px] border-y border-line-strong;
   }
   .contact-channel-email {
-    @apply border border-line border-t-[4px] border-t-accent rounded-[4px];
+    @apply border border-line border-t-[4px] border-t-accent rounded-card;
   }
   .contact-channel h2 {
-    @apply flex items-center gap-[12px] text-[20px] mb-[12px];
+    @apply flex items-center gap-[12px] text-h3 mb-[12px];
   }
   .contact-channel .contact-hours {
-    @apply text-[14px] text-muted mb-[20px];
+    @apply text-fine text-muted mb-[20px];
   }
   .contact-channel > p:last-child {
-    @apply text-[14px] leading-[1.85];
+    @apply text-fine leading-[1.85];
   }
   .contact-email {
     @apply flex items-center gap-[16px] text-[clamp(18px,1.9vw,26px)] leading-[1.7] font-medium py-[12px] mb-[16px] min-h-tap;
@@ -342,13 +342,13 @@
     @apply mt-[5px] text-[var(--accent-text)];
   }
   .industry-needs b {
-    @apply text-[18px] leading-[1.7];
+    @apply text-lead leading-[1.7];
   }
   .industry-needs .d {
-    @apply col-[2] text-[15px] leading-[1.9] text-muted;
+    @apply col-[2] text-compact leading-[1.9] text-muted;
   }
   .interior-content .ledger {
-    @apply max-w-[900px] rounded-[4px] my-[28px];
+    @apply max-w-[900px] rounded-card my-[28px];
   }
   .interior-content .ledger .row {
     @apply py-[20px];
@@ -375,10 +375,10 @@
     @apply pb-[36px];
   }
   .interior-content .flow b {
-    @apply text-[20px] leading-[1.6];
+    @apply text-h3 leading-[1.6];
   }
   .interior-content .flow .d {
-    @apply text-[15px] mt-[10px];
+    @apply text-compact mt-[10px];
   }
   .interior-content .flow .tags {
     @apply mt-[16px];
@@ -394,7 +394,7 @@
   }
   .interior-content .entry-kind,
   .interior-content .metric-note {
-    @apply text-[14px];
+    @apply text-fine;
   }
   .interior-content[data-kind='error'] .page-intro {
     @apply min-h-[480px];
@@ -440,10 +440,10 @@
   }
   @media (max-width: 768px) {
     .interior-content > section {
-      @apply py-[44px];
+      @apply py-interior-section-mb;
     }
     .interior-content .page-intro {
-      @apply pt-[40px] pb-[32px];
+      @apply pt-intro-top-mb pb-intro-bottom-mb;
     }
     .interior-content .page-intro + section {
       @apply pt-[36px];
@@ -456,7 +456,7 @@
       @apply text-[26px];
     }
     .interior-content .sh .lede {
-      @apply pt-[0] text-[16px];
+      @apply pt-[0] text-body;
     }
     .interior-content .reading-section > .wrap {
       @apply grid-cols-[minmax(0,1fr)] gap-[28px];
@@ -481,7 +481,7 @@
       @apply grid-cols-2 gap-[0_24px];
     }
     .interior-content .faq-index a {
-      @apply text-[14px] gap-[8px];
+      @apply text-fine gap-[8px];
     }
     .interior-content .stats {
       @apply grid-cols-2 gap-[24px];
@@ -526,7 +526,7 @@
       @apply p-[24px_20px];
     }
     .contact-channel h2 {
-      @apply text-[18px];
+      @apply text-lead;
     }
     .contact-phone {
       @apply text-[24px];
@@ -541,10 +541,10 @@
       @apply grid-cols-[minmax(0,1fr)] gap-[28px];
     }
     .interior-content .flow b {
-      @apply text-[18px];
+      @apply text-lead;
     }
     .interior-content .acc > summary {
-      @apply text-[16px] py-[20px];
+      @apply text-body py-[20px];
     }
   }
   @media print {

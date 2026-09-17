@@ -1,5 +1,7 @@
 # 紬（つむぎ）
 
+> 大幅なデザイン変更の編集場所・部品の使い方・全ページ比較は [リデザイン手順](docs/product/redesign-guide.md) を参照。
+
 **事業の土台づくりと日々の改善を支えるサービスサイト。**
 
 Next.js・React・TypeScriptで構築し、22ページを静的HTMLとして配信します。文言・料金・URL・見た目を中央管理し、公開ページの**実行時JavaScriptは0バイト**に保っています。同じコードを、顧客サイトのテンプレートとして展開する前提の構成です。
@@ -42,10 +44,10 @@ flowchart TD
 
 ## ブランドの配色
 
-| メイン70% | サブ20% | アクセント10% |
-|---|---|---|
-| アイボリー `#FFF8ED` | エスプレッソ `#302820` | 琥珀 `#FFB000` |
-| 背景・余白 | 文字・説明の章 | 主要ボタン・料金・相談 |
+| メイン70%            | サブ20%                | アクセント10%          |
+| -------------------- | ---------------------- | ---------------------- |
+| アイボリー `#FFF8ED` | エスプレッソ `#302820` | 琥珀 `#FFB000`         |
+| 背景・余白           | 文字・説明の章         | 主要ボタン・料金・相談 |
 
 比率はイラストを除くUI面積の目安です。3色の正本と派生トークンを中央管理し、ヘッダーからフッター、共有カードまで揃えています。[配色ルール](docs/product/design.md#3色の使い方と721) · [判断と検証](docs/architecture/0016-warm-base-palette.md)
 
@@ -110,8 +112,8 @@ flowchart TD
 | ---------------------------------- | ------------------------------------------------------------------------------------ |
 | 見出し・本文・SEO・図のラベル      | [src/i18n/locales/ja/](src/i18n/locales/ja/)                                         |
 | 金額・プラン・価格計算             | [src/content/prices.ts](src/content/prices.ts)                                       |
-| 連絡先・プロフィール | [src/i18n/locales/ja/config.ts](src/i18n/locales/ja/config.ts) |
-| ドメイン・フォーム送信先・公開設定 | [src/content/config.ts](src/content/config.ts) |
+| 連絡先・プロフィール               | [src/i18n/locales/ja/config.ts](src/i18n/locales/ja/config.ts)                       |
+| ドメイン・フォーム送信先・公開設定 | [src/content/config.ts](src/content/config.ts)                                       |
 | ページのURL・アイコン・ナビ分類    | [src/routing/registry.ts](src/routing/registry.ts)                                   |
 | ページの構造・共通部品             | [src/views/](src/views/)・[src/components/](src/components/)                         |
 | 色・書体・寸法                     | [src/styles/design.tokens.json](src/styles/design.tokens.json)                       |

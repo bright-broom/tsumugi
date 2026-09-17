@@ -1,0 +1,75 @@
+@layer components {
+  /* ── 構造図。写真がないときは構造図か整ったデータ面を使う（原則C） */
+  .fig {
+    --fig-accent: var(--accent-text);
+    --fig-ok: var(--color-ok);
+    --fig-bad: var(--color-alert);
+    @apply m-[32px_0_0] p-[24px_0_0];
+    border-top: 1px solid var(--color-line-strong);
+    @apply text-ink overflow-x-auto;
+  }
+  .fig > svg {
+    @apply block w-[100%] min-w-[520px] h-[auto] font-ja;
+  }
+  /* スマホ用に組み直した図がある場合、広い画面では横長のほうを出す */
+  .fig.has-narrow > .fn {
+    @apply hidden;
+  }
+  .fig.has-narrow {
+    overflow-x: visible;
+  }
+  .fig > svg[role='img'] {
+    @apply fill-current text-fine;
+  }
+  .diagram-muted {
+    opacity: 0.72;
+  }
+  .diagram-surface {
+    @apply fill-current stroke-current;
+    fill-opacity: 0.025;
+    stroke-opacity: 0.22;
+    stroke-width: 1;
+  }
+  .diagram-surface.is-accent {
+    fill: var(--fig-accent);
+    stroke: var(--fig-accent);
+    fill-opacity: 0.075;
+    stroke-opacity: 0.65;
+  }
+  .diagram-band {
+    @apply fill-current;
+    fill-opacity: 0.22;
+  }
+  .diagram-band.is-secondary {
+    fill-opacity: 0.42;
+  }
+  .diagram-band.is-accent {
+    fill: var(--fig-accent);
+    fill-opacity: 0.85;
+  }
+  .fig > .diagram-symbols {
+    @apply absolute w-[0] min-w-[0] h-[0] overflow-hidden;
+  }
+  .diagram-icon {
+    overflow: visible;
+  }
+  .fig figcaption {
+    @apply mt-[18px] pt-[14px];
+    border-top: 1px solid var(--color-line);
+    @apply max-w-measure-read text-meta leading-[1.85] text-muted;
+  }
+  section.dark .fig {
+    background: var(--color-main);
+    border-top-color: var(--color-line);
+    @apply text-sub;
+    --fig-accent: var(--accent-text);
+    --fig-ok: var(--color-ok);
+    --fig-bad: var(--color-sub);
+  }
+  section.dark .fig figcaption {
+    @apply border-line text-muted;
+  }
+  .fig-hint {
+    @apply hidden;
+  }
+}
