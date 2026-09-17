@@ -17,7 +17,7 @@
 - `npm run validate` 成功：型・lint・Vitest **585 件**・料金12件・ビルド・セキュリティ・静的 **PASS 332 / WARN 1 / FAIL 0**。新規11テストでバイナリ・旧版・404・転送・通信障害・比較元違い・CLI終了コード等を確認。
 - 実際の52出力ファイル＋トップ / ＋比較元指紋で、通信なしの正常模擬配信は **PASS54 / FAIL0**。同じ長さの旧HTML・CSS破損・画像削除の故障注入は **PASS50 / FAIL4・終了1**。index.html とトップ / の両方を検出する。
 - 自社公開URLとの実通信照合は **PASS52 / FAIL2**。未反映の価格・全プラン比較の変更に対応する price.html と plans.html の差分を検出。他50ファイルとトップ / は一致。これは手元の比較元との内容差であり、公開サイト全体の障害と判断したものではない。比較時の out は未コミット状態のビルドで works.html は検証数字を出さない。
-- 出力比較は52ファイル中51ファイル一致、works.html の検証状態だけ変化。証跡は `.artifacts/release-check/` の validate.log、rehearsal.json、faults.json、live.json、output-comparison.json。本番条件のコミット後検査は下に記録する。
+- 出力比較は52ファイル中51ファイル一致、works.html の検証状態だけ変化。証跡は `.artifacts/release-check/` の validate.log、rehearsal.json、faults.json、live.json、output-comparison.json。コミット `dae14ea079ee584cda42758a250db810dcf78117` のクリーンな状態で build → 本番検査 → build も成功し、**PASS600 / WARN3 / FAIL0**、22ページ・JS0を確認。既存の専門家・受入確認WARNを維持。`committed-verify-report.json` に記録した。この追記は文書のみで、検証対象commitと区別する。文書内のローカルリンク183件も確認。
 - 開始時 main は `85fa5a3`、PR #83 は OPEN。この変更は #83 の上に積む。配備ID・commit・production aliasのAPI照合、余分な公開ファイル、資産の配信ヘッダー、定期monitorへの組込は未対応。A05全体の完了とはしない。
 
 ### 復元テストの既存データ保護（2026-09-18）
@@ -110,7 +110,7 @@
 | 構成                   | ルート直下の `src/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。22ページを `out/` に静的書き出し                                                                            |
 | 実行時 JS              | 全22ページで 0（`postbuild` と `verify` で確認）                                                                                                                                                                                                |
 | 検査                   | 本番全項目 **PASS 600 / WARN 3 / FAIL 0**、静的プレビュー PASS 332 / WARN 1 / FAIL 0（対象なし 42 件）。本番 WARN は専門家確認 2 件・受入確認記録の未実施（ADR 0056）。全プランページ追加による検査対象の増加。しきい値の変更なし（ADR 0062）。 |
-| 型・依存・文言         | `npm run check` が通る。ESLint エラー・警告 0、Vitest 546 件・料金モデル 12 件合格                                                                                                                                                              |
+| 型・依存・文言         | `npm run check` が通る。ESLint エラー・警告 0、Vitest 585 件・料金モデル 12 件合格                                                                                                                                                              |
 | 依存の健全性           | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定。Dependabot は ESLint と Node 型定義のメジャー更新だけを除外し、既存の互換性方針を維持（ADR 0003）                                                    |
 | 動作を確かめた環境     | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一                                                                                                                                        |
 | 文言とルート           | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004）                                                                                                |
