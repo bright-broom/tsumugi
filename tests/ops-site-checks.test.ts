@@ -511,3 +511,17 @@ describe('配信セキュリティヘッダー', () => {
     expect(Object.keys(siteExpectations().expectedHeaders)).toHaveLength(7);
   });
 });
+
+it.each(['/', '/index.html'])(
+  'monitorとcheck:liveが参照資産の欠落も失敗にする: %s',
+  async (path) => {
+    const routes = healthySite();
+    routes[ORIGIN + path]!.body = page('index.html', '<link rel="stylesheet" href="/missing.css">');
+    const policy = { ...POLICY, checkAssets: true, slowMs: 3000 };
+    for (const check of [checkLive, checkMonitor]) {
+      const results = await check(parseSiteUrl(ORIGIN), probeFor(routes), policy);
+      expect(named(results, '参照CSS').status).toBe('FAIL');
+      expect(named(results, '参照CSS').detail).toContain('/missing.css: HEAD 404');
+    }
+  },
+);

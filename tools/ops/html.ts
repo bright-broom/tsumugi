@@ -16,6 +16,7 @@ export interface PageFacts {
   inlineHandlers: string[];
   links: string[];
   robots: string[];
+  assets: { url: string; kind: 'css' | 'image' }[];
 }
 
 const attribute = (element: Element, name: string) =>
@@ -29,6 +30,7 @@ export function inspectHtml(html: string): PageFacts {
     inlineHandlers: [],
     links: [],
     robots: [],
+    assets: [],
   };
   const visit = (node: Node, inert = false) => {
     if ('tagName' in node) {
@@ -43,6 +45,21 @@ export function inspectHtml(html: string): PageFacts {
       )
         facts.robots.push(attribute(element, 'content') ?? '');
       const rel = (attribute(element, 'rel') ?? '').toLowerCase().split(/\s+/);
+      if (!inert) {
+        const asset = (name: string, kind: 'css' | 'image') => {
+          const url = attribute(element, name);
+          if (url !== undefined) facts.assets.push({ url, kind });
+        };
+        if (element.tagName === 'img') asset('src', 'image');
+        if (element.tagName === 'link' && rel.includes('stylesheet')) asset('href', 'css');
+        if (
+          element.tagName === 'link' &&
+          rel.some((value) => ['icon', 'apple-touch-icon'].includes(value))
+        )
+          asset('href', 'image');
+        if (element.tagName === 'meta' && attribute(element, 'property') === 'og:image')
+          asset('content', 'image');
+      }
       if (element.tagName === 'link' && rel.includes('canonical'))
         facts.canonical.push(attribute(element, 'href') ?? '');
       if (

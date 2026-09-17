@@ -31,6 +31,7 @@ export function monitorTarget(
 
 export function siteExpectations() {
   return {
+    checkAssets: true,
     expectedHeaders: SECURITY_HEADERS,
     expectedPaths: [
       ...PUBLIC_ROUTES.map((route) => route.path),

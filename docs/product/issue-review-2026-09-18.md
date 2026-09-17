@@ -1,6 +1,10 @@
 # 残存Issueの再整理 — 2026-09-18
 
-## 今回の再評価
+## 監視強化時の再確認
+
+残存33件を取得し、前回の更新済み本文から変更がないことを確認。新たな完了・不要判定の根拠はないため追加クローズは行わない。#32の直接参照CSS・画像の欠落検出を優先して実装する。監視停止の独立検知・通知到達等は継続。[ADR0071](../architecture/0071-referenced-asset-monitoring.md)。
+
+## 公開案内修正時の再評価
 
 前回の35件を再評価し、#14はADR0056で不要となった独自ドメイン必須条件として終了、#37は現行macOSで25ファイルの再現一致を確認して完了。APIでopen **33件**を確認。#40の公開案内はPR #85で修正し、main・公開先確認まで継続する。前回、将来の別OS対応や顧客別の導入確認を元Issueの完了条件へ広げた点を修正した。判断は[ADR0070](../architecture/0070-source-visibility-and-issue-scope.md)。
 
@@ -37,7 +41,7 @@ PR #82〜84はMERGEDでも、マージ先が中間ブランチだった。開始
 | [#29](https://github.com/bright-broom/tsumugi/issues/29) | 継続 | 月次Markdown/HTML下書き、欠損・前月比較・修補除外は実装済み。実データ接続、担当者承認と限定共有の運用が残る（D07）。 |
 | [#30](https://github.com/bright-broom/tsumugi/issues/30) | 継続 | GBP情報の差分・下書き・承認・実施記録CLIは実装済み。実アカウント、責任者、実反映と確認が残る（D08）。 |
 | [#31](https://github.com/bright-broom/tsumugi/issues/31) | 継続 | bundleバックアップと復元CLIあり。PR#83で既存復元先の誤削除を修正しMac/Linuxで復元成功。開始時main未反映。独立保管先・非公開業務データ・定期運用/通知が残る（A08）。 |
-| [#32](https://github.com/bright-broom/tsumugi/issues/32) | 継続 | 死活・証明書・固定ページ・検索除外・問い合わせリンク監視はmain実装済み。今回、配信ヘッダー検査を追加。資産404、監視停止自体の外部検知、担当/通知/復旧、Search Consoleが残る（A06/A07/B04）。 |
+| [#32](https://github.com/bright-broom/tsumugi/issues/32) | 継続 | 直接参照CSS・画像のHEAD検査をPR #85に追加。main反映、CSS内部等、独立監視・通知到達・Search Consoleの確認は残る。 |
 | [#33](https://github.com/bright-broom/tsumugi/issues/33) | 継続 | 権限関数・保持期限・監査のコアは実装済み。実認証主体との接続、永続化、定期実行、委託先/表示との照合が残る（C06）。 |
 | [#34](https://github.com/bright-broom/tsumugi/issues/34) | 完了・クローズ | レポートの日時・commit・成果物指紋・種別・FAIL数を保持し、別commit/失敗/未確認のレポートを表示しない実装と結合テストがmainにある。通常Git配備は「—」、LCPは記録日付き。配備ID照合は別のA05として追跡する。 |
 | [#35](https://github.com/bright-broom/tsumugi/issues/35) | 継続 | 20項目の自動/人/外部検査対応は実装済み。人・外部確認18項目の証跡が未記入。自動テストで検収済みと代替しない（B01）。 |

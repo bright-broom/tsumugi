@@ -158,3 +158,5 @@
 - [0069 Issueをmainの実装で判定し、実配信ヘッダーを監視する](0069-delivered-headers-and-issue-review.md)
 
 - [0070 ソース公開案内とIssueの完了条件を実態へ合わせる](0070-source-visibility-and-issue-scope.md)
+
+- [0071 公開HTMLの参照CSS・画像を監視する](0071-referenced-asset-monitoring.md)

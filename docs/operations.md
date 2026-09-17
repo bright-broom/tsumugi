@@ -309,3 +309,9 @@ Vercel の Git 配備は静的検査だけで全項目のレポートを持た�
 ### 配信ヘッダーの確認
 
 `check:live`と`monitor`はトップ`/`と取得した公開ページの200応答で、`vercel.json`にある7つのセキュリティヘッダーを照合する。欠落・値の変更はFAIL。意図した変更は配備設定と揃え、再検査する。`--dist`の模擬配信はSKIPであり実配信の証明にはならない。資産の404や通知の到達は別途確認する（[ADR0069](architecture/0069-delivered-headers-and-issue-review.md)）。
+
+### CSS・画像だけが欠けた場合の監視
+
+`monitor`と`check:live`は、トップ`/`と公開HTMLが直接参照する同一サイトのCSS・画像・OGP・アイコンへHEADを送り、200応答とContent-Typeを検査する。404・転送・HTMLへの置換・型の欠落・HEAD非対応もFAIL。最大128資産・4並列・各15秒。`--dist`で通信なしのファイル欠落確認もできる。
+
+本文の破損は`check:release`、見た目は`verify`で確認する。CSS内部やSVG内部、srcset/picture、外部資産は対象外。HEADの合格を画像表示・全依存の完全性の証明にしない（[ADR0071](architecture/0071-referenced-asset-monitoring.md)）。

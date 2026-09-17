@@ -6,6 +6,7 @@
  *
  * 問い合わせはすべて Probe 経由。ここではネットワークに直接触らない。
  */
+import { checkReferencedAssets } from './asset-checks';
 import { inspectHtml } from './html';
 import type { HttpResult, Probe } from './probe';
 import { result, type CheckResult } from './results';
@@ -24,6 +25,7 @@ export interface CertificatePolicy {
   contact?: { path: string; links: readonly string[] };
   /** Exact values from the deployment policy. Offline hosting cannot establish these. */
   expectedHeaders?: Readonly<Record<string, string>>;
+  checkAssets?: boolean;
 }
 
 /** `https://<ドメイン>` だけを受け付ける（パス・ポート・クエリ付きは取り違えの元なので拒否）。 */
@@ -441,6 +443,13 @@ async function inspectSite(site: URL, probe: Probe, policy: CertificatePolicy) {
     ...new Set([...sitemap.urls, ...(expected ?? []), ...contactUrls]),
   ]);
   const readable = okPages(pages);
+  if (policy.checkAssets)
+    results.push(
+      await checkReferencedAssets(
+        top.page ? [...readable, ...okPages([top.page])] : readable,
+        probe,
+      ),
+    );
   if (policy.expectedHeaders)
     results.push(
       checkHeaders(top.page ? [top.page, ...pages] : pages, probe, policy.expectedHeaders),
