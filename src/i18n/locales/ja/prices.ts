@@ -1,5 +1,6 @@
 /** Japanese copy: prices. Keep keys stable; placeholders are named runtime values. */
 export default {
+  languagePreparationNote: '受付準備中。対応言語・翻訳範囲・表示品質の確認後に受付を開始します。',
   singleName: '入口をつくる',
   singleLede: '支給素材を使い、1ページで事業を伝える。既存の構成を選び、確認1回で仕上げます。',
   singleIncludes: '顧客名義のドメイン・契約先の設定（実費別）',

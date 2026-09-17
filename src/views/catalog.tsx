@@ -346,11 +346,19 @@ export default function CatalogPage({ copy, route }: PageProps<'catalog'>) {
       >
         <div className="catalog-option-grid">
           {P.OPTIONS.map((option) => (
-            <article className="catalog-option" key={option.key}>
+            <article
+              className="catalog-option"
+              key={option.key}
+              data-status={option.preparing ? 'preparing' : 'current'}
+            >
               <Icon name={optionIcons[option.key]} />
               <div>
                 <span className="catalog-option-kind">
-                  {option.firm ? copy.options.fixed : copy.options.quoted}
+                  {option.preparing
+                    ? copy.preparing
+                    : option.firm
+                      ? copy.options.fixed
+                      : copy.options.quoted}
                 </span>
                 <h3>{option.name}</h3>
                 {option.note !== '—' && <p>{option.note}</p>}
