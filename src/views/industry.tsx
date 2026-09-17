@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { RentVsOwn } from '@/components/diagrams/RentVsOwn';
 import Vs from '@/components/Vs';
 import { pathForFile } from '@/routing/registry';
@@ -43,6 +44,7 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
         h1
         lede={format(copy.lede, { dName: d.name })}
       >
+        <PageIndex page={route === 'restaurant' ? 'restaurant' : 'industry'} />
         <p
           dangerouslySetInnerHTML={raw(
             format(copy.marketMedian, { dName: esc(d.name), median: esc(d.median) }),
@@ -50,39 +52,56 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
         />
       </Section>
 
-      {/* 業種の話に入る前に、業種を問わない1番の主張を1枚はさむ */}
-      <Section tone="tint">
-        <Note heading={copy.heading} kind="good">
-          <p>
-            {copy.p3}
-            <strong>{copy.strong}</strong>
-          </p>
-          <p>
-            {copy.p4}
-            <a href={href('owned')}>{copy.a}</a>
-          </p>
-        </Note>
-      </Section>
-
-      <Section heading={copy.heading2}>
-        <ol className="steps">
+      <Section id="essentials" heading={copy.heading2}>
+        <ul className="industry-needs">
           {d.must.map(([t, dd]) => (
             <li key={t}>
+              <Icon name="check" />
               <b dangerouslySetInnerHTML={raw(t)} />
               <div className="d" dangerouslySetInnerHTML={raw(dd)} />
             </li>
           ))}
-        </ol>
+        </ul>
       </Section>
 
-      <Section heading={copy.heading3}>
-        <Note heading={format(copy.heading4, { dName: d.name })} kind="bad">
-          <ul className="plain">
-            {d.skip.map(([t, dd]) => (
-              <li key={t} dangerouslySetInnerHTML={raw(`<strong>${esc(t)}</strong><br>${dd}`)} />
-            ))}
-          </ul>
-        </Note>
+      <Section id="estimate" heading={copy.heading6}>
+        <p>
+          {format(copy.p5, { dName: d.name })}
+          <strong>{format(copy.strong2, { planName: plan.name, planPages: plan.pages })}</strong>
+          {copy.p6}
+        </p>
+        <div className="ledger">
+          <div className="hd">{format(copy.hd, { planName: plan.name, runName: run.name })}</div>
+          <div className="row">
+            <span>{copy.span}</span>
+            <span className="v tnum">{P.yen(plan.price)}</span>
+          </div>
+          <div className="row">
+            <span>{copy.span2}</span>
+            <span className="v tnum">{P.yen(payment.deposit)}</span>
+          </div>
+          <div className="row">
+            <span>{copy.span3}</span>
+            <span className="v tnum">{P.yen(payment.acceptance)}</span>
+          </div>
+          <div className="row">
+            <span>{copy.span4}</span>
+            <span className="v tnum">{P.yen(run.price)}</span>
+          </div>
+          <div className="row net">
+            <span>{copy.span5}</span>
+            <span className="v tnum">{P.yen(P.supportMonthlyTotal('run_basic'))}</span>
+          </div>
+        </div>
+        <p className="dim">{copy.dim}</p>
+        <div className="btns">
+          <a className="btn btn-2" href={href('price')}>
+            {copy.btn2}
+          </a>
+          <a className="btn btn-2" href={href('subsidy')}>
+            {copy.btn3}
+          </a>
+        </div>
       </Section>
 
       {route === 'restaurant' ? (
@@ -130,7 +149,7 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
           <p className="dim fine-note">{costCopy.dim}</p>
         </Section>
       ) : (
-        <Section eyebrow={copy.eyebrow2} heading={copy.heading5}>
+        <Section id="cost-review" eyebrow={copy.eyebrow2} heading={copy.heading5}>
           <p dangerouslySetInnerHTML={raw(d.cost)} />
           <div className="btns">
             <a className="btn btn-2" href={href('cost-cut')}>
@@ -140,44 +159,28 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
         </Section>
       )}
 
-      <Section heading={copy.heading6}>
-        <p>
-          {format(copy.p5, { dName: d.name })}
-          <strong>{format(copy.strong2, { planName: plan.name, planPages: plan.pages })}</strong>
-          {copy.p6}
-        </p>
-        <div className="ledger">
-          <div className="hd">{format(copy.hd, { planName: plan.name, runName: run.name })}</div>
-          <div className="row">
-            <span>{copy.span}</span>
-            <span className="v tnum">{P.yen(plan.price)}</span>
-          </div>
-          <div className="row">
-            <span>{copy.span2}</span>
-            <span className="v tnum">{P.yen(payment.deposit)}</span>
-          </div>
-          <div className="row">
-            <span>{copy.span3}</span>
-            <span className="v tnum">{P.yen(payment.acceptance)}</span>
-          </div>
-          <div className="row">
-            <span>{copy.span4}</span>
-            <span className="v tnum">{P.yen(run.price)}</span>
-          </div>
-          <div className="row net">
-            <span>{copy.span5}</span>
-            <span className="v tnum">{P.yen(P.supportMonthlyTotal('run_basic'))}</span>
-          </div>
-        </div>
-        <p className="dim">{copy.dim}</p>
-        <div className="btns">
-          <a className="btn btn-2" href={href('price')}>
-            {copy.btn2}
-          </a>
-          <a className="btn btn-2" href={href('subsidy')}>
-            {copy.btn3}
-          </a>
-        </div>
+      <Section id="scope" heading={copy.heading3}>
+        <Note heading={format(copy.heading4, { dName: d.name })} kind="bad">
+          <ul className="plain">
+            {d.skip.map(([t, dd]) => (
+              <li key={t} dangerouslySetInnerHTML={raw(`<strong>${esc(t)}</strong><br>${dd}`)} />
+            ))}
+          </ul>
+        </Note>
+      </Section>
+
+      {/* 用途と費用の後に、業種共通の所有・引き継ぎ条件を示す */}
+      <Section tone="tint">
+        <Note heading={copy.heading} kind="good">
+          <p>
+            {copy.p3}
+            <strong>{copy.strong}</strong>
+          </p>
+          <p>
+            {copy.p4}
+            <a href={href('owned')}>{copy.a}</a>
+          </p>
+        </Note>
       </Section>
 
       <Section heading={copy.heading7}>

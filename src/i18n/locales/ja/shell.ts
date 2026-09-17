@@ -5,6 +5,89 @@ export default {
     '買い切り制作と任意の継続支援。変更枠・外部費・引継ぎ条件を明示します。',
   areaServedName: '日本',
   skip: '本文へ移動',
+  pageIndex: {
+    label: 'このページの目次',
+    pages: {
+      owned: [
+        ['ownership', '所有の違い'],
+        ['deliverables', '手元に残るもの'],
+        ['running-costs', '維持する費用'],
+        ['questions', '契約の確認'],
+      ],
+      price: [
+        ['production', '制作料金'],
+        ['support', '継続支援'],
+        ['domains', 'ドメイン取得'],
+        ['payment', 'お支払い'],
+        ['comparison', '総額の比較'],
+        ['options', '追加のご依頼'],
+      ],
+      industry: [
+        ['essentials', '必要な情報'],
+        ['estimate', '制作費の目安'],
+        ['cost-review', '毎月の費用'],
+        ['scope', 'つくらないもの'],
+      ],
+      restaurant: [
+        ['essentials', '必要な情報'],
+        ['estimate', '制作費の目安'],
+        ['monthly-costs', '毎月の費用'],
+        ['scope', 'つくらないもの'],
+      ],
+      flow: [
+        ['process', '制作の流れ'],
+        ['subsidy-flow', '補助金を使う場合'],
+        ['preparation', 'ご準備と確認'],
+      ],
+      about: [
+        ['team', '担当する人'],
+        ['response', '連絡と対応'],
+        ['principles', '大切にすること'],
+      ],
+      source: [
+        ['delivery', 'お渡しするもの'],
+        ['handover', '引き継ぎ'],
+        ['formats', '受け渡し方法'],
+      ],
+      unlimited: [
+        ['scope', '変更できること'],
+        ['support', '継続支援'],
+        ['request', '依頼の進め方'],
+      ],
+      subsidy: [
+        ['package', '費用と負担額'],
+        ['conditions', '利用前の確認'],
+        ['schedule', '申請の順番'],
+        ['support', 'お手伝いの範囲'],
+      ],
+      costCut: [
+        ['costs', '掲載費を比べる'],
+        ['fees', '予約の手数料'],
+        ['approach', '見直しの進め方'],
+      ],
+      spec: [
+        ['standards', '納品する仕様'],
+        ['exclusions', 'お約束しないこと'],
+        ['verification', '確かめ方'],
+      ],
+      works: [
+        ['evidence', '自社サイトの実測'],
+        ['policy', '事例の掲載方針'],
+      ],
+      terms: [
+        ['agreement', '契約の成立'],
+        ['production', '制作について'],
+        ['support', '継続支援'],
+        ['changes', '変更・追加'],
+        ['responsibility', '責任と権利'],
+      ],
+      privacy: [
+        ['data', '取得する情報'],
+        ['handling', '情報の取り扱い'],
+        ['operator', '事業者と窓口'],
+      ],
+    },
+  },
   header: {
     roman: 'TSUMUGI',
     tagline: '小さな事業の、身近な相談先。',

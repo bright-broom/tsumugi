@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { LCP_RECORDED_ON, LCP_SECONDS } from '@/content/measurements';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
@@ -31,6 +32,7 @@ export default function SpecPage({ copy, route }: PageProps<'spec'>) {
   return (
     <Base file={file} title={title} desc={desc}>
       <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 navKey={file} lede={copy.lede}>
+        <PageIndex page="spec" />
         <Stats
           items={[
             { icon: 'list-checks', value: '20', unit: copy.itemsUnit, label: copy.itemsLabel },
@@ -50,7 +52,7 @@ export default function SpecPage({ copy, route }: PageProps<'spec'>) {
         </p>
       </Section>
 
-      <Section eyebrow={copy.eyebrow2} heading={copy.heading2}>
+      <Section reading id="standards" eyebrow={copy.eyebrow2} heading={copy.heading2}>
         {groups.map(([grp, rows]) => (
           <Fragment key={grp}>
             <h3 className="grp">{grp}</h3>
@@ -65,7 +67,7 @@ export default function SpecPage({ copy, route }: PageProps<'spec'>) {
         ))}
       </Section>
 
-      <Section tone="tint" heading={copy.heading3}>
+      <Section reading id="exclusions" tone="tint" heading={copy.heading3}>
         {NOT_SELLING.map(([n, r]) => (
           <Acc summary={n} key={n}>
             <p>{r}</p>
@@ -76,7 +78,7 @@ export default function SpecPage({ copy, route }: PageProps<'spec'>) {
         </Note>
       </Section>
 
-      <Section heading={copy.heading5}>
+      <Section id="verification" heading={copy.heading5}>
         <p>{copy.p3}</p>
         <Table
           headers={['#', copy.itemsUnit, copy.headers]}

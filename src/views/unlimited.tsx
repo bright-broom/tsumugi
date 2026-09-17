@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { ROUTES } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
@@ -16,9 +17,11 @@ export default function UnlimitedPage({ copy, route }: PageProps<'unlimited'>) {
 
   return (
     <Base file={file} title={title} desc={desc}>
-      <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 navKey={file} lede={copy.lede} />
+      <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 navKey={file} lede={copy.lede}>
+        <PageIndex page="unlimited" />
+      </Section>
 
-      <Section>
+      <Section id="scope">
         <Table headers={[copy.headers]} rows={P.UPDATE_IN.map((x) => [`<strong>${x}</strong>`])} />
         <Table
           headers={[copy.headers2, copy.headers3, copy.headers4]}
@@ -29,7 +32,7 @@ export default function UnlimitedPage({ copy, route }: PageProps<'unlimited'>) {
         </Note>
       </Section>
 
-      <Section tone="tint" heading={copy.heading3}>
+      <Section id="support" tone="tint" heading={copy.heading3}>
         <Table
           headers={[copy.headers5, copy.headers6]}
           rows={P.RUN.map((r) => [r.name, r.lede])}
@@ -47,7 +50,7 @@ export default function UnlimitedPage({ copy, route }: PageProps<'unlimited'>) {
         </Note>
       </Section>
 
-      <Section heading={copy.heading5}>
+      <Section id="request" heading={copy.heading5}>
         <ol className="steps">
           <li>
             <b>{copy.b}</b>

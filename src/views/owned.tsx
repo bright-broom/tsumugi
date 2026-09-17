@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { LandVsOwn } from '@/components/diagrams/LandVsOwn';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
@@ -40,10 +41,12 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
             {copy.sub2}
           </p>
           <Cta />
+          <PageIndex page="owned" />
         </div>
       </section>
 
       <Section
+        id="ownership"
         tone="tint"
         navKey={file}
         eyebrow={copy.eyebrow}
@@ -83,7 +86,13 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
         </Note>
       </Section>
 
-      <Section tone="dark" eyebrow={copy.eyebrow3} heading={copy.heading4} lede={copy.lede3}>
+      <Section
+        id="deliverables"
+        tone="dark"
+        eyebrow={copy.eyebrow3}
+        heading={copy.heading4}
+        lede={copy.lede3}
+      >
         <Cards cls="g2" items={copy.ownership} />
         <Table
           headers={['', copy.headers5, format(copy.headers6, { cBRAND: C.BRAND })]}
@@ -125,7 +134,13 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
         </Note>
       </Section>
 
-      <Section tone="tint" eyebrow={copy.eyebrow5} heading={copy.heading8} lede={copy.lede5}>
+      <Section
+        id="running-costs"
+        tone="tint"
+        eyebrow={copy.eyebrow5}
+        heading={copy.heading8}
+        lede={copy.lede5}
+      >
         <Calc
           title={copy.title2}
           rows={[
@@ -157,7 +172,7 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
         </Note>
       </Section>
 
-      <Section eyebrow={copy.eyebrow6} heading={copy.heading10} lede={copy.lede6}>
+      <Section id="questions" eyebrow={copy.eyebrow6} heading={copy.heading10} lede={copy.lede6}>
         <Acc summary={copy.summary}>
           <p>
             {copy.p11}

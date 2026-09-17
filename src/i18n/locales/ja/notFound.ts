@@ -1,5 +1,6 @@
 /** Japanese copy: notFound. Keep keys stable; placeholders are named runtime values. */
 export default {
+  code: '404',
   title: 'ページが見つかりません｜{cBRANDT}',
   desc: 'お探しのページは移動したか、なくなっています。',
   desc2: 'トップページか、お電話からお探しの内容にお進みください。',

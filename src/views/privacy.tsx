@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
 import { format } from '@/i18n/format';
@@ -16,6 +17,7 @@ export default function PrivacyPage({ copy, route }: PageProps<'privacy'>) {
   return (
     <Base file={file} title={title} desc={desc}>
       <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 lede={copy.lede}>
+        <PageIndex page="privacy" />
         <Note heading={copy.heading2} kind="good">
           <p>
             {copy.p}
@@ -27,7 +29,7 @@ export default function PrivacyPage({ copy, route }: PageProps<'privacy'>) {
         </Note>
       </Section>
 
-      <Section tone="tint" navKey={file} heading={copy.heading3}>
+      <Section reading id="data" tone="tint" navKey={file} heading={copy.heading3}>
         <Table
           headers={[copy.headers, copy.headers2, copy.headers3]}
           rows={[
@@ -42,7 +44,7 @@ export default function PrivacyPage({ copy, route }: PageProps<'privacy'>) {
         />
       </Section>
 
-      <Section heading={copy.heading4}>
+      <Section reading id="handling" heading={copy.heading4}>
         <Table
           headers={[copy.headers4, copy.headers5]}
           rows={[
@@ -70,7 +72,7 @@ export default function PrivacyPage({ copy, route }: PageProps<'privacy'>) {
         </Note>
       </Section>
 
-      <Section tone="tint" heading={copy.heading6}>
+      <Section reading id="operator" tone="tint" heading={copy.heading6}>
         <Table
           headers={['', '']}
           rows={[

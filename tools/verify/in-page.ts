@@ -174,7 +174,7 @@ ${COLOR_READER}
                    '.hero h1, .hero .service-intro-title', '.hero .sub', '.hero .kick', '.logo .n', '.logo .s',
                    '.brand-hero-copy h1', '.brand-hero-copy p',
                    '.header-contact', '.logo .roman', '.menu > summary', '.header-phone',
-                   '.footer-contact', '.footer-phone', '.footer-links a', '.footer-industries a', '.ftr-legal a', '.footer-top',
+                   '.footer-email', '.footer-phone', '.footer-links a', '.footer-industries a', '.ftr-legal a', '.footer-top',
                    '.amt', '.pricebox .alt li', '.amtwrap .pre',
                    'thead th', '.ftr p', '.ftr .fine', '.sh .lab', '.calc .r .k em',
                    '.calc .r.net .v', '.calc .r.net .k', '.stat .k', '.vs .nm em',

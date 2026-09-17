@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { esc, raw } from '@/lib/raw';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
@@ -36,9 +37,11 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
         h1
         navKey={file}
         lede={format(copy.lede, { cSERVICENOTE: C.SERVICE_NOTE })}
-      />
+      >
+        <PageIndex page="about" />
+      </Section>
 
-      <Section heading={C.TEAM_HEADING}>
+      <Section id="team" heading={C.TEAM_HEADING}>
         <p>{C.TEAM_INTRO}</p>
         {staff.length ? (
           <StaffList members={staff} />
@@ -62,6 +65,7 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
       </Section>
 
       <Section
+        id="response"
         tone="tint"
         eyebrow={copy.eyebrow2}
         heading={format(copy.heading3, { cRESPONSEPROMISE: C.RESPONSE_PROMISE })}
@@ -90,7 +94,7 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
         </Note>
       </Section>
 
-      <Section heading={copy.heading5}>
+      <Section id="principles" heading={copy.heading5}>
         <ul className="plain">
           <li>
             <strong>{copy.strong5}</strong>

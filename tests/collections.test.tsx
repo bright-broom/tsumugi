@@ -135,7 +135,7 @@ describe('generated routes (fictional fixture)', () => {
     // Share images fall back to an existing card instead of a new, unrendered PNG.
     expect(existsSync(join(ROOT, 'public', props.og))).toBe(true);
     const html = render(route.file);
-    expect(html).toContain('<main id="main">');
+    expect(html).toMatch(/<main\b[^>]*\bid="main"[^>]*>/);
     expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
     expect(html).not.toMatch(/<script|\son[a-z]+=|undefined|NaN|<!-- -->/);
     const known = new Set([

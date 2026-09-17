@@ -63,7 +63,7 @@ describe('route completeness', () => {
     ]);
     expect(Buffer.byteLength(JSON.stringify(props), 'utf8')).toBeLessThan(64 * 1024);
     const html = renderToStaticMarkup(<Page {...props} />);
-    expect(html).toContain('<main id="main">');
+    expect(html).toMatch(/<main\b[^>]*\bid="main"[^>]*>/);
     expect(html).not.toMatch(/<script(?![^>]*application\/ld\+json)/);
     expect(html).not.toMatch(/@route:|電話する|タップで発信|undefined/);
     expect(html).not.toMatch(/39,800|698,000|変更は何回でも無料|修正・更新 何回でも|制作費24回/);

@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { MoneyFlow } from '@/components/diagrams/MoneyFlow';
 import { ROUTES } from '@/routing/registry';
 import { format } from '@/i18n/format';
@@ -29,9 +30,12 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
 
   return (
     <Base file={file} title={title} desc={desc}>
-      <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 navKey={file} lede={copy.lede} />
+      <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 navKey={file} lede={copy.lede}>
+        <PageIndex page="costCut" />
+      </Section>
 
-      <Section heading={copy.heading2}>
+      <Section id="costs" heading={copy.heading2}>
+        <MoneyFlow portal={27_500} run={runStd} />
         <Table
           headers={[copy.headers, copy.headers2, copy.headers3, copy.headers4]}
           rows={rows}
@@ -41,7 +45,7 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
             pPORTALFEEDINNER: P.PORTAL_FEE_DINNER,
           })}
         />
-        <MoneyFlow portal={27_500} run={runStd} />
+
         <Note heading={copy.heading3} kind="good">
           <p>
             {copy.p}
@@ -59,7 +63,7 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
         </Note>
       </Section>
 
-      <Section tone="tint" eyebrow={copy.eyebrow2} heading={copy.heading5}>
+      <Section id="fees" tone="tint" eyebrow={copy.eyebrow2} heading={copy.heading5}>
         <p>
           {format(copy.p5, { pPORTALFEEDINNER: P.PORTAL_FEE_DINNER })}
           <strong>{copy.strong4}</strong>
@@ -103,7 +107,7 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
         <p>{copy.p14}</p>
       </Section>
 
-      <Section eyebrow={copy.eyebrow5} heading={copy.heading9}>
+      <Section id="approach" eyebrow={copy.eyebrow5} heading={copy.heading9}>
         <ol className="steps">
           <li>
             <b>{copy.b}</b>

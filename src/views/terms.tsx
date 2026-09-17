@@ -1,3 +1,4 @@
+import PageIndex from '@/components/PageIndex';
 import { ROUTES } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
@@ -18,6 +19,7 @@ export default function TermsPage({ copy, route }: PageProps<'terms'>) {
   return (
     <Base file={file} title={title} desc={desc}>
       <Section eyebrow={copy.eyebrow} heading={copy.heading} h1 lede={copy.lede}>
+        <PageIndex page="terms" />
         {/* 承認記録（版・承認日・確認者・文面の SHA-256）が揃うまで、下書きとして案内する（ADR 0024） */}
         {(C.PLACEHOLDER || !C.isApprovalRecorded(C.LEGAL_APPROVALS.terms)) && (
           <Note heading={copy.heading2} kind="warn">
@@ -30,14 +32,14 @@ export default function TermsPage({ copy, route }: PageProps<'terms'>) {
         )}
       </Section>
 
-      <Section heading={copy.agreement.heading}>
+      <Section reading id="agreement" heading={copy.agreement.heading}>
         <Table
           headers={[copy.headers, copy.headers2]}
           rows={copy.agreement.rows.map(([label, detail]) => [label, detail])}
         />
       </Section>
 
-      <Section tone="tint" navKey={file} heading={copy.heading3}>
+      <Section reading id="production" tone="tint" navKey={file} heading={copy.heading3}>
         <Table
           headers={[copy.headers, copy.headers2]}
           rows={[
@@ -52,7 +54,7 @@ export default function TermsPage({ copy, route }: PageProps<'terms'>) {
         />
       </Section>
 
-      <Section navKey={file} heading={copy.heading4}>
+      <Section reading id="support" navKey={file} heading={copy.heading4}>
         <Table
           headers={[copy.headers, copy.headers2]}
           rows={[
@@ -67,7 +69,7 @@ export default function TermsPage({ copy, route }: PageProps<'terms'>) {
         />
       </Section>
 
-      <Section tone="tint" heading={copy.heading5}>
+      <Section reading id="changes" tone="tint" heading={copy.heading5}>
         <Table
           headers={[copy.headers, copy.headers2]}
           rows={[
@@ -80,7 +82,7 @@ export default function TermsPage({ copy, route }: PageProps<'terms'>) {
         />
       </Section>
 
-      <Section heading={copy.heading6}>
+      <Section reading id="responsibility" heading={copy.heading6}>
         <Table
           headers={[copy.headers, copy.headers2]}
           rows={[
