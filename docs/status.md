@@ -23,6 +23,10 @@
 - 外部の新事実：Repository API は **PRIVATE**。main 保護の取得は 403 で有効性未確認、Weekly backup の実行一覧は 0 件。可視性・契約・権限を変更せず監査に残した。旧 Public 記録を現在の外部状態と混同しない。
 - 証跡：`.artifacts/audit/` の `validate.log`、`production.log`、`final-check.log`、`final-lint.log`、`final-tests.log`、`live-monitor.json`、`rehearsal.json`、`faults.json`、`output-comparison.json`、`monitor-before.json`（Git 管理外）。上記検証は `fix/production-monitoring` の未コミット差分に対して実施。コミット後の再検証は別の証跡として扱う。
 
+コミット後の確認：`db17d4eb16f9c68423ec968e5509ac1d6888177b` を push し、リモート SHA 一致を確認。[PR #80](https://github.com/bright-broom/tsumugi/pull/80) はドラフト。クリーンな同 commit で build → production verify → build を完了し、PASS 600 / WARN 3 / FAIL 0（`commit.dirty=false`）を確認した。証跡は `.artifacts/audit/committed-verify-report.json`。追加のこの追記は文書のみで、検証対象 commit と区別する。
+
+修正ブランチの [Site monitor 手動実行](https://github.com/bright-broom/tsumugi/actions/runs/35266189889) は SUCCESS。Monitor ステップが skipped でなく success、取得した JSON は **PASS 15 / WARN 0 / FAIL 0 / SKIP 0**。証跡は `.artifacts/audit/github-monitor-run.json` と `github-monitor/`。PR の Vercel チェックも SUCCESS を確認。main に残る旧定期監視は未変更であり、この手動実行を main 反映済みと扱わない。PR の最新 CI は GitHub で確認する。
+
 次は、無償修補を変更枠へ合算する工数モデル（監査 D03）と、未提供オプションの見積発行制御（C03）を優先。CMS・多言語の受付開始、顧客データの本番配備、法務承認は行っていない。GitHub の main 反映・定期実行の有効化は、ブランチ上の実装と分けて確認する。
 
 ### 引き継ぎ再確認（2026-09-17 22:15 JST）
