@@ -15,8 +15,9 @@
 監査 A08 を確認し、復元先が既に存在する場合やチェックサム失敗時に、既存の `workDir/repo` を後片付けで削除する不具合を修正した。`fix/restore-workspace-safety` では復元先を排他的に作成し、その実行が作った領域だけを削除する。既存フォルダ・ファイル・リンク・壊れたリンクは保持し、`--keep` の動作を維持する（[ADR 0067](architecture/0067-restore-workspace-ownership.md)）。
 
 - `npm run validate` 成功：型・lint・Vitest **574 件**・料金 12 件・ビルド・セキュリティ・静的 **PASS 332 / WARN 1 / FAIL 0**。復元関連の 29 テストで既存データ保持と、自分の作成領域の成功・失敗／keep の組み合わせを確認。
-- 公開サイトのコード・価格・依存は未変更。証跡は `.artifacts/restore-safety/validate.log`、`output-comparison.json`（Git 管理外）。本番条件と実リポジトリの依存新規導入・復元ビルドの結果はコミット後に記録する。
+- 公開サイトのコード・価格・依存は未変更。証跡は `.artifacts/restore-safety/validate.log`、`output-comparison.json`（Git 管理外）。コミット `7c6dedbb104d096a52325c97e534d0dbb504ec38` のクリーンな状態で build → 本番全項目検査 → build が成功（**PASS 600 / WARN 3 / FAIL 0**、22 ページ・JS 0）。`committed-verify-report.json` に保存。公開出力は 52 中 51 ファイル一致、works.html の検証表示条件のみ差分。
 - 開始時 main は `85fa5a3`、PR #82 は OPEN。既存の修正を保持して #82 の上に積む。Weekly backup の取得した実行一覧は空で、継続した自動実行の証明はまだない。
+- 実バックアップ：同 commit の 458 ファイル・145 コミット、bundle 11,034,050 バイトを作成（1.456 秒）。同じ Mac の別ディレクトリで全ハッシュが一致し、npm 12.0.2 の `ci` で依存を新規導入してビルド成功。復元 **18.215 秒**（依存 7.575 秒・ビルド 10.380 秒）、22 HTML。証跡は `backup-info.json`、`restore-report.json`。元の node_modules のリンク・複製は使わず、npm キャッシュは利用し得る。同時期に本体の検証も実施しており、別端末や障害時の所要時間の保証ではない。復元用 repo は正常に片付け、bundle と証跡は Git 管理外に保持。この追記は文書のみで検証対象 commit と区別する。
 - A08 は部分対応。GitHub から独立した保管先、非公開業務データの暗号化・保持・削除、外部サービスの設定復元、別端末での復旧は未確認。
 
 ### 商品の提供状態と見積発行（2026-09-18）
