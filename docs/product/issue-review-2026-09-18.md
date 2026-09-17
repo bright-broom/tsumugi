@@ -40,7 +40,7 @@ PR #82〜84はMERGEDでも、マージ先が中間ブランチだった。開始
 | [#23](https://github.com/bright-broom/tsumugi/issues/23) | 継続 | 日本語以外のカタログ・URL・SEO・翻訳確認は未実装。多言語の準備中表示と見積発行制御はPR#82に実装されたが、監査開始時main未反映（C02/C03）。 |
 | [#24](https://github.com/bright-broom/tsumugi/issues/24) | 継続 | CSV検証・評価・重複排除・出力CLIは実装済み。実際の入力元・利用条件・運用責任者が未決（D08）。 |
 | [#26](https://github.com/bright-broom/tsumugi/issues/26) | 継続 | 依頼・時間・月次集計CLIと無償修補の除外はmain実装済み（PR#81）。顧客用注釈UI・安全な添付・認証認可・完了連絡が残る（D01/D02）。 |
-| [#27](https://github.com/bright-broom/tsumugi/issues/27) | 継続 | 顧客/案件/契約/引渡し記録CLIは実装済み。ローカルCLIの同時更新対策はPR#85に追加。利用者の認証認可、共有環境での競合、見積との照合・実移管の確認が残る（D02/D04/D06）。 |
+| [#27](https://github.com/bright-broom/tsumugi/issues/27) | 継続 | 顧客/案件/契約/引渡し記録CLIは実装済み。ローカルCLIの同時更新対策はPR#86に追加。利用者の認証認可、共有環境での競合、見積との照合・実移管の確認が残る（D02/D04/D06）。 |
 | [#28](https://github.com/bright-broom/tsumugi/issues/28) | 継続 | 出所・欠損を区別する指標CSV取込は実装済み。顧客が認めた実データ源・定期取得と欠損通知が残る（D07）。 |
 | [#29](https://github.com/bright-broom/tsumugi/issues/29) | 継続 | 月次Markdown/HTML下書き、欠損・前月比較・修補除外は実装済み。実データ接続、担当者承認と限定共有の運用が残る（D07）。 |
 | [#30](https://github.com/bright-broom/tsumugi/issues/30) | 継続 | GBP情報の差分・下書き・承認・実施記録CLIは実装済み。実アカウント、責任者、実反映と確認が残る（D08）。 |
