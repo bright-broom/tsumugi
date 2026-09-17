@@ -6,6 +6,7 @@ import { inspectHtml } from '../tools/ops/html';
 import { createProbe, distFetch, type Certificate, type Fetch } from '../tools/ops/probe';
 import { tally, type CheckResult } from '../tools/ops/results';
 import { checkLive, checkMonitor, parseSiteUrl } from '../tools/ops/site-checks';
+import { monitorTarget, siteExpectations } from '../tools/ops/site-expectations';
 
 const ORIGIN = 'https://tsumugi.test';
 const NOW = new Date('2026-09-16T00:00:00Z');
@@ -216,14 +217,9 @@ describe('公開後の監視（monitor）', () => {
 
   it('正常なら死活・証明書・robots・sitemap・掲載 URL・応答時間がすべて PASS', async () => {
     const results = await checkMonitor(parseSiteUrl(ORIGIN), probeFor(healthySite()), MONITOR);
-    expect(results.map((entry) => [entry.status, entry.name])).toEqual([
-      ['PASS', 'トップページの応答'],
-      ['PASS', 'HTTPS の証明書'],
-      ['PASS', 'robots.txt'],
-      ['PASS', 'sitemap.xml'],
-      ['PASS', 'sitemap 掲載 URL の応答'],
-      ['PASS', '応答時間'],
-    ]);
+    expect(results.every((entry) => entry.status === 'PASS')).toBe(true);
+    for (const name of ['canonical', 'og:url', '実行時', '存在しない URL', '応答時間'])
+      expect(named(results, name).status).toBe('PASS');
   });
 
   it('しきい値を超えて遅いページを WARN で挙げる', async () => {
@@ -264,7 +260,7 @@ describe('out/ を読む模擬配信（リハーサル）', () => {
     writeFileSync(join(dir, 'sitemap.xml'), healthySite()[`${ORIGIN}/sitemap.xml`]!.body!);
     const probe = createProbe({ fetch: distFetch(dir), network: false });
     const results = await checkLive(parseSiteUrl(ORIGIN), probe, POLICY);
-    expect(tally(results)).toEqual({ PASS: 8, WARN: 0, FAIL: 0, SKIP: 3 });
+    expect(tally(results)).toEqual({ PASS: 9, WARN: 0, FAIL: 0, SKIP: 3 });
   });
 
   it('ディレクトリの外は読まない', async () => {
@@ -283,5 +279,139 @@ describe('HTML から読む事実', () => {
     );
     expect(facts.runtimeScripts).toEqual(['inline']);
     expect(facts.inlineHandlers).toEqual(['<rect onload>']);
+  });
+});
+
+describe('監視の見逃しを防ぐ', () => {
+  const expectations = { ...POLICY, slowMs: 3000, expectedPaths: FILES.map((file) => `/${file}`) };
+
+  it('ページと sitemap の両方から同じ URL が消えても検出する', async () => {
+    const routes = healthySite();
+    delete routes[`${ORIGIN}/price.html`];
+    routes[`${ORIGIN}/sitemap.xml`]!.body = routes[`${ORIGIN}/sitemap.xml`]!.body!.replace(
+      `  <url><loc>${ORIGIN}/price.html</loc></url>\n`,
+      '',
+    );
+    const results = await checkMonitor(parseSiteUrl(ORIGIN), probeFor(routes), expectations);
+    expect(named(results, '公開ページ一覧').detail).toContain('不足: /price.html');
+    expect(named(results, '公開ページ一覧').status).toBe('FAIL');
+    expect(named(results, 'sitemap 掲載 URL').detail).toContain('/price.html → 404');
+  });
+
+  it('sitemap の重複とコードにない URL を検出する', async () => {
+    const routes = healthySite();
+    routes[`${ORIGIN}/sitemap.xml`]!.body +=
+      `<loc>${ORIGIN}/price.html</loc><loc>${ORIGIN}/old.html</loc>`;
+    const results = await checkLive(parseSiteUrl(ORIGIN), probeFor(routes), expectations);
+    expect(named(results, 'sitemap.xml').status).toBe('FAIL');
+    expect(named(results, '公開ページ一覧').detail).toContain('未登録: /old.html');
+  });
+
+  it('期待 URL が外部サイトを指す設定をネットワーク呼出し前に拒否する', async () => {
+    const probe = createProbe({
+      fetch: async () => {
+        throw new Error('network should not be called');
+      },
+    });
+    await expect(
+      checkLive(parseSiteUrl(ORIGIN), probe, { ...POLICY, expectedPaths: ['//other.test/'] }),
+    ).rejects.toThrow('絶対パス');
+  });
+
+  it.each(['noindex', 'NOINDEX, FOLLOW', 'none'])(
+    'robots meta の検索除外 %s を定期監視でも検出する',
+    async (directive) => {
+      const routes = healthySite();
+      routes[`${ORIGIN}/price.html`]!.body = page(
+        'price.html',
+        `<meta name="ROBOTS" content="${directive}">`,
+      );
+      const result = named(
+        await checkMonitor(parseSiteUrl(ORIGIN), probeFor(routes), expectations),
+        '検索除外',
+      );
+      expect(result.status).toBe('FAIL');
+      expect(result.detail).toContain('/price.html');
+    },
+  );
+
+  it('CDN が付けた X-Robots-Tag を検出し max-image-preview:none は誤検出しない', async () => {
+    let robotsTag = 'googlebot: noindex, follow';
+    const probe = createProbe({
+      fetch: async (url) => {
+        const response = await mockFetch(healthySite())(url);
+        response.headers.set('x-robots-tag', robotsTag);
+        return response;
+      },
+      resolveHost: async () => ['192.0.2.10'],
+      certificate: async () => validCertificate,
+    });
+    expect(
+      named(await checkLive(parseSiteUrl(ORIGIN), probe, expectations), '検索除外').status,
+    ).toBe('FAIL');
+    robotsTag = 'max-image-preview:none, index';
+    expect(
+      named(await checkLive(parseSiteUrl(ORIGIN), probe, expectations), '検索除外').status,
+    ).toBe('PASS');
+  });
+
+  it('連絡先の文字だけがあってリンクが壊れている場合を検出する', async () => {
+    const routes = healthySite();
+    const contact = { path: '/terms.html', links: ['mailto:hello@tsumugi.test', 'tel:0312345678'] };
+    const policy = { ...expectations, contact };
+    routes[`${ORIGIN}/terms.html`]!.body = page('terms.html', 'hello@tsumugi.test 0312345678');
+    expect(
+      named(await checkMonitor(parseSiteUrl(ORIGIN), probeFor(routes), policy), '問い合わせ')
+        .status,
+    ).toBe('FAIL');
+    routes[`${ORIGIN}/terms.html`]!.body = page(
+      'terms.html',
+      contact.links.map((link) => `<a href="${link}">連絡</a>`).join(''),
+    );
+    expect(
+      named(await checkMonitor(parseSiteUrl(ORIGIN), probeFor(routes), policy), '問い合わせ')
+        .status,
+    ).toBe('PASS');
+  });
+
+  it('template 内の利用できないリンクを連絡先と数えない', () => {
+    const facts = inspectHtml('<template><a href="mailto:test@example.test">email</a></template>');
+    expect(facts.links).toEqual([]);
+  });
+
+  it('定期監視でも配信側の JS 注入・canonical の誤りを拒否する', async () => {
+    const routes = healthySite();
+    routes[`${ORIGIN}/price.html`]!.body = page(
+      'price.html',
+      '<script src="/injected.js"></script>',
+    ).replaceAll(`${ORIGIN}/price.html`, 'https://other.test/');
+    const results = await checkMonitor(parseSiteUrl(ORIGIN), probeFor(routes), expectations);
+    expect(named(results, '実行時').status).toBe('FAIL');
+    expect(named(results, 'canonical').status).toBe('FAIL');
+  });
+});
+
+describe('監視先の決定', () => {
+  const config = { domain: 'tsumugi.test', placeholder: false, authorizedDomain: 'tsumugi.test' };
+  it('変数が空でも明示された自社公開先を監視する', () => {
+    expect(monitorTarget('', config).origin).toBe(ORIGIN);
+    expect(monitorTarget(undefined, config).origin).toBe(ORIGIN);
+  });
+  it.each([
+    { ...config, placeholder: true },
+    { ...config, authorizedDomain: null },
+    { ...config, domain: 'customer.test' },
+  ])('未公開・顧客テンプレートの監視未設定を成功扱いにしない %#', (config) => {
+    expect(() => monitorTarget('', config)).toThrow('監視は実行していません');
+  });
+  it('明示した対象を優先するが不正な URL は拒否する', () => {
+    expect(
+      monitorTarget('https://customer.test', { ...config, authorizedDomain: null }).origin,
+    ).toBe('https://customer.test');
+    expect(() => monitorTarget('http://customer.test', config)).toThrow();
+  });
+  it('期待するページには全プランを含み、404 は含まない', () => {
+    expect(siteExpectations().expectedPaths).toContain('/plans.html');
+    expect(siteExpectations().expectedPaths).not.toContain('/404.html');
   });
 });

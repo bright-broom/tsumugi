@@ -14,16 +14,34 @@ export interface PageFacts {
   runtimeScripts: string[];
   /** onclick などのインラインイベントハンドラ */
   inlineHandlers: string[];
+  links: string[];
+  robots: string[];
 }
 
 const attribute = (element: Element, name: string) =>
   element.attrs.find((entry) => entry.name === name)?.value;
 
 export function inspectHtml(html: string): PageFacts {
-  const facts: PageFacts = { canonical: [], ogUrl: [], runtimeScripts: [], inlineHandlers: [] };
-  const visit = (node: Node) => {
+  const facts: PageFacts = {
+    canonical: [],
+    ogUrl: [],
+    runtimeScripts: [],
+    inlineHandlers: [],
+    links: [],
+    robots: [],
+  };
+  const visit = (node: Node, inert = false) => {
     if ('tagName' in node) {
       const element = node;
+      if (!inert && element.tagName === 'a') facts.links.push(attribute(element, 'href') ?? '');
+      if (
+        !inert &&
+        element.tagName === 'meta' &&
+        ['robots', 'googlebot', 'bingbot'].includes(
+          (attribute(element, 'name') ?? '').toLowerCase(),
+        )
+      )
+        facts.robots.push(attribute(element, 'content') ?? '');
       const rel = (attribute(element, 'rel') ?? '').toLowerCase().split(/\s+/);
       if (element.tagName === 'link' && rel.includes('canonical'))
         facts.canonical.push(attribute(element, 'href') ?? '');
@@ -40,9 +58,9 @@ export function inspectHtml(html: string): PageFacts {
       for (const { name } of element.attrs)
         if (/^on[a-z]+$/i.test(name)) facts.inlineHandlers.push(`<${element.tagName} ${name}>`);
       if (element.tagName === 'template')
-        visit((element as DefaultTreeAdapterMap['template']).content);
+        visit((element as DefaultTreeAdapterMap['template']).content, true);
     }
-    if ('childNodes' in node) for (const child of node.childNodes) visit(child);
+    if ('childNodes' in node) for (const child of node.childNodes) visit(child, inert);
   };
   visit(parse(html));
   return facts;

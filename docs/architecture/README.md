@@ -144,3 +144,5 @@
 - [0062 全プランの比較ページと未発売プランの状態表示](0062-plan-catalog.md)
 
 - [0063 デザイン変更の責務と回帰検証](0063-design-maintainability.md)
+
+- [0064 公開後の監視を実行し、期待するページと受付導線を検証する](0064-production-monitoring.md)

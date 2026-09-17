@@ -5,14 +5,15 @@
  *     SITE_URL=https://<ドメイン> npm run monitor
  *     npm run monitor -- --url https://example.jp --dist out   通信せずに判定を試す
  *
- * .github/workflows/site-monitor.yml が、リポジトリ変数 SITE_URL があるときだけ定期実行する。
+ * SITE_URL 未指定では自社の公開判断に一致する DOMAIN を使う。顧客サイトは明示設定が必要。
  * FAIL が1件でもあれば終了コード 1（ワークフローが失敗し、GitHub の標準の通知が届く）。
  */
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
 import { ROOT } from '../../paths';
 import { report } from '../results';
-import { checkMonitor, parseSiteUrl } from '../site-checks';
+import { checkMonitor } from '../site-checks';
+import { monitorTarget, siteExpectations } from '../site-expectations';
 import { nonNegativeInteger, probeFor } from './options';
 
 const USAGE =
@@ -30,10 +31,10 @@ const { values } = parseArgs({
 });
 
 try {
-  if (!values.url) throw new Error(USAGE);
-  const site = parseSiteUrl(values.url);
+  const site = monitorTarget(values.url);
   const startedAt = new Date();
   const results = await checkMonitor(site, probeFor(values.dist), {
+    ...siteExpectations(),
     slowMs: nonNegativeInteger(values['slow-ms'], '--slow-ms'),
     warnDays: nonNegativeInteger(values['warn-cert-days'], '--warn-cert-days'),
     failDays: nonNegativeInteger(values['fail-cert-days'], '--fail-cert-days'),
@@ -43,5 +44,6 @@ try {
   process.exitCode = report(title, results, { target: site.origin, startedAt, json: values.json });
 } catch (error) {
   console.error(error instanceof Error ? error.message : error);
+  console.error(USAGE);
   process.exitCode = 2;
 }
