@@ -25,7 +25,7 @@ npm run ops:requests -- add    --customer <顧客ID> --url <URL> --description <
                                [--attach <添付の保管場所>]... [--assignee <担当>] [--due YYYY-MM-DD] [--at <受付日時>]
 npm run ops:requests -- move   --customer <顧客ID> --id <依頼ID> --to in_progress|awaiting_review|done --by <記録者> [--note]
 npm run ops:requests -- assign --customer <顧客ID> --id <依頼ID> [--assignee <担当>] [--due YYYY-MM-DD]
-npm run ops:requests -- log    --customer <顧客ID> --id <依頼ID> --minutes <分> --by <作業者> [--date YYYY-MM-DD] [--note]
+npm run ops:requests -- log    --customer <顧客ID> --id <依頼ID> --minutes <分> --kind change|warranty --by <作業者> [--date YYYY-MM-DD] [--note]
 npm run ops:requests -- notice --customer <顧客ID> --id <依頼ID> --channel <連絡手段> --by <記録者> [--note]
 npm run ops:requests -- list   --customer <顧客ID> [--today YYYY-MM-DD]
 npm run ops:requests -- hours  --customer <顧客ID> --month YYYY-MM [--plan <継続支援のキー>]
@@ -122,6 +122,7 @@ runCli(USAGE, {
       logWork(file, args.required('id'), {
         date: parseDate(args.optional('date') ?? jstDate(now()), '--date'),
         minutes: args.integer('minutes'),
+        kind: args.required('kind'),
         by: args.required('by'),
         ...(note ? { note } : {}),
       }),
@@ -166,19 +167,24 @@ runCli(USAGE, {
     const month = parseMonth(args.required('month'), '--month');
     const work = monthlyWork(file, month);
     const average = threeMonthAverage(file, month);
-    if (!work.tracked)
+    if (!work.tracked) {
       console.log(`${month} は記録開始（${file.trackingSince}）より前です（未記録）`);
-    for (const r of work.byRequest) console.log(`${r.id}\t${r.minutes}分\t${r.description}`);
+      return;
+    }
+    for (const r of work.byRequest)
+      console.log(
+        `${r.id}\t実作業 ${r.minutes}分／通常変更 ${r.changeMinutes}分／無償修補 ${r.warrantyMinutes}分／未分類 ${r.unclassifiedMinutes}分\t${r.description}`,
+      );
     console.log(
-      `合計 ${work.rawMinutes}分 → 5分単位の切り上げ ${work.billedMinutes}分${work.partial ? '（記録開始が月の途中）' : ''}`,
+      `実作業 ${work.rawMinutes}分／通常変更 ${work.changeMinutes}分／無償修補 ${work.warrantyMinutes}分（枠から除外）／未分類 ${work.unclassifiedMinutes}分 → 変更枠消費 ${work.billedMinutes === null ? '未確定（過去記録の分類を確認）' : `${work.billedMinutes}分（月合計を5分で切り上げ）`}${work.partial ? '（記録開始が月の途中）' : ''}`,
     );
     console.log(
       average.averageMinutes === null
-        ? '3か月平均：記録が 3 か月分そろっていないため出しません'
+        ? '3か月平均：月初からの記録と作業区分が 3 か月分そろっていないため出しません'
         : `3か月平均：${average.averageMinutes.toFixed(1)}分`,
     );
     const plan = args.optional('plan');
-    if (plan) {
+    if (plan && work.tracked && !work.partial && work.billedMinutes !== null) {
       const allowance = allowanceFor(plan);
       const rest = allowance.minutes - work.billedMinutes;
       console.log(

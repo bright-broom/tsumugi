@@ -67,11 +67,11 @@ const requests = (): RequestsFile => {
     dueOn: '2026-09-05',
   });
   let f = moveRequest(first.file, first.id, 'in_progress', { at: request.receivedAt, by: 'x' });
-  f = logWork(f, first.id, { date: '2026-08-31', minutes: 50, by: 'x' });
-  f = logWork(f, first.id, { date: '2026-09-01', minutes: 22, by: 'x' });
+  f = logWork(f, first.id, { kind: 'change', date: '2026-08-31', minutes: 50, by: 'x' });
+  f = logWork(f, first.id, { kind: 'change', date: '2026-09-01', minutes: 22, by: 'x' });
   const second = addRequest(f, { ...request, description: '写真を差し替える（サンプル）' });
   f = moveRequest(second.file, second.id, 'in_progress', { at: request.receivedAt, by: 'x' });
-  return logWork(f, second.id, { date: '2026-09-02', minutes: 11, by: 'x' });
+  return logWork(f, second.id, { kind: 'change', date: '2026-09-02', minutes: 11, by: 'x' });
 };
 
 const gbp = (
@@ -137,7 +137,7 @@ describe('0 件と未計測を取り違えない', () => {
 describe('二重計上をしない', () => {
   it('作業時間は対象月の記録だけを月合計で 5 分切り上げ、前月分を足さない', () => {
     const md = renderMarkdown(buildMonthlyReport(input()).document);
-    expect(md).toContain('今月の作業時間：33分（月の合計を 5 分単位で切り上げて 35分）');
+    expect(md).toContain('変更枠消費：35分（通常変更の月合計を 5 分単位で切り上げ）');
     expect(md).toContain('| req-0001 | 営業時間の表記を直す（サンプル） | 着手 | 22分 |');
     // 7 月 0 分・8 月 50 分・9 月 35 分（すべて月初から記録）
     expect(md).toContain('3 か月平均：28.3分');
@@ -211,5 +211,34 @@ describe('対応事項と下書き', () => {
     expect(approvalStatus('draft-1', null)).toBe('unapproved');
     expect(approvalStatus('draft-1', approval)).toBe('approved');
     expect(approvalStatus('draft-2', approval)).toBe('stale');
+  });
+});
+
+describe('修補の枠外集計と未分類の扱い', () => {
+  it('修補だけでは超過せず、実作業と枠外時間を両形式に表示する', () => {
+    const f = requests();
+    for (const r of f.requests)
+      for (const w of r.work) {
+        w.kind = 'warranty';
+        w.note = '合意仕様との差異の修補';
+      }
+    const result = buildMonthlyReport(input({ requests: f }));
+    for (const rendered of [renderMarkdown(result.document), renderHtml(result.document)]) {
+      expect(rendered).toContain('実作業時間：33分');
+      expect(rendered).toContain('無償修補：33分（変更枠から除外）');
+      expect(rendered).toContain('変更枠消費：0分');
+      expect(rendered).toContain('3 か月平均：0分');
+    }
+    expect(result.actions.some((a) => a.includes('超えています'))).toBe(false);
+  });
+
+  it('過去の未分類があれば超過の断定を止め、確認事項を出す', () => {
+    const f = requests();
+    for (const r of f.requests) for (const w of r.work) delete w.kind;
+    const result = buildMonthlyReport(input({ requests: f }));
+    expect(renderMarkdown(result.document)).toContain('未分類：33分。変更枠消費：未確定');
+    expect(result.actions.some((a) => a.includes('未分類の記録 33分'))).toBe(true);
+    expect(result.actions.some((a) => a.includes('超えています'))).toBe(false);
+    expect(renderMarkdown(result.document)).not.toContain('3 か月平均：28.3分');
   });
 });
