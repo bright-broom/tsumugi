@@ -294,3 +294,14 @@ npm run backup:restore-test -- --backup .artifacts/backup/tsumugi-<日時>-<comm
 [status.md](status.md) の「残課題」にまとめてある（課題の一覧は1か所だけに持つ）。
 
 Vercel の Git 配備は静的検査だけで全項目のレポートを持たないため、`works.html` の検査件数は「—」（未計測）になる。件数を載せるには、同じコミットのきれいなチェックアウトで build → verify（全項目・FAIL 0）→ build を行い、その `out/` をそのまま配る（[ADR 0025](architecture/0025-verified-build-report.md)）。どの方法で配るかはオーナーが決める。
+
+## 公開成果物の一致確認
+
+`npm run check:release -- --url https://<公開先> --dist <公開に使った成果物>` で、HTML・CSS・画像を含む全ファイルと公開トップをSHA-256で照合する。記録は `.artifacts/ops/check-release.json`。全一致は終了0、不一致やHTTPエラーは1、比較元や入力の問題は2。比較元は公開用ディレクトリを明示し、生成中や中身が変わるディレクトリは使わない。
+
+- 比較元の指紋を固定する場合は `--fingerprint <記録済みのSHA256>`。指紋が異なれば通信前に停止する。
+- 公開前の模擬検査は `--served-dist <模擬配信元>` を追加する。この場合は通信せず、結果に「模擬配信」と記す。
+- HTTP200と内容一致を要求する。404.html だけは404も許可する。転送は追跡せず、意図した公開先を指定し直す。
+- 不一致のパスを確認し、古い版・配信の一部混在・ビルド条件差を切り分ける。コマンドはデプロイ・切戻し・ファイル削除を行わない。
+- 同じコミットからの再ビルドでも、実測証跡の有無で works.html が変わることがある。配備に使用した実物と比較し、GitのSHAだけで同一内容とみなさない。
+- 配備IDとcommitの対応、余分な公開ファイル、ヘッダー・画面の動作はこの検査だけでは確認できない。check:live・monitorと併用する。[ADR 0068](architecture/0068-release-content-verification.md)。

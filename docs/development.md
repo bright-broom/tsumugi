@@ -20,6 +20,7 @@ npm run tokens           # src/styles/design.tokens.json → src/styles/tokens.c
 npm run og               # OGP画像とファビコン（文面を変えたときだけ。差分をコミットする）
 npm run og:check         # 一時ディレクトリに生成し public/og/ とバイト比較（macOS の正本環境で。ADR 0047）
 npm run check:live -- --url https://<ドメイン>   # 公開後の確認（--dist out で公開前のリハーサル。ADR 0044）
+npm run check:release -- --url https://<公開先> --dist <公開に使った成果物> # 全ファイルの配信内容一致（ADR 0068）
 npm run monitor -- --url https://<ドメイン>      # 公開後の監視と同じ確認（ADR 0046）
 npm run backup           # git bundle と目録を .artifacts/backup/ に作る（ADR 0045）
 npm run backup:restore-test -- --backup <dir>    # 別ディレクトリへの復元・照合・ビルドと所要時間の記録

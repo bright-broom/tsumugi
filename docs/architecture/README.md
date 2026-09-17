@@ -152,3 +152,5 @@
 - [0066 商品の提供準備状態を見積発行に適用する](0066-estimate-readiness.md)
 
 - [0067 復元テストで既存の作業領域を削除しない](0067-restore-workspace-ownership.md)
+
+- [0068 比較元の公開成果物と配信内容を全ファイルで照合する](0068-release-content-verification.md)
