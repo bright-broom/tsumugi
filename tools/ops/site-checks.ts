@@ -19,6 +19,9 @@ export interface CertificatePolicy {
   /** 残り日数がこれ未満なら FAIL */
   failDays: number;
   now?: Date;
+  /** Known public paths from the checkout; do not trust the remote sitemap as the only inventory. */
+  expectedPaths?: readonly string[];
+  contact?: { path: string; links: readonly string[] };
 }
 
 /** `https://<ドメイン>` だけを受け付ける（パス・ポート・クエリ付きは取り違えの元なので拒否）。 */
@@ -190,7 +193,11 @@ async function readSitemap(probe: Probe, origin: string) {
   if (!urls.length) return { check: result('FAIL', name, '<loc> が1件もない'), urls };
   const foreign = urls.filter((url) => {
     try {
-      return new URL(url).origin !== origin;
+      const parsed = new URL(url);
+      return (
+        parsed.origin !== origin ||
+        !!(parsed.username || parsed.password || parsed.search || parsed.hash)
+      );
     } catch {
       return true;
     }
@@ -204,7 +211,45 @@ async function readSitemap(probe: Probe, origin: string) {
       ),
       urls: urls.filter((url) => !foreign.includes(url)),
     };
+  if (new Set(urls).size !== urls.length)
+    return {
+      check: result('FAIL', name, '同じ URL が重複して掲載されている'),
+      urls: [...new Set(urls)],
+    };
   return { check: result('PASS', name, `${urls.length} 件、すべて ${origin} を指す`), urls };
+}
+
+function expectedUrls(origin: string, paths: readonly string[]): string[] {
+  return paths.map((path) => {
+    const url = new URL(path, origin);
+    if (
+      !path.startsWith('/') ||
+      path.startsWith('//') ||
+      url.origin !== origin ||
+      url.search ||
+      url.hash ||
+      url.username ||
+      url.password
+    )
+      throw new Error(`期待するページは同じサイトの絶対パスで指定してください: ${path}`);
+    return url.href;
+  });
+}
+
+function checkInventory(actual: readonly string[], expected: readonly string[]) {
+  const missing = expected.filter((url) => !actual.includes(url));
+  const extra = actual.filter((url) => !expected.includes(url));
+  const problems = [
+    ...missing.map((url) => `不足: ${pathOf(url)}`),
+    ...extra.map((url) => `未登録: ${pathOf(url)}`),
+  ];
+  return problems.length
+    ? result('FAIL', '公開ページ一覧の一致', listed(problems))
+    : result(
+        'PASS',
+        '公開ページ一覧の一致',
+        `コードで定義した ${expected.length} URL と sitemap が一致`,
+      );
 }
 
 type Fetched = { url: string; response: HttpResult } | { url: string; error: string };
@@ -244,7 +289,13 @@ function checkPageStatus(pages: readonly Fetched[]) {
 const okPages = (pages: readonly Fetched[]) =>
   pages.flatMap((page) =>
     'response' in page && page.response.status === 200
-      ? [{ url: page.url, facts: inspectHtml(page.response.body) }]
+      ? [
+          {
+            url: page.url,
+            facts: inspectHtml(page.response.body),
+            robotsTag: page.response.robotsTag ?? '',
+          },
+        ]
       : [],
   );
 
@@ -279,6 +330,52 @@ function checkNoRuntimeJs(pages: ReturnType<typeof okPages>) {
     : result('PASS', name, `${pages.length} ページとも JSON-LD 以外の script なし`);
 }
 
+function checkIndexability(pages: ReturnType<typeof okPages>) {
+  const name = '検索除外の混入なし';
+  if (!pages.length) return result('SKIP', name, '200 で取得できたページがない');
+  // Match directives, not values such as max-image-preview:none. Header agent scopes are preserved in the report.
+  const excluded = (value: string) =>
+    value.split(',').some((part) => {
+      const rule = part.trim().toLowerCase();
+      return (
+        /^(noindex|none)$/.test(rule) ||
+        /^[a-z0-9_-]+:\s*noindex$/.test(rule) ||
+        /^(googlebot|bingbot):\s*none$/.test(rule)
+      );
+    });
+  const problems = pages.flatMap(({ url, facts, robotsTag }) =>
+    [...facts.robots, robotsTag].filter(excluded).map((value) => `${pathOf(url)}: ${value}`),
+  );
+  return problems.length
+    ? result('FAIL', name, listed(problems))
+    : result(
+        'PASS',
+        name,
+        `${pages.length} ページの robots meta・X-Robots-Tag に noindex / none なし（検索掲載の保証ではない）`,
+      );
+}
+
+function checkContact(
+  pages: ReturnType<typeof okPages>,
+  origin: string,
+  contact: NonNullable<CertificatePolicy['contact']>,
+) {
+  const url = expectedUrls(origin, [contact.path])[0]!;
+  const page = pages.find((page) => page.url === url);
+  const missing = contact.links.filter((link) => !page?.facts.links.includes(link));
+  if (!page || missing.length)
+    return result(
+      'FAIL',
+      '問い合わせ導線',
+      `${contact.path}: ${page ? `設定済みリンクが不足: ${missing.join(', ')}` : 'ページを取得できない'}`,
+    );
+  return result(
+    'PASS',
+    '問い合わせ導線',
+    `${contact.path} に設定済みの ${contact.links.length} リンクあり（通話・送信はしていない）`,
+  );
+}
+
 async function checkNotFound(probe: Probe, origin: string, now: Date) {
   const name = '存在しない URL は 404';
   const url = `${origin}/tsumugi-check-missing-${now.getTime().toString(36)}.html`;
@@ -293,12 +390,10 @@ async function checkNotFound(probe: Probe, origin: string, now: Date) {
 }
 
 /** 独自ドメインでの公開直後に確かめる項目（#14）。 */
-export async function checkLive(
-  site: URL,
-  probe: Probe,
-  policy: CertificatePolicy,
-): Promise<CheckResult[]> {
+async function inspectSite(site: URL, probe: Probe, policy: CertificatePolicy) {
   const { origin, hostname } = site;
+  const expected = policy.expectedPaths ? expectedUrls(origin, policy.expectedPaths) : null;
+  const contactUrls = policy.contact ? expectedUrls(origin, [policy.contact.path]) : [];
   const results = [
     await checkDns(probe, hostname),
     await checkCertificate(probe, hostname, policy),
@@ -308,16 +403,30 @@ export async function checkLive(
   ];
   const sitemap = await readSitemap(probe, origin);
   results.push(sitemap.check);
-  const pages = await fetchAll(probe, sitemap.urls);
+  if (expected) results.push(checkInventory(sitemap.urls, expected));
+  const pages = await fetchAll(probe, [
+    ...new Set([...sitemap.urls, ...(expected ?? []), ...contactUrls]),
+  ]);
   const readable = okPages(pages);
   results.push(
     checkPageStatus(pages),
     checkSelfReference(readable, 'canonical がこのドメインを指す', (facts) => facts.canonical),
     checkSelfReference(readable, 'og:url がこのドメインを指す', (facts) => facts.ogUrl),
     checkNoRuntimeJs(readable),
+    checkIndexability(readable),
     await checkNotFound(probe, origin, policy.now ?? new Date()),
   );
-  return results;
+  if (policy.contact) results.push(checkContact(readable, origin, policy.contact));
+  return { results, pages };
+}
+
+/** Public endpoint checks do not send forms, email or telephone calls. */
+export async function checkLive(
+  site: URL,
+  probe: Probe,
+  policy: CertificatePolicy,
+): Promise<CheckResult[]> {
+  return (await inspectSite(site, probe, policy)).results;
 }
 
 export interface MonitorPolicy extends CertificatePolicy {
@@ -342,21 +451,13 @@ function checkResponseTimes(pages: readonly Fetched[], slowMs: number) {
     : result('PASS', name, detail);
 }
 
-/** 公開後の定期監視で確かめる項目（#32）。死活・証明書・robots・sitemap 掲載 URL・応答時間。 */
+/** 定期監視にも公開直後と同じ検査を適用し、応答時間を加える。 */
 export async function checkMonitor(
   site: URL,
   probe: Probe,
   policy: MonitorPolicy,
 ): Promise<CheckResult[]> {
-  const { origin, hostname } = site;
-  const results = [
-    await checkTopPage(probe, origin),
-    await checkCertificate(probe, hostname, policy),
-    await checkRobots(probe, origin),
-  ];
-  const sitemap = await readSitemap(probe, origin);
-  results.push(sitemap.check);
-  const pages = await fetchAll(probe, sitemap.urls);
-  results.push(checkPageStatus(pages), checkResponseTimes(pages, policy.slowMs));
+  const { results, pages } = await inspectSite(site, probe, policy);
+  results.push(checkResponseTimes(pages, policy.slowMs));
   return results;
 }

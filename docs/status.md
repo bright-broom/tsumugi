@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-17（AI 共通の引き継ぎ情報を整備。PR #79 の main マージとチェック成功を再確認。本番 URL の実表示は未確認）
+- 最終更新：2026-09-18（機能・運用監査 34 項目、open 41 Issue の照合と監視修正。ローカルと公開 URL の検査を完了。main 上の定期監視への反映は別途確認）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -9,6 +9,30 @@
 ---
 
 ## 現状
+
+### Principal Engineer 視点の監査と監視修正（2026-09-18）
+
+[不足監査](product/feature-audit-2026-09-18.md) に 34 項目と open Issue 41 件の対応表、優先順位、完了条件・必要な担当・提供前の期限を整理した。自社サイト・顧客テンプレート・社内ツールを区別し、コード不足と外部設定・実証待ちを分けている。
+
+**最優先は監視の未実行を success とする不具合。** GitHub の Site monitor 実行 `35249976398` は Monitor が skipped、Variables は 0 件。`fix/production-monitoring` で、自社公開判断に一致する DOMAIN の既定監視、対象未設定時の失敗、コードの公開一覧と sitemap の照合、検索除外・JS・canonical・404・問い合わせリンクの定期確認、JSON 証跡の保存を実装した（[ADR 0064](architecture/0064-production-monitoring.md)）。
+
+- ローカル検証：`npm run validate` 成功（当初 545 単体・12 料金テスト・静的 PASS 332 / WARN 1 / FAIL 0）。追加の template 内リンク判定を含めた最終の型・lint・**Vitest 546 件**も合格。本番全項目 **PASS 600 / WARN 3 / FAIL 0**、22 ページ・実行時 JS 0。既存の専門家・受入未確認の WARN 3 件を維持。
+- 公開 URL を修正後の monitor で検査し **PASS 15 / WARN 0 / FAIL 0 / SKIP 0**。期待する 21 公開ページと電話・メールリンクが一致。実通話・実送信、配備 ID と alias の対応、検索掲載、画面操作の証明ではない。
+- CLI の正常な模擬配信は PASS 12 / SKIP 3。ページと sitemap の同時削除・noindex・メールリンク破壊の故障注入で **FAIL 4、終了コード 1** を確認。DNS・証明書・HTTP 転送は模擬配信の対象外。
+- 出力 52 ファイルのうち **51 ファイルの SHA-256 が一致**。`works.html` のみ、過去の同 commit の検証表示から未コミット状態の「—」へ変わった。公開ページの実装・価格・販売状態・CSS は変更していない。
+- 外部の新事実：Repository API は **PRIVATE**。main 保護の取得は 403 で有効性未確認、Weekly backup の実行一覧は 0 件。可視性・契約・権限を変更せず監査に残した。旧 Public 記録を現在の外部状態と混同しない。
+- 証跡：`.artifacts/audit/` の `validate.log`、`production.log`、`final-check.log`、`final-lint.log`、`final-tests.log`、`live-monitor.json`、`rehearsal.json`、`faults.json`、`output-comparison.json`、`monitor-before.json`（Git 管理外）。上記検証は `fix/production-monitoring` の未コミット差分に対して実施。コミット後の再検証は別の証跡として扱う。
+
+次は、無償修補を変更枠へ合算する工数モデル（監査 D03）と、未提供オプションの見積発行制御（C03）を優先。CMS・多言語の受付開始、顧客データの本番配備、法務承認は行っていない。GitHub の main 反映・定期実行の有効化は、ブランチ上の実装と分けて確認する。
+
+### 引き継ぎ再確認（2026-09-17 22:15 JST）
+
+- 作業先は `/Users/toshikisakuta/dev/tsumugi-wt/store`、ブランチ `docs/ai-handoff`、開始時 HEAD は `8e1b6c7` で差分なし。添付の `status.md` とリポジトリの文書は一致していた。別 checkout `/Users/toshikisakuta/dev/tsumugi` の未追跡ファイルは保持した。
+- fetch とリモート SHA 照合で `main = b4aa12560e3bb4ec6c6122b29c9eb0335a5e5fc1` を確認。PR #79 は MERGED、validate と Vercel は SUCCESS。`docs/ai-handoff` のリモートブランチと PR は取得結果に存在せず、引き継ぎ文書 `8e1b6c7` はローカルのみ。
+- 公開 URL に対して `npm run check:live -- --url https://tsumugi-six.vercel.app --json .artifacts/handoff/live-check.json` を実行し、**PASS 12 / WARN 0 / FAIL 0 / SKIP 0**。DNS・TLS・HTTPS 転送・robots・sitemap・掲載 21 ページの HTTP 200／canonical／og:url／実行時 JS なし・不存在 URL の 404 を確認。22 出力ページのうち 404 は sitemap の対象外。
+- `/plans.html` は HTTP 200。取得した HTML に現行 79,800 円・198,000 円と「準備中」「検討中」があることを確認。ブラウザでの見た目・操作、実機 Safari、production alias と対象 deployment の一致は未確認であり、全項目の本番検査を再実行したという意味ではない。
+- open Issue は 41 件。実装済みの内容も含まれるため、open を未実装と読み替えない。次の作業を選ぶときに現行コード・受入条件と照合する。新料金採用、CMS 受付、専門家確認・受入記録は従来どおり未決／未完了。
+- 今回の変更はこの文書のみ。証跡は `.artifacts/handoff/live-check.json` と `takeover-state.json`（Git 管理外）。アプリのビルド・単体テストは再実行していない。引き継ぎ文書の GitHub 反映と、本番配備先・画面操作の照合を次の確認候補として残す。
 
 ### 繰り返すリデザインへの備え（2026-09-17）
 
@@ -37,7 +61,7 @@
 | 構成                   | ルート直下の `src/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。22ページを `out/` に静的書き出し                                                                            |
 | 実行時 JS              | 全22ページで 0（`postbuild` と `verify` で確認）                                                                                                                                                                                                |
 | 検査                   | 本番全項目 **PASS 600 / WARN 3 / FAIL 0**、静的プレビュー PASS 332 / WARN 1 / FAIL 0（対象なし 42 件）。本番 WARN は専門家確認 2 件・受入確認記録の未実施（ADR 0056）。全プランページ追加による検査対象の増加。しきい値の変更なし（ADR 0062）。 |
-| 型・依存・文言         | `npm run check` が通る。ESLint エラー・警告 0、Vitest 530 件・料金モデル 12 件合格                                                                                                                                                              |
+| 型・依存・文言         | `npm run check` が通る。ESLint エラー・警告 0、Vitest 546 件・料金モデル 12 件合格                                                                                                                                                              |
 | 依存の健全性           | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定。Dependabot は ESLint と Node 型定義のメジャー更新だけを除外し、既存の互換性方針を維持（ADR 0003）                                                    |
 | 動作を確かめた環境     | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一                                                                                                                                        |
 | 文言とルート           | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004）                                                                                                |

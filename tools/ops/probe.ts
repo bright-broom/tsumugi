@@ -16,6 +16,7 @@ export interface HttpResult {
   status: number;
   location: string | null;
   body: string;
+  robotsTag?: string;
   /** 要求から本文の受信完了までのミリ秒 */
   ms: number;
 }
@@ -94,6 +95,7 @@ export function createProbe({
         status: response.status,
         location: response.headers.get('location'),
         body,
+        robotsTag: response.headers.get('x-robots-tag') ?? '',
         ms: Math.round(performance.now() - started),
       };
     },

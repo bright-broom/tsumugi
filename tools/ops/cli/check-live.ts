@@ -13,6 +13,7 @@ import { ROOT } from '../../paths';
 import { report, result } from '../results';
 import { checkLive, parseSiteUrl } from '../site-checks';
 import { nonNegativeInteger, probeFor } from './options';
+import { siteExpectations } from '../site-expectations';
 
 const USAGE =
   '使い方: npm run check:live -- --url https://<ドメイン> [--dist out] [--json <file>] [--warn-cert-days 21] [--fail-cert-days 7]';
@@ -41,6 +42,7 @@ try {
           `src/content/config.ts は ${DOMAIN}。このリポジトリからのビルドは canonical が ${site.hostname} を指さない`,
         ),
     ...(await checkLive(site, probe, {
+      ...siteExpectations(),
       warnDays: nonNegativeInteger(values['warn-cert-days'], '--warn-cert-days'),
       failDays: nonNegativeInteger(values['fail-cert-days'], '--fail-cert-days'),
       now: startedAt,

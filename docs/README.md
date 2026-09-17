@@ -32,6 +32,8 @@
 | Python／Astro から Next.js への移行                                                      | [history/2026-09-migration.md](history/2026-09-migration.md)                                           |
 | コードを触るとき（コマンド・書き方・置き場所の決まり）                                   | [../docs/development.md](development.md)                                                               |
 
+- [2026-09-18 機能・運用の不足監査（34 項目・41 Issue の対応）](product/feature-audit-2026-09-18.md)
+
 ---
 
 ## なぜこの形にしたか
