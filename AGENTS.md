@@ -8,7 +8,7 @@ Next.js が生成した、この文書末尾のルール（このバージョン
 
 ## 1. これは何か
 
-- 小規模事業者向けホームページ制作「紬（つむぎ）」の自社サービスサイト。21ページ
+- 小規模事業者向けホームページ制作「紬（つむぎ）」の自社サービスサイト。22ページ
 - 同じコードベースを、顧客に納品するサイトのテンプレートとして使い回す前提（2件目以降は中身を差し替えて作る）
 - **「実行時 JavaScript 0バイト」がサイトの売り文句そのもの。** 技術選定の理由もここにある
 - アプリのコードは `src/`（Next.js 16 Pages Router + React 19 + TypeScript）。静的HTMLに書き出し、どのホスティングにも置ける
@@ -56,8 +56,8 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 
 1. `npm run check`・`npm run lint`・`npm test` が通る
 2. `npm run build` が通る（postbuild が「実行時の script 0件・区切りコメント 0件」を出す）
-3. `npm run verify -- --mode production` が **PASS 581 / WARN 3 / FAIL 0**（対象なし 40 件。WARN は自社公開で記録した専門家・受入確認の未実施。ADR 0056）
-   - 検査項目やページを増減すると 581 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
+3. `npm run verify -- --mode production` が **PASS 600 / WARN 3 / FAIL 0**（対象なし 42 件。WARN は自社公開で記録した専門家・受入確認の未実施。ADR 0056）
+   - 検査項目やページを増減すると 600 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
 4. 見た目を変えないはずの変更（リファクタリング）では、`out/` の全ファイルのハッシュが変更前と同じ。HTML/CSSの生成方式自体を変更する場合は、変更対象以外のハッシュ一致と、同じブラウザでのPC・モバイルの画面比較で確かめ、差分の理由をADRに記録する（[ADR 0009](docs/architecture/0009-global-tailwind.md)）
 
 ## 5. 進め方

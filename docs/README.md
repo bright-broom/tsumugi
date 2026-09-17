@@ -16,6 +16,8 @@
 | 事業の規範（何を売り、何を売らないか・営業・納品・運用・法令） | [business/紬_ビジネスガイドライン.md](business/紬_ビジネスガイドライン.md) |
 | 事業の数字（料金レバー・プラン・補助金・掲載費） | [business/紬_事業の中身.xlsx](business/紬_事業の中身.xlsx) |
 | 月140時間で採用した料金体系・提供範囲・採算・検証計画 | [business/pricing-redesign-140h.md](business/pricing-redesign-140h.md) |
+| 上位商品の検討案（未採用）：CMS・個別開発の範囲、採算、顧客価値、商品化の条件 | [business/premium-pricing-proposal.md](business/premium-pricing-proposal.md) |
+| 全プランの比較・料金試算（現行と未採用案を区別）：制作、月額、追加オプション、総額、採算 | [business/紬_全プラン比較・料金試算.xlsx](business/紬_全プラン比較・料金試算.xlsx) |
 | サイトの主張・値付け・約束の置き場所・屋号・数字の出典 | [product/messaging-and-pricing.md](product/messaging-and-pricing.md) |
 | 21ページの役割と共通情報の管理 | [product/information-architecture.md](product/information-architecture.md) |
 | デザインの出所・スマホ表示・図・共有カード | [product/design.md](product/design.md) |

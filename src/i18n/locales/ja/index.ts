@@ -33,8 +33,10 @@ import works from '@/i18n/locales/ja/works';
 import storefront from '@/i18n/locales/ja/storefront';
 import collections from '@/i18n/locales/ja/collections';
 import entries from '@/i18n/locales/ja/entries';
+import catalog from '@/i18n/locales/ja/catalog';
 
 export const ja = {
+  catalog,
   og,
   cta,
   entry,

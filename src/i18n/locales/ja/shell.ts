@@ -8,6 +8,14 @@ export default {
   pageIndex: {
     label: 'このページの目次',
     pages: {
+      catalog: [
+        ['production', '制作プラン'],
+        ['custom', '個別設計・機能'],
+        ['support', '月額サポート'],
+        ['options', '追加オプション'],
+        ['total', '総額の目安'],
+        ['conditions', 'ご契約の前に'],
+      ],
       owned: [
         ['ownership', '所有の違い'],
         ['deliverables', '手元に残るもの'],

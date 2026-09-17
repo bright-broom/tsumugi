@@ -32,6 +32,9 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         navKey={ROUTES[route].file}
       >
         <PageIndex page="price" />
+        <a className="catalog-entry-link" href={href('plans')}>
+          {copy.catalogLink}
+        </a>
 
         <div id="production">
           <Entry full />

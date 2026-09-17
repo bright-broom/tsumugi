@@ -34,9 +34,9 @@ describe('catalog interpolation', () => {
 
 describe('route completeness', () => {
   it('uses one inventory for static pages, navigation, industry content and OG cards', () => {
-    expect(ALL_ROUTES).toHaveLength(21);
-    expect(STATIC_ROUTES).toHaveLength(19);
-    expect(new Set(ALL_ROUTES.map((r) => r.file)).size).toBe(21);
+    expect(ALL_ROUTES).toHaveLength(22);
+    expect(STATIC_ROUTES).toHaveLength(20);
+    expect(new Set(ALL_ROUTES.map((r) => r.file)).size).toBe(22);
     expect(Object.keys(OG_CARDS).sort()).toEqual(ALL_ROUTES.map((r) => r.file).sort());
     expect([...NAV, ...NAV_LEGAL, ...INDUSTRIES].map(([f]) => f).sort()).toEqual(
       PUBLIC_ROUTES.map((r) => r.file).sort(),

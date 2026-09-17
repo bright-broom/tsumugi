@@ -140,3 +140,5 @@
 - [0060 ヒーロー画像の上端を保持する](0060-hero-top-alignment.md)
 
 - [0061 ヒーロー SVG の比率と表示サイズを設計し直す](0061-responsive-hero-canvas.md)
+
+- [0062 全プランの比較ページと未発売プランの状態表示](0062-plan-catalog.md)

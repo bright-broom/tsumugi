@@ -35,11 +35,11 @@ const problems = (source: CollectionSource) =>
   reviewCollections(source).problems.map((problem) => `${problem.slug}: ${problem.reason}`);
 
 describe('this site (no collection content)', () => {
-  it('generates no collection pages and keeps the 21 fixed routes, sitemap and navigation', () => {
+  it('generates no collection pages and keeps the 22 fixed routes, sitemap and navigation', () => {
     expect(collectionRoutes(SITE_COLLECTIONS)).toEqual([]);
     expect(collectionPaths('list')).toEqual([]);
     expect(collectionPaths('entry')).toEqual([]);
-    expect(ALL_ROUTES).toHaveLength(21);
+    expect(ALL_ROUTES).toHaveLength(22);
     expect(sitemapXml()).toBe(
       '<?xml version="1.0" encoding="UTF-8"?>\n' +
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
@@ -48,7 +48,7 @@ describe('this site (no collection content)', () => {
         ).join('') +
         '</urlset>\n',
     );
-    expect(NAV_GROUPS.flatMap((group) => group.entries)).toHaveLength(13);
+    expect(NAV_GROUPS.flatMap((group) => group.entries)).toHaveLength(14);
     expect(renderToStaticMarkup(<PublishedWorks />)).toBe('');
   });
 

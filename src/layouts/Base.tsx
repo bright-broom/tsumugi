@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useMessages } from '@/components/ContentProvider';
 /**
- * ページの器。21ページぶんの共通部分（ページごとの head / OGP / JSON-LD / ヘッダー / フッター / 固定CTA）。
+ * ページの器。22ページぶんの共通部分（ページごとの head / OGP / JSON-LD / ヘッダー / フッター / 固定CTA）。
  * ページに依らない head（テーマ色・アイコン・CSS）は pages/_document.tsx に置いてある。
  */
 import Head from 'next/head';

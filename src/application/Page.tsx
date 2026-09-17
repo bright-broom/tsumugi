@@ -11,6 +11,7 @@ import IndustryPage from '@/views/industry';
 import LegalPage from '@/views/legal';
 import OwnedPage from '@/views/owned';
 import PricePage from '@/views/price';
+import CatalogPage from '@/views/catalog';
 import PrivacyPage from '@/views/privacy';
 import SourcePage from '@/views/source';
 import SpecPage from '@/views/spec';
@@ -63,6 +64,8 @@ function renderPage(props: AnyPageProps) {
       return <OwnedPage {...props} />;
     case 'price':
       return <PricePage {...props} />;
+    case 'catalog':
+      return <CatalogPage {...props} />;
     case 'privacy':
       return <PrivacyPage {...props} />;
     case 'source':

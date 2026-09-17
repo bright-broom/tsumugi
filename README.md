@@ -2,7 +2,7 @@
 
 **事業の土台づくりと日々の改善を支えるサービスサイト。**
 
-Next.js・React・TypeScriptで構築し、21ページを静的HTMLとして配信します。文言・料金・URL・見た目を中央管理し、公開ページの**実行時JavaScriptは0バイト**に保っています。同じコードを、顧客サイトのテンプレートとして展開する前提の構成です。
+Next.js・React・TypeScriptで構築し、22ページを静的HTMLとして配信します。文言・料金・URL・見た目を中央管理し、公開ページの**実行時JavaScriptは0バイト**に保っています。同じコードを、顧客サイトのテンプレートとして展開する前提の構成です。
 
 [開発を始める](#開発を始める) · [構成を見る](#ディレクトリ構成) · [編集する場所](#変更したいときの入口) · [現在の状態](docs/status.md) · [資料一覧](docs/README.md)
 
@@ -146,15 +146,15 @@ flowchart TD
 
 ### ページの地図
 
-21ページは、サービス案内13・法務3・業種別4・404ページ1で構成します。以下は分類の図で、すべてのリンク関係を表すものではありません。
+22ページは、サービス案内14・法務3・業種別4・404ページ1で構成します。以下は分類の図で、すべてのリンク関係を表すものではありません。
 
 ```mermaid
 flowchart LR
-  routes["ルート登録 / 21ページ"] --> main["サービス案内 / 13"]
+  routes["ルート登録 / 22ページ"] --> main["サービス案内 / 14"]
   routes --> industry["業種別 / 4"]
   routes --> legal["法務 / 3"]
   routes --> error["エラー / 1"]
-  main --> offer["index・owned・price<br/>unlimited・source"]
+  main --> offer["index・owned・price・plans<br/>unlimited・source"]
   main --> proof["cost-cut・subsidy・spec<br/>flow・works"]
   main --> consult["faq・about・contact"]
   industry --> sectors["restaurant・koumuten<br/>salon・shigyo"]
@@ -206,7 +206,7 @@ npm run dev -- --port 3001 --hostname 127.0.0.1
 ```mermaid
 flowchart TD
   sync["1. トークンの同期検査"] --> assets["2. publicの生成<br/>CSS・ヒーローSVG・サイトマップ等"]
-  assets --> next["3. next build<br/>21ページを静的書き出し"]
+  assets --> next["3. next build<br/>22ページを静的書き出し"]
   next --> post["4. postbuild<br/>不要な印の除去・実行時JSの検査"]
   post --> out["out/<br/>納品物"]
   out --> static["静的検査<br/>文言・価格・リンク・構造等"]
@@ -256,7 +256,7 @@ VercelはRoot Directoryを未指定（リポジトリルート）とし、`npm r
 
 **現在は正式公開に向けた準備中です。** 事業者情報・ドメインには仮の値があり、問い合わせフォームの送信先は未設定です。検査の合格やデプロイの成功は、これらの設定完了を意味しません。機能ごとの未実装・設定待ち・運用未確認は [監査一覧 #41](https://github.com/bright-broom/tsumugi/issues/41) で追跡しています。
 
-全21ページの役割、共通化する情報と各ページに残す条件は [情報設計](docs/product/information-architecture.md) にまとめています。
+全22ページの役割、共通化する情報と各ページに残す条件は [情報設計](docs/product/information-architecture.md) にまとめています。
 
 ## 目的別のドキュメント
 

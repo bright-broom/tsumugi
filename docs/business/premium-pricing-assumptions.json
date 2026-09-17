@@ -1,0 +1,200 @@
+{
+  "status": "proposal-not-adopted",
+  "checkedAt": "2026-09-17",
+  "currency": "JPY",
+  "tax": "exclusive",
+  "assumptions": {
+    "monthlyHours": 140,
+    "adminHours": 28,
+    "reserveHours": 28,
+    "hourlyCost": 5000,
+    "fixedMonthlyCost": 50000,
+    "paymentFeeRate": 0.03,
+    "targetContributionMargin": 0.5,
+    "externalMonthlyEstimate": 3500,
+    "monthlyChurn": 0.02,
+    "supportConversion": 0.75
+  },
+  "builds": [
+    {
+      "key": "entry",
+      "name": "入口をつくる",
+      "price": 79800,
+      "pages": 1,
+      "hours": 5.5,
+      "cashCost": 2000,
+      "cashAcquisitionCost": 6000
+    },
+    {
+      "key": "core",
+      "name": "事業の土台をつくる",
+      "price": 198000,
+      "pages": 6,
+      "hours": 15,
+      "cashCost": 5000,
+      "cashAcquisitionCost": 10000
+    },
+    {
+      "key": "expand",
+      "name": "情報を育てる",
+      "price": 398000,
+      "pages": 9,
+      "hours": 26,
+      "cashCost": 10000,
+      "cashAcquisitionCost": 20000
+    },
+    {
+      "key": "cms30",
+      "price": 398000,
+      "hours": 30,
+      "cashCost": 30000
+    },
+    {
+      "key": "bespoke",
+      "price": 598000,
+      "hours": 36,
+      "cashCost": 40000
+    },
+    {
+      "key": "feature698",
+      "price": 698000,
+      "hours": 50,
+      "cashCost": 50000
+    },
+    {
+      "key": "feature898",
+      "price": 898000,
+      "hours": 50,
+      "cashCost": 50000
+    },
+    {
+      "key": "discovery",
+      "price": 55000,
+      "hours": 3,
+      "cashCost": 2000
+    }
+  ],
+  "support": [
+    {
+      "key": "self",
+      "name": "自分で管理",
+      "price": 0,
+      "workMinutes": 0,
+      "hours": 0,
+      "cashCost": 0
+    },
+    {
+      "key": "care",
+      "name": "守る",
+      "price": 3900,
+      "workMinutes": 0,
+      "hours": 0.3,
+      "cashCost": 300
+    },
+    {
+      "key": "update",
+      "name": "整える",
+      "price": 9800,
+      "workMinutes": 30,
+      "hours": 0.75,
+      "cashCost": 400
+    },
+    {
+      "key": "improve",
+      "name": "育てる",
+      "price": 29800,
+      "workMinutes": 90,
+      "hours": 2.25,
+      "cashCost": 700
+    }
+  ],
+  "normalBookedHours": 67.2,
+  "economicSurplusTarget": 0.15,
+  "scenarios": [
+    {
+      "name": "one-core",
+      "buildCounts": {
+        "core": 1
+      },
+      "supportCounts": {}
+    },
+    {
+      "name": "two-cms-30h",
+      "buildCounts": {
+        "cms30": 2
+      },
+      "supportCounts": {}
+    },
+    {
+      "name": "two-cms-26h",
+      "buildCounts": {
+        "expand": 2
+      },
+      "supportCounts": {}
+    },
+    {
+      "name": "two-cms-and-core",
+      "buildCounts": {
+        "expand": 2,
+        "core": 1
+      },
+      "supportCounts": {}
+    },
+    {
+      "name": "cms-and-support",
+      "buildCounts": {
+        "expand": 2
+      },
+      "supportCounts": {
+        "update": 10,
+        "improve": 3
+      }
+    },
+    {
+      "name": "feature698-and-core",
+      "buildCounts": {
+        "feature698": 1,
+        "core": 1
+      },
+      "supportCounts": {}
+    },
+    {
+      "name": "feature898-and-core",
+      "buildCounts": {
+        "feature898": 1,
+        "core": 1
+      },
+      "supportCounts": {}
+    },
+    {
+      "name": "feature898-only",
+      "buildCounts": {
+        "feature898": 1
+      },
+      "supportCounts": {}
+    },
+    {
+      "name": "all-entry",
+      "buildCounts": {
+        "entry": 12
+      },
+      "supportCounts": {}
+    },
+    {
+      "name": "prior-adopted-mix",
+      "buildCounts": {
+        "core": 1,
+        "expand": 1
+      },
+      "supportCounts": {
+        "care": 10,
+        "update": 16,
+        "improve": 6
+      }
+    }
+  ],
+  "stress": {
+    "hourMultiplier": 1.25,
+    "extraMinutesPerSupport": 30
+  }
+}

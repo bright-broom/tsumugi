@@ -34,7 +34,7 @@ export const IND_IC: Record<string, IconName> = Object.fromEntries(
 // Group membership is shared by the expanded header menu and footer.
 const GROUP_ROUTES = {
   service: ['index', 'owned', 'source', 'spec'],
-  costs: ['price', 'unlimited', 'cost-cut', 'subsidy'],
+  costs: ['plans', 'price', 'unlimited', 'cost-cut', 'subsidy'],
   next: ['flow', 'works', 'faq', 'about', 'contact'],
 } as const satisfies Record<
   keyof typeof copy.groups,
