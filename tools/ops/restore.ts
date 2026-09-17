@@ -5,8 +5,8 @@
  * 段階ごとの所要時間を記録する。1 段階でも失敗したら、そこで止める。
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync, rmSync, symlinkSync } from 'node:fs';
-import { join } from 'node:path';
+import { readFileSync, readdirSync, mkdirSync, rmSync, symlinkSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import {
   BUNDLE,
   CHECKSUMS,
@@ -58,7 +58,9 @@ const tail = (error: unknown) => {
 };
 
 export function restoreTest(options: RestoreOptions): RestoreReport {
-  const { backupDir, workDir, deps, build } = options;
+  const { deps, build } = options;
+  const backupDir = resolve(options.backupDir);
+  const workDir = resolve(options.workDir);
   if (deps === 'link' && build === 'build')
     throw new Error(
       '--deps link ではビルドを確かめられない（Next.js の Turbopack はプロジェクトの外を指す node_modules のリンクを拒否する）。--deps ci か clone を使う',
@@ -67,6 +69,7 @@ export function restoreTest(options: RestoreOptions): RestoreReport {
   const steps: RestoreStep[] = [];
   const startedAt = new Date();
   let manifest: Manifest | undefined;
+  let ownsRepo = false;
 
   const run = (name: string, action: () => string) => {
     const started = performance.now();
@@ -100,7 +103,10 @@ export function restoreTest(options: RestoreOptions): RestoreReport {
       return `${BUNDLE}・${MANIFEST} が一致（commit ${manifest.commit.slice(0, 7)}）`;
     }) &&
     run('バンドルから別ディレクトリへ clone', () => {
-      if (existsSync(repo)) throw new Error(`復元先が既にある: ${repo}`);
+      // 排他的に作成し、既存のフォルダ・ファイル・リンクを取得も削除もしない。
+      // 事前の exists 確認だけでは確認後の競合や壊れたリンクを扱えない。
+      mkdirSync(repo);
+      ownsRepo = true;
       git(workDir, ['clone', '--quiet', '--no-checkout', join(backupDir, BUNDLE), repo]);
       git(repo, ['bundle', 'verify', '--quiet', join(backupDir, BUNDLE)]);
       git(repo, [
@@ -177,7 +183,7 @@ export function restoreTest(options: RestoreOptions): RestoreReport {
       return `npm run build が通り、out/ に HTML ${pages.length} 件`;
     });
 
-  if (!options.keep) rmSync(repo, { recursive: true, force: true });
+  if (ownsRepo && !options.keep) rmSync(repo, { recursive: true, force: true });
   return {
     backup: backupDir,
     commit: manifest?.commit ?? '',

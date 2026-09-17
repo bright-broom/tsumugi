@@ -150,3 +150,5 @@
 - [0065 無償修補と変更枠の作業時間を分ける](0065-warranty-work-accounting.md)
 
 - [0066 商品の提供準備状態を見積発行に適用する](0066-estimate-readiness.md)
+
+- [0067 復元テストで既存の作業領域を削除しない](0067-restore-workspace-ownership.md)

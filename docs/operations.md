@@ -167,6 +167,7 @@ npm run backup:restore-test -- --backup .artifacts/backup/tsumugi-<日時>-<comm
 ```
 
 - 未コミットの変更があるとバックアップは作られない。コミットしてから実行する
+- 復元先は実行ごとに一時フォルダを作る。内部の `repo` は排他的に確保し、既存フォルダ・ファイル・リンクがあれば失敗する。後片付けはその実行が作った `repo` のみで、`--keep` なら成功・失敗とも保持する（[ADR 0067](architecture/0067-restore-workspace-ownership.md)）。
 - 復元テストの既定は `--deps ci --build build`（別環境での復元と同じ条件。依存のダウンロードに通信とディスクが要る）。手元のディスクや通信を節約するときは、`package-lock.json` が同じ場合に限り既存の `node_modules` を使う：`--deps clone`（macOS の APFS クローン。ビルドまで確かめられる）か `--deps link`（シンボリックリンク。Next.js の Turbopack がプロジェクト外を指すリンクを拒否するため `--build typecheck` まで）。どちらも所要時間にインストールを含まないので、その条件を記録に書く
 - 独立した保管先に写すときは、ディレクトリごと（3 ファイル）写す。写した先で `shasum -a 256 -c SHA256SUMS` で照合できる
 
