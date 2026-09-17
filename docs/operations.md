@@ -305,3 +305,7 @@ Vercel の Git 配備は静的検査だけで全項目のレポートを持た�
 - 不一致のパスを確認し、古い版・配信の一部混在・ビルド条件差を切り分ける。コマンドはデプロイ・切戻し・ファイル削除を行わない。
 - 同じコミットからの再ビルドでも、実測証跡の有無で works.html が変わることがある。配備に使用した実物と比較し、GitのSHAだけで同一内容とみなさない。
 - 配備IDとcommitの対応、余分な公開ファイル、ヘッダー・画面の動作はこの検査だけでは確認できない。check:live・monitorと併用する。[ADR 0068](architecture/0068-release-content-verification.md)。
+
+### 配信ヘッダーの確認
+
+`check:live`と`monitor`はトップ`/`と取得した公開ページの200応答で、`vercel.json`にある7つのセキュリティヘッダーを照合する。欠落・値の変更はFAIL。意図した変更は配備設定と揃え、再検査する。`--dist`の模擬配信はSKIPであり実配信の証明にはならない。資産の404や通知の到達は別途確認する（[ADR0069](architecture/0069-delivered-headers-and-issue-review.md)）。

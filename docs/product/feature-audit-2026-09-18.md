@@ -2,6 +2,8 @@
 
 ## 判断
 
+Issueの最新整理は[全41件の再整理](issue-review-2026-09-18.md)を参照。以下の初回監査と実装時の記録は履歴として保持する。
+
 **次の一手は、公開後の監視を実際に動かし、正常に見える失敗を検出すること。** 顧客が問い合わせできない状態を見逃すと既存商品の提供に直結する。既存の 79,800 円／198,000 円の商品を安定して提供する基盤を優先し、CMS の新規販売開始や全面的な管理アプリ開発は次の段階に置く。
 
 取得した Site monitor の実行は success だが、Monitor を含む依存導入以降の全ステップが skipped。リポジトリ変数は 0 件だった。単にジョブが成功したかを見る運用では監視できていなかった。今回 A01〜A04 を一つの変更として実装した。変更理由は [ADR 0064](../architecture/0064-production-monitoring.md)、最終検証・送信状態は [status.md](../status.md) を正本とする。
@@ -31,7 +33,7 @@ P1 は現行提供の信頼性または該当商品を提供する前に必要�
 | A03 / P1  | 定期監視が canonical・JS 混入・検索除外・404 を見ない。**今回実装**            | `tools/ops/site-checks.ts`、`html.ts`、`probe.ts`                                                               | 公開直後と定期の検査を共通化。noindex の HTML・HTTP ヘッダー検査と故障テスト／開発／次の配備前                           |
 | A04 / P1  | 問い合わせページが 200 でもメール・電話リンク消失を見逃す。**今回実装**        | `tools/ops/site-expectations.ts`                                                                                | 正本の電話・メールと実リンクを照合。リンク存在確認と実送受信を区別／開発／次の配備前                                     |
 | A05 / P1  | **部分実装**：指定成果物と公開内容の全ファイル照合。配備ID対応は未確認         | [ADR 0068](../architecture/0068-release-content-verification.md)、`tools/ops/release.ts`                        | 配備 ID・commit・成果物指紋と alias の対応を検証。旧版・一部混在・切戻しを識別／開発・運用／次のリリース手順整備         |
-| A06 / P2  | CSS・画像の 404、配信ヘッダーの変化は定期監視の対象外                          | `tools/ops/probe.ts`、`tools/security/policy.ts`                                                                | 同一 origin の参照資産と必要な応答ヘッダーを検証。ローカル CSP テストと区別／開発／監視の次段階                          |
+| A06 / P2  | **部分実装**：配信ヘッダーの変化を検出。CSS・画像の404は対象外                          | `tools/ops/probe.ts`、`tools/security/policy.ts`                                                                | 同一 origin の参照資産と必要な応答ヘッダーを検証。ローカル CSP テストと区別／開発／監視の次段階                          |
 | A07 / P1  | 監視の停止自体の検知、複数担当への通知、復旧通知がない                         | [ADR 0046](../architecture/0046-post-launch-monitoring.md)、`docs/operations.md` の空欄                         | 独立した監視元・責任者・通知先・エスカレーション・復旧判断を決定し到達確認／運用・オーナー／顧客に監視を提供する前       |
 | A08 / P1  | **部分対応**：復元時の既存領域削除を修正。独立保管先・非公開業務データは未対応 | [ADR 0067](../architecture/0067-restore-workspace-ownership.md)、`weekly-backup.yml`、`backup.ts`、`restore.ts` | 別環境で復元し所要時間を記録。保管先・RPO/RTO・暗号化・アクセス・削除条件を決定／運用／顧客データの運用開始前            |
 | A09 / P1  | サイトは「ソース公開」と案内するが GitHub は Private                           | `src/content/config.ts: SOURCE_REPOSITORY_URL`、`src/i18n/locales/ja/source.ts`、Repository API                 | 公開可能な配布用リポジトリか、現状に合う案内へ整合。公開範囲を確認せず可視性変更しない／オーナー・開発／公開案内の継続前 |

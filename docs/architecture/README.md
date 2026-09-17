@@ -154,3 +154,5 @@
 - [0067 復元テストで既存の作業領域を削除しない](0067-restore-workspace-ownership.md)
 
 - [0068 比較元の公開成果物と配信内容を全ファイルで照合する](0068-release-content-verification.md)
+
+- [0069 Issueをmainの実装で判定し、実配信ヘッダーを監視する](0069-delivered-headers-and-issue-review.md)

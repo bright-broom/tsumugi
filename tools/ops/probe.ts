@@ -17,6 +17,7 @@ export interface HttpResult {
   location: string | null;
   body: string;
   robotsTag?: string;
+  headers?: Readonly<Record<string, string>>;
   /** 要求から本文の受信完了までのミリ秒 */
   ms: number;
 }
@@ -96,6 +97,7 @@ export function createProbe({
         location: response.headers.get('location'),
         body,
         robotsTag: response.headers.get('x-robots-tag') ?? '',
+        headers: Object.fromEntries(response.headers.entries()),
         ms: Math.round(performance.now() - started),
       };
     },
