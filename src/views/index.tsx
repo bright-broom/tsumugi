@@ -35,26 +35,28 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
   return (
     <Base file={file} title={title} desc={desc}>
       <section className="brand-hero" aria-labelledby="brand-heading">
-        <img
-          className="brand-hero-artwork"
-          src={HOME_HERO.src}
-          width={HOME_HERO.width}
-          height={HOME_HERO.height}
-          alt={copy.hero.artworkAlt}
-          fetchPriority="high"
-          loading="eager"
-        />
-        <div className="brand-hero-copy">
-          <h1 id="brand-heading">
-            {copy.hero.heading}
-            <br />
-            {copy.hero.heading2}
-          </h1>
-          <p>
-            {copy.hero.message}
-            <br />
-            {copy.hero.message2}
-          </p>
+        <div className="brand-hero-stage">
+          <img
+            className="brand-hero-artwork"
+            src={HOME_HERO.src}
+            width={HOME_HERO.width}
+            height={HOME_HERO.height}
+            alt={copy.hero.artworkAlt}
+            fetchPriority="high"
+            loading="eager"
+          />
+          <div className="brand-hero-copy">
+            <h1 id="brand-heading">
+              {copy.hero.heading}
+              <br />
+              {copy.hero.heading2}
+            </h1>
+            <p>
+              {copy.hero.message}
+              <br />
+              {copy.hero.message2}
+            </p>
+          </div>
         </div>
       </section>
       {/* ブランド画像に続けて、所有・価格・問い合わせの具体的な案内を置く。 */}
@@ -111,10 +113,12 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               </a>
               <div className="btns">
                 <a className="btn btn-1" href={C.EMAIL_LINK}>
-                  <Icon name="mail" sm />{copy.layout.consult}
+                  <Icon name="mail" sm />
+                  {copy.layout.consult}
                 </a>
                 <a className="btn btn-2" href={href('index', 'pricing')}>
-                  {copy.layout.viewPricing}<Icon name="arrow-right" sm />
+                  {copy.layout.viewPricing}
+                  <Icon name="arrow-right" sm />
                 </a>
               </div>
             </div>
@@ -129,16 +133,16 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               <p className="home-price-tax">{copy.layout.tax}</p>
               <ul className="home-price-points">
                 {copy.layout.pricePoints.map((point) => (
-                  <li key={point}><Icon name="check" sm /><span>{point}</span></li>
+                  <li key={point}>
+                    <Icon name="check" sm />
+                    <span>{point}</span>
+                  </li>
                 ))}
               </ul>
               <p className="home-price-note">{copy.layout.externalCosts}</p>
-
             </div>
           </div>
         </section>
-
-
 
         <Section
           navKey={href('price')}
@@ -157,7 +161,9 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                 <div>
                   <h4>{plan.name}</h4>
                   <p>{format(copy.layout.planMeta, { pages: plan.pages, weeks: plan.weeks })}</p>
-                  {plan.preparing && <span className="home-plan-status">{copy.scope.preparing}</span>}
+                  {plan.preparing && (
+                    <span className="home-plan-status">{copy.scope.preparing}</span>
+                  )}
                 </div>
                 <strong className="tnum">{P.yen(plan.price)}</strong>
                 <Icon name="arrow-right" sm />
@@ -207,7 +213,11 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           <LandVsOwn />
           <Acc summary={copy.heading2}>
             <Cards cls="g2" items={copy.ownership} />
-            <p>{copy.p}<strong>{copy.strong3}</strong>{copy.p2}</p>
+            <p>
+              {copy.p}
+              <strong>{copy.strong3}</strong>
+              {copy.p2}
+            </p>
           </Acc>
           <div className="btns">
             <a className="btn btn-2" href={href('owned')}>
@@ -415,7 +425,8 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           <div className="btns">
             <PhoneLink className="btn btn-1" />
             <a className="btn btn-2" href={C.EMAIL_LINK}>
-              <Icon name="mail" sm />{copy.btn6}
+              <Icon name="mail" sm />
+              {copy.btn6}
             </a>
           </div>
         </Section>

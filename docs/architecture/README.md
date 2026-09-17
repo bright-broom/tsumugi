@@ -138,3 +138,5 @@
 - [0059 フッターの連絡先と目的別案内を整理する](0059-footer-layout.md)
 
 - [0060 ヒーロー画像の上端を保持する](0060-hero-top-alignment.md)
+
+- [0061 ヒーロー SVG の比率と表示サイズを設計し直す](0061-responsive-hero-canvas.md)
