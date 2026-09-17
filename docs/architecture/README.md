@@ -160,3 +160,5 @@
 - [0070 ソース公開案内とIssueの完了条件を実態へ合わせる](0070-source-visibility-and-issue-scope.md)
 
 - [0071 公開HTMLの参照CSS・画像を監視する](0071-referenced-asset-monitoring.md)
+
+- [0072 社内CLIの読み込みから保存までを排他制御する](0072-local-ops-command-lock.md)
