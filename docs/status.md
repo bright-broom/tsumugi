@@ -19,7 +19,7 @@
 - `npm run validate` 成功：型・lint・Vitest **565 件**・料金 12 件・ビルド・セキュリティ・静的 **PASS 332 / WARN 1 / FAIL 0**。対象 2 ファイルの 23 テストは実ファイルの保存・再出力拒否と上書き防止も含む。
 - 料金とプラン比較を 320 / 390 / 768 / 1440 px の 8 ケースで Chromium 検査。JS 無効・HTTP 200、準備中表示・価格維持・購入操作なし・ページ横はみ出しなし。320 px と 1440 px の画像も確認した。実機 Safari は未確認。
 - 出力 52 ファイル中 49 ファイル一致。変更は price.html / plans.html と検証表示条件で変わる works.html。依存・CSS・価格は未変更。
-- 証跡は `.artifacts/readiness/validate.log`、`output-comparison.json`、`browser-checks.json` と画像（Git 管理外）。本番全項目の結果はコミット後に記録する。
+- 証跡は `.artifacts/readiness/validate.log`、`output-comparison.json`、`browser-checks.json` と画像（Git 管理外）。本番全項目もコミット `3b348b4fd0a8cc28fc46f2998207039a3427c404` のクリーンな状態で build → production verify → build に成功し、**PASS 600 / WARN 3 / FAIL 0**、22 ページ・実行時 JS 0 を確認。既存の専門家・受入確認 WARN を維持。`committed-verify-report.json` に証跡を保存した。この追記は文書のみで、検証対象コミットと区別する。文書のローカルリンク 149 件も確認済み。
 - 作業時 PR #81 は OPEN、main は `85fa5a3`。この変更は工数修正の上に積んでおり、PR #81 を先に統合する。外部への見積送信・多言語の提供開始・本番反映は行っていない。
 
 ### 無償修補の工数集計（2026-09-18）
