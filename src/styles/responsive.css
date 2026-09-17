@@ -20,8 +20,8 @@
   }
   .brand-hero-artwork {
     @apply absolute inset-[0] w-[100%] h-[100%] rounded-[0] object-cover;
-    /* 左右を切る幅でも、右寄りの二柱を残す */
-    object-position: 78% 50%;
+    /* 右寄りの二柱を残し、横長の区画でも頭上を切らない（ADR 0060）。 */
+    object-position: 78% 0%;
   }
   /* 判読性のための陰影。コピーが載る左側を暗くし、二柱に向けて薄くする。顔との重なりは許容する */
   .brand-hero::after {
