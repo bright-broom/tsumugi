@@ -1,7 +1,7 @@
 # AGENTS.md ── 開発を引き継ぐ人と AI へ
 
 会話の履歴がなくても開発を続けられるようにするための入口。
-Codex・Cursor・GitHub Copilot などはこのファイルを、Claude Code は `CLAUDE.md` 経由で同じ内容を読む。
+AI の種類にかかわらず、このファイルを共通の入口にする。Claude Code は `CLAUDE.md` 経由で参照する。自動で読み込まれない環境では、最初にこのファイルを開く。
 Next.js が生成した、この文書末尾のルール（このバージョンの Next.js についての注意）にも従う。
 
 ---
@@ -19,11 +19,18 @@ Next.js が生成した、この文書末尾のルール（このバージョン
 |---|---|---|
 | 1 | このファイル | 崩してはいけないこと・合格ライン・進め方・はまりどころ |
 | 2 | [docs/status.md](docs/status.md) | **いまの状態と残課題。作業の前に必ず確認する** |
+| 初回・別環境 | [docs/handoff.md](docs/handoff.md) | 作業場所の確認、正本の対応表、検証・公開の区別、終了時の記録 |
 | 3 | [docs/development.md](docs/development.md) | コマンド・書き方の決まり・置き場所の決まり |
 | 4 | [docs/README.md](docs/README.md) | 仕様・判断理由・事業の文書の目次 |
 | 5 | [docs/spec.md](docs/spec.md) | 納品の条件（検査項目） |
 | 6 | [docs/architecture/README.md](docs/architecture/README.md) | 技術判断の一覧と ADR |
 | 必要なとき | [docs/business/紬_ビジネスガイドライン.md](docs/business/紬_ビジネスガイドライン.md) | 事業の規範（何を売り、何を約束しないか）。サイトの文言を変えるときは必ず読む |
+
+### 作業開始時の最小確認
+
+`git status --short`・`git branch --show-current`・`git remote -v` を確認する。未コミットの変更を消さず、文書に書かれた過去のブランチへ機械的に切り替えない。最新の作業・検証・リモート状態は `docs/status.md` を読む。判断の原典は ADR、変更場所は `docs/development.md` と `docs/product/redesign-guide.md` を参照する。
+
+会話履歴、個人のメモリ、特定端末のスキルがなくても、このリポジトリの文書とコードで引き継ぐ。外部ガイドを参照できない場合は参照したことにせず、`docs/product/design.md` と `docs/product/redesign-guide.md` の記録を利用する。
 
 ## 3. 崩してはいけないこと
 
@@ -52,7 +59,9 @@ npm run build     # トークン同期の検査 → public/ の生成 → next b
 npm run verify    # 全項目の検査（ブラウザ計測を含む）
 ```
 
-**変更を出す前に、次の全部を満たす。**
+**アプリケーションの変更を出す前に、次の全部を満たす。**
+
+文書だけの変更は [引き継ぎ手順](docs/handoff.md) に従い、リンク・記載内容・差分を検証する。過去の実装検査を新しい文書コミットの検証結果として扱わない。
 
 1. `npm run check`・`npm run lint`・`npm test` が通る
 2. `npm run build` が通る（postbuild が「実行時の script 0件・区切りコメント 0件」を出す）

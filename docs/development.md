@@ -4,7 +4,7 @@
 
 > 自社サイトの公開：2026-09-17 のオーナー指示により [ADR 0056](architecture/0056-owner-authorized-publication.md) を適用。専門家確認・受入確認の未実施分は WARN に残す。顧客テンプレートでは `OWNER_PUBLICATION=null` に戻し、従来の納品条件を適用する。紬は Vercel URL・メール受付で公開し、独自ドメインやフォームの導入を前提にしない。
 
-サービスサイト本体。21ページ、**実行時 JavaScript 0バイト**。
+サービスサイト本体。22ページ、**実行時 JavaScript 0バイト**。
 ここには**コードを触るときの決まり**だけを書く。引き継ぎの入口は [AGENTS.md](../AGENTS.md)、いまの状態と残課題は [docs/status.md](status.md)。理由や経緯は [docs/](README.md)（技術の判断は [docs/architecture/](architecture/README.md)）。全体の図は [リポジトリ直下の README](../README.md)。
 
 ```bash
@@ -33,6 +33,12 @@ npm run check:collections  # 記事・事例などの公開前チェックと入
 
 ---
 
+## 作業を再開する
+
+別の AI・端末からは [引き継ぎ手順](handoff.md) を参照。`npm run dev -- --port 3001` で従来のローカル URL を使える。起動済みの別プロセスを停止する前に、その作業場所と用途を確認する。
+
+Next の開発サーバーと本番ビルドは同じ `.next/` を使用する。ビルドが必要なときは同じ checkout の開発サーバーを止め、完了後に再起動するか、別 worktree を使う。
+
 ## ビルドの流れ（`npm run build`）
 
 4段階を順に回し、**どこかで崩れていたらその場で止まる。**
@@ -42,7 +48,7 @@ flowchart TD
   s1["① build-tokens.ts<br/>--check<br/>Tailwindテーマの同期"] --> s2["② build-public.ts<br/>theme.css<br/>robots・sitemap"]
   s2 --> s3["③ next build<br/>静的書き出し"]
   s3 --> s4["④ postbuild.ts<br/>印の除去<br/>0バイトの検査"]
-  s4 --> out[("out/<br/>HTML 21・CSS<br/>OGP画像 24")]
+  s4 --> out[("out/<br/>HTML・CSS・OGP画像")]
   s1 -.->|ずれていたら| stop["ビルドが止まる"]
   s4 -.->|script が残れば| stop
 ```
@@ -82,10 +88,10 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-  out[("out/")] --> st["静的検査<br/>PASS 358"]
-  out --> br["ブラウザ実測<br/>PASS 244"]
+  out[("out/")] --> st["静的検査"]
+  out --> br["ブラウザ実測"]
   content["src/content/<br/>config・prices"] -.->|突き合わせる| st
-  st --> full[".artifacts/verification/verify-report.json<br/>PASS 602<br/>WARN 1 / FAIL 0"]
+  st --> full[".artifacts/verification/verify-report.json<br/>コミット・件数・公開条件"]
   br --> full
   st -.->|簡易版のとき| static["verify-report<br/>.static.json"]
   full -.->|次のビルドで| works["works.html の<br/>「602項目」"]

@@ -9,26 +9,28 @@
 
 デザインは **NOT A HOTEL デザインガイドライン v2.0** に準拠しています（→ [デザイン](product/design.md)）。
 
-| 知りたいこと | 文書 |
-|---|---|
-| **開発を引き継ぐとき（人・AI）の入口** | [../AGENTS.md](../AGENTS.md) |
-| **いまの状態と残課題** | [status.md](status.md) |
-| 事業の規範（何を売り、何を売らないか・営業・納品・運用・法令） | [business/紬_ビジネスガイドライン.md](business/紬_ビジネスガイドライン.md) |
-| 事業の数字（料金レバー・プラン・補助金・掲載費） | [business/紬_事業の中身.xlsx](business/紬_事業の中身.xlsx) |
-| 月140時間で採用した料金体系・提供範囲・採算・検証計画 | [business/pricing-redesign-140h.md](business/pricing-redesign-140h.md) |
-| 上位商品の検討案（未採用）：CMS・個別開発の範囲、採算、顧客価値、商品化の条件 | [business/premium-pricing-proposal.md](business/premium-pricing-proposal.md) |
-| 全プランの比較・料金試算（現行と未採用案を区別）：制作、月額、追加オプション、総額、採算 | [business/紬_全プラン比較・料金試算.xlsx](business/紬_全プラン比較・料金試算.xlsx) |
-| サイトの主張・値付け・約束の置き場所・屋号・数字の出典 | [product/messaging-and-pricing.md](product/messaging-and-pricing.md) |
-| 21ページの役割と共通情報の管理 | [product/information-architecture.md](product/information-architecture.md) |
-| デザインの出所・スマホ表示・図・共有カード | [product/design.md](product/design.md) |
-| 検査している項目（納品の条件）と、検査で見つかった不具合 | [spec.md](spec.md) |
-| 技術的な判断と、その記録（ADR） | [architecture/README.md](architecture/README.md) |
-| 公開前にやること・顧客サイトの作り方・デプロイ | [operations.md](operations.md) |
-| セキュリティ対策・検証範囲・配備時の注意 | [architecture/0055-security-hardening.md](architecture/0055-security-hardening.md) |
-| 自社サイトの公開承認と未確認事項の扱い | [architecture/0056-owner-authorized-publication.md](architecture/0056-owner-authorized-publication.md) |
-| 問い合わせ情報の所在・保持期限・削除の手順 | [inquiry-data.md](inquiry-data.md) |
-| Python／Astro から Next.js への移行 | [history/2026-09-migration.md](history/2026-09-migration.md) |
-| コードを触るとき（コマンド・書き方・置き場所の決まり） | [../docs/development.md](development.md) |
+| 知りたいこと                                                                             | 文書                                                                                                   |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| **開発を引き継ぐとき（人・AI）の入口**                                                   | [../AGENTS.md](../AGENTS.md)                                                                           |
+| **別の AI・端末で作業を再開する手順**                                                    | [handoff.md](handoff.md)                                                                               |
+| **いまの状態と残課題**                                                                   | [status.md](status.md)                                                                                 |
+| 事業の規範（何を売り、何を売らないか・営業・納品・運用・法令）                           | [business/紬_ビジネスガイドライン.md](business/紬_ビジネスガイドライン.md)                             |
+| 事業の数字（料金レバー・プラン・補助金・掲載費）                                         | [business/紬_事業の中身.xlsx](business/紬_事業の中身.xlsx)                                             |
+| 月140時間で採用した料金体系・提供範囲・採算・検証計画                                    | [business/pricing-redesign-140h.md](business/pricing-redesign-140h.md)                                 |
+| 上位商品の検討案（未採用）：CMS・個別開発の範囲、採算、顧客価値、商品化の条件            | [business/premium-pricing-proposal.md](business/premium-pricing-proposal.md)                           |
+| 全プランの比較・料金試算（現行と未採用案を区別）：制作、月額、追加オプション、総額、採算 | [business/紬_全プラン比較・料金試算.xlsx](business/紬_全プラン比較・料金試算.xlsx)                     |
+| サイトの主張・値付け・約束の置き場所・屋号・数字の出典                                   | [product/messaging-and-pricing.md](product/messaging-and-pricing.md)                                   |
+| 全ページの役割と共通情報の管理                                                           | [product/information-architecture.md](product/information-architecture.md)                             |
+| 繰り返すデザイン変更の編集場所・共通部品・表示比較                                       | [product/redesign-guide.md](product/redesign-guide.md)                                                 |
+| デザインの出所・スマホ表示・図・共有カード                                               | [product/design.md](product/design.md)                                                                 |
+| 検査している項目（納品の条件）と、検査で見つかった不具合                                 | [spec.md](spec.md)                                                                                     |
+| 技術的な判断と、その記録（ADR）                                                          | [architecture/README.md](architecture/README.md)                                                       |
+| 公開前にやること・顧客サイトの作り方・デプロイ                                           | [operations.md](operations.md)                                                                         |
+| セキュリティ対策・検証範囲・配備時の注意                                                 | [architecture/0055-security-hardening.md](architecture/0055-security-hardening.md)                     |
+| 自社サイトの公開承認と未確認事項の扱い                                                   | [architecture/0056-owner-authorized-publication.md](architecture/0056-owner-authorized-publication.md) |
+| 問い合わせ情報の所在・保持期限・削除の手順                                               | [inquiry-data.md](inquiry-data.md)                                                                     |
+| Python／Astro から Next.js への移行                                                      | [history/2026-09-migration.md](history/2026-09-migration.md)                                           |
+| コードを触るとき（コマンド・書き方・置き場所の決まり）                                   | [../docs/development.md](development.md)                                                               |
 
 ---
 
@@ -40,7 +42,7 @@
 
 もうひとつの狙いは工数です。ベーシック6ページ198,000円が成立するのは
 **5人日で作れるようになってから**なので、1号目から共通部分を資産化する必要がありました。
-2件目以降は中身（`src/content/`）とページ本文（`src/pages/`）を差し替えるだけで、実装はほぼ再利用できます。
+2件目以降は事業設定（`src/content/`）、文言（`src/i18n/`）、表示（`src/views/`）を差し替えるだけで、実装はほぼ再利用できます。
 
 ---
 
