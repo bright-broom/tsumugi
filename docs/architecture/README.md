@@ -130,3 +130,5 @@
 - [0055 静的サイト・問い合わせ・社内データ・配備経路を防御する](0055-security-hardening.md)
 
 - [0056 自社サイトの公開判断を専門家確認・顧客の納品検収から分ける](0056-owner-authorized-publication.md)
+
+- [0057 TOP を料金・用途から読み進められる構成にする](0057-home-layout.md)
