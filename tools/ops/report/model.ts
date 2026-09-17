@@ -200,28 +200,35 @@ export function buildMonthlyReport(input: ReportInput): {
         work.byRequest.length
           ? {
               kind: 'table',
-              head: ['依頼', '内容', '状態', '今月の作業'],
+              head: ['依頼', '内容', '状態', '実作業', '通常変更', '無償修補（枠外）', '未分類'],
               rows: work.byRequest.map((r) => [
                 r.id,
                 shorten(r.description),
                 STATUS_LABELS[r.status],
                 minutes(r.minutes),
+                minutes(r.changeMinutes),
+                minutes(r.warrantyMinutes),
+                minutes(r.unclassifiedMinutes),
               ]),
             }
           : { kind: 'paragraph', text: '今月の作業記録は 0 分です。' },
       );
       const summary = [
-        `今月の作業時間：${minutes(work.rawMinutes)}（月の合計を 5 分単位で切り上げて ${minutes(work.billedMinutes)}）${work.partial ? '。記録開始が月の途中のため、月初からの合計ではありません' : ''}`,
+        `今月の実作業時間：${minutes(work.rawMinutes)}／通常変更：${minutes(work.changeMinutes)}／無償修補：${minutes(work.warrantyMinutes)}（変更枠から除外）／未分類：${minutes(work.unclassifiedMinutes)}。変更枠消費：${work.billedMinutes === null ? '未確定' : `${minutes(work.billedMinutes)}（通常変更の月合計を 5 分単位で切り上げ）`}${work.partial ? '。記録開始が月の途中のため、月初からの合計ではありません' : ''}`,
         average.averageMinutes === null
-          ? '3 か月平均：記録が 3 か月分そろっていないため出しません'
+          ? '3 か月平均：月初からの記録と作業区分が 3 か月分そろっていないため出しません'
           : `3 か月平均：${minutes(average.averageMinutes)}`,
       ];
+      if (work.unclassifiedMinutes > 0)
+        actions.push(
+          `作業区分が未分類の記録 ${minutes(work.unclassifiedMinutes)} を確認する。変更枠の消費・残り・超過は未確定です`,
+        );
       if (input.plan) {
         const allowance = allowanceFor(input.plan);
         summary.push(`「${allowance.name}」の変更枠：月 ${minutes(allowance.minutes)}`);
-        if (work.billedMinutes > allowance.minutes)
+        if (!work.partial && work.billedMinutes !== null && work.billedMinutes > allowance.minutes)
           actions.push(
-            `作業時間 ${minutes(work.billedMinutes)} が「${allowance.name}」の変更枠 ${minutes(allowance.minutes)} を超えています。次月対応か追加見積もりの選択を確認する`,
+            `通常変更の枠消費 ${minutes(work.billedMinutes)} が「${allowance.name}」の変更枠 ${minutes(allowance.minutes)} を超えています。次月対応か追加見積もりの選択を確認する`,
           );
       }
       blocks.push({ kind: 'list', items: summary });

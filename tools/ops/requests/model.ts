@@ -44,6 +44,21 @@ const locationSchema = z
   );
 export type ScreenLocation = z.infer<typeof locationSchema>;
 
+const workKindSchema = z.enum(['change', 'warranty']);
+const workSchema = z
+  .strictObject({
+    date: dateSchema,
+    minutes: z.int().min(1).max(1440),
+    by: text,
+    /** 未指定は旧記録。通常変更と推測しない。 */
+    kind: workKindSchema.optional(),
+    note: text.optional(),
+  })
+  .refine((work) => work.kind !== 'warranty' || work.note !== undefined, {
+    message: '無償修補には仕様不適合の内容を note に記録してください',
+    path: ['note'],
+  });
+
 const requestSchema = z.strictObject({
   id: idSchema,
   customerId: idSchema,
@@ -68,14 +83,7 @@ const requestSchema = z.strictObject({
       }),
     )
     .min(1),
-  work: z.array(
-    z.strictObject({
-      date: dateSchema,
-      minutes: z.int().min(1).max(1440),
-      by: text,
-      note: text.optional(),
-    }),
-  ),
+  work: z.array(workSchema),
   completionNotice: z
     .strictObject({ recordedAt: timestampSchema, by: text, channel: text, note: text.optional() })
     .optional(),
@@ -208,12 +216,15 @@ export function assignRequest(
 export function logWork(
   file: RequestsFile,
   id: string,
-  entry: { date: string; minutes: number; by: string; note?: string },
+  entry: { date: string; minutes: number; by: string; kind: string; note?: string },
 ): RequestsFile {
   const r = find(file, id);
   if (r.status === 'received') throw new OpsError('着手してから作業時間を記録してください');
   if (entry.date < jstDate(r.receivedAt)) throw new OpsError('受付より前の日付には記録できません');
-  return replace(file, { ...r, work: [...r.work, entry] });
+  const kind = workKindSchema.safeParse(entry.kind);
+  if (!kind.success)
+    throw new OpsError('作業区分は change（通常変更）か warranty（無償修補）を指定してください');
+  return replace(file, { ...r, work: [...r.work, { ...entry, kind: kind.data }] });
 }
 
 export function recordCompletionNotice(
@@ -232,31 +243,58 @@ export interface MonthlyWork {
   /** false：記録開始より前の月（未記録）。partial：記録開始が月の途中。 */
   tracked: boolean;
   partial: boolean;
+  /** 分類にかかわらず全実作業時間。 */
   rawMinutes: number;
-  /** 月の合計を 5 分単位で切り上げる。依頼ごとには切り上げない（料金表の変更枠の説明どおり）。 */
-  billedMinutes: number;
-  byRequest: { id: string; description: string; status: Status; minutes: number }[];
+  changeMinutes: number;
+  warrantyMinutes: number;
+  unclassifiedMinutes: number;
+  /** 通常変更の月合計だけを 5 分で切り上げる。未分類があれば確定しない。請求額ではない。 */
+  billedMinutes: number | null;
+  byRequest: {
+    id: string;
+    description: string;
+    status: Status;
+    minutes: number;
+    changeMinutes: number;
+    warrantyMinutes: number;
+    unclassifiedMinutes: number;
+  }[];
 }
 
 export function monthlyWork(file: RequestsFile, month: string): MonthlyWork {
   const { from, to } = monthRange(month);
   const byRequest = file.requests
-    .map((r) => ({
-      id: r.id,
-      description: r.description,
-      status: r.status,
-      minutes: r.work
-        .filter((w) => from <= w.date && w.date <= to)
-        .reduce((a, w) => a + w.minutes, 0),
-    }))
+    .map((r) => {
+      const work = r.work.filter((w) => from <= w.date && w.date <= to);
+      const sum = (kind: 'change' | 'warranty' | undefined) =>
+        work.filter((w) => w.kind === kind).reduce((total, w) => total + w.minutes, 0);
+      const changeMinutes = sum('change');
+      const warrantyMinutes = sum('warranty');
+      const unclassifiedMinutes = sum(undefined);
+      return {
+        id: r.id,
+        description: r.description,
+        status: r.status,
+        minutes: changeMinutes + warrantyMinutes + unclassifiedMinutes,
+        changeMinutes,
+        warrantyMinutes,
+        unclassifiedMinutes,
+      };
+    })
     .filter((r) => r.minutes > 0);
-  const rawMinutes = byRequest.reduce((a, r) => a + r.minutes, 0);
+  const sum = (key: 'minutes' | 'changeMinutes' | 'warrantyMinutes' | 'unclassifiedMinutes') =>
+    byRequest.reduce((total, r) => total + r[key], 0);
+  const changeMinutes = sum('changeMinutes');
+  const unclassifiedMinutes = sum('unclassifiedMinutes');
   return {
     month,
     tracked: to >= file.trackingSince,
     partial: from < file.trackingSince && file.trackingSince <= to,
-    rawMinutes,
-    billedMinutes: Math.ceil(rawMinutes / 5) * 5,
+    rawMinutes: sum('minutes'),
+    changeMinutes,
+    warrantyMinutes: sum('warrantyMinutes'),
+    unclassifiedMinutes,
+    billedMinutes: unclassifiedMinutes > 0 ? null : Math.ceil(changeMinutes / 5) * 5,
     byRequest,
   };
 }
@@ -264,10 +302,10 @@ export function monthlyWork(file: RequestsFile, month: string): MonthlyWork {
 /** 直近 3 か月（対象月を含む）の平均。3 か月とも月初から記録していなければ出さない。 */
 export function threeMonthAverage(file: RequestsFile, month: string) {
   const months = [-2, -1, 0].map((d) => monthlyWork(file, shiftMonth(month, d)));
-  const complete = months.every((m) => m.tracked && !m.partial);
+  const complete = months.every((m) => m.tracked && !m.partial && m.billedMinutes !== null);
   return {
     months,
-    averageMinutes: complete ? months.reduce((a, m) => a + m.billedMinutes, 0) / 3 : null,
+    averageMinutes: complete ? months.reduce((a, m) => a + (m.billedMinutes ?? 0), 0) / 3 : null,
   };
 }
 

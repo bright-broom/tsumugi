@@ -66,7 +66,7 @@ npm run --silent ops:metrics -- remove-import --customer sample-shop --sha <先�
 npm run --silent ops:requests -- init   --customer sample-shop --since 2026-09-01
 npm run --silent ops:requests -- add    --customer sample-shop --url https://example.jp/menu.html --selector "main h2" --x 120 --y 480 --viewport 390 --description "見出しを差し替える" --channel 電話 --by 担当者 [--attach <保管場所>] [--due 2026-09-20]
 npm run --silent ops:requests -- move   --customer sample-shop --id req-0001 --to in_progress --by 担当者
-npm run --silent ops:requests -- log    --customer sample-shop --id req-0001 --minutes 25 --by 担当者 [--date 2026-09-16]
+npm run --silent ops:requests -- log    --customer sample-shop --id req-0001 --minutes 25 --kind change --by 担当者 [--date 2026-09-16]
 npm run --silent ops:requests -- move   --customer sample-shop --id req-0001 --to awaiting_review --by 担当者
 npm run --silent ops:requests -- move   --customer sample-shop --id req-0001 --to done --by 担当者
 npm run --silent ops:requests -- notice --customer sample-shop --id req-0001 --channel 電話 --by 担当者
@@ -75,7 +75,10 @@ npm run --silent ops:requests -- hours  --customer sample-shop --month 2026-09 -
 ```
 
 - 状態は 受付 → 着手 → 確認待ち → 完了。確認待ちからは差し戻し（着手）もできる。
-- 月の作業時間は、月の合計を 5 分単位で切り上げる（依頼ごとには切り上げない）。3 か月平均は 3 か月とも月初から記録している場合だけ出す。
+- 新しい作業記録は `--kind change`（通常変更）または `--kind warranty`（紬側の仕様不適合の無償修補）を必須にする。修補には `--note "合意仕様との差異と修補内容"` も必要。区分や修補の根拠がない記録は保存しない。
+- 実作業時間は全記録を保持し、通常変更の月合計だけを 5 分単位で切り上げて変更枠を消費する。修補は枠消費 0。依頼ごとに丸めず、自動追加課金もしない。CLI と月次レポートに内訳を表示する。
+- `kind` のない旧記録はそのまま読めるが、通常変更とは推測しない。未分類のある月は消費・残り・超過を未確定とし、3 か月平均も出さない。月初から記録していない月についても残り・超過の確定表示は出さない。
+- 旧記録を分類する場合は元の JSON を別名で保管し、依頼・合意仕様を確認した担当者が該当作業に `kind` と、確認者・確認日・根拠を `note` に追記する。時間・日付・作業者は変えない。根拠のないものは未分類のまま残す。自動移行・訂正履歴管理・請求は未実装。再生成した月次下書きには再確認が必要（既存の SHA 検査で旧承認を無効化）。[ADR 0065](../../docs/architecture/0065-warranty-work-accounting.md)。
 - 完了連絡は記録だけで、送信はしない。顧客ごとのアクセス権限は未実装（オーナーのローカル環境で使う）。
 
 ## 月次レポートの下書き（`npm run ops:report`）

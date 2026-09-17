@@ -1,5 +1,6 @@
+import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { run } from '@/content/prices';
@@ -119,22 +120,22 @@ describe('受付と状態', () => {
 describe('作業時間', () => {
   it('着手前・受付前の日付の記録を拒否する', () => {
     const { file, id } = addRequest(empty, base);
-    expect(() => logWork(file, id, { date: '2026-08-03', minutes: 5, by: 'x' })).toThrow(
-      '着手してから',
-    );
+    expect(() =>
+      logWork(file, id, { kind: 'change', date: '2026-08-03', minutes: 5, by: 'x' }),
+    ).toThrow('着手してから');
     const s = started();
-    expect(() => logWork(s.file, s.id, { date: '2026-08-02', minutes: 5, by: 'x' })).toThrow(
-      '受付より前',
-    );
+    expect(() =>
+      logWork(s.file, s.id, { kind: 'change', date: '2026-08-02', minutes: 5, by: 'x' }),
+    ).toThrow('受付より前');
   });
 
   it('月の合計を 5 分単位で切り上げ、依頼ごとには切り上げない。他の月の記録を混ぜない', () => {
     const a = started();
-    let f = logWork(a.file, a.id, { date: '2026-08-04', minutes: 7, by: 'x' });
+    let f = logWork(a.file, a.id, { kind: 'change', date: '2026-08-04', minutes: 7, by: 'x' });
     const second = addRequest(f, { ...base, receivedAt: '2026-08-10T10:00:00+09:00' });
     f = moveRequest(second.file, second.id, 'in_progress', meta());
-    f = logWork(f, second.id, { date: '2026-08-11', minutes: 11, by: 'x' });
-    f = logWork(f, second.id, { date: '2026-09-01', minutes: 30, by: 'x' });
+    f = logWork(f, second.id, { kind: 'change', date: '2026-08-11', minutes: 11, by: 'x' });
+    f = logWork(f, second.id, { kind: 'change', date: '2026-09-01', minutes: 30, by: 'x' });
     const aug = monthlyWork(f, '2026-08');
     expect(aug.rawMinutes).toBe(18);
     expect(aug.billedMinutes).toBe(20);
@@ -144,7 +145,7 @@ describe('作業時間', () => {
 
   it('3 か月平均は、3 か月とも月初から記録しているときだけ出す', () => {
     const s = started();
-    const f = logWork(s.file, s.id, { date: '2026-08-04', minutes: 30, by: 'x' });
+    const f = logWork(s.file, s.id, { kind: 'change', date: '2026-08-04', minutes: 30, by: 'x' });
     expect(threeMonthAverage(f, '2026-08').averageMinutes).toBe(10);
     const late = { ...f, trackingSince: '2026-07-15' };
     const result = threeMonthAverage(late, '2026-08');
@@ -175,6 +176,152 @@ describe('顧客の分離', () => {
       writeJson(join(dir, 'requests', 'sample-shop.json'), { ...empty, customerId: 'other-shop' });
       expect(() => loadRequests(dir, 'sample-shop')).toThrow('顧客 ID が一致しません');
       expect(loadRequests(dir, 'nobody')).toBeNull();
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('無償修補と未分類の記録', () => {
+  it('通常変更の月合計だけ丸め、同じ依頼の修補と翌月の作業を除外する', () => {
+    const s = started();
+    let f = logWork(s.file, s.id, { kind: 'change', date: '2026-08-04', minutes: 7, by: 'x' });
+    f = logWork(f, s.id, {
+      kind: 'warranty',
+      date: '2026-08-04',
+      minutes: 40,
+      by: 'x',
+      note: '合意仕様と異なる表示を修補',
+    });
+    const second = addRequest(f, base);
+    f = moveRequest(second.file, second.id, 'in_progress', meta());
+    f = logWork(f, second.id, { kind: 'change', date: '2026-08-05', minutes: 6, by: 'x' });
+    f = logWork(f, second.id, {
+      kind: 'warranty',
+      date: '2026-09-01',
+      minutes: 100,
+      by: 'x',
+      note: '仕様不適合',
+    });
+    expect(monthlyWork(f, '2026-08')).toMatchObject({
+      rawMinutes: 53,
+      changeMinutes: 13,
+      warrantyMinutes: 40,
+      unclassifiedMinutes: 0,
+      billedMinutes: 15,
+    });
+    expect(
+      monthlyWork(f, '2026-08').byRequest.map((r) => [
+        r.minutes,
+        r.changeMinutes,
+        r.warrantyMinutes,
+      ]),
+    ).toEqual([
+      [47, 7, 40],
+      [6, 6, 0],
+    ]);
+    expect(monthlyWork(f, '2026-09')).toMatchObject({ rawMinutes: 100, billedMinutes: 0 });
+    expect(threeMonthAverage(f, '2026-08').averageMinutes).toBe(5);
+  });
+
+  it.each([undefined, 'repair', ''])('新規記録の区分 %s を拒否する', (kind) => {
+    const s = started();
+    expect(() =>
+      logWork(s.file, s.id, { kind: kind as string, date: '2026-08-04', minutes: 5, by: 'x' }),
+    ).toThrow('作業区分');
+    expect(s.file.requests[0]!.work).toEqual([]);
+  });
+
+  it.each([undefined, '', '   '])('修補の根拠が空なら保存も直接読込も拒否する', (note) => {
+    const s = started();
+    const work = {
+      kind: 'warranty',
+      date: '2026-08-04',
+      minutes: 5,
+      by: 'x',
+      ...(note === undefined ? {} : { note }),
+    };
+    expect(() => logWork(s.file, s.id, work)).toThrow();
+    expect(
+      requestsFileSchema.safeParse({
+        ...s.file,
+        requests: [{ ...s.file.requests[0]!, work: [work] }],
+      }).success,
+    ).toBe(false);
+  });
+
+  it('旧記録を変更せず読み、消費枠と3か月平均を未確定にする', () => {
+    const s = started();
+    const legacy = {
+      ...s.file,
+      requests: [
+        { ...s.file.requests[0]!, work: [{ date: '2026-08-04', minutes: 31, by: '旧担当' }] },
+      ],
+    };
+    const parsed = requestsFileSchema.parse(legacy);
+    expect(parsed).toEqual(legacy);
+    const f = logWork(parsed, s.id, {
+      kind: 'warranty',
+      date: '2026-08-05',
+      minutes: 10,
+      by: 'x',
+      note: '仕様不適合',
+    });
+    expect(monthlyWork(f, '2026-08')).toMatchObject({
+      rawMinutes: 41,
+      warrantyMinutes: 10,
+      unclassifiedMinutes: 31,
+      billedMinutes: null,
+    });
+    expect(threeMonthAverage(f, '2026-08').averageMinutes).toBeNull();
+    expect(monthlyWork(f, '2026-09').billedMinutes).toBe(0);
+  });
+
+  it('CLI で区分必須、失敗時は無変更、修補保存と枠集計を一貫して扱う', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'ops-work-cli-'));
+    const path = join(dir, 'requests', 'sample-shop.json');
+    const s = started();
+    const cli = (...args: string[]) =>
+      spawnSync(
+        process.execPath,
+        [
+          '--import',
+          'tsx',
+          'tools/ops/requests/cli.ts',
+          ...args,
+          '--data',
+          dir,
+          '--customer',
+          'sample-shop',
+        ],
+        { encoding: 'utf8' },
+      );
+    try {
+      writeJson(path, s.file);
+      const before = readFileSync(path, 'utf8');
+      const args = ['log', '--id', s.id, '--minutes', '40', '--date', '2026-08-04', '--by', '担当'];
+      expect(cli(...args).status).toBe(1);
+      expect(cli(...args, '--kind', 'warranty').status).toBe(1);
+      expect(readFileSync(path, 'utf8')).toBe(before);
+      expect(cli(...args, '--kind', 'warranty', '--note', '仕様不適合の修補').status).toBe(0);
+      const hours = cli('hours', '--month', '2026-08', '--plan', 'run_basic');
+      expect(hours.status).toBe(0);
+      expect(hours.stdout).toContain('実作業 40分');
+      expect(hours.stdout).toContain('変更枠消費 0分');
+      expect(hours.stdout).toContain('残り 30分');
+      const legacy = {
+        ...s.file,
+        requests: [
+          { ...s.file.requests[0]!, work: [{ date: '2026-08-04', minutes: 40, by: 'x' }] },
+        ],
+      };
+      writeJson(path, legacy);
+      const uncertain = cli('hours', '--month', '2026-08', '--plan', 'run_basic');
+      expect(uncertain.stdout).toContain('未確定');
+      expect(uncertain.stdout).not.toMatch(/残り|超過/);
+      expect(cli('hours', '--month', '2026-05', '--plan', 'run_basic').stdout).not.toMatch(
+        /残り|超過/,
+      );
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

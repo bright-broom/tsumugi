@@ -146,3 +146,5 @@
 - [0063 デザイン変更の責務と回帰検証](0063-design-maintainability.md)
 
 - [0064 公開後の監視を実行し、期待するページと受付導線を検証する](0064-production-monitoring.md)
+
+- [0065 無償修補と変更枠の作業時間を分ける](0065-warranty-work-accounting.md)
