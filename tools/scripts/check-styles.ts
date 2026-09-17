@@ -29,6 +29,21 @@ export function checkInlineStyles(text: string, filename = 'component.tsx'): str
     );
   }
   function visit(node: ts.Node) {
+    if (
+      !filename.endsWith('/components/Action.tsx') &&
+      ts.isJsxAttribute(node) &&
+      node.name.getText(source) === 'className' &&
+      node.initializer
+    ) {
+      function checkActionClass(value: ts.Node) {
+        if (ts.isStringLiteralLike(value) && /(?:^|\s)btn(?:-[12])?(?:\s|$)/.test(value.text))
+          problems.push(
+            `${filename}: use ActionLink / ActionButton or variant on PhoneLink / ContactAction`,
+          );
+        ts.forEachChild(value, checkActionClass);
+      }
+      checkActionClass(node.initializer);
+    }
     if (ts.isJsxAttribute(node) && node.name.getText(source) === 'style') {
       const initializer = node.initializer;
       if (
@@ -55,8 +70,27 @@ export function checkInlineStyles(text: string, filename = 'component.tsx'): str
   return problems;
 }
 
+/** Shared typography and radii must remain adjustable from the theme. SVG geometry is separate. */
+export function checkDesignValues(text: string, filename: string): string[] {
+  if (filename.endsWith('tokens.css') || filename.endsWith('og.css')) return [];
+  const shared = /\b(?:text-\[(?:14|15|16|18|20)px\]|rounded-\[(?:4|8)px\])/g;
+  return [...text.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(shared)].map(
+    (match) =>
+      `${filename}: ${match[0]} must use the shared typography/radius token (design.tokens.json)`,
+  );
+}
+
 export function checkStyleSources(root: string): string[] {
   const problems: string[] = [];
+  function styles(dir: string) {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const file = join(dir, entry.name);
+      if (entry.isDirectory()) styles(file);
+      else if (entry.name.endsWith('.css'))
+        problems.push(...checkDesignValues(readFileSync(file, 'utf8'), file));
+    }
+  }
+  styles(join(root, 'src', 'styles'));
   function visit(dir: string) {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const file = join(dir, entry.name);

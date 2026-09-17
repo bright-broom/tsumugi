@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import { LandVsOwn } from '@/components/diagrams/LandVsOwn';
 import { OwnershipClock } from '@/components/diagrams/OwnershipClock';
 import { SubsidyBar } from '@/components/diagrams/SubsidyBar';
@@ -112,14 +113,14 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                 <Icon name="arrow-right" sm />
               </a>
               <div className="btns">
-                <a className="btn btn-1" href={C.EMAIL_LINK}>
+                <ActionLink variant="primary" href={C.EMAIL_LINK}>
                   <Icon name="mail" sm />
                   {copy.layout.consult}
-                </a>
-                <a className="btn btn-2" href={href('index', 'pricing')}>
+                </ActionLink>
+                <ActionLink variant="secondary" href={href('index', 'pricing')}>
                   {copy.layout.viewPricing}
                   <Icon name="arrow-right" sm />
-                </a>
+                </ActionLink>
               </div>
             </div>
             <div className="pricebox">
@@ -220,9 +221,9 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
             </p>
           </Acc>
           <div className="btns">
-            <a className="btn btn-2" href={href('owned')}>
+            <ActionLink variant="secondary" href={href('owned')}>
               {copy.btn3}
-            </a>
+            </ActionLink>
           </div>
         </Section>
 
@@ -351,9 +352,9 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                 <p>{copy.p4}</p>
               </Note>
               <div className="btns">
-                <a className="btn btn-2" href={href('unlimited')}>
+                <ActionLink variant="secondary" href={href('unlimited')}>
                   {copy.btn5}
-                </a>
+                </ActionLink>
               </div>
             </div>
           </div>
@@ -423,11 +424,11 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
             {copy.p20}
           </p>
           <div className="btns">
-            <PhoneLink className="btn btn-1" />
-            <a className="btn btn-2" href={C.EMAIL_LINK}>
+            <PhoneLink variant="primary" />
+            <ActionLink variant="secondary" href={C.EMAIL_LINK}>
               <Icon name="mail" sm />
               {copy.btn6}
-            </a>
+            </ActionLink>
           </div>
         </Section>
       </div>

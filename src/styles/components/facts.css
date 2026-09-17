@@ -1,0 +1,23 @@
+@layer components {
+  /* ══ C22 OrganizationFacts ─ 見出しと値の対応を保つ */
+  .ledger {
+    border: 1px solid var(--color-line);
+    @apply rounded-card overflow-hidden;
+  }
+  .ledger .hd {
+    @apply p-[13px_20px] bg-surface text-fine font-bold;
+  }
+  .ledger .row {
+    @apply flex justify-between gap-[18px] p-[13px_20px];
+    border-top: 1px solid var(--color-line);
+  }
+  .ledger .row .v {
+    @apply tabular-nums font-semi;
+  }
+  .ledger .row.sub {
+    @apply text-fine text-muted;
+  }
+  .ledger .row.net {
+    @apply bg-ink text-white;
+  }
+}

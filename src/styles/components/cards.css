@@ -1,0 +1,47 @@
+@layer components {
+  /* ══ C07 CatalogCard / C08 ScenarioCard
+       配置領域の幅で列数を決める（960/520px）。サイドバーに入れても壊れない */
+  .cq,
+  .cards {
+    container-type: inline-size;
+  }
+  .cards .g {
+    @apply grid gap-gap grid-cols-[1fr];
+  }
+  @container (min-width: 520px) {
+    .cards .g {
+      @apply grid-cols-[repeat(2,_1fr)];
+    }
+  }
+  @container (min-width: 960px) {
+    .cards .g3 {
+      @apply grid-cols-[repeat(3,_1fr)];
+    }
+  }
+  /* 既定は罫だけ。角丸の箱にすると全部が同じ強さになって階層が消える（原則F） */
+  .card {
+    @apply flex flex-col gap-[10px] pt-[20px];
+    border-top: 1px solid var(--color-line-strong);
+  }
+  section.dark .card {
+    border-top-color: var(--color-white);
+  }
+  .card h3 {
+    @apply text-[17px] flex items-center gap-[8px];
+  }
+  .card h3 .ic {
+    @apply text-muted;
+  }
+  section.dark .card h3 .ic {
+    @apply text-muted-on-ink;
+  }
+  .card .meta {
+    @apply text-[14.5px] leading-[1.85] text-muted m-[0];
+  }
+  section.dark .card .meta {
+    @apply text-muted-on-ink;
+  }
+  .card a {
+    @apply mt-[auto] pt-[4px] inline-flex items-center min-h-tap text-fine font-semi;
+  }
+}

@@ -1,0 +1,11 @@
+@layer components {
+  /* 仕様ページの分類見出し */
+  h3.grp {
+    @apply mt-[44px] pt-[12px];
+    border-top: 1px solid var(--color-line-strong);
+    @apply text-lead;
+  }
+  h3.grp + .dim {
+    @apply mt-[6px];
+  }
+}

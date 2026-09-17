@@ -1,0 +1,40 @@
+@layer components {
+  /* ══ C15 Disclosure ─ details。未確認・重要条件は初期状態で見せる */
+  .acc {
+    border-bottom: 1px solid var(--color-line);
+    @apply rounded-[0] bg-white;
+  }
+  section.dark .acc {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_5%,_transparent)] border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
+  }
+  .acc > summary {
+    @apply list-none list-outside cursor-pointer flex items-center gap-[11px] min-h-[64px] p-[18px_0] text-body font-medium;
+  }
+  .acc > summary::-webkit-details-marker {
+    @apply hidden;
+  }
+  .acc > summary::after {
+    content: '';
+    @apply ml-[auto] w-[9px] h-[9px] flex-[none];
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg) translate(-2px, -2px);
+    transition: transform var(--duration-fast) ease;
+  }
+  .acc[open] > summary::after {
+    transform: rotate(225deg) translate(-2px, -2px);
+  }
+  .acc > summary:hover {
+    @apply bg-surface;
+  }
+  section.dark .acc > summary:hover {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)];
+  }
+
+  .acc .bd {
+    @apply p-[0_28px_24px_0] text-compact leading-[1.9];
+  }
+  .acc .bd > :first-child {
+    @apply mt-[0];
+  }
+}

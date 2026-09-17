@@ -1,0 +1,29 @@
+@layer components {
+  /* ══ C05 SectionHeading ─ 小分類、見出し、短い導入 */
+  .sh {
+    @apply mb-[32px];
+  }
+  .sh > h2,
+  .sh > .lede {
+    @apply max-w-measure-read;
+  }
+  section.dark .sh {
+    @apply text-white;
+  }
+  .sh .lab {
+    @apply flex items-center gap-[7px] mb-[16px] text-fine font-semi tracking-[.08em] text-muted;
+  }
+  section.dark .sh .lab {
+    @apply text-muted-on-ink;
+  }
+  .lede {
+    @apply text-[17px] leading-body m-[14px_0_0];
+  }
+  section .lede:first-child {
+    @apply mt-[0];
+  }
+  section > .wrap > .lede,
+  section > .wrap-w > .lede {
+    @apply max-w-measure-read;
+  }
+}

@@ -1,0 +1,46 @@
+@layer components {
+  /* ══ C20 FieldGroup ─ 入力文字 16px、枠の薄さだけに依存しない */
+  .contact-email {
+    overflow-wrap: anywhere;
+  }
+
+  .field {
+    @apply grid gap-[7px] mb-[22px];
+  }
+  .field label {
+    @apply text-[14.5px] font-semi flex items-center gap-[8px];
+  }
+  .field .req {
+    @apply text-fine font-medium text-muted;
+  }
+  .field .hint {
+    @apply text-meta text-muted;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    font: inherit;
+    @apply text-body min-h-field-h p-[11px_14px] bg-field text-ink;
+    border: 1.5px solid var(--color-line-strong);
+    @apply rounded-media w-[100%];
+  }
+  .field textarea {
+    @apply min-h-[150px] leading-[1.8];
+    resize: vertical;
+  }
+  .field:has(input:focus, select:focus, textarea:focus) label {
+    @apply text-[var(--accent-text)];
+  }
+  .field:has([aria-invalid='true']) input,
+  .field:has([aria-invalid='true']) textarea {
+    @apply border-alert;
+  }
+  .field:has([aria-invalid='true']) label {
+    @apply text-alert;
+  }
+
+  /* 固定CTA。本文・フッターを覆わないよう body 側で余白を確保する */
+  .fixbar {
+    @apply hidden;
+  }
+}

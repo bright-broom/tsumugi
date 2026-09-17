@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import ContactActionLink from '@/components/ContactAction';
 import { CONTACT_ACTIONS } from '@/content/contact-actions';
 import type { ContactAction } from '@/lib/storefront/contact-actions';
@@ -19,20 +20,20 @@ export default function Cta({ primary, where, actions = CONTACT_ACTIONS.buttons 
         <ContactActionLink
           action={first}
           surface="button"
-          className="btn btn-1"
+          variant="primary"
           contactLabel={where === undefined ? primary : undefined}
         />
       )}
       {where !== undefined ? (
-        <a className="btn btn-2" href={where}>
+        <ActionLink variant="secondary" href={where}>
           {primary}
-        </a>
+        </ActionLink>
       ) : (
         second && (
           <ContactActionLink
             action={second}
             surface="button"
-            className="btn btn-2"
+            variant="secondary"
             contactLabel={primary}
           />
         )

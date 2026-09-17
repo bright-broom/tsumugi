@@ -1,0 +1,170 @@
+@layer components {
+  /* ══ C01 BrandHeader / C02 NavigationPanel。ADR 0006：生成り、藍墨、細い糸の罫線 */
+  .hdr {
+    @apply sticky top-[0] z-[40] bg-header-paper text-header-ink;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
+  }
+  .hdr-in {
+    @apply h-header-pc max-w-[1600px] mx-[auto] px-pad-pc flex items-center gap-[28px];
+  }
+  .logo {
+    @apply inline-flex items-center gap-[17px] flex-[none] min-h-tap;
+    color: inherit;
+    @apply no-underline;
+  }
+  .logo .n {
+    @apply font-brand text-[48px] font-regular leading-[1.1];
+  }
+  .logo-copy {
+    @apply grid gap-[7px];
+  }
+  .logo .roman {
+    @apply text-fine font-medium tracking-[.28em] leading-[1];
+  }
+  .logo .s {
+    @apply text-fine tracking-[.1em] leading-[1.4];
+  }
+  .nav {
+    @apply ml-[auto];
+  }
+  .nav ul {
+    @apply flex items-center gap-[28px] m-[0] p-[0] list-none list-outside;
+  }
+  .nav li {
+    @apply m-[0];
+  }
+  .nav a {
+    @apply relative inline-flex items-center min-h-tap;
+    color: inherit;
+    @apply no-underline text-fine font-medium tracking-[.04em] whitespace-nowrap;
+  }
+  .nav a::after {
+    content: '';
+    @apply absolute bottom-[3px] left-[0] right-[.04em] h-[1px] bg-header-brass;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--duration-panel) ease;
+  }
+  .nav a:hover::after,
+  .nav a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+  .nav a[aria-current='page'] {
+    @apply font-bold;
+  }
+  .header-actions {
+    @apply flex items-center gap-[25px];
+  }
+  .header-phone {
+    @apply hidden items-center gap-[8px] min-h-tap;
+    color: inherit;
+    @apply no-underline text-fine;
+  }
+  .header-phone .num {
+    @apply whitespace-nowrap tabular-nums;
+  }
+  .header-phone:hover {
+    @apply underline underline-offset-[.3em];
+  }
+  .header-contact {
+    @apply inline-flex items-center justify-center gap-[18px] min-h-[48px] p-[10px_20px];
+    border: 1px solid var(--color-accent);
+    @apply rounded-card bg-accent text-sub text-fine font-medium tracking-[.05em] whitespace-nowrap no-underline;
+    transition:
+      background var(--duration-fast) ease,
+      color var(--duration-fast) ease;
+  }
+  .header-contact:hover {
+    @apply bg-header-paper text-header-ink;
+  }
+  .header-contact .ic {
+    transition: transform var(--duration-fast) ease;
+  }
+  .header-contact:hover .ic {
+    transform: translateX(3px);
+  }
+  .contact-short {
+    @apply hidden;
+  }
+  .menu {
+    @apply flex-[none];
+  }
+  .menu > summary {
+    @apply list-none list-outside cursor-pointer flex flex-col items-center justify-center gap-[9px] min-h-[52px] min-w-[56px] text-fine leading-[1] tracking-[.04em];
+  }
+  .menu > summary::-webkit-details-marker {
+    @apply hidden;
+  }
+  .menu-lines {
+    @apply relative block w-[26px] h-[12px];
+  }
+  .menu-lines::before,
+  .menu-lines::after {
+    content: '';
+    @apply absolute left-[0] w-[26px] h-[1px];
+    background: currentColor;
+    transition: transform var(--duration-panel) ease;
+  }
+  .menu-lines::before {
+    @apply top-[2px];
+  }
+  .menu-lines::after {
+    @apply top-[10px] w-[19px];
+  }
+  .menu[open] .menu-lines::before {
+    transform: translateY(4px) rotate(45deg);
+  }
+  .menu[open] .menu-lines::after {
+    @apply w-[26px];
+    transform: translateY(-4px) rotate(-45deg);
+  }
+  .menu-close,
+  .menu[open] .menu-open {
+    @apply hidden;
+  }
+  .menu[open] .menu-close {
+    @apply inline;
+  }
+  .menu-panel {
+    @apply absolute right-pad-pc top-[100%] w-[min(480px,_calc(100vw_-_40px))] max-h-[calc(100dvh_-_var(--spacing-header-pc)_-_24px)];
+    overflow-y: auto;
+    @apply p-[24px] bg-header-paper;
+    border: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
+    box-shadow: 0 16px 28px color-mix(in srgb, var(--color-sub) 10%, transparent);
+  }
+  .menu-panel ul {
+    @apply grid grid-cols-[repeat(2,_minmax(0,_1fr))] list-none list-outside m-[0] p-[0];
+  }
+  .menu-panel li {
+    @apply m-[0];
+  }
+  .menu-panel a {
+    @apply flex items-center min-h-tap p-[8px_10px];
+    color: inherit;
+    @apply text-fine leading-[1.5] no-underline;
+  }
+  .menu-panel a:hover,
+  .menu-panel a[aria-current='page'] {
+    background: color-mix(in srgb, var(--color-header-brass) 12%, transparent);
+  }
+  .menu-panel a[aria-current='page'] {
+    @apply font-bold;
+  }
+  .menu-panel .hd {
+    @apply text-fine font-medium tracking-[.12em] m-[20px_0_8px] p-[0_10px_10px];
+    border-bottom: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
+  }
+  .menu-panel .hd:first-child {
+    @apply mt-[0];
+  }
+  .menu-phone {
+    @apply mt-[20px] p-[12px_10px_0];
+    border-top: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
+  }
+  .menu-phone .phone-link {
+    @apply inline-flex gap-[10px] text-[17px] px-[0];
+  }
+  .menu-phone p {
+    @apply m-[0] text-fine;
+  }
+}

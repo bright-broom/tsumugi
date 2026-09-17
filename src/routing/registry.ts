@@ -18,6 +18,7 @@ export const ROUTES = {
   index: route('index', 'home', 'circle-dollar-sign', 'main', false),
   owned: route('owned', 'owned', 'key', 'main', true),
   price: route('price', 'price', 'calculator', 'main', true),
+  plans: route('plans', 'catalog', 'list-checks', 'main', false),
   unlimited: route('unlimited', 'unlimited', 'repeat-2', 'main', false),
   source: route('source', 'source', 'code-xml', 'main', false),
   'cost-cut': route('cost-cut', 'costCut', 'trending-down', 'main', true),

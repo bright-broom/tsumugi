@@ -1,0 +1,11 @@
+scenario,revenue_yen,recurring_yen,delivery_hours,cash_variable_yen,cash_before_owner_yen,economic_surplus_yen,hours_with_25pct_overrun,feasible_25pct,hours_with_25pct_and_30min_support,feasible_combined
+one-core,198000,0,15,20940,127060,-572940,18.75,true,18.75,true
+two-cms-30h,796000,0,60,83880,662120,-37880,75,true,75,true
+two-cms-26h,796000,0,52,83880,662120,-37880,65,true,65,true
+two-cms-and-core,994000,0,67,104820,839180,139180,83.75,true,83.75,true
+cms-and-support,983400,187400,66.25,95602,837798,137798,82.8125,true,89.3125,false
+feature698-and-core,896000,0,65,91880,754120,54120,81.25,true,81.25,true
+feature898-and-core,1096000,0,65,97880,948120,248120,81.25,true,81.25,true
+feature898-only,898000,0,50,76940,771060,71060,62.5,true,62.5,true
+all-entry,957600,0,66,124728,782872,82872,82.5,true,82.5,true
+prior-adopted-mix,970600,374600,69.5,87718,832882,132882,86.875,false,102.875,false

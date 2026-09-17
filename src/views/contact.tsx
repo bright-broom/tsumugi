@@ -1,3 +1,4 @@
+import { ActionLink, ActionButton } from '@/components/Action';
 import Icon from '@/components/Icon';
 import { ROUTES } from '@/routing/registry';
 import PhoneLink from '@/components/PhoneLink';
@@ -51,9 +52,9 @@ export default function ContactPage({ copy, route }: PageProps<'contact'>) {
             <PhoneLink className="contact-phone" />
             <p className="contact-hours">{format(copy.p2, { cTELHOURS: C.TEL_HOURS })}</p>
             {C.LINE_URL && (
-              <a className="btn btn-2" href={C.LINE_URL}>
+              <ActionLink variant="secondary" href={C.LINE_URL}>
                 {copy.btn}
-              </a>
+              </ActionLink>
             )}
           </div>
         </div>
@@ -152,13 +153,13 @@ export default function ContactPage({ copy, route }: PageProps<'contact'>) {
               </div>
             )}
             {disabled ? (
-              <button className="btn btn-1" type="submit" disabled>
+              <ActionButton variant="primary" type="submit" disabled>
                 {copy.btn2}
-              </button>
+              </ActionButton>
             ) : (
-              <button className="btn btn-1" type="submit">
+              <ActionButton variant="primary" type="submit">
                 {copy.btn3}
-              </button>
+              </ActionButton>
             )}
           </form>
           <p className="dim">{copy.dim}</p>

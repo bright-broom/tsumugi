@@ -40,7 +40,8 @@
     "backup:restore-test": "tsx tools/ops/cli/restore-test.ts",
     "check:security": "tsx tools/security/check.ts",
     "audit:security": "npm audit --audit-level=moderate",
-    "test:security-browser": "tsx tools/security/browser.ts"
+    "test:security-browser": "tsx tools/security/browser.ts",
+    "design:compare": "tsx tools/design/compare.ts"
   },
   "dependencies": {
     "clsx": "2.1.1",

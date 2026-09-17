@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import PageIndex from '@/components/PageIndex';
 import { LandVsOwn } from '@/components/diagrams/LandVsOwn';
 import { ROUTES } from '@/routing/registry';
@@ -155,9 +156,9 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
           ]}
         />
         <p>
-          <a className="btn btn-2" href={href('price', 'domains')}>
+          <ActionLink variant="secondary" href={href('price', 'domains')}>
             {copy.registrarsLink}
-          </a>
+          </ActionLink>
         </p>
         <Note heading={copy.heading9} kind="good">
           <p>
@@ -238,9 +239,9 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
           foot={copy.foot5}
         />
         <div className="btns">
-          <a className="btn btn-2" href={href('flow')}>
+          <ActionLink variant="secondary" href={href('flow')}>
             {copy.btn}
-          </a>
+          </ActionLink>
         </div>
       </Section>
 

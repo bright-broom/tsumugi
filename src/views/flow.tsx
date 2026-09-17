@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import PageIndex from '@/components/PageIndex';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
@@ -142,9 +143,9 @@ export default function FlowPage({ copy, route }: PageProps<'flow'>) {
           foot={copy.foot}
         />
         <div className="btns">
-          <a className="btn btn-2" href={href('subsidy')}>
+          <ActionLink variant="secondary" href={href('subsidy')}>
             {copy.btn}
-          </a>
+          </ActionLink>
         </div>
       </Section>
 

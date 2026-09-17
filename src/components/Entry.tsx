@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import { href } from '@/routing/registry';
 import { useMessages } from '@/components/ContentProvider';
 import { format } from '@/i18n/format';
@@ -57,12 +58,12 @@ export default function Entry({ full = false }: Props) {
             </a>
           )}
           <div className="btns">
-            <a className="btn btn-2" href={href('contact')}>
+            <ActionLink variant="secondary" href={href('contact')}>
               {copy.btn}
-            </a>
-            <a className="btn btn-2" href={href('owned')}>
+            </ActionLink>
+            <ActionLink variant="secondary" href={href('owned')}>
               {copy.btn2}
-            </a>
+            </ActionLink>
           </div>
         </div>
       </div>

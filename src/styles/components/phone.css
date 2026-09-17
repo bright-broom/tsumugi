@@ -1,0 +1,15 @@
+@layer components {
+  /* ── 電話。主要CTAのひとつ。数字は必ず文字で置く */
+  .tel {
+    @apply inline-flex items-center gap-[8px] min-h-tap p-[5px_14px_5px_12px];
+    border: 1.5px solid var(--color-ink);
+    @apply rounded-media text-ink no-underline flex-[none];
+  }
+  .tel:hover {
+    @apply bg-ink text-white;
+  }
+  .tel .num {
+    @apply text-[17px] font-bold tabular-nums whitespace-nowrap;
+    color: inherit;
+  }
+}

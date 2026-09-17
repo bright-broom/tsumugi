@@ -1,0 +1,35 @@
+@layer components {
+  /* ══ C16 PrimaryAction / C17 SecondaryAction
+       主要CTA PC 315×57 / モバイル 260×48。琥珀の上は墨の文字（ADR 0014） */
+  .btns {
+    @apply flex flex-wrap gap-[14px];
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-[9px] min-h-cta-h-pc px-[26px] rounded-media text-compact font-semi no-underline;
+    border: 1.5px solid transparent;
+    transition:
+      background var(--duration-fast) ease,
+      color var(--duration-fast) ease;
+  }
+  .btn-1 {
+    @apply min-w-cta-w-pc bg-[var(--accent)] text-[var(--accent-ink)] border-[var(--accent)];
+  }
+  .btn-1:hover {
+    filter: brightness(0.94);
+  }
+  .btn-2 {
+    background: transparent;
+    @apply text-ink border-line-strong;
+  }
+  .btn-2:hover {
+    @apply border-ink bg-surface;
+  }
+  section.dark .btn-2,
+  .hero .btn-2 {
+    @apply text-white border-[color-mix(in_srgb,_var(--color-main)_45%,_transparent)];
+  }
+  section.dark .btn-2:hover,
+  .hero .btn-2:hover {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)] border-white;
+  }
+}

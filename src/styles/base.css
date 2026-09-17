@@ -109,7 +109,7 @@
   :where(a, button, summary, input, select, textarea, [tabindex]):focus-visible {
     outline: 3px solid var(--color-ink);
     outline-offset: 2px;
-    @apply rounded-[4px];
+    @apply rounded-card;
   }
   :where(a, button, summary, input, select, textarea, h1, h2, h3, [id]) {
     scroll-margin-top: calc(var(--spacing-header-pc) + 16px);
@@ -248,7 +248,7 @@
       @apply text-[22px];
     }
     h3 {
-      @apply text-[18px];
+      @apply text-lead;
     }
     :where(a, button, summary, input, select, textarea, h1, h2, h3, [id]) {
       scroll-margin-top: calc(var(--spacing-header-mb) + 12px);

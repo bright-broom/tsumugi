@@ -4,6 +4,19 @@ const copy = getMessages().prices;
 /** 公開価格の唯一の正本。金額は税別円。キーで参照する。 */
 const TAX_RATE = 0.1;
 export const EXTERNAL_MONTHLY_ESTIMATE = 3500;
+/** 検討中の参考価格。販売用の productionPlans / RUN / OPTIONS には含めない。 */
+export const PROPOSED_PRICES = {
+  bespoke: { price: 598000, status: 'concept' },
+  feature: { price: 898000, status: 'concept' },
+  discovery: { price: 55000, status: 'concept' },
+  technical: { price: 29800, status: 'concept' },
+} as const;
+export const CATALOG_COST_ASSUMPTIONS = {
+  cmsAdditionalMonthly: 4900,
+  featureExternalMonthly: 10000,
+  firstYearMonths: 12,
+  threeYearMonths: 36,
+} as const;
 const PAYMENT_DEPOSIT_RATE = 0.5;
 export const SINGLE = {
   key: 'single',
@@ -120,6 +133,53 @@ export const productionPlans = () => [SINGLE, ...BUILD];
 export function paymentSchedule(price: number) {
   const deposit = Math.floor(price * PAYMENT_DEPOSIT_RATE);
   return { deposit, acceptance: price - deposit, total: price };
+}
+/** 個別開発の未採用案。設計費は総額の内訳であり、別料金として重ねない。 */
+export function proposedFeaturePayment() {
+  const schedule = paymentSchedule(PROPOSED_PRICES.feature.price);
+  return {
+    design: PROPOSED_PRICES.discovery.price,
+    start: schedule.deposit - PROPOSED_PRICES.discovery.price,
+    acceptance: schedule.acceptance,
+    total: schedule.total,
+  };
+}
+
+export function catalogCostExamples() {
+  const assumed = CATALOG_COST_ASSUMPTIONS;
+  const samples = [
+    { key: 'single', price: SINGLE.price, support: 0, external: EXTERNAL_MONTHLY_ESTIMATE },
+    { key: 'basic', price: build('basic').price, support: 0, external: EXTERNAL_MONTHLY_ESTIMATE },
+    {
+      key: 'cms-free',
+      price: build('standard').price,
+      support: 0,
+      external: EXTERNAL_MONTHLY_ESTIMATE,
+    },
+    {
+      key: 'cms-paid',
+      price: build('standard').price,
+      support: 0,
+      external: EXTERNAL_MONTHLY_ESTIMATE + assumed.cmsAdditionalMonthly,
+    },
+    {
+      key: 'feature-self',
+      price: PROPOSED_PRICES.feature.price,
+      support: 0,
+      external: assumed.featureExternalMonthly,
+    },
+    {
+      key: 'feature-care',
+      price: PROPOSED_PRICES.feature.price,
+      support: PROPOSED_PRICES.technical.price,
+      external: assumed.featureExternalMonthly,
+    },
+  ];
+  return samples.map((sample) => ({
+    ...sample,
+    year: sample.price + (sample.support + sample.external) * assumed.firstYearMonths,
+    threeYears: sample.price + (sample.support + sample.external) * assumed.threeYearMonths,
+  }));
 }
 export const withTax = (price: number) => Math.round(price * (1 + TAX_RATE));
 export function supportMonthlyTotal(key: RunKey) {

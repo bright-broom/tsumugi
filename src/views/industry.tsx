@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import PageIndex from '@/components/PageIndex';
 import { RentVsOwn } from '@/components/diagrams/RentVsOwn';
 import Vs from '@/components/Vs';
@@ -95,12 +96,12 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
         </div>
         <p className="dim">{copy.dim}</p>
         <div className="btns">
-          <a className="btn btn-2" href={href('price')}>
+          <ActionLink variant="secondary" href={href('price')}>
             {copy.btn2}
-          </a>
-          <a className="btn btn-2" href={href('subsidy')}>
+          </ActionLink>
+          <ActionLink variant="secondary" href={href('subsidy')}>
             {copy.btn3}
-          </a>
+          </ActionLink>
         </div>
       </Section>
 
@@ -142,9 +143,9 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
             </p>
           </Note>
           <div className="btns">
-            <a className="btn btn-2" href={href('cost-cut')}>
+            <ActionLink variant="secondary" href={href('cost-cut')}>
               {costCopy.btn4}
-            </a>
+            </ActionLink>
           </div>
           <p className="dim fine-note">{costCopy.dim}</p>
         </Section>
@@ -152,9 +153,9 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
         <Section id="cost-review" eyebrow={copy.eyebrow2} heading={copy.heading5}>
           <p dangerouslySetInnerHTML={raw(d.cost)} />
           <div className="btns">
-            <a className="btn btn-2" href={href('cost-cut')}>
+            <ActionLink variant="secondary" href={href('cost-cut')}>
               {copy.btn}
-            </a>
+            </ActionLink>
           </div>
         </Section>
       )}

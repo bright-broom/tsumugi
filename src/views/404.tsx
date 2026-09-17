@@ -1,3 +1,4 @@
+import { ActionLink } from '@/components/Action';
 import { ROUTES } from '@/routing/registry';
 import { href } from '@/routing/registry';
 import { format } from '@/i18n/format';
@@ -17,11 +18,11 @@ export default function NotFoundPage({ copy, route }: PageProps<'notFound'>) {
     <Base file={file} title={title} desc={desc}>
       <Section eyebrow={copy.code} heading={copy.heading} h1 lede={copy.lede}>
         <div className="btns">
-          <a className="btn btn-1" href={href('index')}>
+          <ActionLink variant="primary" href={href('index')}>
             <Icon name="arrow-right" sm />
             {copy.primary}
-          </a>
-          <PhoneLink className="btn btn-2" />
+          </ActionLink>
+          <PhoneLink variant="secondary" />
         </div>
       </Section>
     </Base>

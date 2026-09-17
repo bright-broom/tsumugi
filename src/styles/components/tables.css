@@ -1,0 +1,104 @@
+@layer components {
+  /* ══ C19 ComparisonMatrix ─ table と見出しセルを使い、横スクロールは領域内に閉じる */
+  .tblwrap {
+    @apply relative;
+  }
+  .tbl {
+    @apply overflow-x-auto;
+    border: 1px solid var(--color-line);
+    @apply rounded-card;
+    /* 端まで来たら止まる位置を作って、指で弾いたときの行き過ぎを防ぐ */
+    scroll-snap-type: x proximity;
+  }
+  section.dark .tbl {
+    @apply border-[color-mix(in_srgb,_var(--color-main)_16%,_transparent)];
+  }
+  .tbl table {
+    @apply w-[100%] min-w-[520px] text-compact;
+  }
+  /* 表の外に出したキャプションと脚注。散文なので折り返して全部読める */
+  .tbl-note {
+    @apply m-[12px_0_0] text-meta leading-[1.8] text-muted max-w-measure-read;
+  }
+  section.dark .tbl-note {
+    @apply text-muted-on-ink;
+  }
+  .tbl-hint {
+    @apply hidden;
+  }
+  .tbl th,
+  .tbl td {
+    @apply p-[13px_18px] text-left align-[top];
+    border-bottom: 1px solid var(--color-line);
+  }
+  section.dark .tbl th,
+  section.dark .tbl td {
+    @apply border-[color-mix(in_srgb,_var(--color-main)_12%,_transparent)];
+  }
+  .tbl thead th {
+    @apply bg-surface text-fine font-bold whitespace-nowrap;
+  }
+  section.dark .tbl thead th {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_8%,_transparent)] text-white;
+  }
+  .tbl tbody th,
+  .tbl thead th:first-child {
+    @apply sticky left-[0] z-[1] font-semi bg-white;
+    box-shadow: 1px 0 0 var(--color-line);
+  }
+  .tbl thead th:first-child {
+    @apply bg-surface;
+  }
+  /* 固定する列は幅を決める。決めないと狭くなりすぎて、行見出しが何行にも折れる */
+  .tbl tbody th,
+  .tbl thead th:first-child {
+    @apply min-w-[8.5em];
+  }
+  .tbl tbody th .dim {
+    @apply block mt-[2px] text-fine leading-[1.55];
+  }
+  .tbl tbody th br {
+    @apply hidden;
+  }
+  section.dark .tbl tbody th {
+    @apply bg-ink;
+    box-shadow: 1px 0 0 color-mix(in srgb, var(--color-main) 16%, transparent);
+  }
+  section.dark .tbl thead th:first-child {
+    @apply bg-sub;
+  }
+  section.tint .tbl tbody th {
+    @apply bg-white;
+  }
+  .tbl th.n,
+  .tbl td.n {
+    @apply text-right tabular-nums whitespace-nowrap;
+  }
+  .tbl tbody tr:last-child th,
+  .tbl tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .tbl tfoot td {
+    @apply bg-surface text-meta text-muted;
+  }
+  section.dark .tbl tfoot td {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_8%,_transparent)] text-muted-on-ink;
+  }
+
+  .yes {
+    @apply text-ok font-bold inline-flex items-baseline gap-[5px];
+  }
+  .no {
+    @apply text-alert font-bold inline-flex items-baseline gap-[5px];
+  }
+  section.dark .yes {
+    @apply text-main;
+  }
+  section.dark .no {
+    @apply text-[var(--color-main)];
+  }
+  .yes .ic,
+  .no .ic {
+    @apply self-center;
+  }
+}
