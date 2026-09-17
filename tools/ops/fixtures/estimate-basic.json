@@ -1,5 +1,7 @@
 {
   "estimateId": "est-sample-001",
+  "customerId": "sample-shop",
+  "projectId": "site-2026",
   "customerLabel": "架空の商店（サンプル）",
   "issuedOn": "2026-09-16",
   "validUntil": "2026-10-16",

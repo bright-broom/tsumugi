@@ -1,5 +1,6 @@
+import { appendVersion, estimateInputSchema } from '../../tools/ops/estimate/model';
 import { describe, expect, it } from 'vitest';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { readFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { writeJson } from '../../tools/ops/shared/store';
@@ -18,6 +19,18 @@ import {
   recordHandover,
 } from '../../tools/ops/crm/model';
 
+const estimate = appendVersion(
+  null,
+  estimateInputSchema.parse(
+    JSON.parse(
+      readFileSync(
+        new URL('../../tools/ops/fixtures/estimate-basic.json', import.meta.url),
+        'utf8',
+      ),
+    ),
+  ),
+  { savedAt: '2026-09-16T10:00:00+09:00', today: '2026-09-16' },
+).versions[0]!;
 const m = { at: '2026-09-16T10:00:00+09:00', by: 'サンプル担当' };
 const decided = { decidedBy: 'サンプル顧客', decidedOn: '2026-09-20' };
 const fresh = () =>
@@ -39,7 +52,7 @@ const through = (stop: string) => {
     f = advanceProject(f, 'site-2026', to, m);
     return to === stop;
   };
-  f = linkEstimate(f, 'site-2026', { estimateId: 'est-sample-001', version: 2 }, m);
+  f = linkEstimate(f, 'site-2026', { ...estimate, version: 2 }, m);
   if (step('estimate_sent')) return f;
   f = recordContract(
     f,
@@ -202,9 +215,7 @@ describe('案件の状態遷移', () => {
       '進められません',
     );
     const lost = advanceProject(fresh(), 'site-2026', 'closed_lost', m);
-    expect(() => linkEstimate(lost, 'site-2026', { estimateId: 'est-x', version: 1 }, m)).toThrow(
-      '変更しません',
-    );
+    expect(() => linkEstimate(lost, 'site-2026', estimate, m)).toThrow('変更しません');
     expect(() => advanceProject(lost, 'site-2026', 'consulting', m)).toThrow('進められません');
   });
 });

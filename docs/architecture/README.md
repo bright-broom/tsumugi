@@ -162,3 +162,5 @@
 - [0071 公開HTMLの参照CSS・画像を監視する](0071-referenced-asset-monitoring.md)
 
 - [0072 社内CLIの読み込みから保存までを排他制御する](0072-local-ops-command-lock.md)
+
+- [0073 — 見積の顧客・案件とCRM参照の照合](0073-estimate-customer-project-binding.md)

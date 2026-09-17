@@ -68,6 +68,8 @@ export const catalogFingerprint = (c: PriceCatalog) =>
 export const estimateInputSchema = z
   .strictObject({
     estimateId: idSchema,
+    customerId: idSchema.optional(),
+    projectId: idSchema.optional(),
     customerLabel: z.string().trim().min(1).max(120),
     issuedOn: dateSchema,
     validUntil: dateSchema,
@@ -307,6 +309,21 @@ export function appendVersion(
     throw new OpsError(`有効期限（${input.validUntil}）が今日（${options.today}）より前です`);
   if (file && file.estimateId !== input.estimateId)
     throw new OpsError(`見積番号が違います: ${file.estimateId} と ${input.estimateId}`);
+  if (!input.customerId || !input.projectId)
+    throw new OpsError(
+      '保存には customerId と projectId が必要です。旧見積は内容を確認して新しい見積番号で保存してください',
+    );
+  if (
+    file?.versions.some(
+      (v) =>
+        v.input.estimateId !== file.estimateId ||
+        v.input.customerId !== input.customerId ||
+        v.input.projectId !== input.projectId,
+    )
+  )
+    throw new OpsError(
+      '見積の顧客・案件または番号が一致しません。旧見積の帰属は推定せず、新しい見積番号を使ってください',
+    );
   const last = file?.versions.at(-1);
   if (
     last &&

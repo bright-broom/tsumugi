@@ -1,9 +1,17 @@
 /** npm run ops:crm -- <command>。使い方は tools/ops/README.md。 */
 import { join } from 'node:path';
+import { estimateFileSchema, findVersion } from '../estimate/model';
 import { loadCustomerMetrics } from '../metrics/model';
 import { loadRequests } from '../requests/model';
 import { type Args, runCli } from '../shared/cli';
-import { OpsError, parseId, resolveDataDir, resolveOutputFile, writeJson } from '../shared/store';
+import {
+  OpsError,
+  parseId,
+  resolveDataDir,
+  resolveOutputFile,
+  readJson,
+  writeJson,
+} from '../shared/store';
 import { jstDate, now, parseDate } from '../shared/time';
 import {
   type CustomerFile,
@@ -92,18 +100,12 @@ runCli(USAGE, {
   },
   estimate(args) {
     const c = open(args);
-    c.save(
-      linkEstimate(
-        c.file,
-        c.project(),
-        {
-          estimateId: parseId(args.required('estimate'), '--estimate'),
-          version: args.integer('version'),
-        },
-        c.m,
-      ),
-      '見積の版を紐付けました',
-    );
+    const id = parseId(args.required('estimate'), '--estimate');
+    const estimate = readJson(join(c.dataDir, 'estimates', `${id}.json`), estimateFileSchema);
+    if (estimate.estimateId !== id || estimate.versions.some((v) => v.input.estimateId !== id))
+      throw new OpsError('見積番号と保存内容が一致しません');
+    const version = findVersion(estimate, args.integer('version'));
+    c.save(linkEstimate(c.file, c.project(), version, c.m), '見積の版を紐付けました');
   },
   contract(args) {
     const c = open(args);
