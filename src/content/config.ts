@@ -85,8 +85,8 @@ export function isApprovalRecorded(approval: LegalApproval): boolean {
 }
 
 /**
- * このサイト自身のソースコードの公開先（#40、ADR 0027）。2026-09-14 にオーナーが Public のままにすると承認した。
+ * このサイト自身のソースコードの公開先（#40、ADR 0027・0070）。2026-09-18 の API 確認では非公開。
  * 非公開にしたら null にする（works・spec の案内が「公開していません」に切り替わる）。
  * 顧客サイトのソースコードは公開しない（契約した顧客を閲覧権限で招待する）。
  */
-export const SOURCE_REPOSITORY_URL: string | null = 'https://github.com/bright-broom/tsumugi';
+export const SOURCE_REPOSITORY_URL: string | null = null;

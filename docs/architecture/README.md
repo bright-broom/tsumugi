@@ -156,3 +156,5 @@
 - [0068 比較元の公開成果物と配信内容を全ファイルで照合する](0068-release-content-verification.md)
 
 - [0069 Issueをmainの実装で判定し、実配信ヘッダーを監視する](0069-delivered-headers-and-issue-review.md)
+
+- [0070 ソース公開案内とIssueの完了条件を実態へ合わせる](0070-source-visibility-and-issue-scope.md)

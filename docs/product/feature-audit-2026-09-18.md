@@ -36,7 +36,7 @@ P1 は現行提供の信頼性または該当商品を提供する前に必要�
 | A06 / P2  | **部分実装**：配信ヘッダーの変化を検出。CSS・画像の404は対象外                          | `tools/ops/probe.ts`、`tools/security/policy.ts`                                                                | 同一 origin の参照資産と必要な応答ヘッダーを検証。ローカル CSP テストと区別／開発／監視の次段階                          |
 | A07 / P1  | 監視の停止自体の検知、複数担当への通知、復旧通知がない                         | [ADR 0046](../architecture/0046-post-launch-monitoring.md)、`docs/operations.md` の空欄                         | 独立した監視元・責任者・通知先・エスカレーション・復旧判断を決定し到達確認／運用・オーナー／顧客に監視を提供する前       |
 | A08 / P1  | **部分対応**：復元時の既存領域削除を修正。独立保管先・非公開業務データは未対応 | [ADR 0067](../architecture/0067-restore-workspace-ownership.md)、`weekly-backup.yml`、`backup.ts`、`restore.ts` | 別環境で復元し所要時間を記録。保管先・RPO/RTO・暗号化・アクセス・削除条件を決定／運用／顧客データの運用開始前            |
-| A09 / P1  | サイトは「ソース公開」と案内するが GitHub は Private                           | `src/content/config.ts: SOURCE_REPOSITORY_URL`、`src/i18n/locales/ja/source.ts`、Repository API                 | 公開可能な配布用リポジトリか、現状に合う案内へ整合。公開範囲を確認せず可視性変更しない／オーナー・開発／公開案内の継続前 |
+| A09 / P1  | **ブランチ修正済み**：GitHub Privateに合わせ非公開表示。実公開確認待ち                           | `src/content/config.ts: SOURCE_REPOSITORY_URL`、`src/i18n/locales/ja/source.ts`、Repository API                 | 公開可能な配布用リポジトリか、現状に合う案内へ整合。公開範囲を確認せず可視性変更しない／オーナー・開発／公開案内の継続前 |
 | A10 / P1  | main 保護の有効性を API で再確認できない                                       | Branch protection API 403、従来 ADR 0055                                                                        | 契約・権限・ruleset を確認し PR/必須検査/強制 push 制限の実効性を検証／リポジトリ管理者／次の main 統合前                |
 
 ### B. 提供品質の裏付け

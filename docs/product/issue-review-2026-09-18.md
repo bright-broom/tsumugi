@@ -1,6 +1,10 @@
 # 残存Issueの再整理 — 2026-09-18
 
-## 判断と範囲
+## 今回の再評価
+
+前回の35件を再評価し、#14はADR0056で不要となった独自ドメイン必須条件として終了、#37は現行macOSで25ファイルの再現一致を確認して完了。APIでopen **33件**を確認。#40の公開案内はPR #85で修正し、main・公開先確認まで継続する。前回、将来の別OS対応や顧客別の導入確認を元Issueの完了条件へ広げた点を修正した。判断は[ADR0070](../architecture/0070-source-visibility-and-issue-scope.md)。
+
+## 前回の判断と範囲
 
 開始時のopen 41件を全件照合。完了5件（#13 #34 #61 #62 #63）と古い集約1件（#41）のクローズを選び、35件は残条件を明記して継続する。GitHubの全41件の本文を更新し、6件のクローズ・open35件をAPIで再取得して確認済み。Issue本文の旧監査・履歴は保持した。
 
@@ -16,7 +20,7 @@ PR #82〜84はMERGEDでも、マージ先が中間ブランチだった。開始
 | [#11](https://github.com/bright-broom/tsumugi/issues/11) | 継続 | 二系統通知・再送・返信期限のコアは実装済み。実送信アダプタ、ワーカー、通知停止の外部検知と到達確認が残る（C05）。 |
 | [#12](https://github.com/bright-broom/tsumugi/issues/12) | 継続 | 事業者情報・電話・メールと自社公開判断は反映済み。LINEは採用しない自社受付。実機でのダイヤラー・メール起動、実到達と担当引継ぎが未確認（B03/B04）。 |
 | [#13](https://github.com/bright-broom/tsumugi/issues/13) | 完了・クローズ | 本番/プレビューの分離、仮値・受付・承認の検査と回帰テストはmain実装済み。自社の明示的公開判断だけに限定したWARN例外はADR0056に記録。専門家の実確認は#39で継続する。 |
-| [#14](https://github.com/bright-broom/tsumugi/issues/14) | 継続 | 自社は承認されたVercel URLで公開済み。独自ドメインの購入・接続は未実施。顧客用のドメイン所有者・契約・DNS・切戻し確認として残す。 |
+| [#14](https://github.com/bright-broom/tsumugi/issues/14) | 不要・クローズ | 自社の独自ドメイン取得はADR0056で公開条件から除外済み。顧客案件の導入確認と分離。 |
 | [#15](https://github.com/bright-broom/tsumugi/issues/15) | 継続 | CMSの認証、編集、下書き、承認、履歴、静的公開と復元は未実装。該当プランの受付開始前の必須条件（C01）。 |
 | [#16](https://github.com/bright-broom/tsumugi/issues/16) | 継続 | 記事モデル・一覧/詳細・下書き除外・ルート生成は実装済み。顧客の入稿枠・承認済み原稿と編集から配備までの接続が残る（C07/#15）。 |
 | [#17](https://github.com/bright-broom/tsumugi/issues/17) | 継続 | 事例モデル・静的一覧/詳細・絞り込み基盤は実装済み。実顧客データ、入稿/非公開の公開運用、モバイル受入が残る（C07）。 |
@@ -38,10 +42,10 @@ PR #82〜84はMERGEDでも、マージ先が中間ブランチだった。開始
 | [#34](https://github.com/bright-broom/tsumugi/issues/34) | 完了・クローズ | レポートの日時・commit・成果物指紋・種別・FAIL数を保持し、別commit/失敗/未確認のレポートを表示しない実装と結合テストがmainにある。通常Git配備は「—」、LCPは記録日付き。配備ID照合は別のA05として追跡する。 |
 | [#35](https://github.com/bright-broom/tsumugi/issues/35) | 継続 | 20項目の自動/人/外部検査対応は実装済み。人・外部確認18項目の証跡が未記入。自動テストで検収済みと代替しない（B01）。 |
 | [#36](https://github.com/bright-broom/tsumugi/issues/36) | 継続 | 画像と文字を分離しi18nから生成する基盤は実装済み。最終素材と実機の欠落/二重読上げ/切取確認を#60と合わせて残す（B04）。 |
-| [#37](https://github.com/bright-broom/tsumugi/issues/37) | 継続 | macOSの既存書体を正本として再現コマンドと一致検査を実装済み（ADR0047）。別OSでの再現方針と書体切替の判断を残し、画像は変更しない。 |
+| [#37](https://github.com/bright-broom/tsumugi/issues/37) | 完了・クローズ | macOSで再生成25ファイルが既存画像と一致。別OS移行は元Issueの必須条件ではない。 |
 | [#38](https://github.com/bright-broom/tsumugi/issues/38) | 継続 | 実績モデルと公開条件は実装済み。許諾済み実案件・実測値の入稿待ち（C07）。 |
 | [#39](https://github.com/bright-broom/tsumugi/issues/39) | 継続 | 下書きと承認条件は実装済み。専門家による実確認と指紋・版・日付の記録が残る（B02）。 |
-| [#40](https://github.com/bright-broom/tsumugi/issues/40) | 継続 | リンク実装はあるが、取得したRepository APIはPRIVATE。公開案内との整合が未解決。可視性は変更せず、公開範囲または案内の判断を残す（A09）。 |
+| [#40](https://github.com/bright-broom/tsumugi/issues/40) | 公開反映待ち | 非公開表示とリンク除去をPR #85に実装。main統合・実公開での確認は未完了。 |
 | [#41](https://github.com/bright-broom/tsumugi/issues/41) | 集約・クローズ | 旧監査の集約Issueは、個別Issueとdocs/product/feature-audit-2026-09-18.mdおよび今回の再整理一覧へ集約。子Issueの未完了条件は維持するため、二重の一覧管理だけを終了する。 |
 | [#55](https://github.com/bright-broom/tsumugi/issues/55) | 継続 | 親計画は継続。#61/#62/#63と基盤検査の完了を整理。#12/#56/#57/#58/#59/#60/#64の残条件を個別Issueで追跡する。 |
 | [#56](https://github.com/bright-broom/tsumugi/issues/56) | 継続 | 手書きJSのTS化と図解React化は実装済み。装飾HTML/rawの整理、フォント・メニュー操作と実行時JS0の設計が残る（D10/D11）。 |
