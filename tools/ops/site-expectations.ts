@@ -3,6 +3,7 @@ import { collectionRoutes, SITE_COLLECTIONS } from '@/content/collections';
 import { CONTACT_METHOD, DOMAIN, EMAIL_LINK, PLACEHOLDER, TEL_LINK } from '@/content/config';
 import { OWNER_PUBLICATION } from '@/content/publication';
 import { PUBLIC_ROUTES, ROUTES } from '@/routing/registry';
+import { SECURITY_HEADERS } from '../security/policy';
 import { parseSiteUrl } from './site-checks';
 
 interface TargetConfig {
@@ -30,6 +31,8 @@ export function monitorTarget(
 
 export function siteExpectations() {
   return {
+    checkAssets: true,
+    expectedHeaders: SECURITY_HEADERS,
     expectedPaths: [
       ...PUBLIC_ROUTES.map((route) => route.path),
       ...collectionRoutes(SITE_COLLECTIONS).map((route) => route.path),

@@ -76,7 +76,7 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
   GitHub のメール保護が有効で、個人のアドレスが入ったコミットを含む push は拒否される
 - **push の前に、送るコミットのメールを確かめる：** `git log --format='%h %ae %ce %s' origin/main..HEAD`
 - `git push … | tail` のようにパイプでつなぐと、失敗が握りつぶされて次のコマンドが走る。つなぐなら `set -o pipefail`
-- リポジトリは **Publicのまま**にする。2026-09-14にユーザーが `docs/business/` の社内資料を含めたpushを明示的に承認した。作者メールは引き続きnoreplyを使い、認証情報は含めない。
+- リポジトリの公開範囲はオーナーが決定する。2026-09-14のPublic承認は履歴であり、2026-09-18のAPI確認では**Private**。過去の記録だけを根拠に可視性を変更しない。公開案内は実態に合わせる（ADR 0070）。作者メールはnoreplyを使い、認証情報は含めない。
 - 判断を下したら `docs/architecture/` に ADR を足す。**作業を終えたら `docs/status.md` を更新する**
 - 文書の置き場所は [docs/README.md](docs/README.md)「文書の置き場所の決まり」に従う
 

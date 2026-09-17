@@ -17,6 +17,7 @@ export interface HttpResult {
   location: string | null;
   body: string;
   robotsTag?: string;
+  headers?: Readonly<Record<string, string>>;
   /** 要求から本文の受信完了までのミリ秒 */
   ms: number;
 }
@@ -33,6 +34,7 @@ export interface Probe {
   /** false のときは DNS・証明書・HTTP→HTTPS の転送を確かめられない（模擬配信） */
   readonly network: boolean;
   get(url: string): Promise<HttpResult>;
+  head(url: string): Promise<HttpResult>;
   lookup(host: string): Promise<string[]>;
   certificate(host: string): Promise<Certificate>;
 }
@@ -96,6 +98,25 @@ export function createProbe({
         location: response.headers.get('location'),
         body,
         robotsTag: response.headers.get('x-robots-tag') ?? '',
+        headers: Object.fromEntries(response.headers.entries()),
+        ms: Math.round(performance.now() - started),
+      };
+    },
+    async head(url) {
+      const started = performance.now();
+      const response = await fetchImpl(url, {
+        method: 'HEAD',
+        redirect: 'manual',
+        signal: AbortSignal.timeout(timeoutMs),
+        headers: { 'user-agent': 'tsumugi-site-check' },
+      });
+      await response.body?.cancel();
+      return {
+        url,
+        status: response.status,
+        location: response.headers.get('location'),
+        body: '',
+        headers: Object.fromEntries(response.headers.entries()),
         ms: Math.round(performance.now() - started),
       };
     },

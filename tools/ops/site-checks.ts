@@ -6,6 +6,7 @@
  *
  * 問い合わせはすべて Probe 経由。ここではネットワークに直接触らない。
  */
+import { checkReferencedAssets } from './asset-checks';
 import { inspectHtml } from './html';
 import type { HttpResult, Probe } from './probe';
 import { result, type CheckResult } from './results';
@@ -22,6 +23,9 @@ export interface CertificatePolicy {
   /** Known public paths from the checkout; do not trust the remote sitemap as the only inventory. */
   expectedPaths?: readonly string[];
   contact?: { path: string; links: readonly string[] };
+  /** Exact values from the deployment policy. Offline hosting cannot establish these. */
+  expectedHeaders?: Readonly<Record<string, string>>;
+  checkAssets?: boolean;
 }
 
 /** `https://<ドメイン>` だけを受け付ける（パス・ポート・クエリ付きは取り違えの元なので拒否）。 */
@@ -133,7 +137,10 @@ async function getOrFail(probe: Probe, url: string, name: string) {
 async function checkTopPage(probe: Probe, origin: string) {
   const name = 'トップページの応答';
   const response = await getOrFail(probe, `${origin}/`, name);
-  return 'ms' in response ? result('PASS', name, `200（${response.ms}ms）`) : response;
+  return {
+    check: 'ms' in response ? result('PASS', name, `200（${response.ms}ms）`) : response,
+    page: 'ms' in response ? { url: `${origin}/`, response } : null,
+  };
 }
 
 function robotsProblems(body: string, origin: string): string[] {
@@ -389,16 +396,44 @@ async function checkNotFound(probe: Probe, origin: string, now: Date) {
   }
 }
 
+function checkHeaders(
+  pages: readonly Fetched[],
+  probe: Probe,
+  expected: Readonly<Record<string, string>>,
+) {
+  const name = '配信セキュリティヘッダー';
+  if (!probe.network) return offline(name);
+  const readable = pages.filter((page) => 'response' in page && page.response.status === 200);
+  if (!readable.length) return result('FAIL', name, '200 で取得できたページがない');
+  const entries = Object.entries(expected);
+  if (!entries.length) return result('FAIL', name, '期待するヘッダーが未設定');
+  const problems = readable.flatMap((page) => {
+    if (!('response' in page)) return [];
+    const headers = new Headers(page.response.headers);
+    return entries.flatMap(([key, value]) =>
+      headers.get(key)?.trim() === value.trim()
+        ? []
+        : [
+            `${pathOf(page.url)}: ${key} が配備設定と不一致（${headers.has(key) ? '値の変更' : '欠落'}）`,
+          ],
+    );
+  });
+  return problems.length
+    ? result('FAIL', name, `${problems.length} 件の不一致\n${listed(problems)}`)
+    : result('PASS', name, `${readable.length} URL × ${entries.length} ヘッダーが配備設定と一致`);
+}
+
 /** 独自ドメインでの公開直後に確かめる項目（#14）。 */
 async function inspectSite(site: URL, probe: Probe, policy: CertificatePolicy) {
   const { origin, hostname } = site;
   const expected = policy.expectedPaths ? expectedUrls(origin, policy.expectedPaths) : null;
   const contactUrls = policy.contact ? expectedUrls(origin, [policy.contact.path]) : [];
+  const top = await checkTopPage(probe, origin);
   const results = [
     await checkDns(probe, hostname),
     await checkCertificate(probe, hostname, policy),
     await checkHttpsRedirect(probe, hostname),
-    await checkTopPage(probe, origin),
+    top.check,
     await checkRobots(probe, origin),
   ];
   const sitemap = await readSitemap(probe, origin);
@@ -408,6 +443,17 @@ async function inspectSite(site: URL, probe: Probe, policy: CertificatePolicy) {
     ...new Set([...sitemap.urls, ...(expected ?? []), ...contactUrls]),
   ]);
   const readable = okPages(pages);
+  if (policy.checkAssets)
+    results.push(
+      await checkReferencedAssets(
+        top.page ? [...readable, ...okPages([top.page])] : readable,
+        probe,
+      ),
+    );
+  if (policy.expectedHeaders)
+    results.push(
+      checkHeaders(top.page ? [top.page, ...pages] : pages, probe, policy.expectedHeaders),
+    );
   results.push(
     checkPageStatus(pages),
     checkSelfReference(readable, 'canonical がこのドメインを指す', (facts) => facts.canonical),

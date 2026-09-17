@@ -73,6 +73,7 @@ export default {
   comparisonDetailTitle: '更新も任せる場合の総額',
   comparisonDetail:
     '6ページ＋「整える」＋同じ外部費概算では、36か月{total}円。比較先より{diff}円高くなります。更新量・素材・所有条件を揃えて選びます。',
+  optionPreparing: '受付準備中',
   optionsTitle: '標準の内容と、追加作業',
   includedHeaders: ['標準に含むもの', '範囲'],
   optionHeaders: ['追加作業', '#目安（税別）', '条件'],

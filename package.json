@@ -34,6 +34,7 @@
     "ops:leads": "tsx tools/ops/leads/cli.ts",
     "ops:gbp": "tsx tools/ops/gbp/cli.ts",
     "check:unused": "knip --config config/knip.config.ts",
+    "check:release": "tsx tools/ops/cli/check-release.ts",
     "check:live": "tsx tools/ops/cli/check-live.ts",
     "monitor": "tsx tools/ops/cli/monitor.ts",
     "backup": "tsx tools/ops/cli/backup.ts",

@@ -170,7 +170,11 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         />
         <Table
           headers={[...copy.optionHeaders]}
-          rows={P.OPTIONS.map((o) => [o.name, P.yen(o.price), o.note])}
+          rows={P.OPTIONS.map((o) => [
+            o.name,
+            o.preparing ? `${P.yen(o.price)}（${copy.optionPreparing}）` : P.yen(o.price),
+            o.note,
+          ])}
           caption={copy.optionNote}
         />
       </Section>

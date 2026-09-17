@@ -91,7 +91,7 @@ runCli(USAGE, {
     );
     if (version.catalogFingerprint !== catalogFingerprint(siteCatalog()))
       console.error(
-        '注意: 保存した後に src/content/prices.ts の料金が変わっています。書面は保存時の金額のままです。必要なら新しい版を保存してください',
+        '注意: 保存した後に src/content/prices.ts の料金または提供状態が変わっています。書面は保存時の金額のままです。必要なら新しい版を保存してください',
       );
     const previous = file.versions.filter((v) => v.version < version.version).at(-1);
     const doc = estimateDocument(version, { today: todayOf(args), previous });

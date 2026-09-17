@@ -415,3 +415,113 @@ describe('監視先の決定', () => {
     expect(siteExpectations().expectedPaths).not.toContain('/404.html');
   });
 });
+
+describe('配信セキュリティヘッダー', () => {
+  const expectedHeaders = {
+    'content-security-policy': "default-src 'none'",
+    'x-frame-options': 'DENY',
+  };
+  const policy = { ...POLICY, expectedHeaders, slowMs: 3000 };
+  const setup = (change?: (url: string, headers: Headers) => void, network = true) => {
+    const fetch: Fetch = async (url) => {
+      const response = await mockFetch(healthySite())(url);
+      const headers = new Headers(expectedHeaders);
+      response.headers.forEach((value, key) => headers.set(key, value));
+      change?.(url, headers);
+      return new Response(response.body, { status: response.status, headers });
+    };
+    return createProbe({
+      fetch,
+      network,
+      resolveHost: async () => ['192.0.2.10'],
+      certificate: async () => validCertificate,
+    });
+  };
+
+  it('トップの別名を含む全ページを配備設定と照合する', async () => {
+    const result = named(
+      await checkMonitor(parseSiteUrl(ORIGIN), setup(), policy),
+      '配信セキュリティ',
+    );
+    expect(result.status).toBe('PASS');
+    expect(result.detail).toContain('4 URL × 2 ヘッダー');
+  });
+
+  it.each(['/', '/price.html'])('正常応答でもヘッダーの欠落を検出する: %s', async (path) => {
+    const result = named(
+      await checkMonitor(
+        parseSiteUrl(ORIGIN),
+        setup((url, headers) => {
+          if (url === ORIGIN + path) headers.delete('content-security-policy');
+        }),
+        policy,
+      ),
+      '配信セキュリティ',
+    );
+    expect(result.status).toBe('FAIL');
+    expect(result.detail).toContain(`${path}: content-security-policy`);
+    expect(result.detail).toContain('欠落');
+  });
+
+  it('公開直後の検査でもヘッダー値の緩和を検出する', async () => {
+    const result = named(
+      await checkLive(
+        parseSiteUrl(ORIGIN),
+        setup((_, headers) => {
+          headers.set('Content-Security-Policy', 'default-src *');
+        }),
+        policy,
+      ),
+      '配信セキュリティ',
+    );
+    expect(result.status).toBe('FAIL');
+    expect(result.detail).toContain('値の変更');
+  });
+
+  it('模擬配信は外部ヘッダーを確認済みにしない', async () => {
+    const result = named(
+      await checkLive(parseSiteUrl(ORIGIN), setup(undefined, false), policy),
+      '配信セキュリティ',
+    );
+    expect(result.status).toBe('SKIP');
+  });
+
+  it('空の設定は合格にしない', async () => {
+    const result = named(
+      await checkLive(parseSiteUrl(ORIGIN), setup(), { ...policy, expectedHeaders: {} }),
+      '配信セキュリティ',
+    );
+    expect(result.status).toBe('FAIL');
+  });
+
+  it('全ページを取得できないとヘッダー未検証も失敗にする', async () => {
+    const probe = createProbe({
+      fetch: async () => new Response('down', { status: 503 }),
+      resolveHost: async () => [],
+      certificate: async () => validCertificate,
+    });
+    const result = named(await checkLive(parseSiteUrl(ORIGIN), probe, policy), '配信セキュリティ');
+    expect(result.status).toBe('FAIL');
+  });
+
+  it('実際のサイトの期待値は配備設定を含む', () => {
+    expect(siteExpectations().expectedHeaders['content-security-policy']).toContain(
+      "script-src 'none'",
+    );
+    expect(Object.keys(siteExpectations().expectedHeaders)).toHaveLength(7);
+  });
+});
+
+it.each(['/', '/index.html'])(
+  'monitorとcheck:liveが参照資産の欠落も失敗にする: %s',
+  async (path) => {
+    const routes = healthySite();
+    routes[ORIGIN + path]!.body = page('index.html', '<link rel="stylesheet" href="/missing.css">');
+    const policy = { ...POLICY, checkAssets: true, slowMs: 3000 };
+    for (const check of [checkLive, checkMonitor]) {
+      const results = await check(parseSiteUrl(ORIGIN), probeFor(routes), policy);
+      expect(named(results, '参照CSS').status).toBe('FAIL');
+      expect(named(results, '参照CSS').detail).toContain('/missing.css: HEAD 404');
+    }
+  },
+);

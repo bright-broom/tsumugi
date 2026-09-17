@@ -1,10 +1,23 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+  existsSync,
+  symlinkSync,
+  lstatSync,
+  readlinkSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   BUNDLE,
+  CHECKSUMS,
+  MANIFEST,
+  digest,
   categoryOf,
   createBackup,
   excludedPaths,
@@ -192,5 +205,72 @@ describe('バックアップと復元テスト', () => {
     expect(() =>
       restoreTest({ backupDir: '.', workDir: '.', deps: 'link', build: 'build' }),
     ).toThrow('Turbopack');
+  });
+});
+
+describe('復元先の所有権と後片付け', () => {
+  const backup = () => createBackup({ root: fixtureRepo(), outDir: tempDir('backup-safe-') }).dir;
+  const restore = (backupDir: string, workDir: string, keep = false) =>
+    restoreTest({ backupDir, workDir, deps: 'none', build: 'none', keep });
+
+  it.each(['directory', 'file', 'link', 'broken-link'])('既存の %s を削除しない', (kind) => {
+    const dir = backup();
+    const work = tempDir('restore-safe-');
+    const repo = join(work, 'repo');
+    const target = join(tempDir('restore-target-'), 'owned.txt');
+    writeFileSync(target, 'original target');
+    if (kind === 'directory') {
+      mkdirSync(repo);
+      writeFileSync(join(repo, 'owned.txt'), 'original');
+    } else if (kind === 'file') writeFileSync(repo, 'original');
+    else symlinkSync(kind === 'link' ? target : target + '.missing', repo);
+    const result = restore(dir, work);
+    expect(result.ok).toBe(false);
+    expect(result.steps).toHaveLength(2);
+    expect(result.steps[1]!.detail).toContain('EEXIST');
+    if (kind === 'directory')
+      expect(readFileSync(join(repo, 'owned.txt'), 'utf8')).toBe('original');
+    else if (kind === 'file') expect(readFileSync(repo, 'utf8')).toBe('original');
+    else {
+      expect(lstatSync(repo).isSymbolicLink()).toBe(true);
+      expect(readlinkSync(repo)).toBe(kind === 'link' ? target : target + '.missing');
+    }
+    expect(readFileSync(target, 'utf8')).toBe('original target');
+  });
+
+  it('チェックサムの段階で失敗しても既存の復元先を削除しない', () => {
+    const dir = backup();
+    writeFileSync(join(dir, BUNDLE), 'damaged');
+    const work = tempDir('restore-safe-');
+    mkdirSync(join(work, 'repo'));
+    writeFileSync(join(work, 'repo', 'owned.txt'), 'original');
+    const result = restore(dir, work);
+    expect(result.ok).toBe(false);
+    expect(result.steps).toHaveLength(1);
+    expect(readFileSync(join(work, 'repo', 'owned.txt'), 'utf8')).toBe('original');
+  });
+
+  it.each([false, true])('自分が作成した成功時の復元先だけ keep=%s に従って扱う', (keep) => {
+    const dir = backup();
+    const work = tempDir('restore-safe-');
+    const result = restore(dir, work, keep);
+    expect(result.ok).toBe(true);
+    expect(existsSync(join(work, 'repo'))).toBe(keep);
+    expect(existsSync(join(dir, BUNDLE))).toBe(true);
+  });
+
+  it.each([false, true])('clone 失敗時も自分が作った領域だけ keep=%s に従って扱う', (keep) => {
+    const dir = backup();
+    writeFileSync(join(dir, BUNDLE), 'not a git bundle');
+    writeFileSync(
+      join(dir, CHECKSUMS),
+      `${digest(join(dir, BUNDLE)).sha256}  ${BUNDLE}\n${digest(join(dir, MANIFEST)).sha256}  ${MANIFEST}\n`,
+    );
+    const work = tempDir('restore-safe-');
+    const result = restore(dir, work, keep);
+    expect(result.ok).toBe(false);
+    expect(result.steps).toHaveLength(2);
+    expect(result.steps[0]!.ok).toBe(true);
+    expect(existsSync(join(work, 'repo'))).toBe(keep);
   });
 });
