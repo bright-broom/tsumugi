@@ -201,3 +201,7 @@ npm run --silent ops:gbp -- due     --customer sample-shop
 保存する入力JSONには`customerId`と`projectId`を指定する（サンプルは`sample-shop` / `site-2026`）。同じ見積番号の改版で別の顧客・案件には変更できない。CRMのestimate操作は同じ保存先の見積ファイル・指定版・顧客・案件を照合してから記録する。
 
 IDのない旧見積は試算・既存書面の参照が可能だが、改版保存・新しいCRM紐付けはできない。内容と帰属を担当者が確認し、新しい見積番号で保存する。旧ファイルを書き換えて移行したことにしない。契約との照合・実際の宛先確認は別に行う。[ADR0073](../../docs/architecture/0073-estimate-customer-project-binding.md)。
+
+### 案件を進める前の見積確認
+
+`advance`で見積提出・契約済み・制作中へ進む際は、紐付け済みの全見積の存在・指定版・顧客・案件を再確認する。`show`にも停止理由が出る。見積欠落時は正しいバックアップから復元し、旧データの帰属や参照違いは担当者が確認して修復する。ロックを外して再実行するだけでは解決しない。相談への差し戻しや中止は可能。[ADR0074](../../docs/architecture/0074-crm-transition-estimate-validation.md)。

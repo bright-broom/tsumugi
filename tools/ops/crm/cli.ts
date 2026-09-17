@@ -68,6 +68,33 @@ const open = (args: Args) => {
 const dayOf = (args: Args, name: string) =>
   parseDate(args.optional(name) ?? jstDate(now()), `--${name}`);
 
+/** Re-read saved references while the common data lock is held. */
+const readEstimate = (dataDir: string, id: string, version: number) => {
+  const estimate = readJson(
+    join(dataDir, 'estimates', `${parseId(id, '見積番号')}.json`),
+    estimateFileSchema,
+  );
+  if (estimate.estimateId !== id || estimate.versions.some((v) => v.input.estimateId !== id))
+    throw new OpsError('見積番号と保存内容が一致しません');
+  return findVersion(estimate, version);
+};
+const checkEstimateReferences = (
+  dataDir: string,
+  file: CustomerFile,
+  projectId: string,
+  to: string,
+) => {
+  if (!['estimate_sent', 'contracted', 'in_production'].includes(to)) return;
+  const project = file.projects.find((p) => p.id === projectId);
+  if (!project) throw new OpsError(`案件がありません: ${projectId}`);
+  if (!project.estimates.length) throw new OpsError('見積の版が紐付いていません');
+  for (const ref of project.estimates) {
+    const version = readEstimate(dataDir, ref.estimateId, ref.version);
+    if (version.input.customerId !== file.customerId || version.input.projectId !== projectId)
+      throw new OpsError('見積の顧客・案件が一致しません。旧参照も確認してから進めてください');
+  }
+};
+
 runCli(USAGE, {
   init(args) {
     const dataDir = resolveDataDir(args.optional('data'));
@@ -101,10 +128,7 @@ runCli(USAGE, {
   estimate(args) {
     const c = open(args);
     const id = parseId(args.required('estimate'), '--estimate');
-    const estimate = readJson(join(c.dataDir, 'estimates', `${id}.json`), estimateFileSchema);
-    if (estimate.estimateId !== id || estimate.versions.some((v) => v.input.estimateId !== id))
-      throw new OpsError('見積番号と保存内容が一致しません');
-    const version = findVersion(estimate, args.integer('version'));
+    const version = readEstimate(c.dataDir, id, args.integer('version'));
     c.save(linkEstimate(c.file, c.project(), version, c.m), '見積の版を紐付けました');
   },
   contract(args) {
@@ -192,7 +216,10 @@ runCli(USAGE, {
   },
   advance(args) {
     const c = open(args);
-    c.save(advanceProject(c.file, c.project(), args.required('to'), c.m), '状態を進めました');
+    const to = args.required('to');
+    const next = advanceProject(c.file, c.project(), to, c.m);
+    checkEstimateReferences(c.dataDir, c.file, c.project(), to);
+    c.save(next, '状態を進めました');
   },
   show(args) {
     const dataDir = resolveDataDir(args.optional('data'));
@@ -217,6 +244,14 @@ runCli(USAGE, {
       );
       for (const s of nextStates) {
         const blockers = blockersFor(p, s);
+        if (!blockers.length) {
+          try {
+            checkEstimateReferences(dataDir, file, p.id, s);
+          } catch (error) {
+            if (!(error instanceof OpsError)) throw error;
+            blockers.push(error.message);
+          }
+        }
         console.log(
           `  → ${STATE_LABELS[s]}：${blockers.length ? blockers.join('／') : '進められます'}`,
         );

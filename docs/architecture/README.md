@@ -164,3 +164,5 @@
 - [0072 社内CLIの読み込みから保存までを排他制御する](0072-local-ops-command-lock.md)
 
 - [0073 — 見積の顧客・案件とCRM参照の照合](0073-estimate-customer-project-binding.md)
+
+- [0074 — 案件進行時の見積参照再検証](0074-crm-transition-estimate-validation.md)
