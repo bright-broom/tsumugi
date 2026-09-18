@@ -25,6 +25,9 @@ export const INQUIRY_LIMITS = {
   bodyBytes: 64 * 1024,
 } as const;
 
+/** 送信回数の上限。接続元ごとに、この時間内の送信をこの件数まで受け付ける（ADR 0079） */
+export const INQUIRY_RATE_LIMIT = { submissions: 5, windowMinutes: 10 } as const;
+
 /** 同じ内容の再送を、同じ受付番号に寄せる時間 */
 export const INQUIRY_DUPLICATE_WINDOW_MINUTES = 10;
 

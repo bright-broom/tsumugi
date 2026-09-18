@@ -104,6 +104,15 @@ for (const dir of ['src', 'tools', 'services']) {
           problems.push(`${rel}: デザイントークンの正本がありません`);
         continue;
       }
+      // The CMS snapshot is a data-only leaf written by tools/cms/pull.ts (ADR 0080).
+      if (spec === '@/i18n/locales/ja/entries/cms.json') {
+        if (
+          from !== 'i18n' ||
+          !statSync(join(ROOT, 'src/i18n/locales/ja/entries/cms.json')).isFile()
+        )
+          problems.push(`${rel}: CMS のスナップショットは i18n の entries からだけ読み込む`);
+        continue;
+      }
       const to = spec!.slice(2).split('/')[0] as Layer;
       const target = ['.ts', '.tsx', '/index.ts', '/index.tsx']
         .map((ext) => `src/${spec.slice(2)}${ext}`)

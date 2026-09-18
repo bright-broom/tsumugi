@@ -35,6 +35,37 @@ npm run --silent ops:estimate -- render --id <見積番号> --format md|html [--
 - 書面は保存した版の金額のまま出す。保存後に料金表が変わっていれば、出力時に注意を出す。
 - 印刷用 HTML は JavaScript を含まない。PDF はブラウザの印刷で作る。
 
+## 請求書と入金（`npm run ops:invoice`）
+
+保存した見積の版と、顧客管理の契約・案件の状態から請求書を作り、入金を記録する（[ADR 0078](../../docs/architecture/0078-invoices-and-payments.md)）。送信・決済・会計サービスとの連携はしない。書面は人が渡す。
+
+最初に `<データの置き場所>/billing/profile.json` へ振込先とインボイス登録の状況を記録する（形式は架空の例 [fixtures/billing-profile.json](fixtures/billing-profile.json)）。このファイルは git 管理外に置き、実際の口座をコミットしない。登録済みなら `{ "status": "registered", "number": "T＋13桁" }`。
+
+```sh
+npm run --silent ops:invoice -- profile
+npm run --silent ops:invoice -- issue   --customer sample-shop --project site-2026 --estimate est-sample-001 --version 2 --kind deposit --issued-on 2026-09-18 --due 2026-09-30 --by 担当者
+npm run --silent ops:invoice -- issue   --customer sample-shop --project site-2026 --estimate est-sample-001 --version 2 --kind monthly --period 2026-10 --issued-on 2026-10-01 --due 2026-10-31 --by 担当者
+npm run --silent ops:invoice -- pay     --customer sample-shop --invoice inv-202609-001 --amount 137500 --received-on 2026-09-25 --ref "通帳 9/25" --by 担当者
+npm run --silent ops:invoice -- void    --customer sample-shop --invoice inv-202609-001 --reason 宛名の誤り --by 担当者
+npm run --silent ops:invoice -- list    --customer sample-shop
+npm run --silent ops:invoice -- receivables
+npm run --silent ops:invoice -- render  --customer sample-shop --invoice inv-202609-001 --format html
+```
+
+| `--kind`     | 発行できる時期                                 | 金額                                            |
+| ------------ | ---------------------------------------------- | ----------------------------------------------- |
+| `deposit`    | 契約締結済み・案件が契約済み以降               | 見積の「着手時（制作本体）」                    |
+| `acceptance` | 案件が検収済み以降。着手時と同じ見積の版だけ   | 見積の「検収時（制作本体）」                    |
+| `options`    | 契約済み以降。目安額（別見積もり）を含むと不可 | 見積のオプション合計                            |
+| `monthly`    | 契約済み以降。対象月ごとに1件                  | 見積の継続支援（月額）。0円のプランは発行しない |
+
+- 金額は保存済みの見積の版からだけ取る。手入力の金額・値引きは受け付けない。変わる場合は見積の新しい版を保存し、案件に紐付けてから請求する。
+- お支払期限は規約に日数の定めがないため、発行のたびに `--due` で指定する。
+- 請求番号は全顧客で月ごとの通し番号（`inv-YYYYMM-001`）。同じ請求の二重発行は止める。訂正は取消（void）してから発行し直し、取消した番号は欠番として残す。入金のある請求書は取消できない。
+- 発行者（屋号・氏名・所在地・連絡先）は `src/content/config.ts`、振込先と登録状況は profile.json の、発行時の値を請求書に写す。後から設定を変えても発行済みの書面は変わらない。
+- インボイス未登録では登録番号を載せず、「本書は適格請求書ではありません」と明記する。登録済みでは登録番号と税率ごとの消費税を載せる。消費税の表示・計算を免税事業者としてどう扱うかは税理士に確認する。
+- 入金は根拠（通帳・振込明細）付きで記録し、残額を超える入金は記録しない（返金・充当は人が判断する）。`receivables` は全顧客の未回収を期限順に出し、期限超過があれば終了コード 1。
+
 ## 顧客運用の指標（`npm run ops:metrics`）
 
 計測タグは入れない。顧客が同意したデータ源の集計 CSV を取り込む（[ADR 0037](../../docs/architecture/0037-customer-metrics-and-monthly-reports.md)）。

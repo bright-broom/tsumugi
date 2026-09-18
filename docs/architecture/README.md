@@ -171,6 +171,11 @@
 
 - [0076 — 本番の配信内容と main のビルドを自動で照合する](0076-release-drift-check.md)
 
+- [0078 — 請求書と入金を社内 CLI で記録する](0078-invoices-and-payments.md)
+
+- [0079 — 問い合わせ受付を Cloudflare Workers ＋ D1 に配備できるようにする](0079-inquiry-service-on-workers.md)
+
+- [0080 — 記事・事例を microCMS から取り込んで静的に公開する](0080-microcms-content-source.md)
 - [0077 — トップの各セクションから詳細ページへつなぐ](0077-home-detail-links.md)
 
 - [0081 — 言語をビルドごとに選び、追加言語を /<言語>/ 配下に公開する](0081-build-time-locales.md)
