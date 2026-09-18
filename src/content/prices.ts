@@ -3,13 +3,14 @@ import { format } from '@/i18n/format';
 const copy = getMessages().prices;
 /** 公開価格の唯一の正本。金額は税別円。キーで参照する。 */
 const TAX_RATE = 0.1;
+/** 比較だけに使う仮定。紬への固定月額・顧客の確定実費ではない。 */
 export const EXTERNAL_MONTHLY_ESTIMATE = 3500;
 /** 検討中の参考価格。販売用の productionPlans / RUN / OPTIONS には含めない。 */
 export const PROPOSED_PRICES = {
-  bespoke: { price: 598000, status: 'concept' },
-  feature: { price: 898000, status: 'concept' },
-  discovery: { price: 55000, status: 'concept' },
-  technical: { price: 29800, status: 'concept' },
+  bespoke: { price: 600000, status: 'concept' },
+  feature: { price: 900000, status: 'concept' },
+  discovery: { price: 60000, status: 'concept' },
+  technical: { price: 30000, status: 'concept' },
 } as const;
 export const CATALOG_COST_ASSUMPTIONS = {
   cmsAdditionalMonthly: 4900,
@@ -22,7 +23,7 @@ export const SINGLE = {
   key: 'single',
   name: copy.singleName,
   pages: 1,
-  price: 79800,
+  price: 100000,
   weeks: 2,
   lede: copy.singleLede,
   includes: [
@@ -40,7 +41,7 @@ export const BUILD = [
     key: 'basic',
     name: copy.buildName,
     pages: 6,
-    price: 198000,
+    price: 250000,
     weeks: 4,
     recommended: true,
     preparing: false,
@@ -59,7 +60,7 @@ export const BUILD = [
     key: 'standard',
     name: copy.buildName2,
     pages: 9,
-    price: 398000,
+    price: 450000,
     weeks: 6,
     recommended: false,
     preparing: true,
@@ -86,7 +87,7 @@ export const RUN = [
   {
     key: 'run_light',
     name: copy.runName,
-    price: 3900,
+    price: 6000,
     minutes: 0,
     lede: copy.runLede,
     includes: [copy.runIncludes2, copy.runIncludes3, copy.runIncludes4, copy.careExclusion],
@@ -94,7 +95,7 @@ export const RUN = [
   {
     key: 'run_basic',
     name: copy.runNameBasic,
-    price: 9800,
+    price: 12000,
     minutes: 30,
     recommended: true,
     lede: copy.runLede2,
@@ -103,7 +104,7 @@ export const RUN = [
   {
     key: 'run_standard',
     name: copy.runNameStandard,
-    price: 29800,
+    price: 30000,
     minutes: 90,
     lede: copy.runLede3,
     includes: [
@@ -191,7 +192,7 @@ export const OPTIONS = [
   {
     key: 'page_add',
     name: copy.optionName,
-    price: 33000,
+    price: 30000,
     note: copy.optionNote,
     preparing: false,
     firm: true,
@@ -199,7 +200,7 @@ export const OPTIONS = [
   {
     key: 'photo_half_day',
     name: copy.buildIncludes,
-    price: 55000,
+    price: 60000,
     note: copy.optionNote2,
     preparing: false,
     firm: false,
@@ -207,16 +208,23 @@ export const OPTIONS = [
   {
     key: 'photo_full_day',
     name: copy.buildIncludes14,
-    price: 88000,
+    price: 90000,
     note: copy.optionNote3,
     preparing: false,
     firm: false,
   },
-  { key: 'logo', name: copy.optionName2, price: 88000, note: '—', preparing: false, firm: true },
+  {
+    key: 'logo',
+    name: copy.optionName2,
+    price: 90000,
+    note: copy.logoNote,
+    preparing: false,
+    firm: false,
+  },
   {
     key: 'article_interview',
     name: copy.optionName3,
-    price: 55000,
+    price: 60000,
     note: copy.optionNote4,
     preparing: false,
     firm: true,
@@ -224,7 +232,7 @@ export const OPTIONS = [
   {
     key: 'landing_page',
     name: copy.optionName4,
-    price: 198000,
+    price: 200000,
     note: copy.optionNote5,
     preparing: false,
     firm: true,
@@ -232,7 +240,7 @@ export const OPTIONS = [
   {
     key: 'booking_integration',
     name: copy.optionName5,
-    price: 55000,
+    price: 30000,
     note: copy.optionNote6,
     preparing: false,
     firm: true,
@@ -240,7 +248,7 @@ export const OPTIONS = [
   {
     key: 'language',
     name: copy.optionName6,
-    price: 165000,
+    price: 150000,
     note: copy.languagePreparationNote,
     preparing: true,
     firm: true,
@@ -289,11 +297,15 @@ export const UPDATE_IN = [
   copy.unlimitedIncluded9,
 ] as const;
 export const UPDATE_OUT: [name: string, detail: string, price: string][] = [
-  [copy.unlimitedExcluded, copy.unlimitedExcluded2, copy.unlimitedExcluded3],
+  [
+    copy.unlimitedExcluded,
+    copy.unlimitedExcluded2,
+    format(copy.pricePerPage, { price: yen(OPTIONS.find((p) => p.key === 'page_add')!.price) }),
+  ],
   [copy.unlimitedExcluded4, copy.unlimitedExcluded5, copy.unlimitedExcluded6],
   [copy.unlimitedExcluded7, copy.unlimitedExcluded8, copy.unlimitedExcluded6],
   [copy.unlimitedExcluded9, copy.unlimitedExcluded10, copy.unlimitedExcluded6],
-  [copy.unlimitedExcluded11, '—', copy.unlimitedExcluded12],
+  [copy.unlimitedExcluded11, '—', copy.unlimitedExcluded6],
   [copy.unlimitedExcluded13, copy.unlimitedExcluded14, copy.unlimitedExcluded15],
 ];
 export const UPDATE_NOTE = copy.unlimitedNote;
@@ -345,7 +357,11 @@ export const SUBSIDY = {
     [copy.subsidyPackage, copy.subsidyPackage2, build('basic').price],
     [copy.subsidyPackage3, copy.subsidyPackage4, 150000],
     [copy.subsidyPackage3, copy.subsidyPackage5, 100000],
-    [copy.subsidyPackage3, copy.subsidyPackage6, 88000],
+    [
+      copy.subsidyPackage3,
+      copy.subsidyPackage6,
+      OPTIONS.find((p) => p.key === 'photo_full_day')!.price,
+    ],
     [copy.subsidyPackage3, copy.subsidyPackage7, 64000],
   ] as [kind: string, detail: string, price: number][],
 };

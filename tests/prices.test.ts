@@ -32,18 +32,18 @@ describe('料金の参照と比較', () => {
   });
   it('継続支援なしでも外部費が残り、税込の比較は税を揃える', () => {
     expect(supportMonthlyTotal('run_self')).toBe(3500);
-    expect(supportMonthlyTotal('run_basic')).toBe(13300);
-    expect(withTax(supportMonthlyTotal('run_basic'))).toBe(14630);
+    expect(supportMonthlyTotal('run_basic')).toBe(15500);
+    expect(withTax(supportMonthlyTotal('run_basic'))).toBe(17050);
   });
   it('36か月の基本比較は保守なし・外部費込み', () => {
     expect(compareRows().map(({ our_total, diff }) => [our_total, diff])).toEqual([
-      [205800, -152000],
-      [324000, -213800],
-      [524000, -193800],
+      [226000, -131800],
+      [376000, -161800],
+      [576000, -141800],
     ]);
   });
   it('運用期間ゼロでは制作費だけを比較する', () => {
-    expect(compareRows(0).map(({ our_total }) => our_total)).toEqual([79800, 198000, 398000]);
+    expect(compareRows(0).map(({ our_total }) => our_total)).toEqual([100000, 250000, 450000]);
   });
 });
 

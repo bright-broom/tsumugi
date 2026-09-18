@@ -361,7 +361,7 @@ export default function CatalogPage({ copy, route }: PageProps<'catalog'>) {
                       : copy.options.quoted}
                 </span>
                 <h3>{option.name}</h3>
-                {option.note !== '—' && <p>{option.note}</p>}
+                <p>{option.note}</p>
               </div>
               <Amount copy={copy} value={option.price} />
             </article>

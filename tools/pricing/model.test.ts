@@ -11,20 +11,20 @@ import model from './proposal.json';
 test('140 hours includes sales and reserves; full owner-time cost is not double counted', () => {
   const p = portfolio(model);
   assert.equal(p.deliveryCapacity, 84);
-  assert.equal(p.hours, 69.5);
-  assert.equal(p.headroom, 14.5);
-  assert.equal(p.revenue, 970600);
-  assert.equal(p.mrr, 374600);
-  assert.equal(p.clients, 32);
+  assert.equal(p.hours, 61);
+  assert.equal(p.headroom, 23);
+  assert.equal(p.revenue, 800000);
+  assert.equal(p.mrr, 300000);
+  assert.equal(p.clients, 22);
   assert.equal(p.surplusAfterOwnerTime, p.revenue - p.variableCash - 750000);
 });
-test('25% delivery overrun prevents further commitments', () => {
-  const p = portfolio(model, { hourMultiplier: 1.25 });
-  assert.equal(p.hours, 86.875);
+test('combined delivery and support stress prevents further commitments', () => {
+  const p = portfolio(model, { hourMultiplier: 1.25, extraMinutesPerSupport: 30 });
+  assert.equal(p.hours, 87.25);
   assert.equal(p.feasible, false);
 });
 test('extra support time is counted across every paying client', () => {
-  assert.equal(portfolio(model, { extraMinutesPerSupport: 30 }).headroom, -1.5);
+  assert.equal(portfolio(model, { extraMinutesPerSupport: 30 }).headroom, 12);
 });
 test('no sales still carries the full monthly time and fixed-cost budget', () => {
   const p = portfolio(model, { buildCounts: {}, supportCounts: {} });
@@ -40,10 +40,10 @@ test('price floor detects high acquisition costs, instead of subsidizing them fr
   assert.ok(high.minimumPrice > 198000);
 });
 test('comparison includes external hosting costs and retains unfavorable rows', () => {
-  assert.equal(customerTotal(model, { buildKey: 'entry', supportKey: 'care' }).difference, -11600);
-  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).ourTotal, 464400);
-  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).difference, -73400);
-  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).breakEvenMonth, 27);
+  assert.equal(customerTotal(model, { buildKey: 'entry', supportKey: 'care' }).difference, 84200);
+  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).ourTotal, 592000);
+  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).difference, 54200);
+  assert.equal(customerTotal(model, { buildKey: 'core', supportKey: 'care' }).breakEvenMonth, 47);
   assert.equal(
     customerTotal(model, { buildKey: 'core', supportKey: 'improve' }).breakEvenMonth,
     null,
@@ -81,15 +81,15 @@ test('a missing comparison tariff is rejected instead of returning NaN', () => {
     message: 'missing comparison price: core',
   });
 });
-test('care reduction keeps the modeled 50% contribution floor and the 140-hour capacity', () => {
+test('care scope keeps the modeled 50% contribution floor and the 140-hour capacity', () => {
   const care = model.support.find((p) => p.key === 'care');
   assert.ok(care);
   const unit = unitEconomics(care, model.assumptions);
-  assert.equal(care.price, 3900);
-  assert.equal(unit.minimumPrice, 3830);
+  assert.equal(care.price, 6000);
+  assert.equal(unit.minimumPrice, 5958);
   assert.ok(unit.margin !== null && unit.margin >= model.assumptions.targetContributionMargin);
-  assert.equal(unit.contribution, 1983);
-  assert.equal(portfolio(model).headroom, 14.5);
+  assert.equal(unit.contribution, 3020);
+  assert.equal(portfolio(model).headroom, 23);
   assert.ok(
     customerTotal(model, { buildKey: 'entry', supportKey: 'care', months: 6 }).difference > 0,
   );
@@ -97,9 +97,9 @@ test('care reduction keeps the modeled 50% contribution floor and the 140-hour c
 
 test('default comparison uses production only with customer-paid external costs', () => {
   const total = customerTotal(model, { buildKey: 'entry' });
-  assert.equal(total.ourTotal, 205800);
-  assert.equal(total.difference, -152000);
-  assert.equal(customerTotal(model, { buildKey: 'core' }).ourTotal, 324000);
-  assert.equal(customerTotal(model, { buildKey: 'expand' }).ourTotal, 524000);
-  assert.equal(customerTotal(model, { buildKey: 'entry', supportKey: 'care' }).ourTotal, 346200);
+  assert.equal(total.ourTotal, 226000);
+  assert.equal(total.difference, -131800);
+  assert.equal(customerTotal(model, { buildKey: 'core' }).ourTotal, 376000);
+  assert.equal(customerTotal(model, { buildKey: 'expand' }).ourTotal, 576000);
+  assert.equal(customerTotal(model, { buildKey: 'entry', supportKey: 'care' }).ourTotal, 442000);
 });

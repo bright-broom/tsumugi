@@ -13,14 +13,14 @@ describe('home pricing comparison', () => {
       .split('class="comparison-totals"')[1]
       ?.split('class="comparison-difference"')[0];
     expect(comparison).toMatch(
-      /紬・1 ページの制作費（買い切り）<\/h3><strong class="tnum">79,800 円<\/strong>/,
+      /紬・1 ページの制作費（買い切り）<\/h3><strong class="tnum">100,000 円<\/strong>/,
     );
-    expect(html).toContain('205,800 円');
-    expect(html).toContain('紬のほうが 152,000 円安い試算です。');
+    expect(html).toContain('226,000 円');
+    expect(html).toContain('紬のほうが 131,800 円安い試算です。');
     expect(html).toContain('紬への月額 0 円');
     expect(html).toContain('3,500');
     expect(html).toContain('保守契約なし');
-    expect(html).not.toMatch(/378,600|346,200|(?<!\d)4,800|-152,000 円高い/);
+    expect(html).not.toMatch(/378,600|346,200|(?<!\d)4,800|-131,800 円高い/);
   });
   it.each([
     [1000, '紬のほうが 1,000 円高い試算です。'],
@@ -40,7 +40,7 @@ it('keeps maintenance optional on the price page, with the paid care tariff avai
   const html = renderToStaticMarkup(<Page {...pageProps('price')} />);
   expect(html).toContain('制作費は買い切り。保守契約は不要です');
   expect(html).toContain('管理を任せたい方だけ、追加の支援プラン');
-  expect(html).toContain('3,900');
+  expect(html).toContain('6,000');
   expect(html).toContain('紬への月額 0 円');
-  expect(html).toContain('205,800 円');
+  expect(html).toContain('226,000 円');
 });

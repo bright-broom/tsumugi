@@ -24,24 +24,24 @@ function elements(node: Node): DefaultTreeAdapterMap['element'][] {
 
 describe('complete plan catalog', () => {
   it('keeps proposed prices outside the existing saleable plan inventories', () => {
-    expect(productionPlans().map((p) => p.price)).toEqual([79800, 198000, 398000]);
-    expect(RUN.map((p) => p.price)).toEqual([0, 3900, 9800, 29800]);
+    expect(productionPlans().map((p) => p.price)).toEqual([100000, 250000, 450000]);
+    expect(RUN.map((p) => p.price)).toEqual([0, 6000, 12000, 30000]);
     expect(OPTIONS).toHaveLength(8);
     expect(Object.values(PROPOSED_PRICES).every((p) => p.status === 'concept')).toBe(true);
   });
   it('counts discovery once inside the feature-development total', () => {
     const payment = proposedFeaturePayment();
-    expect(payment).toEqual({ design: 55000, start: 394000, acceptance: 449000, total: 898000 });
+    expect(payment).toEqual({ design: 60000, start: 390000, acceptance: 450000, total: 900000 });
     expect(payment.design + payment.start + payment.acceptance).toBe(payment.total);
   });
   it('matches all six reviewed cost scenarios including external costs and no support', () => {
     expect(catalogCostExamples().map((sample) => [sample.year, sample.threeYears])).toEqual([
-      [121800, 205800],
-      [240000, 324000],
-      [440000, 524000],
-      [498800, 700400],
-      [1018000, 1258000],
-      [1375600, 2330800],
+      [142000, 226000],
+      [292000, 376000],
+      [492000, 576000],
+      [550800, 752400],
+      [1020000, 1260000],
+      [1380000, 2340000],
     ]);
   });
   it('labels unready products locally and does not attach purchase actions to them', () => {
@@ -72,7 +72,7 @@ it('多言語の提供状態を料金表とプラン比較の両方に表示す�
   for (const page of ['price', 'plans'] as const) {
     const html = renderToStaticMarkup(<Page {...pageProps(page)} />);
     expect(html).toContain('対応言語・翻訳範囲・表示品質');
-    expect(html).toContain('165,000');
+    expect(html).toContain('150,000');
     expect(html).toContain('受付準備中');
   }
 });

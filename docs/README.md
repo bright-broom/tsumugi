@@ -16,9 +16,11 @@
 | **いまの状態と残課題**                                                                   | [status.md](status.md)                                                                                 |
 | 事業の規範（何を売り、何を売らないか・営業・納品・運用・法令）                           | [business/紬_ビジネスガイドライン.md](business/紬_ビジネスガイドライン.md)                             |
 | 事業の数字（料金レバー・プラン・補助金・掲載費）                                         | [business/紬_事業の中身.xlsx](business/紬_事業の中身.xlsx)                                             |
-| 月140時間で採用した料金体系・提供範囲・採算・検証計画                                    | [business/pricing-redesign-140h.md](business/pricing-redesign-140h.md)                                 |
+| 旧料金設計の履歴：月140時間で採用した料金体系・提供範囲・採算・検証計画                                    | [business/pricing-redesign-140h.md](business/pricing-redesign-140h.md)                                 |
 | 上位商品の検討案（未採用）：CMS・個別開発の範囲、採算、顧客価値、商品化の条件            | [business/premium-pricing-proposal.md](business/premium-pricing-proposal.md)                           |
 | 全プランの比較・料金試算（現行と未採用案を区別）：制作、月額、追加オプション、総額、採算 | [business/紬_全プラン比較・料金試算.xlsx](business/紬_全プラン比較・料金試算.xlsx)                     |
+| 現在の採用料金・範囲・原価仮定 | [2026-09-18新料金表](business/pricing-2026-09-18.md) |
+| 費用総点検（未採用案）：原価・工数・外部費・改定案 | [費用レビュー](business/cost-review-2026-09-18.md)・[試算Excel](business/紬_費用総点検_2026-09-18.xlsx) |
 | サイトの主張・値付け・約束の置き場所・屋号・数字の出典                                   | [product/messaging-and-pricing.md](product/messaging-and-pricing.md)                                   |
 | 全ページの役割と共通情報の管理                                                           | [product/information-architecture.md](product/information-architecture.md)                             |
 | 繰り返すデザイン変更の編集場所・共通部品・表示比較                                       | [product/redesign-guide.md](product/redesign-guide.md)                                                 |

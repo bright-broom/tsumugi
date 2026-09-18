@@ -1,5 +1,6 @@
 # 標準仕様の検査（納品の条件）
 
+> 料金再設定の検査（2026-09-18）：本番全項目 PASS600/WARN3/FAIL0、静的 PASS332/WARN1/FAIL0、Vitest662件、料金12件。検査のCSS待機をCSPに抵触しない方法へ修正し、サイトの制限・合格基準は維持（ADR0075）。
 > 最新の検査（2026-09-17・全プランページ追加）：本番全項目 **PASS 600 / WARN 3 / FAIL 0**、静的プレビュー **PASS 332 / WARN 1 / FAIL 0**、対象なし 42。固定ページ 22、Vitest 530 件、料金モデル 12 件。ページ追加による検査対象の増加で、しきい値の緩和はない（[ADR 0062](architecture/0062-plan-catalog.md)）。
 
 > 自社サイトの公開：2026-09-17 のオーナー指示により [ADR 0056](architecture/0056-owner-authorized-publication.md) を適用。専門家確認・受入確認の未実施分は WARN に残す。顧客テンプレートでは `OWNER_PUBLICATION=null` に戻し、従来の納品条件を適用する。紬は Vercel URL・メール受付で公開し、独自ドメインやフォームの導入を前提にしない。
