@@ -127,3 +127,47 @@ export async function checkRelease(
     ...results,
   ];
 }
+
+interface WaitOptions {
+  /** 最初の照合からの待ち時間の上限。0 なら1回だけ照合する。 */
+  timeoutMs: number;
+  intervalMs: number;
+  sleep?: (ms: number) => Promise<void>;
+  now?: () => number;
+}
+
+/**
+ * 配備の切替待ちのため、全件一致するか期限まで照合を繰り返す。
+ * 比較元の取り違えなど入力の問題（例外）は再試行しない。最後の結果と試行の記録を返す。
+ */
+export async function waitForRelease(
+  check: () => Promise<CheckResult[]>,
+  {
+    timeoutMs,
+    intervalMs,
+    sleep = (ms) => new Promise((done) => setTimeout(done, ms)),
+    now = Date.now,
+  }: WaitOptions,
+): Promise<CheckResult[]> {
+  if (timeoutMs > 0 && intervalMs <= 0) throw new Error('再試行の間隔は1ミリ秒以上にしてください');
+  const started = now();
+  for (let attempt = 1; ; attempt++) {
+    const results = await check();
+    const elapsed = Math.round((now() - started) / 1000);
+    if (!results.some((entry) => entry.status === 'FAIL'))
+      return [
+        result('PASS', '照合の試行', `${attempt}回目で全件一致（経過 ${elapsed} 秒）`),
+        ...results,
+      ];
+    if (now() - started + intervalMs > timeoutMs)
+      return [
+        result(
+          'FAIL',
+          '照合の試行',
+          `${attempt}回・${elapsed} 秒の照合で一致せず（待ち上限 ${Math.round(timeoutMs / 1000)} 秒。以下は最後の結果）`,
+        ),
+        ...results,
+      ];
+    await sleep(intervalMs);
+  }
+}

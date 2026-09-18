@@ -110,7 +110,7 @@ npm run build
 | main への反映    | PR の MERGED と merge commit。ブランチへの push だけでは判断しない                 |
 | CI 合格          | 対象コミットに紐付くチェック結果                                                   |
 | Vercel 配備      | 対象 deployment とチェック結果。PR プレビューと production alias を区別            |
-| 本番 URL の更新  | production alias が対象 deployment を向き、公開 URL で対象ページ・内容・動作を確認 |
+| 本番 URL の更新  | production alias が対象 deployment を向き、公開 URL で対象ページ・内容・動作を確認。内容の一致は main 後の Release check（ADR 0076）の成功、または同じツリーの `out/` での `check:release` 全件一致を根拠にする |
 
 本番モードのローカル検査は公開操作ではない。認証が必要で確認できない場合は、どこまで確認し、何が未確認かを書き残す。
 

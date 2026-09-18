@@ -1,0 +1,49 @@
+# 本番の配信内容が main のビルドと全ファイル一致するかを確かめる（ADR 0076・0068）。
+# main への push 後は Vercel の切替を最大15分待つ。毎日の実行は、手元からの配備・巻き戻し等で
+# 本番が main からずれたことを検出する。公開先は SITE_URL、未設定なら自社公開判断の DOMAIN。
+# 一致は配備ID・production alias の証明ではない。不一致・取得失敗はジョブの失敗として通知される。
+name: Release check
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '41 21 * * *' # 毎日 6:41（日本時間）。監視の毎時17分と重ねない
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: release-check
+  cancel-in-progress: true
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SITE_URL: ${{ vars.SITE_URL }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install --global npm@12.0.2
+      - run: npm ci
+      - run: npm run build
+      - name: Compare production with main
+        run: >-
+          npm run check:release --
+          --dist out
+          --wait-seconds 900
+          --interval-seconds 30
+          --json .artifacts/ops/check-release.json
+      - name: Upload release evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-check-${{ github.run_number }}
+          path: .artifacts/ops/check-release.json
+          retention-days: 30
+          if-no-files-found: warn

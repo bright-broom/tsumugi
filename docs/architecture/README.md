@@ -168,3 +168,5 @@
 - [0074 — 案件進行時の見積参照再検証](0074-crm-transition-estimate-validation.md)
 
 - [0075 — 料金を用途・作業範囲・実費に整理する](0075-pricing-reset.md)
+
+- [0076 — 本番の配信内容と main のビルドを自動で照合する](0076-release-drift-check.md)
