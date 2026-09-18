@@ -11,7 +11,7 @@ import { tokyoDate } from '@/lib/verification-report';
 import { SCREENSHOTS_DIR } from '../paths';
 import { rec } from './results';
 import { SECURITY_HEADERS } from '../security/policy';
-import { pages } from './static';
+import { localeScope } from './static';
 import {
   CONTRAST_BODY, CONTRAST_LARGE, IC_RATIO_MAX, IC_RATIO_MIN, LCP_BUDGET_MS, MIN_FIG_TEXT, MIN_FONT_MB, MOBILE_W, TAP_MIN,
 } from './thresholds';
@@ -80,6 +80,9 @@ export async function checkBrowser(
 
   mkdirSync(SCREENSHOTS_DIR, { recursive: true });
   const { server, base } = await serve(dist);
+  // ビルドした言語のページだけを、その言語のパスで開く（ADR 0081）
+  const scope = localeScope(dist);
+  const at = (f: string) => `${base}${scope.urlPrefix}/${f}`;
   const lcps = new Map<string, number>();
   const blocked: string[] = [];
 
@@ -103,8 +106,8 @@ export async function checkBrowser(
       pg.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
       pg.on('pageerror', (x) => errs.push(String(x)));
 
-      for (const f of pages(dist)) {
-        await pg.goto(`${base}/${f}`, { waitUntil: 'domcontentloaded' });
+      for (const f of scope.files) {
+        await pg.goto(at(f), { waitUntil: 'domcontentloaded' });
         const r = await run<{ lcp: number; el: string }>(pg, JS.LCP);
         lcps.set(f, r.lcp);
         rec(r.lcp <= LCP_BUDGET_MS ? 'PASS' : 'FAIL', '13 LCP 2.5秒以内', f, `${r.lcp.toFixed(0)}ms / 要素=${r.el}`);
@@ -118,10 +121,10 @@ export async function checkBrowser(
         await recFigText(pg, f, 1280);
       }
 
-      const have = pages(dist);
+      const have = scope.files;
       const preferred = ['index.html', 'price.html', 'owned.html', 'flow.html'].filter((c) => have.includes(c));
       for (const cf of preferred.length ? preferred : [have[0]!]) {
-        await pg.goto(`${base}/${cf}`, { waitUntil: 'domcontentloaded' });
+        await pg.goto(at(cf), { waitUntil: 'domcontentloaded' });
         // Static pages have no deferred scripts to delay DOMContentLoaded until CSS is ready.
         // Measuring earlier intermittently counted hidden navigation and fallback-font text.
         await waitForStyles(pg);
@@ -144,8 +147,8 @@ export async function checkBrowser(
         viewport: { width: MOBILE_W, height: 780 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true,
       });
       await mp.route('**/*', blockExternal);
-      for (const f of pages(dist)) {
-        await mp.goto(`${base}/${f}`, { waitUntil: 'domcontentloaded' });
+      for (const f of scope.files) {
+        await mp.goto(at(f), { waitUntil: 'domcontentloaded' });
         await waitForStyles(mp);
 
         const ov = await run<{ doc: number; view: number; offenders: unknown[] }>(mp, JS.OVERFLOW);
@@ -175,17 +178,17 @@ export async function checkBrowser(
             : `${ir.length}種すべて ${IC_RATIO_MIN}〜${IC_RATIO_MAX} 倍`);
       }
 
-      const shot = existsSync(join(dist, 'index.html')) ? 'index.html' : pages(dist)[0]!;
-      await mp.goto(`${base}/${shot}`, { waitUntil: 'domcontentloaded' });
+      const shot = existsSync(join(scope.root, 'index.html')) ? 'index.html' : scope.files[0]!;
+      await mp.goto(at(shot), { waitUntil: 'domcontentloaded' });
       writeFileSync(join(SCREENSHOTS_DIR, 'shot-mobile.png'), await mp.screenshot({ fullPage: false }));
       await mp.close();
 
       const dp = await br.newPage({ viewport: { width: 1280, height: 900 } });
       await dp.route('**/*', blockExternal);
-      await dp.goto(`${base}/${shot}`, { waitUntil: 'domcontentloaded' });
+      await dp.goto(at(shot), { waitUntil: 'domcontentloaded' });
       writeFileSync(join(SCREENSHOTS_DIR, 'shot-desktop.png'), await dp.screenshot({ fullPage: false }));
-      if (existsSync(join(dist, 'price.html'))) {
-        await dp.goto(`${base}/price.html`, { waitUntil: 'domcontentloaded' });
+      if (existsSync(join(scope.root, 'price.html'))) {
+        await dp.goto(at('price.html'), { waitUntil: 'domcontentloaded' });
         writeFileSync(join(SCREENSHOTS_DIR, 'shot-price.png'), await dp.screenshot({ fullPage: false }));
       }
       await dp.close();

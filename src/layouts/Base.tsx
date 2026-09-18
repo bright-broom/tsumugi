@@ -10,6 +10,7 @@ import { useMessages } from '@/components/ContentProvider';
 import Head from 'next/head';
 import { LOCALE } from '@/i18n/catalog';
 import { ALL_ROUTES, ROUTES, canonical, ogImage } from '@/routing/registry';
+import { LOCALE_SETTINGS } from '@/lib/locale';
 import { publicImageUrl } from '@/routing/collections';
 import type { ReactNode } from 'react';
 import * as C from '@/content/config';
@@ -44,6 +45,16 @@ export default function Base({ file, title, desc, og: ogPath, children }: Props)
         <title>{title}</title>
         <meta name="description" content={desc} />
         <link rel="canonical" href={url} />
+        {/* Alternates only when the site publishes more than one language (ADR 0081). */}
+        {C.PUBLISHED_LOCALES.length > 1 &&
+          [...C.PUBLISHED_LOCALES, 'x-default' as const].map((locale) => (
+            <link
+              key={locale}
+              rel="alternate"
+              hrefLang={locale === 'x-default' ? locale : LOCALE_SETTINGS[locale].language}
+              href={canonical(C.DOMAIN, file, locale === 'x-default' ? C.PUBLISHED_LOCALES[0] : locale)}
+            />
+          ))}
         <meta property="og:title" content={title} />
         <meta property="og:description" content={desc} />
         <meta property="og:type" content="website" />

@@ -1,4 +1,5 @@
 import type { IconName } from '@/lib/icons';
+import { BUILD_LOCALE, LOCALE_SETTINGS, localePath, type LocaleId } from '@/lib/locale';
 function route<
   const ID extends string,
   const Template extends string,
@@ -8,7 +9,8 @@ function route<
     id,
     template,
     file: `${id}.html` as const,
-    path: `/${id}.html` as const,
+    /** Includes the build language's base path (`/en/price.html`); `file` stays relative. */
+    path: localePath(`${id}.html`),
     icon,
     kind,
     header,
@@ -50,11 +52,13 @@ export function getRoute(id: string): Route | undefined {
 export function href(id: RouteId, fragment?: string): string {
   return ROUTES[id].path + (fragment ? `#${fragment}` : '');
 }
-export function canonical(domain: string, file: string): string {
-  return `https://${domain}/${file}`;
+export function canonical(domain: string, file: string, locale: LocaleId = BUILD_LOCALE): string {
+  return `https://${domain}${localePath(file, locale)}`;
 }
-export function ogImage(domain: string, file: string): string {
-  return `https://${domain}/og/${file.replace(/\.html$/, '')}.png`;
+/** Share cards are per language: /og/price.png, /og/en/price.png (generated with `npm run og`). */
+export function ogImage(domain: string, file: string, locale: LocaleId = BUILD_LOCALE): string {
+  const dir = LOCALE_SETTINGS[locale].basePath.replace(/^\//, '');
+  return `https://${domain}/og/${dir ? `${dir}/` : ''}${file.replace(/\.html$/, '')}.png`;
 }
 
 export function pathForFile(file: string): string {

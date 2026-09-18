@@ -5,6 +5,7 @@ import {
   collectionListFile,
 } from '@/routing/collections';
 import { ROUTES, type RouteId } from '@/routing/registry';
+import { localePath } from '@/lib/locale';
 import type { IconName } from '@/lib/icons';
 import {
   CollectionError,
@@ -171,19 +172,19 @@ export function collectionRoutes(site: SiteCollections): CollectionRoute[] {
     if (!published.length) return [];
     const entries = published.map((entry): CollectionRoute => {
       const file = collectionEntryFile(base, entry.slug);
-      return { collection, kind: 'entry', slug: entry.slug, file, path: `/${file}`, lastmod: lastModified(entry) };
+      return { collection, kind: 'entry', slug: entry.slug, file, path: localePath(file), lastmod: lastModified(entry) };
     });
     if (attachedTo !== null) return entries;
     const file = collectionListFile(base);
     const dates = published.map(lastModified).filter((date): date is string => date !== null);
     const lastmod = dates.length ? dates.sort().at(-1)! : null;
-    return [{ collection, kind: 'list', slug: null, file, path: `/${file}`, lastmod }, ...entries];
+    return [{ collection, kind: 'list', slug: null, file, path: localePath(file), lastmod }, ...entries];
   });
 }
 
 export function collectionListPath(collection: CollectionId): string {
   const { base, attachedTo } = COLLECTION_SETTINGS[collection];
-  return attachedTo === null ? `/${collectionListFile(base)}` : ROUTES[attachedTo].path;
+  return attachedTo === null ? localePath(collectionListFile(base)) : ROUTES[attachedTo].path;
 }
 
 /** Share card path under public/og/: the entry's own image or the collection's existing card. */

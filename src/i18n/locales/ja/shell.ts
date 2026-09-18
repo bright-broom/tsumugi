@@ -5,6 +5,8 @@ export default {
     '買い切り制作と任意の継続支援。変更枠・外部費・引継ぎ条件を明示します。',
   areaServedName: '日本',
   skip: '本文へ移動',
+  /** 言語の切り替え（2 言語以上を公開するときだけ表示。ADR 0081） */
+  language: { label: '表示する言語', name: '日本語' },
   pageIndex: {
     label: 'このページの目次',
     pages: {
