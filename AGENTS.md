@@ -24,6 +24,7 @@ Next.js が生成した、この文書末尾のルール（このバージョン
 | 4 | [docs/README.md](docs/README.md) | 仕様・判断理由・事業の文書の目次 |
 | 5 | [docs/spec.md](docs/spec.md) | 納品の条件（検査項目） |
 | 6 | [docs/architecture/README.md](docs/architecture/README.md) | 技術判断の一覧と ADR |
+| 料金変更時 | [docs/business/pricing-maintenance.md](docs/business/pricing-maintenance.md) | 現行と旧案の区別、価格・工数・Excel・検証の同期手順 |
 | 必要なとき | [docs/business/紬_ビジネスガイドライン.md](docs/business/紬_ビジネスガイドライン.md) | 事業の規範（何を売り、何を約束しないか）。サイトの文言を変えるときは必ず読む |
 
 ### 作業開始時の最小確認
