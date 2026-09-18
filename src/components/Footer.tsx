@@ -4,6 +4,7 @@ import Icon from '@/components/Icon';
 import PhoneLink from '@/components/PhoneLink';
 import * as C from '@/content/config';
 import { INDUSTRIES, NAV_IC, NAV_LEGAL } from '@/content/nav';
+import { languageLinks } from '@/content/languages';
 import { format } from '@/i18n/format';
 import { href, pathForFile } from '@/routing/registry';
 
@@ -112,6 +113,15 @@ export default function Footer({ file }: { file: string }) {
           </ul>
         </nav>
         <p className="fine">{copy.fine}</p>
+        {languageLinks(file).length > 0 && (
+          <nav className="fine" aria-label={copy.language.label}>
+            {languageLinks(file).map((link) => (
+              <a key={link.locale} href={link.href} hrefLang={link.language} lang={link.language}>
+                {link.name}
+              </a>
+            ))}
+          </nav>
+        )}
         <div className="footer-bottom">
           <p className="footer-copyright">{`© ${C.LEGAL_NAME}`}</p>
           <a className="footer-top" href="#page-top">

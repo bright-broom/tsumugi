@@ -7,6 +7,8 @@ import { join, relative, sep } from 'node:path';
 import * as C from '@/content/config';
 import * as P from '@/content/prices';
 import { tokyoDate } from '@/lib/verification-report';
+import { LOCALE } from '@/i18n/catalog';
+import { BUILD_LOCALE, LOCALE_SETTINGS, localePath } from '@/lib/locale';
 import { checkTokens } from '../scripts/build-tokens';
 import { pendingHumanChecks } from './acceptance';
 import { evaluatePublication, publicationSnapshot, type VerifyMode } from './publication';
@@ -24,7 +26,7 @@ const all = (h: string, re: RegExp) => [...h.matchAll(re)].map((m) => m[1]!);
 const chars = (s: string) => [...s].length;
 
 /** dist の HTML（＝ページ）。コレクションの詳細（news/<slug>.html）も含め、相対パスの名前順 */
-export function pages(dist: string, prefix = ''): string[] {
+function pages(dist: string, prefix = ''): string[] {
   return readdirSync(join(dist, prefix), { withFileTypes: true })
     .flatMap((e) =>
       e.isDirectory() && e.name !== '_next'
@@ -33,6 +35,23 @@ export function pages(dist: string, prefix = ''): string[] {
     )
     .sort();
 }
+
+/**
+ * ビルドした言語のページ（ADR 0081）。追加言語は out/<言語>/ が起点で、既定言語からは他言語の
+ * ディレクトリを除く。共有のテーマ・画像・共有カードはサイトの起点（dist）から探す。
+ */
+export function localeScope(dist: string) {
+  const dirOf = (basePath: string) => basePath.replace(/^\//, '');
+  const dir = dirOf(LOCALE_SETTINGS[BUILD_LOCALE].basePath);
+  const others = new Set(C.PUBLISHED_LOCALES.map((l) => dirOf(LOCALE_SETTINGS[l].basePath)).filter(Boolean));
+  const root = dir ? join(dist, dir) : dist;
+  const files = existsSync(root)
+    ? pages(root).filter((f) => dir || !others.has(f.split('/')[0]!))
+    : [];
+  return { root, files, urlPrefix: dir ? `/${dir}` : '' };
+}
+/** 日本語の文言そのものを照合する検査は、日本語のビルドだけで行う（他言語は翻訳の検収で確認） */
+const JAPANESE_COPY = BUILD_LOCALE === 'ja';
 
 /** dist の中に実在するファイルを、相対パス（/ 区切り）で全部拾う（og/ や fonts/ も対象にする） */
 function filesUnder(dir: string, root = dir, out = new Set<string>()): Set<string> {
@@ -67,14 +86,14 @@ export function imageFindings(page: string, html: string): Result[] {
 }
 
 export function checkStatic(dist: string, mode: VerifyMode): void {
-  const files = pages(dist);
+  const { root, files } = localeScope(dist);
   const names = filesUnder(dist);
 
   if (!files.length) {
     rec('FAIL', '出力', '-', 'dist/ にHTMLがありません。npm run build を先に実行してください');
     return;
   }
-  const html = new Map(files.map((f) => [f, read(join(dist, f))]));
+  const html = new Map(files.map((f) => [f, read(join(root, f))]));
 
   // トークンは design.tokens.json が正本。生成物とずれていたら納品しない（16 導入と運用）
   let tokens: { ok: boolean; message: string };
@@ -142,11 +161,11 @@ export function checkStatic(dist: string, mode: VerifyMode): void {
     'legal.html': '特定商取引法に基づく表記', 'owned.html': '借地と所有',
   };
   for (const [f, label] of Object.entries(MUST)) {
-    if (!existsSync(join(dist, f))) {
+    if (!existsSync(join(root, f))) {
       rec('FAIL', '25 必須ページ', f, `${label} がありません`);
       continue;
     }
-    const miss = files.filter((p) => !html.get(p)!.includes(`href="/${f}"`));
+    const miss = files.filter((p) => !html.get(p)!.includes(`href="${localePath(f)}"`));
     rec(miss.length ? 'FAIL' : 'PASS', '25 必須ページ', f,
       miss.length ? `リンクが無いページ: ${list(miss)}` : `${label}（全ページから到達可）`);
   }
@@ -162,9 +181,10 @@ export function checkStatic(dist: string, mode: VerifyMode): void {
     [`${comma(first.sub_total)}円`, 'price.html', '月額制1ページの36か月総額'],
     [`${comma(first.our_total)}円`, 'price.html', '当方1ページの36か月総額'],
   ];
-  for (const [txt, fname, what] of PRICE_FACTS) {
+  // 他言語では「円」などの表記は翻訳に任せ、金額の数字だけを照合する
+  for (const [txt, fname, what] of PRICE_FACTS.filter(([t]) => JAPANESE_COPY || !t.includes('円'))) {
     // 「9,800<span class="u">円／月」のようにタグで割れているので、外してから探す
-    const flat = readIf(join(dist, fname)).replace(/<[^>]+>/g, '');
+    const flat = readIf(join(root, fname)).replace(/<[^>]+>/g, '');
     const found = flat.includes(japaneseSpacing(txt));
     rec(found ? 'PASS' : 'FAIL', '29 価格の一致', fname,
       found ? `${what} ${txt}` : `${what} ${txt} がページに出ていません`);
@@ -172,8 +192,12 @@ export function checkStatic(dist: string, mode: VerifyMode): void {
 
   // 30 他社比較の出典。金額を並べる以上、いつ時点の公開情報かを必ず添える。
   for (const fname of ['index.html', 'price.html']) {
-    if (!existsSync(join(dist, fname))) continue;
-    const h = read(join(dist, fname));
+    if (!JAPANESE_COPY) {
+      rec('N/A', '30 他社比較の出典', fname, '日本語の文言での照合。翻訳の検収で確認');
+      continue;
+    }
+    if (!existsSync(join(root, fname))) continue;
+    const h = read(join(root, fname));
     if (!h.includes('月額制')) continue;
     const cited = h.includes(japaneseSpacing(P.SUBS_SOURCE));
     rec(cited ? 'PASS' : 'FAIL', '30 他社比較の出典', fname,
@@ -181,11 +205,14 @@ export function checkStatic(dist: string, mode: VerifyMode): void {
   }
 
   // 26 主張の一貫性。トップの1番の主張と、その根拠ページが同じ言葉で書かれていること。
-  const idx = readIf(join(dist, 'index.html'));
-  const own = readIf(join(dist, 'owned.html'));
+  const idx = readIf(join(root, 'index.html'));
+  const own = readIf(join(root, 'owned.html'));
   const words = ['借地', '所有', '名義', 'ソースコード'].filter((w) => !(idx.includes(w) && own.includes(w)));
-  rec(words.length ? 'FAIL' : 'PASS', '26 主張の一貫性', 'index.html / owned.html',
-    words.length ? `片方にしか無い語: ${list(words)}` : '借地・所有・名義・ソースコードが両方にあります');
+  if (!JAPANESE_COPY)
+    rec('N/A', '26 主張の一貫性', 'index.html / owned.html', '日本語の文言での照合。翻訳の検収で確認');
+  else
+    rec(words.length ? 'FAIL' : 'PASS', '26 主張の一貫性', 'index.html / owned.html',
+      words.length ? `片方にしか無い語: ${list(words)}` : '借地・所有・名義・ソースコードが両方にあります');
 
   if (existsSync(join(dist, 'llms.txt'))) {
     rec('FAIL', '禁止 llms.txt', '-', '根拠がないため作らない方針に反しています');
@@ -217,7 +244,7 @@ export function checkStatic(dist: string, mode: VerifyMode): void {
       hasHours && hasAddr ? '' : `時間=${hasHours} 住所=${hasAddr}`);
 
     // 12 lang / viewport
-    rec(h.includes('lang="ja"') ? 'PASS' : 'FAIL', '12 lang属性', n);
+    rec(h.includes(`lang="${LOCALE.language}"`) ? 'PASS' : 'FAIL', '12 lang属性', n);
     rec(h.includes('name="viewport" content="width=device-width') ? 'PASS' : 'FAIL', '12 viewport', n);
 
     // h1 はちょうど1つ
@@ -303,14 +330,14 @@ export function checkStatic(dist: string, mode: VerifyMode): void {
   }
 
   // 04 料金の明示（料金ページに金額が入っている）
-  const pr = readIf(join(dist, 'price.html'));
+  const pr = readIf(join(root, 'price.html'));
   const want = [...P.BUILD.map((b) => b.price), ...P.RUN.map((r) => r.price)].map(comma);
   const lack = want.filter((w) => !pr.includes(w));
   rec(lack.length ? 'FAIL' : 'PASS', '04 料金の明示', 'price.html',
     lack.length ? `欠落: ${list(lack)}` : '全プランの金額を掲載');
 
   // 05 業種別ページが4本ある。業種で電話とフォームのどちらを主役にするかは、この検査では証明しない（人の確認）
-  const ind = ['restaurant.html', 'koumuten.html', 'salon.html', 'shigyo.html'].filter((f) => existsSync(join(dist, f)));
+  const ind = ['restaurant.html', 'koumuten.html', 'salon.html', 'shigyo.html'].filter((f) => existsSync(join(root, f)));
   rec(ind.length === 4 ? 'PASS' : 'FAIL', '05 業種別ページ', '-',
     `${ind.length}/4（ページの有無だけ。主役にする連絡手段は人の確認）`);
 

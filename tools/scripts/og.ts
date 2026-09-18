@@ -27,11 +27,13 @@ import * as P from '@/content/prices';
 import tokens from '@/styles/design.tokens.json';
 
 import { ROOT } from '../paths';
+import { BUILD_LOCALE, LOCALE_SETTINGS } from '@/lib/locale';
 const outArg = process.argv.indexOf('--out');
 const OUT =
   outArg >= 0 && process.argv[outArg + 1]
     ? resolve(process.argv[outArg + 1]!)
-    : join(ROOT, 'public', 'og');
+    : // 追加言語のカードは public/og/<言語>/（SITE_LOCALE=en npm run og、ADR 0081）
+      join(ROOT, 'public', 'og', LOCALE_SETTINGS[BUILD_LOCALE].basePath.replace(/^\//, ''));
 const W = 1200;
 const H = 630;
 

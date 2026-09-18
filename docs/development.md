@@ -16,6 +16,8 @@ npm run verify -- --static   # 静的検査のみ（ブラウザ不要・CI向�
 npm run verify -- --mode production  # 本番の公開条件で検査（VERCEL_ENV=production のときは指定しなくても本番）
 npm run verify -- --write    # LCP実測値と記録日を src/content/measurements.ts に書き戻す（コミットしてから再ビルド）
 npm run verify -- --dist <path>  # 検査するディレクトリを差し替える（既定は out/）
+npm run verify:locales -- --static  # 追加言語ごとの検査（言語が1つなら何もしない。ADR 0081）
+npm run check:locales    # 全言語の lang・canonical・hreflang・リンク・混在・サイトマップ（build の最後にも実行）
 npm run tokens           # src/styles/design.tokens.json → src/styles/tokens.css（--check で同期検査）
 npm run og               # OGP画像とファビコン（文面を変えたときだけ。差分をコミットする）
 npm run og:check         # 一時ディレクトリに生成し public/og/ とバイト比較（macOS の正本環境で。ADR 0047）
