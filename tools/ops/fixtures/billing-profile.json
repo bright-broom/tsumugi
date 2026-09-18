@@ -1,0 +1,10 @@
+{
+  "invoiceRegistration": { "status": "unregistered" },
+  "bankTransfer": {
+    "bank": "架空銀行",
+    "branch": "サンプル支店",
+    "accountType": "普通",
+    "accountNumber": "0000000",
+    "accountHolder": "サンプル タロウ"
+  }
+}

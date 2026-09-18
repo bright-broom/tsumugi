@@ -170,3 +170,5 @@
 - [0075 — 料金を用途・作業範囲・実費に整理する](0075-pricing-reset.md)
 
 - [0076 — 本番の配信内容と main のビルドを自動で照合する](0076-release-drift-check.md)
+
+- [0078 — 請求書と入金を社内 CLI で記録する](0078-invoices-and-payments.md)

@@ -27,6 +27,7 @@
     "test:pricing": "tsx --test tools/pricing/model.test.ts",
     "report:pricing": "tsx tools/pricing/report.ts",
     "ops:estimate": "tsx tools/ops/estimate/cli.ts",
+    "ops:invoice": "tsx tools/ops/billing/cli.ts",
     "ops:metrics": "tsx tools/ops/metrics/cli.ts",
     "ops:requests": "tsx tools/ops/requests/cli.ts",
     "ops:report": "tsx tools/ops/report/cli.ts",

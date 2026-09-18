@@ -1,6 +1,6 @@
 /** 見積書の中身（Markdown と印刷用 HTML で共通）。保存した版の金額をそのまま出す。 */
 import { OpsError } from '../shared/store';
-import { BRAND } from '@/content/config';
+import { issuerRows, siteIssuer } from '../shared/issuer';
 import { type Block, type DocumentModel, signedYen, yen } from '../shared/document';
 import { type Certainty, type EstimateVersion, calculateEstimate, diffVersions } from './model';
 
@@ -27,7 +27,7 @@ export function estimateDocument(
         ['見積番号', `${input.estimateId}（第${version.version}版）`],
         ['発行日', input.issuedOn],
         ['有効期限', input.validUntil],
-        ['発行', BRAND],
+        ...issuerRows(siteIssuer()),
       ],
     },
   ];
