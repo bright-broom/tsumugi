@@ -21,3 +21,42 @@
     @apply flex items-center gap-[8px];
   }
 }
+
+/* セクションから詳細ページへの導線（RouteLinks）。文言とアイコンはナビと共通 */
+@layer components {
+  .route-links {
+    @apply grid grid-cols-2 gap-x-[24px] mt-[32px] mb-[0] p-[0] list-none border-t border-line;
+  }
+  .route-links:has(> li:only-child) {
+    @apply grid-cols-1;
+  }
+  @media (min-width: 1025px) {
+    .route-links:has(> li:nth-child(4)) {
+      @apply grid-cols-4;
+    }
+  }
+  @media (max-width: 768px) {
+    .route-links {
+      @apply grid-cols-1;
+    }
+  }
+  .route-links li {
+    @apply m-[0];
+  }
+  .route-links a {
+    @apply flex items-center gap-[12px] min-h-[56px] py-[14px] border-b border-line text-fine text-ink no-underline;
+  }
+  .route-links a > .ic:last-child {
+    @apply ml-auto shrink-0;
+  }
+  .route-links a:hover {
+    @apply text-[var(--accent-text)];
+  }
+  section.dark .route-links,
+  section.dark .route-links a {
+    @apply text-white border-[color-mix(in_srgb,_var(--color-main)_14%,_transparent)];
+  }
+  section.dark .route-links a:hover {
+    @apply text-muted-on-ink;
+  }
+}

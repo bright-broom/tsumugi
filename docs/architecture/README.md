@@ -176,3 +176,4 @@
 - [0079 — 問い合わせ受付を Cloudflare Workers ＋ D1 に配備できるようにする](0079-inquiry-service-on-workers.md)
 
 - [0080 — 記事・事例を microCMS から取り込んで静的に公開する](0080-microcms-content-source.md)
+- [0077 — トップの各セクションから詳細ページへつなぐ](0077-home-detail-links.md)
