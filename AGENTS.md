@@ -94,6 +94,7 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 | `npm run dev` の HTML に script がある | 開発サーバーはホットリロード用の JS を入れる | 0バイトの対象は `out/`。開発中の HTML で判断しない |
 | `next dev` のたびに `AGENTS.md`・`CLAUDE.md` にルールが加わる | Next.js 16 が生成・再生成する | 動かさずにコミットしておく |
 | TypeScript 7 で ESLint が動かない | typescript-eslint は TypeScript 6 の JavaScript API が必要 | `@typescript/native` の `tsc` は 7.0.2、`typescript` は公式互換パッケージの 6.0.3。併用を保つ（ADR 0003） |
+| `check:live`・`check:release`・`monitor` が全件「fetch failed」 | プロキシ経由でしか外へ出られない環境では、Node の fetch が既定でプロキシを使わない（curl は通る） | `NODE_USE_ENV_PROXY=1 npm run check:release -- …`。DNS・TLS の直接確認はその環境では再現できないため、未確認として記録する |
 | 検査で「ブラウザが無い」と言われる | Playwright のブラウザは Playwright の版ごとに入れる | `PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium` |
 
 ## 7. いまの状態と残課題

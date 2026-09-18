@@ -3,7 +3,9 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync, readFileSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { checkRelease } from '../tools/ops/release';
+import { checkRelease, waitForRelease } from '../tools/ops/release';
+import { result, type CheckResult } from '../tools/ops/results';
+import { DOMAIN } from '../src/content/config';
 import { distFetch, type Fetch } from '../tools/ops/probe';
 
 const dirs: string[] = [];
@@ -187,4 +189,123 @@ it('CLIは一致0・内容不一致1・比較元の取り違え2で終了し、�
   expect(run().status).toBe(1);
   expect(JSON.parse(readFileSync(report, 'utf8')).counts.FAIL).toBe(1);
   expect(run('--fingerprint', 'wrong').status).toBe(2);
+});
+
+describe('配備の切替を待つ照合', () => {
+  const clock = () => {
+    let t = 0;
+    const sleeps: number[] = [];
+    return {
+      sleeps,
+      now: () => t,
+      sleep: async (ms: number) => {
+        sleeps.push(ms);
+        t += ms;
+      },
+    };
+  };
+  const outcome = (status: 'PASS' | 'FAIL'): CheckResult[] => [result(status, '/', 'x')];
+
+  it('一致するまで間隔を空けて繰り返し、試行回数を記録する', async () => {
+    const c = clock();
+    let calls = 0;
+    const r = await waitForRelease(async () => outcome(++calls < 3 ? 'FAIL' : 'PASS'), {
+      timeoutMs: 600_000,
+      intervalMs: 30_000,
+      ...c,
+    });
+    expect(calls).toBe(3);
+    expect(c.sleeps).toEqual([30_000, 30_000]);
+    expect(r[0]).toMatchObject({ status: 'PASS', name: '照合の試行' });
+    expect(r[0]!.detail).toContain('3回目で全件一致（経過 60 秒）');
+    expect(r.slice(1)).toEqual(outcome('PASS'));
+  });
+
+  it('期限を超えて待たず、最後の不一致をFAILとして返す', async () => {
+    const c = clock();
+    let calls = 0;
+    const r = await waitForRelease(
+      async () => {
+        calls++;
+        return outcome('FAIL');
+      },
+      { timeoutMs: 60_000, intervalMs: 30_000, ...c },
+    );
+    expect(calls).toBe(3);
+    expect(c.now()).toBe(60_000);
+    expect(r[0]).toMatchObject({ status: 'FAIL', name: '照合の試行' });
+    expect(r[0]!.detail).toContain('3回・60 秒');
+    expect(r.filter((x) => x.status === 'FAIL')).toHaveLength(2);
+  });
+
+  it('待ち時間0なら1回だけ照合し、入力の誤りは再試行しない', async () => {
+    const c = clock();
+    let calls = 0;
+    const once = await waitForRelease(
+      async () => {
+        calls++;
+        return outcome('FAIL');
+      },
+      { timeoutMs: 0, intervalMs: 30_000, ...c },
+    );
+    expect(calls).toBe(1);
+    expect(c.sleeps).toEqual([]);
+    expect(once[0]!.status).toBe('FAIL');
+    calls = 0;
+    await expect(
+      waitForRelease(
+        async () => {
+          calls++;
+          throw new Error('比較元の指紋が一致しません');
+        },
+        { timeoutMs: 600_000, intervalMs: 30_000, ...c },
+      ),
+    ).rejects.toThrow('指紋');
+    expect(calls).toBe(1);
+    await expect(
+      waitForRelease(async () => outcome('PASS'), { timeoutMs: 1000, intervalMs: 0, ...c }),
+    ).rejects.toThrow('間隔');
+  });
+});
+
+it('CLIは待ち時間付きの照合と、URL省略時の自社公開先の既定を扱う', () => {
+  const expected = fixture(),
+    served = fixture();
+  const reportDir = mkdtempSync(join(tmpdir(), 'release-wait-'));
+  dirs.push(reportDir);
+  const report = join(reportDir, 'check.json');
+  const env = { ...process.env };
+  delete env.SITE_URL;
+  const run = (...extra: string[]) =>
+    spawnSync(
+      process.execPath,
+      [
+        '--import',
+        'tsx',
+        'tools/ops/cli/check-release.ts',
+        '--dist',
+        expected,
+        '--served-dist',
+        served,
+        '--json',
+        report,
+        ...extra,
+      ],
+      { encoding: 'utf8', env },
+    );
+  const matched = run('--wait-seconds', '60', '--interval-seconds', '5');
+  expect(matched.status).toBe(0);
+  const body = JSON.parse(readFileSync(report, 'utf8'));
+  expect(body.target).toBe(`https://${DOMAIN}`);
+  expect(body.results[0]).toMatchObject({ status: 'PASS', name: '照合の試行' });
+  expect(body.counts).toMatchObject({ PASS: 7, FAIL: 0 });
+  expect(run('--wait-seconds', '60', '--interval-seconds', '1').status).toBe(2);
+  expect(run('--wait-seconds', '-1').status).toBe(2);
+  const missing = spawnSync(
+    process.execPath,
+    ['--import', 'tsx', 'tools/ops/cli/check-release.ts', '--url', origin],
+    { encoding: 'utf8', env },
+  );
+  expect(missing.status).toBe(2);
+  expect(missing.stderr).toContain('--dist');
 });

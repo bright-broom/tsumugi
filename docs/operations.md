@@ -305,6 +305,9 @@ Vercel の Git 配備は静的検査だけで全項目のレポートを持た�
 - 不一致のパスを確認し、古い版・配信の一部混在・ビルド条件差を切り分ける。コマンドはデプロイ・切戻し・ファイル削除を行わない。
 - 同じコミットからの再ビルドでも、実測証跡の有無で works.html が変わることがある。配備に使用した実物と比較し、GitのSHAだけで同一内容とみなさない。
 - 配備IDとcommitの対応、余分な公開ファイル、ヘッダー・画面の動作はこの検査だけでは確認できない。check:live・monitorと併用する。[ADR 0068](architecture/0068-release-content-verification.md)。
+- 配備の切替を待つ場合は `--wait-seconds 900 --interval-seconds 30` のように指定する。全件一致するまで繰り返し、期限切れは最後の結果をFAILとして記録する。`--url` を省略すると `SITE_URL`、なければ監視と同じ自社公開先を使う。
+- GitHub Actions の Release check が、main への push 後（最大15分待つ）と毎日6:41に、main のビルドと本番を照合する。失敗は本番が main と異なるか、取得できなかったことを示す。自動の配備・巻き戻しはしない。[ADR 0076](architecture/0076-release-drift-check.md)。
+- プロキシ経由でしか外部へ出られない環境では、Node の fetch は既定でプロキシを使わず全件「fetch failed」になる。`NODE_USE_ENV_PROXY=1` を付けて実行する（Node 24.5以降）。
 
 ### 配信ヘッダーの確認
 
