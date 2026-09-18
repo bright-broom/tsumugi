@@ -3,6 +3,7 @@
  * 顧客ごとに 1 ファイル。案件の状態は遷移表と、遷移ごとの前提条件（見積・契約・承認・納品チェック・引渡し）で検査する。
  * 他の顧客の情報を読めない権限は未実装。ファイルを分け、読み込み時に顧客 ID を照合する。
  */
+import type { EstimateVersion } from '../estimate/model';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'zod';
@@ -237,11 +238,14 @@ export function addProject(
 export function linkEstimate(
   file: CustomerFile,
   projectId: string,
-  ref: { estimateId: string; version: number },
+  estimate: EstimateVersion,
   m: Meta,
 ) {
   const p = findProject(file, projectId);
   editable(p);
+  if (estimate.input.customerId !== file.customerId || estimate.input.projectId !== projectId)
+    throw new OpsError('見積の顧客・案件が一致しません。帰属のない旧見積は紐付けできません');
+  const ref = { estimateId: estimate.input.estimateId, version: estimate.version };
   if (p.estimates.some((e) => e.estimateId === ref.estimateId && e.version === ref.version))
     throw new OpsError('この見積の版は紐付け済みです');
   return withProject(

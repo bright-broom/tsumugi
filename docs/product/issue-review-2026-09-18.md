@@ -1,5 +1,17 @@
 # 残存Issueの再整理 — 2026-09-18
 
+## 案件進行時の再確認
+
+残存32件の本文は前回から変更なし。追加で不要・完了とする根拠はなく維持。#27/D04で、紐付け後の見積欠落や古い参照を検出せず案件を進められる不足を優先した。見積提出・契約済み・制作中への進行と状況表示で参照を再検証する（[ADR0074](../architecture/0074-crm-transition-estimate-validation.md)）。
+
+## 見積照合と公開反映の再確認
+
+PR #85のmainマージを確認。#40は実公開のworks/spec両ページで非公開表示と閲覧不可リンクの除去を確認できたため完了。残存は32件。その他は未完了条件を維持し、次は#27/D04の見積と顧客・案件の取り違え防止をPR #86へ追加する（[ADR0073](../architecture/0073-estimate-customer-project-binding.md)）。
+
+## 社内データの競合対策時の再確認
+
+残存33件の本文に前回から変更なし。追加クローズの根拠はなく、#26/#27に関係するD02の同時更新での上書きを優先。社内7CLIの読み込みから保存までの排他を実装する。認証認可・共有ストレージ・HTTPサービス対応は残す（[ADR0072](../architecture/0072-local-ops-command-lock.md)）。
+
 ## 監視強化時の再確認
 
 残存33件を取得し、前回の更新済み本文から変更がないことを確認。新たな完了・不要判定の根拠はないため追加クローズは行わない。#32の直接参照CSS・画像の欠落検出を優先して実装する。監視停止の独立検知・通知到達等は継続。[ADR0071](../architecture/0071-referenced-asset-monitoring.md)。
@@ -33,15 +45,15 @@ PR #82〜84はMERGEDでも、マージ先が中間ブランチだった。開始
 | [#20](https://github.com/bright-broom/tsumugi/issues/20) | 継続 | 声のモデル・許諾/依頼表示・公開条件の検査は実装済み。実際の許諾・担当者確認・撤回運用が残る（C07）。 |
 | [#21](https://github.com/bright-broom/tsumugi/issues/21) | 継続 | 業種別CTAと外部予約/電話等の設定基盤は実装済み。採用予約先の契約・実接続と代替導線の顧客受入が残る（C07）。 |
 | [#22](https://github.com/bright-broom/tsumugi/issues/22) | 継続 | 店舗/例外営業時間・構造化データは実装済み。GBPとの実情報照合、日付境界での再生成・公開運用が残る（C08）。 |
-| [#23](https://github.com/bright-broom/tsumugi/issues/23) | 継続 | 日本語以外のカタログ・URL・SEO・翻訳確認は未実装。多言語の準備中表示と見積発行制御はPR#82に実装されたが、監査開始時main未反映（C02/C03）。 |
+| [#23](https://github.com/bright-broom/tsumugi/issues/23) | 継続 | 日本語以外のカタログ・URL・SEO・翻訳確認は未実装。多言語の準備中表示と見積発行制御はPR#82に実装されたが、PR#85でmain反映済み（C02/C03）。 |
 | [#24](https://github.com/bright-broom/tsumugi/issues/24) | 継続 | CSV検証・評価・重複排除・出力CLIは実装済み。実際の入力元・利用条件・運用責任者が未決（D08）。 |
 | [#26](https://github.com/bright-broom/tsumugi/issues/26) | 継続 | 依頼・時間・月次集計CLIと無償修補の除外はmain実装済み（PR#81）。顧客用注釈UI・安全な添付・認証認可・完了連絡が残る（D01/D02）。 |
-| [#27](https://github.com/bright-broom/tsumugi/issues/27) | 継続 | 顧客/案件/契約/引渡し記録CLIは実装済み。利用者の認証認可、同時更新、見積との照合・実移管の確認が残る（D02/D04/D06）。 |
+| [#27](https://github.com/bright-broom/tsumugi/issues/27) | 継続 | 顧客/案件/契約/引渡し記録CLIは実装済み。ローカルCLIの同時更新対策はPR#86に追加。利用者の認証認可、共有環境での競合、見積との照合・実移管の確認が残る（D02/D04/D06）。 |
 | [#28](https://github.com/bright-broom/tsumugi/issues/28) | 継続 | 出所・欠損を区別する指標CSV取込は実装済み。顧客が認めた実データ源・定期取得と欠損通知が残る（D07）。 |
 | [#29](https://github.com/bright-broom/tsumugi/issues/29) | 継続 | 月次Markdown/HTML下書き、欠損・前月比較・修補除外は実装済み。実データ接続、担当者承認と限定共有の運用が残る（D07）。 |
 | [#30](https://github.com/bright-broom/tsumugi/issues/30) | 継続 | GBP情報の差分・下書き・承認・実施記録CLIは実装済み。実アカウント、責任者、実反映と確認が残る（D08）。 |
-| [#31](https://github.com/bright-broom/tsumugi/issues/31) | 継続 | bundleバックアップと復元CLIあり。PR#83で既存復元先の誤削除を修正しMac/Linuxで復元成功。開始時main未反映。独立保管先・非公開業務データ・定期運用/通知が残る（A08）。 |
-| [#32](https://github.com/bright-broom/tsumugi/issues/32) | 継続 | 直接参照CSS・画像のHEAD検査をPR #85に追加。main反映、CSS内部等、独立監視・通知到達・Search Consoleの確認は残る。 |
+| [#31](https://github.com/bright-broom/tsumugi/issues/31) | 継続 | bundleバックアップと復元CLIあり。PR#83で既存復元先の誤削除を修正しMac/Linuxで復元成功。PR#85でmain反映済み。独立保管先・非公開業務データ・定期運用/通知が残る（A08）。 |
+| [#32](https://github.com/bright-broom/tsumugi/issues/32) | 継続 | 直接参照CSS・画像のHEAD検査をPR #85に追加。main反映済み。CSS内部等、独立監視・通知到達・Search Consoleの確認は残る。 |
 | [#33](https://github.com/bright-broom/tsumugi/issues/33) | 継続 | 権限関数・保持期限・監査のコアは実装済み。実認証主体との接続、永続化、定期実行、委託先/表示との照合が残る（C06）。 |
 | [#34](https://github.com/bright-broom/tsumugi/issues/34) | 完了・クローズ | レポートの日時・commit・成果物指紋・種別・FAIL数を保持し、別commit/失敗/未確認のレポートを表示しない実装と結合テストがmainにある。通常Git配備は「—」、LCPは記録日付き。配備ID照合は別のA05として追跡する。 |
 | [#35](https://github.com/bright-broom/tsumugi/issues/35) | 継続 | 20項目の自動/人/外部検査対応は実装済み。人・外部確認18項目の証跡が未記入。自動テストで検収済みと代替しない（B01）。 |
@@ -49,7 +61,7 @@ PR #82〜84はMERGEDでも、マージ先が中間ブランチだった。開始
 | [#37](https://github.com/bright-broom/tsumugi/issues/37) | 完了・クローズ | macOSで再生成25ファイルが既存画像と一致。別OS移行は元Issueの必須条件ではない。 |
 | [#38](https://github.com/bright-broom/tsumugi/issues/38) | 継続 | 実績モデルと公開条件は実装済み。許諾済み実案件・実測値の入稿待ち（C07）。 |
 | [#39](https://github.com/bright-broom/tsumugi/issues/39) | 継続 | 下書きと承認条件は実装済み。専門家による実確認と指紋・版・日付の記録が残る（B02）。 |
-| [#40](https://github.com/bright-broom/tsumugi/issues/40) | 公開反映待ち | 非公開表示とリンク除去をPR #85に実装。main統合・実公開での確認は未完了。 |
+| [#40](https://github.com/bright-broom/tsumugi/issues/40) | 完了・クローズ | PR #85のmain統合と実公開works/specで非公開表示・リンク除去を確認。 |
 | [#41](https://github.com/bright-broom/tsumugi/issues/41) | 集約・クローズ | 旧監査の集約Issueは、個別Issueとdocs/product/feature-audit-2026-09-18.mdおよび今回の再整理一覧へ集約。子Issueの未完了条件は維持するため、二重の一覧管理だけを終了する。 |
 | [#55](https://github.com/bright-broom/tsumugi/issues/55) | 継続 | 親計画は継続。#61/#62/#63と基盤検査の完了を整理。#12/#56/#57/#58/#59/#60/#64の残条件を個別Issueで追跡する。 |
 | [#56](https://github.com/bright-broom/tsumugi/issues/56) | 継続 | 手書きJSのTS化と図解React化は実装済み。装飾HTML/rawの整理、フォント・メニュー操作と実行時JS0の設計が残る（D10/D11）。 |

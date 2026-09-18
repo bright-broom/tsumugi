@@ -8,6 +8,14 @@ Next.js・React・TypeScriptで構築し、22ページを静的HTMLとして配�
 
 [AI・開発者の引き継ぎ](AGENTS.md) · [再開手順](docs/handoff.md) · [開発を始める](#開発を始める) · [構成を見る](#ディレクトリ構成) · [編集する場所](#変更したいときの入口) · [現在の状態](docs/status.md) · [資料一覧](docs/README.md)
 
+## 現在の提供範囲
+
+自社サイトは [tsumugi-six.vercel.app](https://tsumugi-six.vercel.app/) で公開し、問い合わせは電話・メールで案内します。自社の問い合わせフォーム・オンライン決済・契約締結は設けていません。独自ドメイン取得は自社公開の前提にしません（[公開判断](docs/architecture/0056-owner-authorized-publication.md)）。
+
+CMS・追加言語などは準備中です。顧客向けフォームのコア実装や社内CLIがあることと、サービスを提供できることは区別します。機能ごとの不足は [機能監査](docs/product/feature-audit-2026-09-18.md)、Issueの判断は [再整理一覧](docs/product/issue-review-2026-09-18.md)、直近の検証・main反映状況は [現状と残課題](docs/status.md) を参照してください。
+
+自社リポジトリは非公開です。顧客へのソース納品・閲覧招待は、自社サイトのソース公開とは別に扱います。
+
 ## 全体像
 
 Reactはビルド時にHTMLを作ります。閲覧者にはHTML・CSS・画像を届け、リンクやメニューはブラウザ標準の機能で動かします。
@@ -76,10 +84,14 @@ flowchart TD
 │   ├── design/                 全ページの変更前後比較
 │   ├── verify/                 納品物の検査・ブラウザ実測
 │   ├── pricing/                事業の料金・工数モデル
+│   ├── ops/                    社内CLI・公開監視・バックアップ
+│   ├── security/               静的配信とブラウザの安全性検査
 │   └── paths.ts                ルートと生成物の共通パス
+├── services/inquiry/           顧客向け受付のコア（本番接続は未完了）
 ├── config/                     ESLint・Knip・Vitest・Prettierの設定
 ├── docs/                       開発・仕様・設計判断・事業資料
 ├── .github/                    CI・Dependabot
+├── .data/                      社内ツールの業務データ（Git管理外）
 ├── .artifacts/                 レポート・検査画像（Git管理外）
 ├── out/                        静的な納品物（Git管理外）
 └── .next/                      Next.jsの生成物（Git管理外）
@@ -181,7 +193,7 @@ flowchart TD
   og -->|画像生成時に使用| image["OGP画像"]
 ```
 
-トークンを変更したら `npm run tokens`、CSSのコンパイルだけなら `npm run styles` を使います。`npm run dev` はテーマ生成とCSS監視も起動します。OGP画像の再生成には書体環境の条件があるため、実行前に [残課題](docs/status.md#c-開発の基盤) を確認してください。
+トークンを変更したら `npm run tokens`、CSSのコンパイルだけなら `npm run styles` を使います。`npm run dev` はテーマ生成とCSS監視も起動します。OGP画像の再生成には書体環境の条件があるため、実行前に [OGPの環境条件](docs/architecture/0047-og-image-environment.md) を確認してください。
 
 ## 開発を始める
 
@@ -226,15 +238,17 @@ flowchart TD
 | `npm run lint`         | コードの規約                                             |
 | `npm test`             | アプリと開発基盤の単体テスト                             |
 | `npm run test:pricing` | 事業の料金・工数モデル                                   |
-| `npm run validate`     | check・lint・両単体テスト → ビルド → 静的検査            |
-| `npm run verify`       | 生成済みの `out/` をブラウザ実測も含めて検査             |
+| `npm run validate`     | check・lint・両単体テスト → ビルド → 安全性・静的検査            |
+| `npm run verify`       | 生成済みの `out/` をブラウザ実測も含めて検査（既定はプレビュー） |
+| `npm run verify -- --mode production` | 本番の公開条件を含めた全項目検査 |
+| `npm run test:security-browser` | ブラウザでCSPの正常表示・攻撃遮断を検査 |
 
 変更を出す前は次の順で確認します。`verify` 自体はビルドを行いません。
 
 ```sh
 npm run validate
 PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium  # 初回・Playwright更新時
-npm run verify
+npm run verify -- --mode production
 ```
 
 検査の条件は [仕様](docs/spec.md)、直近の検証結果と既知の警告は [現在の状態](docs/status.md) に集約しています。FAILがある場合は納品しません。JSON-LDは構造化データとして許容し、それ以外の実行時スクリプトの混入を検査します。
@@ -252,14 +266,30 @@ flowchart TD
   preview --> review
   review --> merge["mainへマージ"]
   merge --> deploy["Vercelの本番デプロイ"]
-  deploy --> launch["正式公開<br/>事業者情報・フォーム・独自ドメイン等を確認"]
+  deploy --> launch["公開後の確認<br/>配信内容・連絡先・ヘッダー・参照資産"]
 ```
 
 VercelはRoot Directoryを未指定（リポジトリルート）とし、`npm run validate` で作った `out/` を配信します。手動プレビューは `npm run deploy:preview`。配備設定は [vercel.json](vercel.json)、公開手順は [運用ガイド](docs/operations.md) を参照してください。
 
-**現在は正式公開に向けた準備中です。** 事業者情報・ドメインには仮の値があり、問い合わせフォームの送信先は未設定です。検査の合格やデプロイの成功は、これらの設定完了を意味しません。機能ごとの未実装・設定待ち・運用未確認は [監査一覧 #41](https://github.com/bright-broom/tsumugi/issues/41) で追跡しています。
+専門家による契約文面確認と人による受入確認は未完了です。紬の自社公開に限るオーナー判断を本番検査のWARNに残し、確認済みとは扱いません。顧客テンプレートへ転用する場合は `OWNER_PUBLICATION=null` に戻し、顧客案件の公開・納品条件で検証します。プレビュー成功・mainへのマージ・実公開の確認はそれぞれ別の証跡です。
 
 全22ページの役割、共通化する情報と各ページに残す条件は [情報設計](docs/product/information-architecture.md) にまとめています。
+
+## 公開後の運用と社内ツール
+
+| 用途 | コマンド・入口 |
+| --- | --- |
+| 公開先のページ・ヘッダー・直接参照するCSS/画像の確認 | `npm run check:live -- --url <公開URL>` |
+| 定期監視と同じ検査 | `npm run monitor -- --url <公開URL>` |
+| 公開に使った成果物と配信内容の照合 | `npm run check:release -- --url <公開URL> --dist <成果物のディレクトリ>` |
+| Gitのバックアップと復元リハーサル | `npm run backup` / `npm run backup:restore-test -- --backup <バックアップ先>` |
+| 見積・依頼/工数・CRM・指標・月次レポート・営業リスト・GBP | [社内CLIの使い方](tools/ops/README.md) |
+
+監視の実行先・通知到達、独立したバックアップ保管先、非公開業務データの保全は個別に確認します。Gitのバックアップだけで業務データまで復元できるとは扱いません。設定と復旧手順は [運用ガイド](docs/operations.md) を参照してください。
+
+社内CLIのデータは `.data/`、`.artifacts/` またはリポジトリ外に保存します。同じ保存先への操作は排他制御し、競合時は保存せず停止します。強制終了後のロックは自動削除せず、手順に従って実行元の停止を確認します。
+
+新規見積の保存には顧客・案件IDが必要です。CRMへの紐付けと、見積提出・契約済み・制作中への進行時に実ファイル・番号・版・顧客・案件を照合します。帰属のない旧データは自動移行しません。CLIの検査は利用者の認証・権限管理の代わりにはなりません。詳細は [ADR0072](docs/architecture/0072-local-ops-command-lock.md)・[0073](docs/architecture/0073-estimate-customer-project-binding.md)・[0074](docs/architecture/0074-crm-transition-estimate-validation.md) に記録しています。
 
 ## 目的別のドキュメント
 

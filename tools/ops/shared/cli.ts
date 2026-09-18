@@ -1,7 +1,8 @@
 /** 社内ツールの CLI の共通部分。`--name value` と `--flag` だけを受け付ける。 */
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { OpsError } from './store';
+import { OpsError, resolveDataDir } from './store';
+import { withDataLock } from './lock';
 
 export class Args {
   private readonly values = new Map<string, string[]>();
@@ -72,7 +73,7 @@ export function runCli(usage: string, commands: Record<string, Command>): void {
     return;
   }
   try {
-    command(args);
+    withDataLock(resolveDataDir(args.optional('data')), () => command(args));
   } catch (error) {
     if (!(error instanceof OpsError)) throw error;
     console.error(`エラー: ${error.message}`);
