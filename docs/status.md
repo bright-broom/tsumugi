@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-18（AI共通の引き継ぎ情報を整理）
+- 最終更新：2026-09-18 20:40 JST（本番反映の確認と、本番と main の自動照合を追加）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -10,7 +10,27 @@
 
 ## 現状
 
-### 再開ポイント（2026-09-18 19:55〜20:05 JST確認）
+### 再開ポイント（2026-09-18 20:15〜20:40 JST確認）
+
+- checkout は `/Users/toshikisakuta/dev/tsumugi-wt/store`。作業ブランチ `feat/release-drift-check`（`origin/main` = `79f2983` から作成、upstream なし）。実装コミット `3d93d8b7fa185d94b4c8295442cb1d03eba6b3f3`。**未 push・PR 未作成**：この作業環境のサンドボックスが GitHub への SSH と `gh` の設定読み込みを遮断したため。再開時は `git push -u origin feat/release-drift-check` → main 向け PR を作成し、PR の validate・Vercel と最新 head の結果を確認する。
+- **PR #87（新料金）は main に統合済み。** 2026-09-18 20:14 JST に取得した追跡情報で `origin/main = 79f29830ac51191d9958bc41f57d31c0a4896004`（Merge pull request #87、20:11 JST）。merge commit のツリーは `b7beee1` と同一。その後の fetch は上記の遮断で失敗したため、20:14 以降の main の変化は未確認。
+- **本番は新料金の内容で配信されている。** 同じツリーからクリーンにビルドした `out/` で `check:release` を実行し、52ファイル＋トップ `/` が本番とSHA-256で全件一致（**PASS 54 / FAIL 0**、指紋 `fd3311c2…`）。料金・規約・OGP画像を含む。`price.html` の取得本文に 100,000 / 250,000 / 450,000 円があり、79,800 / 99,800 / 198,000 円はない。配備ID・production alias の API 照合ではない。
+- `check:live` は **PASS 15 / FAIL 2**。FAIL は DNS 解決と TLS 直結で、サンドボックスが直接の名前解決・443接続を禁止し、プロキシ経由だけ通すため。本番の障害とは判断していない。DNS・証明書・HTTP→HTTPS 転送はこの環境では**未確認**。
+- 次の一手：上記ブランチの push・PR・統合後、GitHub Actions の Release check（push 時と毎日 6:41 JST）の初回成功を確認する。その後は status に「本番反映は未確認」を手で書く代わりに、Release check の結果を引用する。料金の原価仮定の実績検証、残存 Issue の再確認（今回 GitHub に接続できず件数は未確認）は従来どおり。
+
+### 本番反映の確認と、本番と main の自動照合（2026-09-18）
+
+これまで PR 統合のたびに「本番反映は未確認」が残り、手作業の `check:release` まで本番と main の一致が分からなかった。毎時の Site monitor は死活・ヘッダー・資産を見るが本文・価格の古さを検出せず、`deploy:production`（`vercel --prod`）は main を経由しない配備もできる。そこで main のビルドと本番の全ファイル照合を GitHub Actions に組み込んだ（[ADR0076](architecture/0076-release-drift-check.md)）。
+
+- `.github/workflows/release-check.yml`：main への push 後は Vercel の切替を最大900秒・30秒間隔で待ち、毎日 6:41 JST と手動でも実行。公開先は `SITE_URL`、未設定なら自社公開判断の DOMAIN。証跡 JSON を30日保存。自動の配備・巻き戻しはしない。
+- `waitForRelease` と `check:release --wait-seconds/--interval-seconds`、URL 省略時の既定。入力の誤りは再試行しない。
+- 検証：型・構造・lint 成功。Vitest **666件**（新規5テスト）・料金12件・build・セキュリティ・静的 **PASS 332 / WARN 1 / FAIL 0** 成功。Vitest は既定の並列度では負荷平均約8の端末で、今回未変更の子プロセス系テスト（見積・依頼・バックアップのCLI）が5秒のタイムアウトに2〜3件かかり、実行ごとに対象が入れ替わった。単独実行と `--maxWorkers=3` では全件合格。CI の既定並列での結果は PR で確認する。
+- 実本番に新CLI（URL省略・待機付き）で **PASS 55 / FAIL 0**（1回目で一致）。模擬配信の故障注入：配信中の price.html を12秒後に正しい版へ差し替えると4回目（15秒）で一致し終了0。古いままなら期限で止め、不一致ページを示して終了1。
+- 公開出力は変更前ビルドと52ファイル全て一致（サイトのコード・価格・CSS・依存は未変更）。`verify --mode production` はサンドボックスが localhost の待受を禁止したため**未実行**。出力が不変のため PR の CI（ci.yml の本番モード検査）で確認する。
+- 実行環境：macOS・**Node 25.2.1・npm 11.6.2**（プロジェクト指定の Node 24 / npm 12 は nvm 配下を読めず使えなかった）。それでも出力が Vercel の本番とバイト一致したため、ビルド出力は Node の版に依存していない。プロキシ環境では Node の fetch に `NODE_USE_ENV_PROXY=1` が必要（AGENTS.md のはまりどころに追記）。
+- 証跡（Git 管理外）：`.artifacts/prod-release-0918/`（release.json・live-check.json・dist）、`.artifacts/release-drift/`（validate.log・tests-maxworkers3.log・pricing.log・static.log・live-release.json・fault-switch.json・fault-stale.json・production.log）。
+
+### 再開ポイント（2026-09-18 19:55〜20:05 JST確認・履歴）
 
 - 作業リポジトリ：`bright-broom/tsumugi`（Private）。今回のcheckoutは `/Users/toshikisakuta/dev/tsumugi-wt/store`、ブランチ `feat/pricing-reset`。ミラーの `sources/` は編集しない。
 - 料金実装：`2a9b0cbd186be6192a6499d78a8b8ebc41892423`。同SHAをremote branchで確認済み。[PR #87](https://github.com/bright-broom/tsumugi/pull/87) はOPEN、20:05 JSTに同SHAのGitHub validate・VercelのSUCCESSを確認。これは料金実装コミットの結果であり、後続の文書コミットのチェック結果ではない。再開時に最新headの結果を再取得する。
