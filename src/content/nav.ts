@@ -1,5 +1,5 @@
 import { getMessages } from '@/i18n/catalog';
-import { ALL_ROUTES, INDUSTRY_ROUTES, ROUTES, type Route } from '@/routing/registry';
+import { ALL_ROUTES, INDUSTRY_ROUTES, ROUTES, type Route, type RouteId } from '@/routing/registry';
 import type { IconName } from '@/lib/icons';
 import {
   SITE_COLLECTIONS,
@@ -30,6 +30,14 @@ export const INDUSTRIES: [string, string, string][] = INDUSTRY_ROUTES.map((r) =>
 export const IND_IC: Record<string, IconName> = Object.fromEntries(
   INDUSTRY_ROUTES.map((r) => [r.file, r.icon]),
 );
+
+/** Links to detail pages reuse the navigation label and icon, so the wording never drifts. */
+export function routeLinks(ids: readonly Exclude<RouteId, '404'>[]) {
+  return ids.map((id) => {
+    const { path, icon } = ROUTES[id];
+    return { id, path, icon, label: copy.labels[id] as string };
+  });
+}
 
 // Group membership is shared by the expanded header menu and footer.
 const GROUP_ROUTES = {

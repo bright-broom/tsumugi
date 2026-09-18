@@ -406,6 +406,9 @@
   .home-faq .acc + .acc {
     @apply mt-[0];
   }
+  .home-faq .route-links {
+    @apply col-[2];
+  }
   .home-faq .acc > summary {
     @apply py-[24px] px-[0] min-h-[76px] leading-[1.7];
   }
@@ -582,6 +585,13 @@
   }
   .home-contact .btn-2:hover {
     @apply bg-main text-sub;
+  }
+  .home-contact .route-links,
+  .home-contact .route-links a {
+    @apply text-sub border-[color-mix(in_srgb,_var(--color-sub)_30%,_transparent)];
+  }
+  .home-contact .route-links a:hover {
+    @apply underline underline-offset-[4px];
   }
   .home-section.home-contact :where(a, summary):focus-visible {
     outline-color: var(--color-sub);

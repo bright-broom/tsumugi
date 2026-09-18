@@ -20,6 +20,7 @@ import Cards from '@/components/Cards';
 import Calc from '@/components/Calc';
 import Entry from '@/components/Entry';
 import Icon from '@/components/Icon';
+import RouteLinks from '@/components/RouteLinks';
 import type { PageProps } from '@/content/page-props';
 import { HOME_HERO } from '@/content/hero';
 
@@ -175,6 +176,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
             {copy.dim2}
             <a href={href('price')}>{copy.a}</a>
           </p>
+          <RouteLinks ids={['price', 'plans']} />
         </Section>
 
         <Section
@@ -225,6 +227,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               {copy.btn3}
             </ActionLink>
           </div>
+          <RouteLinks ids={['source', 'spec']} />
         </Section>
 
         {/* 比較の期間・外部費・更新範囲を明示し、条件を確認できるようにする。 */}
@@ -316,6 +319,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               {copy.p10}
             </p>
           </Acc>
+          <RouteLinks ids={['cost-cut', 'price']} />
         </Section>
 
         <Section
@@ -394,6 +398,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           lede={copy.lede9}
         >
           <FaqList entries={copy.questions} />
+          <RouteLinks ids={['faq']} />
         </Section>
 
         <Section
@@ -430,6 +435,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               {copy.btn6}
             </ActionLink>
           </div>
+          <RouteLinks ids={['flow', 'works', 'about', 'contact']} />
         </Section>
       </div>
     </Base>
