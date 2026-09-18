@@ -1,0 +1,29 @@
+# 受付サービスの配備設定の例（ADR 0079）。コピーして wrangler.toml にし、値を実際のものに置き換える。
+# 鍵（LINE_CHANNEL_ACCESS_TOKEN）と担当者の対応表（STAFF_ACCESS）は `wrangler secret put` で登録し、ファイルに書かない。
+name = "inquiry"
+main = "worker.ts"
+compatibility_date = "2026-09-01"
+
+[vars]
+SITE_ORIGIN = "https://example.jp"
+# ALLOWED_ORIGINS = "https://www.example.jp"
+MAIL_FROM = "notify@example.jp"
+MAIL_TO = "staff@example.jp"
+LINE_TO = "Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+ACCESS_TEAM_DOMAIN = "example.cloudflareaccess.com"
+ACCESS_AUD = "Access アプリケーションの AUD タグ"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "inquiry"
+database_id = "wrangler d1 create inquiry の出力"
+migrations_dir = "migrations"
+
+# 担当者のメールへだけ送る（Email Routing で確認済みの宛先）
+[[send_email]]
+name = "NOTIFY_EMAIL"
+destination_address = "staff@example.jp"
+
+# 5 分ごとに期限の来た通知を送り、失敗・遅延を記録する
+[triggers]
+crons = ["*/5 * * * *"]

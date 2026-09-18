@@ -172,3 +172,5 @@
 - [0076 — 本番の配信内容と main のビルドを自動で照合する](0076-release-drift-check.md)
 
 - [0078 — 請求書と入金を社内 CLI で記録する](0078-invoices-and-payments.md)
+
+- [0079 — 問い合わせ受付を Cloudflare Workers ＋ D1 に配備できるようにする](0079-inquiry-service-on-workers.md)
