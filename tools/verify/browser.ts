@@ -46,6 +46,16 @@ function run<T>(page: Page, fn: string, arg?: unknown): Promise<T> {
   return page.evaluate(`(${fn})(${arg === undefined ? '' : JSON.stringify(arg)})`) as Promise<T>;
 }
 
+/** CSPのunsafe-evalを要求せず、検査側でCSSの読込みを待つ。 */
+async function waitForStyles(page: Page): Promise<void> {
+  const deadline = Date.now() + 5000;
+  while (Date.now() < deadline) {
+    if (await run<boolean>(page, JS.STYLES_READY)) return;
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+  throw new Error(`theme.css did not become ready: ${page.url()}`);
+}
+
 const need = (large: boolean) => (large ? CONTRAST_LARGE : CONTRAST_BODY);
 
 /** 27 図解の文字も、SVG 上の値ではなく画面上の実寸で下限を測る（図のあるページだけ記録する） */
@@ -114,7 +124,7 @@ export async function checkBrowser(
         await pg.goto(`${base}/${cf}`, { waitUntil: 'domcontentloaded' });
         // Static pages have no deferred scripts to delay DOMContentLoaded until CSS is ready.
         // Measuring earlier intermittently counted hidden navigation and fallback-font text.
-        await pg.waitForFunction(`(${JS.STYLES_READY})()`, undefined, { timeout: 5000 });
+        await waitForStyles(pg);
         await pg.evaluate(() => document.fonts.ready.then(() => undefined));
         for (const c of await run<{ sel: string; ratio: number; size: number; large: boolean }[]>(pg, JS.CONTRAST)) {
           const req = need(c.large);
@@ -136,7 +146,7 @@ export async function checkBrowser(
       await mp.route('**/*', blockExternal);
       for (const f of pages(dist)) {
         await mp.goto(`${base}/${f}`, { waitUntil: 'domcontentloaded' });
-        await mp.waitForFunction(`(${JS.STYLES_READY})()`, undefined, { timeout: 5000 });
+        await waitForStyles(mp);
 
         const ov = await run<{ doc: number; view: number; offenders: unknown[] }>(mp, JS.OVERFLOW);
         const clean = !ov.offenders.length;

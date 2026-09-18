@@ -122,6 +122,31 @@ describe('端数', () => {
 });
 
 describe('版と差額', () => {
+  it('料金改定後も保存済みの旧見積金額を維持し、新版にだけ新料金を使う', () => {
+    const oldCatalog: PriceCatalog = {
+      ...siteCatalog(),
+      production: siteCatalog().production.map((p) =>
+        p.key === 'basic' ? { ...p, price: 198000 } : p,
+      ),
+      support: siteCatalog().support.map((p) =>
+        p.key === 'run_basic' ? { ...p, price: 9800 } : p,
+      ),
+    };
+    const old = appendVersion(null, input(), { ...saveOpts, catalog: oldCatalog });
+    const saved = JSON.stringify(old);
+    const revised = appendVersion(old, input(), saveOpts);
+    expect(JSON.stringify(old)).toBe(saved);
+    expect(revised.versions[0]!.result.initialSubtotal).toBe(198000);
+    expect(revised.versions[0]!.result.monthlySubtotal).toBe(9800);
+    expect(revised.versions[1]!.result.initialSubtotal).toBe(250000);
+    expect(revised.versions[1]!.result.monthlySubtotal).toBe(12000);
+    const oldDocument = renderMarkdown(
+      estimateDocument(revised.versions[0]!, { today: saveOpts.today }),
+    );
+    expect(oldDocument).toContain('198,000円');
+    expect(oldDocument).not.toContain('250,000円');
+  });
+
   it('版を重ね、同じ内容や期限切れは保存しない', () => {
     const v1 = appendVersion(null, input(), saveOpts);
     expect(v1.versions.map((v) => v.version)).toEqual([1]);
@@ -197,11 +222,11 @@ describe('提供準備状態と見積の発行', () => {
 
   it('金額確定の多言語も準備中なら試算に留め、保存を拒否する', () => {
     expect(siteCatalog().options.find((o) => o.key === 'language')).toMatchObject({
-      price: 165000,
+      price: 150000,
       firm: true,
       preparing: true,
     });
-    expect(calculateEstimate(language).optionsSubtotal).toBe(165000);
+    expect(calculateEstimate(language).optionsSubtotal).toBe(150000);
     expect(calculateEstimate(language).blockers).toHaveLength(1);
     expect(() => appendVersion(null, language, saveOpts)).toThrow('受付準備中');
   });

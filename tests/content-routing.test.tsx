@@ -185,8 +185,8 @@ describe('adopted tariff presentation', () => {
     expect(html).toContain('外部');
     expect(html).toContain('30 分');
     expect(html).toContain('90 分');
-    expect(html).toContain('676,800');
-    expect(html).toContain('139,000');
+    expect(html).toContain('808,000');
+    expect(html).toContain('270,200');
     expect(html).not.toContain('type="radio"');
   });
 });
@@ -197,7 +197,7 @@ it('keeps restaurant listing and booking comparisons on the restaurant page only
     const html = renderToStaticMarkup(<Page {...pageProps(route)} />);
     if (route === 'restaurant') {
       expect(html.split(heading)).toHaveLength(2);
-      for (const amount of ['55,000 円', '27,500 円', '14,630 円', '11,000 円', '220 円', '110 円'])
+      for (const amount of ['55,000 円', '27,500 円', '17,050 円', '11,000 円', '220 円', '110 円'])
         expect(html).toContain(amount);
       expect(html).toContain('手数料は、常連さんの予約にもかかります');
       expect(html).toContain('制作費別。任意の支援と外部費を税込で比較');

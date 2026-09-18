@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-16",
+  "version": "2026-09-18",
   "status": "adopted-in-project-pending-release",
   "currency": "JPY",
   "tax": "exclusive",
@@ -19,27 +19,27 @@
     {
       "key": "entry",
       "name": "入口をつくる",
-      "price": 79800,
+      "price": 100000,
       "pages": 1,
-      "hours": 5.5,
+      "hours": 6.5,
       "cashCost": 2000,
       "cashAcquisitionCost": 6000
     },
     {
       "key": "core",
       "name": "事業の土台をつくる",
-      "price": 198000,
+      "price": 250000,
       "pages": 6,
-      "hours": 15,
+      "hours": 18,
       "cashCost": 5000,
       "cashAcquisitionCost": 10000
     },
     {
       "key": "expand",
       "name": "情報を育てる",
-      "price": 398000,
+      "price": 450000,
       "pages": 9,
-      "hours": 26,
+      "hours": 30,
       "cashCost": 10000,
       "cashAcquisitionCost": 20000
     }
@@ -56,44 +56,44 @@
     {
       "key": "care",
       "name": "守る",
-      "price": 3900,
+      "price": 6000,
       "workMinutes": 0,
-      "hours": 0.3,
+      "hours": 0.5,
       "cashCost": 300
     },
     {
       "key": "update",
       "name": "整える",
-      "price": 9800,
+      "price": 12000,
       "workMinutes": 30,
-      "hours": 0.75,
+      "hours": 1,
       "cashCost": 400
     },
     {
       "key": "improve",
       "name": "育てる",
-      "price": 29800,
+      "price": 30000,
       "workMinutes": 90,
-      "hours": 2.25,
+      "hours": 2.5,
       "cashCost": 700
     }
   ],
   "portfolio": {
     "buildCounts": {
       "entry": 0,
-      "core": 1,
-      "expand": 1
+      "core": 2,
+      "expand": 0
     },
     "supportCounts": {
       "self": 0,
-      "care": 10,
-      "update": 16,
-      "improve": 6
+      "care": 6,
+      "update": 12,
+      "improve": 4
     }
   },
   "competitorReference": {
     "url": "https://www.propagateinc.com/web-design",
-    "checkedAt": "2026-09-14",
+    "checkedAt": "2026-09-18",
     "initial": 5000,
     "minimumMonths": 6,
     "monthly": {
@@ -102,5 +102,6 @@
       "expand": 19800
     },
     "note": "ページ数の近い公開料金の参考。更新範囲・制作内容・所有条件は同一ではない。競合の追加実費は見積確認時に加算する。"
-  }
+  },
+  "assumptionsNote": "固定費・決済率・獲得費は実請求未確認の感度分析用。価格の請求内訳ではない。外部費は比較用。"
 }

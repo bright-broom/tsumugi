@@ -133,7 +133,9 @@ flowchart TD
 | レイアウト・装飾・レスポンシブ表示 | [src/styles/](src/styles/)                                                           |
 | SVG 図解の形・座標                 | [src/components/diagrams/](src/components/diagrams/)                                 |
 | ヒーローの元画像                   | [src/assets/hero/](src/assets/hero/)                                                 |
-| 事業の工数・収支の仮定             | [tools/pricing/](tools/pricing/)・[料金設計](docs/business/pricing-redesign-140h.md) |
+| 事業の工数・収支の仮定             | [tools/pricing/](tools/pricing/)・[料金設計](docs/business/pricing-2026-09-18.md) |
+
+[2026-09-18の採用料金](docs/business/pricing-2026-09-18.md)と[改定前の費用総点検](docs/business/cost-review-2026-09-18.md)に、採用料金と改定前の検討経緯、工数試算・外部費の確認事項をまとめています。
 
 事業資料のExcelは価格の写しです。Excelを直してもサイトの料金は変わりません。`out/`、`public/theme.css`、`src/styles/tokens.css` は生成結果なので手で編集しません。
 

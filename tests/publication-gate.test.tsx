@@ -16,7 +16,7 @@ import {
 } from '../tools/verify/publication';
 import type { Result } from '../tools/verify/results';
 
-const TODAY = '2026-09-17';
+const TODAY = '2026-09-18';
 const HASH = 'f'.repeat(64);
 
 /** 公開条件をすべて満たした設定（テスト用の架空の値） */

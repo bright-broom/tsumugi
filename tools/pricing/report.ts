@@ -9,6 +9,7 @@ const report = {
   base: portfolio(model),
   deliveryOverrun25Percent: portfolio(model, { hourMultiplier: 1.25 }),
   extraSupport30Minutes: portfolio(model, { extraMinutesPerSupport: 30 }),
+  combinedStress: portfolio(model, { hourMultiplier: 1.25, extraMinutesPerSupport: 30 }),
   comparisons36Months: model.builds.map((p) => ({
     key: p.key,
     ...customerTotal(model, { buildKey: p.key }),
