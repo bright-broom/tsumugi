@@ -10,7 +10,18 @@
 
 ## 現状
 
-### 再開ポイント（2026-09-18 20:15〜20:40 JST確認）
+### 再開ポイント（2026-09-19確認）
+
+- 作業ブランチ `feat/service-readiness`（`origin/main` = `894664b` から作成）。3コミット：請求・入金（`e426fe8`）、問い合わせ受付の Workers ＋ D1 接続（`547b15a`）、microCMS の取り込み（`b171d1c`）。**未 push**（この作業環境は GitHub への接続がサンドボックスで遮断される）。トップ導線は別ブランチ `feat/home-detail-links`（PR #89）。両方とも `docs/architecture/README.md` と `docs/status.md` に追記しているため、後から統合する側で追記を両方残す。
+- PR #88（本番と main の自動照合）は 2026-09-18 20:41 JST に統合済み。GitHub 上の Release check の初回結果は未確認（同じ照合を手元で再現して PASS 55 / FAIL 0）。
+- オーナー依頼「今日から営業・サービス提供できる状態に、不足機能を全部実装」への対応状況：
+  - **既存商品の受注〜入金**：見積（既存）→ 契約・案件（既存）→ 請求・入金（今回）で、社内の流れは揃った。実際の振込先を `.data/billing/profile.json` に入れるのはオーナー（未記入）。
+  - **フォーム受付（顧客サイト）・CMS（情報を育てる）**：本番用の部品と手順を実装。実配備・実サービスでの確認と、費用・規約の確認が残るため、受付準備中の表示は変えていない。
+  - **多言語**：未着手。ビルド・パス・canonical・hreflang・サイトマップ・検査の全体に関わり、承認済みの翻訳が必要。進め方の判断待ち。
+  - コードで解決しない前提：弁護士確認（規約）、税理士確認（免税事業者の消費税表示）、専門家・受入確認、実電話・実メールの到達確認。
+- 次の一手：ブランチを push して main 向け PR を作り、CI（本番モード検査を含む）を確認する。
+
+### 再開ポイント（2026-09-18 20:15〜20:40 JST確認・履歴）
 
 - checkout は `/Users/toshikisakuta/dev/tsumugi-wt/store`。作業ブランチ `feat/release-drift-check`（`origin/main` = `79f2983` から作成、upstream なし）。実装コミット `3d93d8b7fa185d94b4c8295442cb1d03eba6b3f3`。**未 push・PR 未作成**：この作業環境のサンドボックスが GitHub への SSH と `gh` の設定読み込みを遮断したため。再開時は `git push -u origin feat/release-drift-check` → main 向け PR を作成し、PR の validate・Vercel と最新 head の結果を確認する。
 - **PR #87（新料金）は main に統合済み。** 2026-09-18 20:14 JST に取得した追跡情報で `origin/main = 79f29830ac51191d9958bc41f57d31c0a4896004`（Merge pull request #87、20:11 JST）。merge commit のツリーは `b7beee1` と同一。その後の fetch は上記の遮断で失敗したため、20:14 以降の main の変化は未確認。
