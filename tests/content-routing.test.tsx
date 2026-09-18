@@ -25,7 +25,9 @@ describe('catalog interpolation', () => {
   });
   it('fails on missing own parameters and unsupported locales', () => {
     expect(() => format('{value}', Object.create({ value: 'inherited' }))).toThrow('Missing');
-    expect(() => getMessages('en')).toThrow('Unsupported');
+    // 対応している言語でも、承認済みの翻訳カタログがなければ日本語で代用しない（ADR 0081）
+    expect(() => getMessages('en')).toThrow('No catalog');
+    expect(() => getMessages('fr')).toThrow('Unsupported');
   });
   it('resolves every symbolic link before rendering', () => {
     expect(JSON.stringify(getMessages())).not.toMatch(/@route:|@brand:/);

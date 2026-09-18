@@ -1,3 +1,4 @@
+import { BUILD_LOCALE, type LocaleId } from '@/lib/locale';
 /** 自社サイトの公開判断。専門家確認・顧客への納品検収とは別の記録（ADR 0056）。 */
 export interface OwnerPublication {
   domain: string;
@@ -8,34 +9,40 @@ export interface OwnerPublication {
   deferredChecks: readonly string[];
 }
 
-/** 顧客テンプレートへ転用するときは null に戻す。 */
-export const OWNER_PUBLICATION: OwnerPublication | null = {
-  domain: 'tsumugi-six.vercel.app',
-  ownerNameSha256: 'a28ec82ad9f7f783da153bbdee247fc5ae86c7ccb913573f4bd1eac51b60fa80',
-  authorizedOn: '2026-09-18',
-  evidence: 'docs/architecture/0075-pricing-reset.md',
-  documentHashes: {
-    terms: 'fc7e1aced92c386f057d1d55a6db8df6e7accba9d0c86d98f38cd7014dda1151',
-    legal: '0cdf0b0d82546a5b99d58e11a762955a9b7eec047877cce723f5808ecf46eee2',
+/**
+ * 言語ごとの公開判断（ADR 0081）。ほかの言語は、その言語の文面を確認して別に記録するまで公開判断なし。
+ * 顧客テンプレートへ転用するときは空に戻す。
+ */
+const OWNER_PUBLICATIONS: Partial<Record<LocaleId, OwnerPublication>> = {
+  ja: {
+    domain: 'tsumugi-six.vercel.app',
+    ownerNameSha256: 'a28ec82ad9f7f783da153bbdee247fc5ae86c7ccb913573f4bd1eac51b60fa80',
+    authorizedOn: '2026-09-18',
+    evidence: 'docs/architecture/0075-pricing-reset.md',
+    documentHashes: {
+      terms: 'fc7e1aced92c386f057d1d55a6db8df6e7accba9d0c86d98f38cd7014dda1151',
+      legal: '0cdf0b0d82546a5b99d58e11a762955a9b7eec047877cce723f5808ecf46eee2',
+    },
+    deferredChecks: [
+      'phone',
+      'hours',
+      'address',
+      'price',
+      'primary-contact',
+      'area',
+      'photos',
+      'staff',
+      'cases',
+      'voices',
+      'guides',
+      'mobile-parity',
+      'no-score-chasing',
+      'tap-target',
+      'structured-data',
+      'business-profile',
+      'notifications',
+      'reviews',
+    ],
   },
-  deferredChecks: [
-    'phone',
-    'hours',
-    'address',
-    'price',
-    'primary-contact',
-    'area',
-    'photos',
-    'staff',
-    'cases',
-    'voices',
-    'guides',
-    'mobile-parity',
-    'no-score-chasing',
-    'tap-target',
-    'structured-data',
-    'business-profile',
-    'notifications',
-    'reviews',
-  ],
 };
+export const OWNER_PUBLICATION: OwnerPublication | null = OWNER_PUBLICATIONS[BUILD_LOCALE] ?? null;

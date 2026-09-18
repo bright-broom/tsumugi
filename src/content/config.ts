@@ -2,6 +2,7 @@ import { LCP_SECONDS, LCP_PAGE_COUNT, LCP_RECORDED_ON } from '@/content/measurem
 import { getMessages } from '@/i18n/catalog';
 const copy = getMessages().config;
 import { format } from '@/i18n/format';
+import { BUILD_LOCALE, type LocaleId } from '@/lib/locale';
 /**
  * ブランド設定 ── 連絡先と公開設定。表示用文言は i18n/locales/ja/config.ts に置く。
  */
@@ -76,10 +77,23 @@ export interface LegalApproval {
   reviewerRole: 'attorney' | 'other-expert' | null;
   catalogSha256: string | null;
 }
-export const LEGAL_APPROVALS: Readonly<Record<LegalDocumentId, LegalApproval>> = {
-  terms: { version: null, approvedOn: null, reviewerRole: null, catalogSha256: null },
-  legal: { version: null, approvedOn: null, reviewerRole: null, catalogSha256: null },
+const NOT_APPROVED: LegalApproval = {
+  version: null,
+  approvedOn: null,
+  reviewerRole: null,
+  catalogSha256: null,
 };
+/** 言語ごとの承認。翻訳した文面は、その言語の文面として別に確認・記録する（ADR 0081） */
+const LEGAL_APPROVALS_BY_LOCALE: Partial<
+  Record<LocaleId, Readonly<Record<LegalDocumentId, LegalApproval>>>
+> = {
+  ja: {
+    terms: { version: null, approvedOn: null, reviewerRole: null, catalogSha256: null },
+    legal: { version: null, approvedOn: null, reviewerRole: null, catalogSha256: null },
+  },
+};
+export const LEGAL_APPROVALS: Readonly<Record<LegalDocumentId, LegalApproval>> =
+  LEGAL_APPROVALS_BY_LOCALE[BUILD_LOCALE] ?? { terms: NOT_APPROVED, legal: NOT_APPROVED };
 export function isApprovalRecorded(approval: LegalApproval): boolean {
   return Object.values(approval).every((v) => typeof v === 'string' && v.trim() !== '');
 }
@@ -90,3 +104,10 @@ export function isApprovalRecorded(approval: LegalApproval): boolean {
  * 顧客サイトのソースコードは公開しない（契約した顧客を閲覧権限で招待する）。
  */
 export const SOURCE_REPOSITORY_URL: string | null = null;
+
+/**
+ * Languages this site publishes (ADR 0081). The first is the default at the site root; others are
+ * built separately under their base path and need an approved catalog in i18n/locales/index.ts.
+ * 紬の自社サイトは日本語だけ（未承認の翻訳を公開しない）。
+ */
+export const PUBLISHED_LOCALES: readonly LocaleId[] = ['ja'];

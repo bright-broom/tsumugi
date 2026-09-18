@@ -22,5 +22,7 @@ export default function config(phase: string): NextConfig {
       },
     };
   }
-  return { output: 'export' };
+  // 追加言語は別の出力先でビルドし、out/<言語>/ へ統合する（tools/scripts/build-locales.ts、ADR 0081）
+  const distDir = process.env.NEXT_DIST_DIR;
+  return { output: 'export', ...(distDir ? { distDir } : {}) };
 }

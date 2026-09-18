@@ -177,3 +177,5 @@
 
 - [0080 — 記事・事例を microCMS から取り込んで静的に公開する](0080-microcms-content-source.md)
 - [0077 — トップの各セクションから詳細ページへつなぐ](0077-home-detail-links.md)
+
+- [0081 — 言語をビルドごとに選び、追加言語を /<言語>/ 配下に公開する](0081-build-time-locales.md)

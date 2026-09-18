@@ -27,4 +27,5 @@ jobs:
       - run: npm run validate
       - run: npx playwright install --with-deps chromium
       - run: npm run verify -- --mode production
+      - run: npm run verify:locales -- --mode production
       - run: npm run test:security-browser

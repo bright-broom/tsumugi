@@ -23,6 +23,7 @@ import { resolveMode } from './publication';
 import { artifactFingerprint, buildReport, printReport } from './report';
 import { R, rec } from './results';
 import { checkStatic } from './static';
+import { BUILD_LOCALE, DEFAULT_LOCALE } from '@/lib/locale';
 
 import { ROOT, VERIFICATION_DIR } from '../paths';
 const argv = process.argv.slice(2);
@@ -32,7 +33,13 @@ const arg = (flag: string, fallback: string) => {
 };
 const DIST = resolve(arg('--dist', join(ROOT, 'out')));
 const STATIC_ONLY = argv.includes('--static');
-const REPORT = STATIC_ONLY ? 'verify-report.static.json' : 'verify-report.json';
+// 追加言語の結果は別のファイルに書く。works.html が読む既定言語の結果を上書きしない（ADR 0081）
+const LANG_SUFFIX = BUILD_LOCALE === DEFAULT_LOCALE ? '' : `.${BUILD_LOCALE}`;
+const REPORT = `verify-report${LANG_SUFFIX}${STATIC_ONLY ? '.static' : ''}.json`;
+if (LANG_SUFFIX && argv.includes('--write')) {
+  console.error('verify: --write は既定言語だけで使えます（実測値はサイト共通のデータに書くため）');
+  process.exit(2);
+}
 
 const modeAt = argv.indexOf('--mode');
 const modeFlag = modeAt < 0 ? undefined : argv[modeAt + 1] && !argv[modeAt + 1]!.startsWith('--') ? argv[modeAt + 1]! : null;

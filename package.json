@@ -9,6 +9,7 @@
     "dev": "tsx tools/scripts/dev.ts",
     "build": "tsx tools/cms/pull.ts --if-configured && tsx tools/scripts/build-tokens.ts --check && tsx tools/scripts/build-public.ts && next build && tsx tools/scripts/postbuild.ts",
     "cms:pull": "tsx tools/cms/pull.ts",
+    "build": "tsx tools/scripts/build-tokens.ts --check && tsx tools/scripts/build-public.ts && next build && tsx tools/scripts/postbuild.ts && tsx tools/scripts/build-locales.ts && tsx tools/scripts/check-locales.ts",
     "check": "tsc --noEmit && tsx tools/scripts/check-structure.ts && tsx tools/scripts/check-content.ts && tsx tools/scripts/check-styles.ts && npm run check:collections && npm run check:unused",
     "check:collections": "tsx tools/scripts/check-collections.ts",
     "verify": "tsx tools/verify/verify.ts",
@@ -20,7 +21,7 @@
     "test:watch": "vitest --config config/vitest.config.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "validate": "npm run check && npm run lint && npm test && npm run test:pricing && npm run build && npm run check:security && npm run verify -- --static",
+    "validate": "npm run check && npm run lint && npm test && npm run test:pricing && npm run build && npm run check:security && npm run verify -- --static && npm run verify:locales -- --static",
     "deploy:preview": "vercel",
     "deploy:production": "vercel --prod",
     "styles": "tsx tools/scripts/build-styles.ts",
@@ -44,7 +45,9 @@
     "check:security": "tsx tools/security/check.ts",
     "audit:security": "npm audit --audit-level=moderate",
     "test:security-browser": "tsx tools/security/browser.ts",
-    "design:compare": "tsx tools/design/compare.ts"
+    "design:compare": "tsx tools/design/compare.ts",
+    "check:locales": "tsx tools/scripts/check-locales.ts",
+    "verify:locales": "tsx tools/scripts/verify-locales.ts"
   },
   "dependencies": {
     "clsx": "2.1.1",

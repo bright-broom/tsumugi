@@ -1,3 +1,4 @@
+import { LOCALE_SETTINGS } from '@/lib/locale';
 import { getRoute } from '@/routing/registry';
 
 /**
@@ -5,7 +6,18 @@ import { getRoute } from '@/routing/registry';
  * `/news.html` lists entries and `/news/<slug>.html` shows one. Nested files work on any host.
  */
 const BASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const RESERVED = new Set(['og', 'images', 'fonts', 'theme', 'sitemap', 'robots', 'index', '404']);
+const RESERVED = new Set([
+  'og',
+  'images',
+  'fonts',
+  'theme',
+  'sitemap',
+  'robots',
+  'index',
+  '404',
+  // Language directories (ADR 0081) must not be taken by a collection.
+  ...Object.values(LOCALE_SETTINGS).map((l) => l.basePath.replace(/^\//, '')).filter(Boolean),
+]);
 
 export function collectionListFile(base: string): string {
   return `${base}.html`;

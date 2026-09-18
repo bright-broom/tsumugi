@@ -17,7 +17,8 @@ import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { ROOT } from '../paths';
-const OUT = join(ROOT, 'out');
+// 追加言語のビルドは NEXT_DIST_DIR の出力を検査する（build-locales.ts、ADR 0081）
+const OUT = join(ROOT, process.env.NEXT_DIST_DIR ?? 'out');
 // コレクションの詳細（news/<slug>.html など）も対象にするため、下の階層まで拾う
 const htmlFiles = (dir: string, prefix = ''): string[] =>
   readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
