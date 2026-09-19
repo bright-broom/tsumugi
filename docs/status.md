@@ -18,7 +18,8 @@
   - **フォーム受付（顧客サイト）・CMS（情報を育てる）・多言語**：本番用の仕組みと手順を実装。実配備・実サービス・実際の翻訳での確認と、費用・規約の確認が残るため、受付準備中の表示は変えていない。
   - コードで解決しない前提：弁護士確認（規約）、税理士確認（免税事業者の消費税表示）、専門家・受入確認、実電話・実メールの到達確認。
 - 未確認：GitHub 上の Release check の実行結果（この作業環境は `gh` と GitHub への接続がサンドボックスで遮断される。手元の再現は PASS 55 / FAIL 0）、PR #91 の Vercel の結果（`gh pr checks 91` に Vercel が出なかった。Site checks は成功）。
-- 次の一手：このブランチを push して PR を作り、CI を確認する。統合後に Release check の成功を確認する。
+- PR #92 の Vercel が失敗した。Vercel は `npm run validate` を実行し、社内 CLI を別プロセスで何度も起動するテスト（billing・estimate・requests・ops-release など）が既定の 5 秒を超えていたとみられる。同じ環境変数（`VERCEL=1 VERCEL_ENV=preview CI=1`）で手元に再現すると 4 件がタイムアウトで失敗した。Vitest の `testTimeout` を 30 秒にし、同じ条件で validate が全件成功することを確認した（Vercel のログそのものは未確認）。#91 で Vercel の結果が出なかったのも同じ原因の可能性がある。
+- 次の一手：PR #92 の Vercel の成功を確認して統合する。統合後に Release check の成功を確認する。
 
 ### トップの各セクションから詳細ページへつなぐ（2026-09-19）
 
