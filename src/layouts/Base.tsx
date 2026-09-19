@@ -52,7 +52,11 @@ export default function Base({ file, title, desc, og: ogPath, children }: Props)
               key={locale}
               rel="alternate"
               hrefLang={locale === 'x-default' ? locale : LOCALE_SETTINGS[locale].language}
-              href={canonical(C.DOMAIN, file, locale === 'x-default' ? C.PUBLISHED_LOCALES[0] : locale)}
+              href={canonical(
+                C.DOMAIN,
+                file,
+                locale === 'x-default' ? C.PUBLISHED_LOCALES[0] : locale,
+              )}
             />
           ))}
         <meta property="og:title" content={title} />

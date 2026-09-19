@@ -16,7 +16,9 @@ const RESERVED = new Set([
   'index',
   '404',
   // Language directories (ADR 0081) must not be taken by a collection.
-  ...Object.values(LOCALE_SETTINGS).map((l) => l.basePath.replace(/^\//, '')).filter(Boolean),
+  ...Object.values(LOCALE_SETTINGS)
+    .map((l) => l.basePath.replace(/^\//, ''))
+    .filter(Boolean),
 ]);
 
 export function collectionListFile(base: string): string {
