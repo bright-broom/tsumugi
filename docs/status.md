@@ -37,7 +37,7 @@ PR #88〜#91 統合後の main に #92 を載せた状態（`7b78def`）で、�
 
 テストの手順の誤りで、架空の見積・顧客ファイル 2 件をリポジトリの `.data/` に書いた（元のデータはなかった）。確認のうえ削除し、手順を直して再実行した。
 
-**リリース判定（main `fa8a67b`、PR #92 統合後）**：コードは上の `7b78def` と同一。新しい作業ツリーで `VERCEL=1 VERCEL_ENV=production CI=1 npm run validate` が全工程成功（テスト 726 件・料金 12 件・build・check-locales・セキュリティ・本番モードの静的検査 PASS 347 / WARN 3 / FAIL 0。WARN は既存の専門家 2 件・受入 1 件の未記録）。ビルド出力は上のブラウザ確認済みの出力と全ファイル一致し、本番とも全ファイル一致（PASS 55 / FAIL 0）。判定はリリース可。証跡は `.artifacts/release-0919/`（Git 管理外）。
+**リリース判定（main `fa8a67b`、PR #92 統合後）**：コードは上の `7b78def` と同一。新しい作業ツリーで `VERCEL=1 VERCEL_ENV=production CI=1 npm run validate` が全工程成功（テスト 726 件・料金 12 件・build・check-locales・セキュリティ・本番モードの静的検査 PASS 347 / WARN 3 / FAIL 0。WARN 3 件は、規約と特定商取引法の表記の専門家確認 2 件と、受入確認 18 項目（1 件にまとめて表示）の未記録。内容と解消の手順は [本番検査の WARN 3 件](product/publication-warnings.md)）。ビルド出力は上のブラウザ確認済みの出力と全ファイル一致し、本番とも全ファイル一致（PASS 55 / FAIL 0）。判定はリリース可。証跡は `.artifacts/release-0919/`（Git 管理外）。
 
 ### トップの各セクションから詳細ページへつなぐ（2026-09-19）
 

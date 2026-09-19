@@ -26,6 +26,7 @@
 | 全ページの役割と共通情報の管理                                                           | [product/information-architecture.md](product/information-architecture.md)                             |
 | 繰り返すデザイン変更の編集場所・共通部品・表示比較                                       | [product/redesign-guide.md](product/redesign-guide.md)                                                 |
 | デザインの出所・スマホ表示・図・共有カード                                               | [product/design.md](product/design.md)                                                                 |
+| 本番検査の WARN 3 件（専門家確認・受入確認の未記録）と解消の手順 | [product/publication-warnings.md](product/publication-warnings.md) |
 | 更新管理画面（microCMS）の設定とお客様向けの操作説明 | [product/cms-guide.md](product/cms-guide.md) |
 | 顧客サイトに言語を追加する手順 | [product/multilingual-guide.md](product/multilingual-guide.md) |
 | 検査している項目（納品の条件）と、検査で見つかった不具合                                 | [spec.md](spec.md)                                                                                     |
