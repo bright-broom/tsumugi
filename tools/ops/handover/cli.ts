@@ -126,10 +126,14 @@ runCli(USAGE, {
     // 既にある資料は上書きしない。作り直すときは、ひとつ前の資料を残したまま日付を変える。
     mkdirSync(dir, { mode: 0o700 });
 
-    const { dir: sourceDir, manifest } = createBackup({
-      root: ROOT,
-      outDir: join(dir, SOURCE_DIR),
-    });
+    // 未コミットの変更・追跡してはいけないファイル・秘密情報の形があれば、ここで止まる。
+    const { dir: sourceDir, manifest } = (() => {
+      try {
+        return createBackup({ root: ROOT, outDir: join(dir, SOURCE_DIR) });
+      } catch (error) {
+        throw new OpsError(error instanceof Error ? error.message : String(error));
+      }
+    })();
     const materials = args.list('material').map((path) => {
       const from = resolve(path);
       if (!isDirectory(from)) throw new OpsError(`元素材はフォルダで指定してください: ${from}`);
@@ -207,6 +211,14 @@ runCli(USAGE, {
       );
     if (!report.ok) {
       console.error('\n作り直せませんでした。封をしません（この資料は引き渡せません）');
+      process.exitCode = 1;
+      return;
+    }
+    // 引渡し書には「作り直せることを確かめた」と書く。依存を入れ直してビルドまで通した資料だけを封にする。
+    if (report.build !== 'build') {
+      console.error(
+        `\n${report.build === 'none' ? 'ビルドを省いた' : '型検査までの'}確認では封をしません。--deps ci（または clone）--build build で実行してください`,
+      );
       process.exitCode = 1;
       return;
     }
