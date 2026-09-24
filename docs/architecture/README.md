@@ -180,3 +180,5 @@
 - [0080 — 記事・事例を microCMS から取り込んで静的に公開する](0080-microcms-content-source.md)
 
 - [0081 — 言語をビルドごとに選び、追加言語を /<言語>/ 配下に公開する](0081-build-time-locales.md)
+
+- [0082 — 引渡し資料を 1 つに梱包し、作り直せたことを確かめてから封をする](0082-handover-package.md)

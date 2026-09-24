@@ -2,7 +2,15 @@
  * 社内ツールのデータ置き場。実データは git 管理外の `.data/` に置く（ADR 0036）。
  * 書き込み先がリポジトリの追跡対象のディレクトリになる指定は拒否する。
  */
-import { existsSync, mkdirSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  renameSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { z } from 'zod';
@@ -19,6 +27,20 @@ export function parseId(value: string, name: string): string {
   const result = idSchema.safeParse(value);
   if (!result.success) throw new OpsError(`${name}: ${result.error.issues[0]?.message}`);
   return value;
+}
+
+/**
+ * 記録に残してはいけない認証情報の形。社内の記録も顧客に渡す書面も、保管場所の名前までにする。
+ * パスワード・鍵は別の経路で渡す（ガイドライン 5.4、ADR 0082）。
+ */
+const CREDENTIAL_WORDS =
+  /パスワード|ぱすわーど|password|passwd|秘密鍵|private key|api[ _-]?key|secret|トークン|token/i;
+
+export function assertNoCredential(field: string, value: string): void {
+  if (CREDENTIAL_WORDS.test(value))
+    throw new OpsError(
+      `${field}: パスワード・鍵・トークンは記録しません。保管場所や管理画面の名前だけを書き、認証情報は別の経路で渡してください`,
+    );
 }
 
 /** 顧客別のファイルは中身の customerId も一致させる。取り違えたファイルを黙って読まない。 */

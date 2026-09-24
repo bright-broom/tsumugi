@@ -154,22 +154,47 @@ npm run --silent ops:crm -- advance  --customer sample-shop --project site-2026 
 npm run --silent ops:crm -- contract --customer sample-shop --project site-2026 --version 1 --status signed --signed-on 2026-09-18 --ref <書面の保管場所> --by 担当者
 npm run --silent ops:crm -- approval --customer sample-shop --project site-2026 --id copy-top --kind copy --item トップの原稿 --status approved --decided-by お客様 --decided-on 2026-09-20 --by 担当者
 npm run --silent ops:crm -- check    --customer sample-shop --project site-2026 --key verify-fail-zero --evidence <検査レポート> --by 担当者
+npm run --silent ops:crm -- account  --customer sample-shop --project site-2026 --id domain --kind domain --service お名前.com --holder customer --ref "お客様のアカウント（管理画面）" --access revoked --transferred-on 2026-09-20 --revoked-on 2026-09-24 --by 担当者
 npm run --silent ops:crm -- handover --customer sample-shop --project site-2026 --item github_invite --permission read --ref <招待先> --by 担当者
 npm run --silent ops:crm -- show     --customer sample-shop
 npm run --silent ops:crm -- export   --customer sample-shop --out .data/exports/sample-shop.json
 ```
 
-| 状態                           | 進める前提                                                                                            |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| `estimate_sent` 見積提出       | 見積の版が紐付いている                                                                                |
-| `contracted` 契約済み          | 締結済みの契約の版がある                                                                              |
-| `in_production` 制作中         | —                                                                                                     |
-| `awaiting_acceptance` 検収待ち | 原稿・写真の承認がそれぞれあり、すべて承認済み                                                        |
-| `accepted` 検収済み            | 納品チェック（検査 FAIL 0・ドメインがお客様名義・パスワード類をソースに入れていない）が根拠つきで完了 |
-| `handed_over` 引渡し済み       | ソースコード・手順書・写真の元データ・GitHub 閲覧招待（read のみ）の記録                              |
+| 状態                           | 進める前提                                                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| `estimate_sent` 見積提出       | 見積の版が紐付いている                                                                                       |
+| `contracted` 契約済み          | 締結済みの契約の版がある                                                                                     |
+| `in_production` 制作中         | —                                                                                                            |
+| `awaiting_acceptance` 検収待ち | 原稿・写真の承認がそれぞれあり、すべて承認済み                                                               |
+| `accepted` 検収済み            | 納品チェック（検査 FAIL 0・ドメインがお客様名義・パスワード類をソースに入れていない）が根拠つきで完了        |
+| `handed_over` 引渡し済み       | ドメイン・ホスティングがお客様名義。ソースコード・手順書・写真の元データ・GitHub 閲覧招待（read のみ）の記録 |
 
 - `show` は、次に進める状態と足りない前提を一覧で出す。
+- `account` は、ドメイン・ホスティングなどの名義（`--holder`）と、引渡し後の紬のアクセス（`--access revoked|retained`）を記録する。パスワード・鍵・トークンらしき文字列は受け付けない（`--ref` は管理画面の名前まで）。
 - 他の顧客の情報を読めない権限は未実装（ファイルの分離と顧客 ID の照合まで）。
+
+## 引渡し資料の梱包（`npm run ops:handover`）
+
+検収済みの案件について、ソース一式（履歴ごと）・元素材・引渡し書・名義とアクセス・検査の実績を 1 つのフォルダにまとめ、別のフォルダで作り直せたことを確かめてから封（`SHA256SUMS`）をする（[ADR 0082](../../docs/architecture/0082-handover-package.md)）。
+
+```sh
+npm run --silent ops:handover -- plan   --customer sample-shop --project site-2026
+npm run --silent ops:handover -- pack   --customer sample-shop --project site-2026 --by 担当者 --material <写真の元データのフォルダ>
+npm run --silent ops:handover -- verify --package .artifacts/handover/sample-shop-site-2026-20260924 --deps ci --build build
+npm run --silent ops:handover -- record --customer sample-shop --project site-2026 --package .artifacts/handover/sample-shop-site-2026-20260924 --github <招待先> --by 担当者
+npm run --silent ops:crm      -- advance --customer sample-shop --project site-2026 --to handed_over --by 担当者
+```
+
+| 段階     | すること                                           | 止まる条件                                                                                   |
+| -------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `plan`   | 引き渡せる状態かを見る                             | 検収前・納品チェック未了・ドメイン／ホスティングが未記録かお客様名義でない・検査の実績がない |
+| `pack`   | `source/`・`materials/`・引渡し書・`handover.json` | 未コミットの変更・秘密情報の形・同じ日の資料がある・別のコミットや静的検査だけの検査レポート |
+| `verify` | 別のフォルダへ取り出してビルドまで通し、封をする   | 取り出しかビルドの失敗・`--build build` 以外・封のある資料                                   |
+| `record` | CRM の引渡し記録にする                             | 封がない・封と中身が合わない・顧客や案件が資料と違う                                         |
+
+- 引渡し書に載せる検査の実績は、全項目・FAIL 0・引き渡すコミットと同じ・未コミットの変更なしのレポートからだけ取る（[ADR 0025](../../docs/architecture/0025-verified-build-report.md)）。既定は `.artifacts/verification/verify-report.json`。
+- パスワード・鍵・トークンは同梱しない。元素材に `.env*`・鍵ファイル・秘密情報の形があれば梱包しない。ログイン情報は別の経路で渡す。
+- 資料の置き場所は `.artifacts/`・`.data/` かリポジトリの外（顧客名の入った資料を追跡対象に置かない）。
 
 ## 営業リスト（leadfinder、`npm run ops:leads`）
 

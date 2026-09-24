@@ -14,6 +14,7 @@ import {
   createCustomer,
   linkEstimate,
   loadCustomer,
+  recordAccount,
   recordApproval,
   recordContract,
   recordHandover,
@@ -83,6 +84,37 @@ const through = (stop: string) => {
       m,
     );
   if (step('accepted')) return f;
+  // ドメインとホスティングがお客様名義になるまで引き渡さない（ADR 0082）。
+  f = recordAccount(
+    f,
+    'site-2026',
+    {
+      id: 'domain',
+      kind: 'domain',
+      service: 'お名前.com',
+      holder: 'customer',
+      ref: 'お客様のアカウント',
+      transferredOn: '2026-09-25',
+      access: 'revoked',
+      revokedOn: '2026-09-26',
+    },
+    m,
+  );
+  f = recordAccount(
+    f,
+    'site-2026',
+    {
+      id: 'hosting',
+      kind: 'hosting',
+      service: 'Vercel',
+      holder: 'customer',
+      ref: 'お客様のアカウント',
+      transferredOn: '2026-09-25',
+      access: 'retained',
+      retainedReason: '継続支援の契約があるため',
+    },
+    m,
+  );
   for (const item of ['source_code', 'manual', 'photos'])
     f = recordHandover(
       f,
@@ -204,6 +236,8 @@ describe('案件の状態遷移', () => {
       m,
     );
     expect(blockersFor(project(partial), 'handed_over')).toEqual([
+      'ドメインのアカウントが未記録です',
+      'ホスティングのアカウントが未記録です',
       '引き継ぎ手順書の引渡しが未記録です',
       '写真の元データの引渡しが未記録です',
       'GitHub の閲覧招待の引渡しが未記録です',
