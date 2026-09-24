@@ -110,6 +110,9 @@ describe('watchdog コマンド', () => {
   afterEach(() => {
     for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
   });
+  /** CLI は実時刻で判定するので、実行のたびに「さっき」の時刻を作る。 */
+  const recent = (over: Partial<WorkflowRun> = {}) =>
+    ok({ createdAt: new Date(Date.now() - 5 * 60_000).toISOString(), ...over });
   const cli = (runs: WorkflowRun[]) => {
     const dir = mkdtempSync(join(tmpdir(), 'tsumugi-watchdog-'));
     dirs.push(dir);
@@ -135,7 +138,7 @@ describe('watchdog コマンド', () => {
   };
 
   it('正常なら終了コード 0、通知は none', () => {
-    const result = cli([ok(), ok()]);
+    const result = cli([recent(), recent()]);
     expect(result.status).toBe(0);
     expect(result.stdout).toContain('通知: none');
     expect(result.output).toContain('alert=none');
@@ -152,7 +155,7 @@ describe('watchdog コマンド', () => {
   });
 
   it('復旧は終了コード 0 で、通知だけ recovered にする', () => {
-    const result = cli([ok(), ok({ conclusion: 'failure' })]);
+    const result = cli([recent(), recent({ conclusion: 'failure' })]);
     expect(result.status).toBe(0);
     expect(result.output).toContain('alert=recovered');
   });
@@ -161,7 +164,11 @@ describe('watchdog コマンド', () => {
     const result = spawnSync(
       'node',
       ['--import', 'tsx', join(ROOT, 'tools/ops/cli/watchdog.ts'), '--repo', ''],
-      { cwd: ROOT, encoding: 'utf8', env: { ...process.env, GITHUB_REPOSITORY: '', GH_TOKEN: '', GITHUB_TOKEN: '' } },
+      {
+        cwd: ROOT,
+        encoding: 'utf8',
+        env: { ...process.env, GITHUB_REPOSITORY: '', GH_TOKEN: '', GITHUB_TOKEN: '' },
+      },
     );
     expect(result.status).toBe(2);
     expect(result.stderr).toContain('--repo owner/name');
