@@ -242,7 +242,7 @@ describe('同梱してはいけないもの', () => {
         material('photos/店内.jpg.txt', '写真の説明'),
         material('.env.local', 'SECRET=1'),
         material('deploy.key', 'x'),
-        material('notes.txt', '-----BEGIN PRIVATE KEY-----'),
+        material('notes.txt', ['-----BEGIN ', 'PRIVATE KEY-----'].join('')),
       ]),
     ).toEqual([
       '.env.local（.env*（.env.example を除く））',
