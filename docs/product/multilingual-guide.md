@@ -11,6 +11,8 @@
 
 ## 手順
 
+<!-- check-docs: allow src/i18n/locales/en/index.ts （この手順で新しく作るファイル） -->
+
 1. **承認済みの翻訳を受け取る**。日本語のカタログ（`src/i18n/locales/ja/`）と同じ構成で `src/i18n/locales/en/index.ts` を作り、型 `Translation` に合わせて書く。機械翻訳をそのまま載せない。
 2. **登録する**。`src/i18n/locales/index.ts` の `CATALOGS` に `en: translated('en', en)` を加える。日本語と比べて、キーの過不足・リストの長さ・差し込み値（`{price}` など）・ページへのリンク（`@route:`）が違えばビルドが止まる。
 3. **公開する言語に加える**。`src/content/config.ts` の `PUBLISHED_LOCALES` を `['ja', 'en']` にする。

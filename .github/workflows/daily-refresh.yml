@@ -1,0 +1,53 @@
+# 日付で表示が変わる日に、静的サイトを作り直す（監査 C08、ADR 0084）。
+# 臨時休業・臨時の営業時間は、ビルドした日を基準に表示している。置いたままのサイトは日付をまたいでも
+# 変わらないので、境目の日に配備フックで作り直す。境目がない日は何もしない（毎日の空振りで通知しない）。
+# 配備フックは Vercel のプロジェクト → Settings → Git → Deploy Hooks で作り、
+# シークレット VERCEL_DEPLOY_HOOK に入れる。臨時の案内を使わないサイトでは設定しなくてよい。
+name: Daily refresh
+on:
+  schedule:
+    - cron: '10 15 * * *' # 日本時間 0:10。日付が変わってすぐ
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: daily-refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install --global npm@12.0.2
+      - run: npm ci
+      - name: Check for a date boundary
+        id: check
+        # 境目があれば終了コード 10。それ以外の 0 でない値は判定の失敗なので、ジョブを落とす。
+        run: |
+          set +e
+          npm run refresh
+          code=$?
+          set -e
+          if [ "$code" -ne 0 ] && [ "$code" -ne 10 ]; then exit "$code"; fi
+
+      - name: Rebuild the site
+        if: steps.check.outputs.refresh == 'yes'
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          set -euo pipefail
+          if [ -z "${HOOK:-}" ]; then
+            echo "日付で表示が変わる日ですが、VERCEL_DEPLOY_HOOK が未設定のため作り直せません。" >&2
+            echo "Vercel の Deploy Hooks で作った URL をシークレットに入れてください。" >&2
+            exit 1
+          fi
+          curl -fsS -X POST "$HOOK" -o /dev/null -w '配備フックの応答: %{http_code}\n'
+          echo "サイトの作り直しを要求しました（反映は Vercel の配備の完了後）" >> "$GITHUB_STEP_SUMMARY"

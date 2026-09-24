@@ -33,8 +33,8 @@ P1 は現行提供の信頼性または該当商品を提供する前に必要�
 | A03 / P1  | 定期監視が canonical・JS 混入・検索除外・404 を見ない。**今回実装**            | `tools/ops/site-checks.ts`、`html.ts`、`probe.ts`                                                               | 公開直後と定期の検査を共通化。noindex の HTML・HTTP ヘッダー検査と故障テスト／開発／次の配備前                           |
 | A04 / P1  | 問い合わせページが 200 でもメール・電話リンク消失を見逃す。**今回実装**        | `tools/ops/site-expectations.ts`                                                                                | 正本の電話・メールと実リンクを照合。リンク存在確認と実送受信を区別／開発／次の配備前                                     |
 | A05 / P1  | **部分実装**：指定成果物と公開内容の全ファイル照合。配備ID対応は未確認         | [ADR 0068](../architecture/0068-release-content-verification.md)、`tools/ops/release.ts`                        | 配備 ID・commit・成果物指紋と alias の対応を検証。旧版・一部混在・切戻しを識別／開発・運用／次のリリース手順整備         |
-| A06 / P2  | **部分実装**：配信ヘッダーと直接参照CSS・画像の欠落/型を検出。CSS内等は対象外                          | `tools/ops/probe.ts`、`tools/security/policy.ts`                                                                | 同一 origin の参照資産と必要な応答ヘッダーを検証。ローカル CSP テストと区別／開発／監視の次段階                          |
-| A07 / P1  | 監視の停止自体の検知、複数担当への通知、復旧通知がない                         | [ADR 0046](../architecture/0046-post-launch-monitoring.md)、`docs/operations.md` の空欄                         | 独立した監視元・責任者・通知先・エスカレーション・復旧判断を決定し到達確認／運用・オーナー／顧客に監視を提供する前       |
+| A06 / P2  | **ブランチ実装済み**：配信ヘッダーと、直接参照＋CSS の url()・@import が指す資産の欠落/型を検出 | `tools/ops/asset-checks.ts`、`tools/ops/probe.ts`、`tools/security/policy.ts` | 同一 origin の参照資産と必要な応答ヘッダーを検証。ローカル CSP テストと区別／開発／監視の次段階 本文の完全性は引き続き未検証。main 反映は status.md 参照 |
+| A07 / P1  | **ブランチ実装済み**：監視の停止・skipped・連続失敗・復旧を検知し、issue で通知 | [ADR 0083](../architecture/0083-monitor-watchdog.md)、`tools/ops/watchdog.ts` | 独立した監視元・責任者・通知先・エスカレーション・復旧判断を決定し到達確認／運用・オーナー／顧客に監視を提供する前 **独立した監視元（GitHub の外）と、担当・エスカレーションの決定は残る**。main 反映は status.md 参照 |
 | A08 / P1  | **部分対応**：復元時の既存領域削除を修正。独立保管先・非公開業務データは未対応 | [ADR 0067](../architecture/0067-restore-workspace-ownership.md)、`weekly-backup.yml`、`backup.ts`、`restore.ts` | 別環境で復元し所要時間を記録。保管先・RPO/RTO・暗号化・アクセス・削除条件を決定／運用／顧客データの運用開始前            |
 | A09 / P1  | **完了**：GitHub Privateに合わせ非公開表示。main・実公開を確認                           | `src/content/config.ts: SOURCE_REPOSITORY_URL`、`src/i18n/locales/ja/source.ts`、Repository API                 | 公開可能な配布用リポジトリか、現状に合う案内へ整合。公開範囲を確認せず可視性変更しない／オーナー・開発／公開案内の継続前 |
 | A10 / P1  | main 保護の有効性を API で再確認できない                                       | Branch protection API 403、従来 ADR 0055                                                                        | 契約・権限・ruleset を確認し PR/必須検査/強制 push 制限の実効性を検証／リポジトリ管理者／次の main 統合前                |
@@ -47,7 +47,7 @@ P1 は現行提供の信頼性または該当商品を提供する前に必要�
 | B02 / P1  | 契約・法定表示の専門家確認 2 件が未実施                  | `src/content/config.ts`、`src/content/publication.ts`                     | 専門家による版・確認日・役割・文面指紋の記録／オーナー・専門家／契約運用前。法律判断は本監査で代行しない       |
 | B03 / P1  | 実通話・実メール送受信・返信担当の引継ぎは未確認         | `CONTACT_METHOD=email`、`RESPONSE_ACTUAL=null`                            | 承認したテスト宛先で到達と担当交代、返信期限を確認／運用／受付の受入確認時                                     |
 | B04 / P2  | 実機 Safari、支援技術、公開環境での利用者指標は未確認    | `tools/verify/browser.ts`、`src/content/measurements.ts`                  | 実機でメニュー・目次・表・連絡先を確認。Search Console 等は設定・実データの有無を確認／品質・運用／顧客納品前  |
-| B05 / P2  | 文書の古い操作手順や参照資料が残り、初回導入を誤らせる   | 事業ガイド 10.2 の `site/`、運用の旧コピー手順、存在しない `claude/` 参照 | 現行パス・メール受付・検査基準へ整理し、文書リンクとコマンド参照の継続検査／開発／次の顧客複製前               |
+| B05 / P2  | **ブランチ実装済み**：文書のリンク・npm script・ファイル参照を `npm run check` で継続検査 | `tools/scripts/check-docs.ts`、`tools/scripts/docs-references.ts` | 現行パス・メール受付・検査基準へ整理し、文書リンクとコマンド参照の継続検査／開発／次の顧客複製前 古くなっていた design.md の図の節を修正。文章の内容そのものは人が読む。main 反映は status.md 参照 |
 
 ### C. 顧客向け商品の不足
 
@@ -60,7 +60,7 @@ P1 は現行提供の信頼性または該当商品を提供する前に必要�
 | C05 / P1・条件付 | 二系統の実送信アダプタ・送信箱ワーカー・再送と遅延の外部監視が未接続         | `services/inquiry/outbox.ts`、[ADR 0033](../architecture/0033-dual-notification-and-reply-deadline.md)          | 実送信先・資格情報・冪等性・一系統停止・両系停止・復旧を試験／開発・運用／フォーム受付開始前                                        |
 | C06 / P1・条件付 | 担当者認証と権限の接続、保持期限ジョブ、監査ログの永続保管がない             | `services/inquiry/access.ts` は actorId を受ける権限関数、`retention.ts` は処理本体                             | ログイン主体をサーバーで確定し権限へ接続。削除・保留・監査の定期実行と保存先を試験／開発・運用／個人情報の運用前                    |
 | C07 / P2・条件付 | 記事・事例・エリア・スタッフ・声は基盤あり、実データと承認・顧客導入は未確認 | `src/i18n/locales/ja/entries/`、`content/staff.ts`、`testimonials.ts`、#16〜22 #38                              | 実顧客の許諾済み素材で一覧／詳細／検索案内／予約リンクの受入試験／制作・顧客／該当ページ納品前                                      |
-| C08 / P2・条件付 | 日付で変わる営業時間等を静的出力へ反映する再生成の運用がない                 | `src/content/store.ts` の `STORE_AS_OF`、`build-public.ts`                                                      | 日付境界で再生成・公開され、期限後の告知・構造化データが更新される試験／開発・運用／臨時営業を扱う顧客の運用開始前                  |
+| C08 / P2・条件付 | **ブランチ実装済み**：境目の日に配備フックで作り直す（`npm run refresh`・Daily refresh） | [ADR 0084](../architecture/0084-date-boundary-refresh.md)、`tools/ops/freshness.ts` | 日付境界で再生成・公開され、期限後の告知・構造化データが更新される試験／開発・運用／臨時営業を扱う顧客の運用開始前 配備フックの設定と、実際の作り直しの確認は臨時の案内を使うサイトが出てから。main 反映は status.md 参照 |
 
 ### D. 社内業務・拡張時に必要なもの
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { checkReferencedAssets } from '../tools/ops/asset-checks';
+import { checkReferencedAssets, cssReferences } from '../tools/ops/asset-checks';
 import { inspectHtml } from '../tools/ops/html';
 import { createProbe, type Fetch } from '../tools/ops/probe';
 
@@ -10,15 +10,15 @@ const pages = (markup: string) => [
 ];
 
 describe('HTMLが直接参照する資産の監視', () => {
-  it('相対URL・クエリを保ち、重複・フラグメントをまとめてHEADだけで検査する', async () => {
+  it('相対URL・クエリを保ち、重複・フラグメントをまとめる。資産は HEAD、CSS は中身も読む', async () => {
     const calls: string[] = [];
     const fetch: Fetch = async (url, init) => {
-      calls.push(url);
-      expect(init?.method).toBe('HEAD');
+      calls.push(`${init?.method ?? 'GET'} ${url}`);
+      const css = url.includes('.css');
       expect(init?.redirect).toBe('manual');
       expect(init?.signal).toBeDefined();
-      return new Response('unused body', {
-        headers: { 'content-type': url.includes('.css') ? 'text/css; charset=utf-8' : 'image/png' },
+      return new Response(css ? 'body{color:#000}' : 'unused body', {
+        headers: { 'content-type': css ? 'text/css; charset=utf-8' : 'image/png' },
       });
     };
     const result = await checkReferencedAssets(
@@ -26,7 +26,12 @@ describe('HTMLが直接参照する資産の監視', () => {
       createProbe({ fetch }),
     );
     expect(result.status).toBe('PASS');
-    expect(calls.sort()).toEqual([`${ORIGIN}/hero.png`, `${ORIGIN}/theme.css?v=1`]);
+    // 直接参照の確認は HEAD だけ。CSS だけは中の url() をたどるために GET する
+    expect(calls.sort()).toEqual([
+      `GET ${ORIGIN}/theme.css?v=1`,
+      `HEAD ${ORIGIN}/hero.png`,
+      `HEAD ${ORIGIN}/theme.css?v=1`,
+    ]);
   });
 
   it.each([404, 503, 302, 405])('画像が%sなら失敗する', async (status) => {
@@ -72,7 +77,12 @@ describe('HTMLが直接参照する資産の監視', () => {
     );
     expect(result.status).toBe('FAIL');
     expect(result.detail).toContain('HEAD取得失敗');
-    expect(calls).toHaveLength(2);
+    // theme.css は HEAD のあと、中身をたどるために GET する
+    expect(calls).toEqual([
+      `${ORIGIN}/theme.css?v=1`,
+      `${ORIGIN}/hero.png`,
+      `${ORIGIN}/theme.css?v=1`,
+    ]);
   });
 
   it('OGP画像・アイコン・空URLと認証付きURLを扱う', async () => {
@@ -150,5 +160,88 @@ describe('HTMLが直接参照する資産の監視', () => {
     );
     expect(result.status).toBe('PASS');
     expect(max).toBe(4);
+  });
+});
+
+describe('CSS の中から参照される資産の監視', () => {
+  /** theme.css が font/background を指す配信を模す。 */
+  const serve = (files: Record<string, { status?: number; type?: string; body?: string }>) => {
+    const calls: string[] = [];
+    const probe = createProbe({
+      fetch: async (url, init) => {
+        calls.push(`${init?.method ?? 'GET'} ${new URL(url).pathname}`);
+        const file = files[new URL(url).pathname];
+        if (!file) return new Response(null, { status: 404 });
+        return new Response(file.body ?? '', {
+          status: file.status ?? 200,
+          headers: { 'content-type': file.type ?? 'text/css' },
+        });
+      },
+    });
+    return { calls, probe };
+  };
+  const cssPage = [
+    {
+      url: `${ORIGIN}/index.html`,
+      facts: inspectHtml('<link rel="stylesheet" href="/theme.css">'),
+    },
+  ];
+
+  it('url() が指す書体を取りに行き、配信されていれば合格にする', async () => {
+    const { calls, probe } = serve({
+      '/theme.css': { body: "@font-face{src:url('fonts/league-gothic.woff2') format('woff2')}" },
+      '/fonts/league-gothic.woff2': { type: 'font/woff2' },
+    });
+    const result = await checkReferencedAssets(cssPage, probe);
+    expect(result.status).toBe('PASS');
+    expect(result.detail).toContain('CSS内の1参照');
+    expect(calls).toContain('HEAD /fonts/league-gothic.woff2');
+  });
+
+  it('CSS の中だけから参照される書体の欠落を見つける', async () => {
+    const { probe } = serve({
+      '/theme.css': { body: 'body{background:url("/images/hero.webp")}' },
+    });
+    const result = await checkReferencedAssets(cssPage, probe);
+    expect(result.status).toBe('FAIL');
+    expect(result.detail).toContain('/theme.css → /images/hero.webp');
+    expect(result.detail).toContain('HEAD 404');
+  });
+
+  it('無いファイルに HTML を返す配信も失敗にする', async () => {
+    const { probe } = serve({
+      '/theme.css': { body: 'body{background:url(/images/hero.webp)}' },
+      '/images/hero.webp': { type: 'text/html; charset=utf-8' },
+    });
+    const result = await checkReferencedAssets(cssPage, probe);
+    expect(result.status).toBe('FAIL');
+    expect(result.detail).toContain('HTML が返る');
+  });
+
+  it('@import の先の CSS もたどる', async () => {
+    const { calls, probe } = serve({
+      '/theme.css': { body: '@import "parts/print.css";' },
+      '/parts/print.css': { body: 'body{background:url(/paper.png)}' },
+      '/paper.png': { type: 'image/png' },
+    });
+    const result = await checkReferencedAssets(cssPage, probe);
+    expect(result.status).toBe('PASS');
+    expect(calls).toContain('GET /parts/print.css');
+    expect(calls).toContain('HEAD /paper.png');
+  });
+
+  it('参照の抜き出しは、コメント・data:・外部サイト・重複を除く', () => {
+    const css = [
+      '/* url(/commented.png) */',
+      "@font-face{src:url('/a.woff2')}",
+      'a{background:url(/a.woff2)}',
+      'b{background:url("https://cdn.example/b.png")}',
+      'c{background:url(data:image/png;base64,AAA)}',
+      '@import url(/d.css);',
+    ].join('\n');
+    expect(cssReferences(css, `${ORIGIN}/theme.css`)).toEqual([
+      `${ORIGIN}/a.woff2`,
+      `${ORIGIN}/d.css`,
+    ]);
   });
 });
