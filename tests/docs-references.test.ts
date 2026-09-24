@@ -77,6 +77,17 @@ describe('文書の参照', () => {
     expect(check('docs/development.md', text)).toEqual([]);
   });
 
+  it('ビルドが作るファイルは、まだ無くても指してよい', () => {
+    const generated = ['public/theme.css'];
+    expect(check('docs/development.md', '中央のCSSは `public/theme.css` に出る')).toHaveLength(1);
+    expect(
+      check('docs/development.md', '中央のCSSは `public/theme.css` に出る', { generated }),
+    ).toEqual([]);
+    expect(check('README.md', '[生成される CSS](public/theme.css)', { generated })).toEqual([]);
+    // 一覧に無い生成物らしき道筋は、引き続き不一致として出す
+    expect(check('README.md', '`public/other.css` を見る', { generated })).toHaveLength(1);
+  });
+
   it('複数の文書をまとめて見る', () => {
     expect(
       documentProblems(

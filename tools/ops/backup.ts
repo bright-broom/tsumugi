@@ -9,17 +9,11 @@ import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { lstatSync, mkdirSync, readFileSync, readlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { GENERATED_PUBLIC } from '../paths';
 
 export const BUNDLE = 'repo.bundle';
 export const MANIFEST = 'manifest.json';
 export const CHECKSUMS = 'SHA256SUMS';
-
-const GENERATED_PUBLIC = [
-  'public/theme.css',
-  'public/robots.txt',
-  'public/sitemap.xml',
-  'public/images/onokoro-hero.svg',
-];
 
 const EXCLUDED: readonly { rule: string; test: (path: string) => boolean }[] = [
   {
@@ -35,7 +29,7 @@ const EXCLUDED: readonly { rule: string; test: (path: string) => boolean }[] = [
   },
   {
     rule: `生成物（${GENERATED_PUBLIC.join('・')}）`,
-    test: (path) => GENERATED_PUBLIC.includes(path),
+    test: (path) => (GENERATED_PUBLIC as readonly string[]).includes(path),
   },
   {
     rule: '鍵・証明書ファイル（*.pem・*.key・*.p12・*.pfx）',

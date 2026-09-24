@@ -12,7 +12,7 @@
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
-import { ROOT } from '../paths';
+import { GENERATED_PUBLIC, ROOT } from '../paths';
 import { documentProblems, type DocFile, type Entry } from './docs-references';
 
 /** 見る文書。生成物・依存・作業用のフォルダは見ない。 */
@@ -57,7 +57,8 @@ const scripts = Object.keys(
   (JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')) as { scripts: object }).scripts,
 );
 
-const problems = documentProblems(files, { scripts, entry });
+// ビルドが作る公開ファイルは checkout 直後には無い（npm run check は build の前に走る）。
+const problems = documentProblems(files, { scripts, entry, generated: GENERATED_PUBLIC });
 if (problems.length) {
   console.error(`check-docs: 文書の参照が ${problems.length} 件合いません`);
   for (const problem of problems) console.error(`  ${problem}`);

@@ -18,6 +18,8 @@ export interface Context {
   scripts: readonly string[];
   /** リポジトリからの相対パスが何であるかを返す。 */
   entry: (path: string) => Entry;
+  /** ビルドが作るファイル（checkout 直後には無い）。文書は指してよい。 */
+  generated?: readonly string[];
 }
 
 /** リポジトリの中身を指す道筋の起点。 */
@@ -64,7 +66,7 @@ export function documentProblems(files: readonly DocFile[], context: Context): s
         if (!path) continue;
         const resolved = normalize(`${dir}/${decodeURIComponent(path)}`);
         if (resolved === null) at(number, `リポジトリの外を指しています: ${target}`);
-        else if (context.entry(resolved) === 'missing')
+        else if (!context.generated?.includes(resolved) && context.entry(resolved) === 'missing')
           at(number, `リンク先がありません: ${target}`);
       }
 
@@ -77,7 +79,7 @@ export function documentProblems(files: readonly DocFile[], context: Context): s
 
       for (const [, quoted] of line.matchAll(QUOTED)) {
         const text = (quoted ?? '').replace(/^\.\//, '').split(':')[0] ?? '';
-        if (!pathLike(text) || allowed.has(text)) continue;
+        if (!pathLike(text) || allowed.has(text) || context.generated?.includes(text)) continue;
         if (context.entry(text) !== 'file') at(number, `ファイルがありません: ${text}`);
       }
     });
