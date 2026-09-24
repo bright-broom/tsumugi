@@ -1,5 +1,5 @@
 /** npm run ops:handover -- <command>。使い方は tools/ops/README.md（ADR 0082）。 */
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join, resolve } from 'node:path';
 import { ROOT } from '../../paths';
@@ -83,6 +83,76 @@ const readIndex = (args: Args): { dir: string; index: HandoverIndex } => {
   return { dir, index: readJson(join(dir, INDEX), indexSchema) };
 };
 
+/** 梱包の本体。ソース・元素材・引渡し書・目録を、作った直後のフォルダに書く。 */
+function packInto(
+  dir: string,
+  args: Args,
+  input: {
+    file: CustomerFile;
+    project: CustomerFile['projects'][number];
+    by: string;
+    on: string;
+    commit: string;
+    verification: HandoverIndex['verification'];
+  },
+): void {
+  const { file, project, by, on, commit, verification } = input;
+  // 未コミットの変更・追跡してはいけないファイル・秘密情報の形があれば、ここで止まる。
+  const { dir: sourceDir, manifest } = (() => {
+    try {
+      return createBackup({ root: ROOT, outDir: join(dir, SOURCE_DIR) });
+    } catch (error) {
+      throw new OpsError(error instanceof Error ? error.message : String(error));
+    }
+  })();
+  const materials = args.list('material').map((path) => {
+    const from = resolve(path);
+    if (!isDirectory(from)) throw new OpsError(`元素材はフォルダで指定してください: ${from}`);
+    const name = basename(from);
+    const problems = materialProblems(
+      packageFiles(from).map((f) => ({
+        path: f.path,
+        content: () => (f.bytes > 5 * 1024 * 1024 ? null : readFileSync(join(from, f.path))),
+      })),
+    );
+    if (problems.length)
+      throw new OpsError(`同梱できないものが元素材に入っています:\n${problems.join('\n')}`);
+    cpSync(from, join(dir, MATERIALS_DIR, name), { recursive: true });
+    return { dir: name, ...folderTotals(join(dir, MATERIALS_DIR, name)) };
+  });
+
+  const index: HandoverIndex = {
+    format: 1,
+    createdAt: now(),
+    createdBy: by,
+    handedOverOn: on,
+    customer: { id: file.customerId, name: file.name },
+    project: { id: project.id, title: project.title },
+    commit,
+    source: {
+      dir: basename(sourceDir),
+      bundle: manifest.bundle.sha256,
+      files: manifest.files.length,
+      bytes: manifest.files.reduce((sum, f) => sum + f.bytes, 0),
+    },
+    materials,
+    accounts: project.accounts,
+    verification,
+    documents: [`${DOCUMENT}.md`, `${DOCUMENT}.html`],
+    files: [],
+    sealedAt: null,
+    restore: null,
+  };
+  writeDocuments(dir, index);
+  writeJson(join(dir, INDEX), index);
+  console.log(
+    `${dir} に梱包しました（ソース ${index.source.files} ファイル・元素材 ${materials.length} 組）`,
+  );
+  console.log(
+    `まだ封をしていません。別のフォルダで作り直せるかを確かめて封をします:\n  npm run ops:handover -- verify --package ${dir}`,
+  );
+}
+
 runCli(USAGE, {
   plan(args) {
     const { project } = open(args);
@@ -123,63 +193,22 @@ runCli(USAGE, {
     resolveDataDir(out);
     const dir = join(out, `${file.customerId}-${project.id}-${on.replaceAll('-', '')}`);
     mkdirSync(out, { recursive: true, mode: 0o700 });
-    // 既にある資料は上書きしない。作り直すときは、ひとつ前の資料を残したまま日付を変える。
-    mkdirSync(dir, { mode: 0o700 });
-
-    // 未コミットの変更・追跡してはいけないファイル・秘密情報の形があれば、ここで止まる。
-    const { dir: sourceDir, manifest } = (() => {
-      try {
-        return createBackup({ root: ROOT, outDir: join(dir, SOURCE_DIR) });
-      } catch (error) {
-        throw new OpsError(error instanceof Error ? error.message : String(error));
-      }
-    })();
-    const materials = args.list('material').map((path) => {
-      const from = resolve(path);
-      if (!isDirectory(from)) throw new OpsError(`元素材はフォルダで指定してください: ${from}`);
-      const name = basename(from);
-      const problems = materialProblems(
-        packageFiles(from).map((f) => ({
-          path: f.path,
-          content: () => (f.bytes > 5 * 1024 * 1024 ? null : readFileSync(join(from, f.path))),
-        })),
+    // 既にある資料は上書きしない。渡した資料を、同じ場所で黙って作り替えない。
+    try {
+      mkdirSync(dir, { mode: 0o700 });
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+      throw new OpsError(
+        `同じ日の引渡し資料が既にあります: ${dir}。中身を確かめ、作り直す場合は消してから実行してください`,
       );
-      if (problems.length)
-        throw new OpsError(`同梱できないものが元素材に入っています:\n${problems.join('\n')}`);
-      cpSync(from, join(dir, MATERIALS_DIR, name), { recursive: true });
-      return { dir: name, ...folderTotals(join(dir, MATERIALS_DIR, name)) };
-    });
-
-    const index: HandoverIndex = {
-      format: 1,
-      createdAt: now(),
-      createdBy: by,
-      handedOverOn: on,
-      customer: { id: file.customerId, name: file.name },
-      project: { id: project.id, title: project.title },
-      commit,
-      source: {
-        dir: basename(sourceDir),
-        bundle: manifest.bundle.sha256,
-        files: manifest.files.length,
-        bytes: manifest.files.reduce((sum, f) => sum + f.bytes, 0),
-      },
-      materials,
-      accounts: project.accounts,
-      verification,
-      documents: [`${DOCUMENT}.md`, `${DOCUMENT}.html`],
-      files: [],
-      sealedAt: null,
-      restore: null,
-    };
-    writeDocuments(dir, index);
-    writeJson(join(dir, INDEX), index);
-    console.log(
-      `${dir} に梱包しました（ソース ${index.source.files} ファイル・元素材 ${materials.length} 組）`,
-    );
-    console.log(
-      `まだ封をしていません。別のフォルダで作り直せるかを確かめて封をします:\n  npm run ops:handover -- verify --package ${dir}`,
-    );
+    }
+    // 途中で止まったときは、作りかけの資料を残さない（次の実行を妨げない）。
+    try {
+      packInto(dir, args, { file, project, by, on, commit, verification });
+    } catch (error) {
+      rmSync(dir, { recursive: true, force: true });
+      throw error;
+    }
   },
 
   verify(args) {
