@@ -14,7 +14,11 @@ import {
 } from '../shared/store';
 import { jstDate, now, parseDate } from '../shared/time';
 import {
+  type Account,
   type CustomerFile,
+  ACCOUNT_ACCESS_LABELS,
+  ACCOUNT_HOLDER_LABELS,
+  ACCOUNT_KIND_LABELS,
   HANDOVER_LABELS,
   STATE_LABELS,
   addConsultation,
@@ -27,6 +31,7 @@ import {
   linkEstimate,
   loadCustomer,
   recordApproval,
+  recordAccount,
   recordContract,
   recordHandover,
 } from './model';
@@ -39,6 +44,7 @@ npm run ops:crm -- estimate  --customer <顧客ID> --project <案件ID> --estima
 npm run ops:crm -- contract  --customer <顧客ID> --project <案件ID> --version <版> --status draft|sent|signed --ref <書面の保管場所> [--signed-on YYYY-MM-DD] --by <記録者>
 npm run ops:crm -- approval  --customer <顧客ID> --project <案件ID> --id <承認ID> --kind copy|photo --item <対象> --status pending|approved|changes_requested [--decided-by <判断者> --decided-on YYYY-MM-DD] --by <記録者>
 npm run ops:crm -- check     --customer <顧客ID> --project <案件ID> --key <項目> --evidence <根拠> --by <確認者> [--on YYYY-MM-DD]
+npm run ops:crm -- account   --customer <顧客ID> --project <案件ID> --id <記録ID> --kind domain|hosting|cms|analytics|mail|other --service <サービス名> --holder customer|tsumugi --ref <管理画面・登録先> --access revoked|retained --by <記録者> [--transferred-on YYYY-MM-DD] [--revoked-on YYYY-MM-DD] [--reason <保持する理由>] [--note <備考>]
 npm run ops:crm -- handover  --customer <顧客ID> --project <案件ID> --item source_code|manual|photos|github_invite --ref <保管場所・招待先> --by <記録者> [--permission read] [--on YYYY-MM-DD]
 npm run ops:crm -- advance   --customer <顧客ID> --project <案件ID> --to <状態> --by <記録者>
 npm run ops:crm -- show      --customer <顧客ID>
@@ -214,6 +220,35 @@ runCli(USAGE, {
       '引渡しを記録しました',
     );
   },
+  account(args) {
+    const c = open(args);
+    const kind = args.required('kind');
+    const holder = args.required('holder');
+    const access = args.required('access');
+    if (!(kind in ACCOUNT_KIND_LABELS))
+      throw new OpsError(`--kind は ${Object.keys(ACCOUNT_KIND_LABELS).join('・')}`);
+    if (holder !== 'customer' && holder !== 'tsumugi')
+      throw new OpsError('--holder は customer か tsumugi');
+    if (access !== 'revoked' && access !== 'retained')
+      throw new OpsError('--access は revoked か retained');
+    const transferredOn = args.optional('transferred-on');
+    const revokedOn = args.optional('revoked-on');
+    const reason = args.optional('reason');
+    const note = args.optional('note');
+    const account = {
+      id: parseId(args.required('id'), '--id'),
+      kind,
+      service: args.required('service'),
+      holder,
+      ref: args.required('ref'),
+      access,
+      ...(transferredOn ? { transferredOn: parseDate(transferredOn, '--transferred-on') } : {}),
+      ...(revokedOn ? { revokedOn: parseDate(revokedOn, '--revoked-on') } : {}),
+      ...(reason ? { retainedReason: reason } : {}),
+      ...(note ? { note } : {}),
+    } as Account;
+    c.save(recordAccount(c.file, c.project(), account, c.m), 'アカウントを記録しました');
+  },
   advance(args) {
     const c = open(args);
     const to = args.required('to');
@@ -236,6 +271,16 @@ runCli(USAGE, {
         `  納品チェック ${p.checklist.filter((c) => c.done).length}/${p.checklist.length}／引渡し ${
           Object.keys(p.handover)
             .map((k) => HANDOVER_LABELS[k as keyof typeof HANDOVER_LABELS])
+            .join('、') || 'なし'
+        }`,
+      );
+      console.log(
+        `  アカウント ${
+          p.accounts
+            .map(
+              (a) =>
+                `${ACCOUNT_KIND_LABELS[a.kind]}=${a.service}（${ACCOUNT_HOLDER_LABELS[a.holder]}・紬のアクセス${ACCOUNT_ACCESS_LABELS[a.access]}）`,
+            )
             .join('、') || 'なし'
         }`,
       );

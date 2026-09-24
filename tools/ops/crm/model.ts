@@ -7,7 +7,7 @@ import type { EstimateVersion } from '../estimate/model';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { z } from 'zod';
-import { OpsError, assertCustomer, idSchema, readJson } from '../shared/store';
+import { OpsError, assertCustomer, assertNoCredential, idSchema, readJson } from '../shared/store';
 import { dateSchema, timestampSchema } from '../shared/time';
 
 const STATES = [
@@ -70,6 +70,53 @@ const handoverRecord = z.strictObject({
   note: text.optional(),
 });
 
+/**
+ * サイトの運用に要るアカウント。名義（holder）と、引渡し後の紬側のアクセス（access）を記録する。
+ * パスワードは記録しない。`ref` は管理画面や登録事業者の名前までにする（ADR 0082）。
+ */
+const ACCOUNT_KINDS = ['domain', 'hosting', 'cms', 'analytics', 'mail', 'other'] as const;
+type AccountKind = (typeof ACCOUNT_KINDS)[number];
+export const ACCOUNT_KIND_LABELS: Record<AccountKind, string> = {
+  domain: 'ドメイン',
+  hosting: 'ホスティング',
+  cms: 'CMS',
+  analytics: 'アクセス解析',
+  mail: 'メール',
+  other: 'その他',
+};
+/** 引渡しに必ず要る種類。サイトを自分で持ち続けられる条件（ガイドライン 5.4）。 */
+const REQUIRED_ACCOUNT_KINDS = ['domain', 'hosting'] as const;
+export const ACCOUNT_HOLDER_LABELS = { customer: 'お客様名義', tsumugi: '紬名義' } as const;
+export const ACCOUNT_ACCESS_LABELS = { revoked: '撤回済み', retained: '保持' } as const;
+
+export const accountSchema = z
+  .strictObject({
+    id: idSchema,
+    kind: z.enum(ACCOUNT_KINDS),
+    service: text,
+    holder: z.enum(['customer', 'tsumugi']),
+    ref: text,
+    /** お客様名義であることを確かめた日（移管した場合は移管日）。 */
+    transferredOn: dateSchema.optional(),
+    access: z.enum(['revoked', 'retained']),
+    revokedOn: dateSchema.optional(),
+    retainedReason: text.optional(),
+    note: text.optional(),
+  })
+  .refine(
+    (a) => (a.holder === 'customer') === (a.transferredOn !== undefined),
+    'お客様名義には確認日（移管日）が必要です。紬名義には記録しません',
+  )
+  .refine(
+    (a) => (a.access === 'revoked') === (a.revokedOn !== undefined),
+    'アクセスの撤回には撤回日が必要です',
+  )
+  .refine(
+    (a) => (a.access === 'retained') === (a.retainedReason !== undefined),
+    'アクセスを保持する場合は理由が必要です',
+  );
+export type Account = z.infer<typeof accountSchema>;
+
 const projectSchema = z.strictObject({
   id: idSchema,
   title: text,
@@ -118,6 +165,7 @@ const projectSchema = z.strictObject({
         '完了した項目には日付・確認者・根拠が必要です',
       ),
   ),
+  accounts: z.array(accountSchema).default([]),
   handover: z.strictObject({
     source_code: handoverRecord.optional(),
     manual: handoverRecord.optional(),
@@ -227,6 +275,7 @@ export function addProject(
         contracts: [],
         approvals: [],
         checklist: DEFAULT_CHECKLIST.map((c) => ({ ...c, done: false })),
+        accounts: [],
         handover: {},
         stateHistory: [{ ...m, from: null, to: 'consulting' }],
       },
@@ -320,6 +369,48 @@ export function completeChecklistItem(
   return withProject(file, { ...p, checklist }, m, `納品チェック ${item.key} を完了`);
 }
 
+export function recordAccount(
+  file: CustomerFile,
+  projectId: string,
+  account: Account,
+  m: Meta,
+): CustomerFile {
+  const p = findProject(file, projectId);
+  editable(p);
+  assertNoCredential('アカウントの参照', account.ref);
+  if (account.note) assertNoCredential('アカウントの備考', account.note);
+  const accounts = [...p.accounts.filter((a) => a.id !== account.id), account].sort((a, b) =>
+    a.id.localeCompare(b.id),
+  );
+  return withProject(
+    file,
+    { ...p, accounts },
+    m,
+    `${ACCOUNT_KIND_LABELS[account.kind]}「${account.service}」を ${ACCOUNT_HOLDER_LABELS[account.holder]}・アクセス${ACCOUNT_ACCESS_LABELS[account.access]}として記録`,
+  );
+}
+
+/**
+ * 資料の受け渡しより前に満たす条件（検収・名義・アクセス）。引渡し資料を作る前に確かめる（ADR 0082）。
+ * 引渡しの記録そのものは含まない。資料を渡してから記録するため。
+ */
+export function transferBlockers(project: Project): string[] {
+  const blockers: string[] = [];
+  if (project.state !== 'accepted' && project.state !== 'handed_over')
+    blockers.push(`「${STATE_LABELS[project.state]}」の案件です。検収済みになってから引き渡します`);
+  for (const c of project.checklist.filter((c) => !c.done))
+    blockers.push(`納品チェック「${c.label}」が未完了です`);
+  for (const kind of REQUIRED_ACCOUNT_KINDS)
+    if (!project.accounts.some((a) => a.kind === kind))
+      blockers.push(`${ACCOUNT_KIND_LABELS[kind]}のアカウントが未記録です`);
+  for (const a of project.accounts)
+    if (a.holder !== 'customer')
+      blockers.push(
+        `${ACCOUNT_KIND_LABELS[a.kind]}「${a.service}」がお客様名義ではありません（${ACCOUNT_HOLDER_LABELS[a.holder]}）`,
+      );
+  return blockers;
+}
+
 export function recordHandover(
   file: CustomerFile,
   projectId: string,
@@ -365,9 +456,11 @@ export function blockersFor(project: Project, to: State): string[] {
   if (to === 'accepted')
     for (const c of project.checklist.filter((c) => !c.done))
       blockers.push(`納品チェック「${c.label}」が未完了です`);
-  if (to === 'handed_over')
+  if (to === 'handed_over') {
+    blockers.push(...transferBlockers(project));
     for (const item of HANDOVER_ITEMS)
       if (!project.handover[item]) blockers.push(`${HANDOVER_LABELS[item]}の引渡しが未記録です`);
+  }
   return blockers;
 }
 
