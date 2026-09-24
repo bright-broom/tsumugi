@@ -40,6 +40,7 @@
     "check:release": "tsx tools/ops/cli/check-release.ts",
     "check:live": "tsx tools/ops/cli/check-live.ts",
     "monitor": "tsx tools/ops/cli/monitor.ts",
+    "watchdog": "tsx tools/ops/cli/watchdog.ts",
     "backup": "tsx tools/ops/cli/backup.ts",
     "backup:restore-test": "tsx tools/ops/cli/restore-test.ts",
     "check:security": "tsx tools/security/check.ts",

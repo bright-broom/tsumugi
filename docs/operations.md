@@ -202,13 +202,16 @@ npm run backup:restore-test -- --backup .artifacts/backup/tsumugi-<日時>-<comm
 ## 公開後の監視
 
 監視の現在の設計は [ADR 0064](architecture/0064-production-monitoring.md)。通知の限界は [ADR 0046](architecture/0046-post-launch-monitoring.md)。
+監視そのものが動いているかの見張りは [ADR 0083](architecture/0083-monitor-watchdog.md)。
 
 ### 設定（公開後に一度）
 
 1. GitHub のリポジトリ → Settings → Secrets and variables → Actions → **Variables** に `SITE_URL` を追加する。値は `https://<本番ドメイン>`（末尾の `/` やパスは付けない）。公開情報なので Secret にしない
 2. Actions → Site monitor → Run workflow で一度手動実行し、ジョブの要約に結果の表が出ることを確かめる
 3. 失敗通知を受け取る人が、GitHub の通知設定で Actions の失敗通知を受け取る設定になっているか確かめる。**定期実行の失敗通知は、ワークフローの cron を最後に変更した人に届く**
-4. 「監視の体制」の表を埋める
+4. Actions → Monitor watchdog → Run workflow で一度手動実行し、「監視の見張り」の表が出ることを確かめる
+5. 通知を複数人で受けるなら、Variables に `ALERT_ASSIGNEES`（GitHub のユーザー名をカンマ区切り）を追加する。障害の issue がその人に割り当てられる
+6. 「監視の体制」の表を埋める
 
 `SITE_URL` が未設定でも、紬の自社公開判断に一致する `DOMAIN`（`PLACEHOLDER=false`）を監視する。顧客テンプレート等で公開先を確定できなければ終了コード 2 で失敗する。未実行を成功とは扱わない。期待するページと連絡先は、この checkout の設定から取得するので、監視先も同じ顧客サイトに揃える。
 
@@ -230,6 +233,21 @@ npm run backup:restore-test -- --backup .artifacts/backup/tsumugi-<日時>-<comm
 | 応答時間                     | 3,000ms 超のページがある | —                                                                      |
 
 監視 JSON はジョブ要約に加えて Actions の成果物へ 14 日保存する。設定・依存導入で止まった場合はログで理由を確認する。`--dist out` なら通信せずに同じ検査を試せる（DNS・証明書・HTTPS 転送は SKIP）。
+
+### 監視そのものの見張り（6 時間ごと）
+
+`npm run watchdog`（手元では `npm run watchdog -- --runs <実行履歴.json>` で通信せずに試せる）。Site monitor の**実行の履歴**を見る（[ADR 0083](architecture/0083-monitor-watchdog.md)）。
+
+| 項目       | FAIL                                                        |
+| ---------- | ----------------------------------------------------------- |
+| 監視の実行 | 直近の完了した実行が 180 分より古い・一度も実行されていない |
+| 監視の中身 | 手順「Monitor」が飛ばされている・実行に含まれていない       |
+| 直近の結果 | success でない                                              |
+| 連続の失敗 | 2 回以上続けて失敗している                                  |
+
+FAIL があると `site-monitor-down` ラベルの issue が 1 件だけ立つ（既にあれば追記）。失敗のあとに成功すると「復旧」として同じ issue が閉じられる。issue はリポジトリを見ている全員に届くので、失敗通知が cron を最後に変更した 1 人にしか届かない問題を補う。
+
+**この見張りも GitHub Actions の上で動く。** GitHub 側の停止や、ワークフローごと止められた場合は検出できない。月に一度の手動確認（下の 6 番）は続ける。
 
 ### 手で見るもの（月に一度と、公開・大きな変更の直後）
 
@@ -264,7 +282,7 @@ npm run backup:restore-test -- --backup .artifacts/backup/tsumugi-<日時>-<comm
    - **robots・sitemap の FAIL**：本番に出ているコミットの `DOMAIN` とビルドを確かめ、`npm run check:live -- --url https://<本番ドメイン>` で全体を確認する
    - **応答時間の WARN だけ**：1 回だけなら記録して様子を見る。続く場合は手元の回線から `check:live` で比べる
 4. 復旧したら `npm run check:live` を実行し、「障害と復旧の記録」に書く
-5. **監視そのものが止まったとき**（Actions に数時間分の実行がない）：Actions の画面でワークフローが無効になっていないか見て、有効に戻す。Public リポジトリは動きがない期間が続くと定期実行が止まる
+5. **監視そのものが止まったとき**（Actions に数時間分の実行がない）：`site-monitor-down` の issue と Monitor watchdog の結果を見る。Actions の画面でワークフローが無効になっていないか確かめ、有効に戻す。Public リポジトリは動きがない期間が続くと定期実行が止まる
 
 ### 監視の体制
 
@@ -273,6 +291,7 @@ npm run backup:restore-test -- --backup .artifacts/backup/tsumugi-<日時>-<comm
 | 監視の担当者                                                    |     |          |
 | 失敗通知を受け取る GitHub アカウント（cron を最後に変更した人） |     |          |
 | 2 人目への連絡方法                                              |     |          |
+| `ALERT_ASSIGNEES`（障害 issue の割り当て先）                    |     |          |
 | 顧客サイトで監視を提供する場合の通知先・方式                    |     |          |
 
 ### 手動確認の記録

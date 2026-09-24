@@ -1,0 +1,89 @@
+# 監視そのものの見張り（監査 A07、ADR 0083）。
+# 毎時の Site monitor が「止まっている」「成功と表示されているが中身が飛ばされている」「失敗が続いている」
+# ことを、実行の履歴から検出する。障害は issue を 1 件だけ立てて知らせ、復旧したら自動で閉じる。
+# 通知先を増やすときは、リポジトリ変数 ALERT_ASSIGNEES に GitHub のユーザー名をカンマ区切りで入れる。
+# 同じ GitHub Actions の上で動くため、GitHub 全体の停止は検出できない（ADR 0083 の「限界」）。
+name: Monitor watchdog
+on:
+  schedule:
+    - cron: '37 */6 * * *' # 6 時間ごと。監視は毎時なので、3 時間止まれば次の実行で気づく
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+  issues: write
+concurrency:
+  group: monitor-watchdog
+  cancel-in-progress: false
+env:
+  LABEL: site-monitor-down
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install --global npm@12.0.2
+      - run: npm ci
+      - name: Watchdog
+        id: watchdog
+        continue-on-error: true # 判定の結果は通知してから、最後にジョブの成否へ反映する
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: npm run watchdog -- --json .artifacts/ops/watchdog.json --body .artifacts/ops/watchdog-body.md
+
+      - name: Open an issue
+        if: steps.watchdog.outputs.alert == 'down'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEADLINE: ${{ steps.watchdog.outputs.headline }}
+          ASSIGNEES: ${{ vars.ALERT_ASSIGNEES }}
+        run: |
+          set -euo pipefail
+          gh label create "$LABEL" --color B60205 --description "公開後の監視の警報（自動）" --force
+          existing="$(gh issue list --label "$LABEL" --state open --limit 1 --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body-file .artifacts/ops/watchdog-body.md
+            echo "既存の issue #$existing に追記しました"
+          else
+            args=(--label "$LABEL" --title "監視の警報: $HEADLINE"
+                  --body-file .artifacts/ops/watchdog-body.md)
+            if [ -n "${ASSIGNEES:-}" ]; then args+=(--assignee "$ASSIGNEES"); fi
+            gh issue create "${args[@]}"
+          fi
+
+      - name: Close the issue when recovered
+        if: steps.watchdog.outputs.alert == 'recovered'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for number in $(gh issue list --label "$LABEL" --state open --json number --jq '.[].number'); do
+            gh issue close "$number" --comment "$(cat .artifacts/ops/watchdog-body.md)"
+            echo "issue #$number を閉じました"
+          done
+
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: monitor-watchdog-${{ github.run_number }}
+          path: |
+            .artifacts/ops/watchdog.json
+            .artifacts/ops/watchdog-body.md
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: Fail when the watchdog found a problem
+        if: steps.watchdog.outcome != 'success'
+        run: |
+          echo "監視の見張りが問題を検出しました（上の結果を参照）" >&2
+          exit 1
