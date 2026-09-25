@@ -36,6 +36,12 @@ CRM（ADR 0038）は引渡しを「ソースコード一式・引き継ぎ手順
 - **封は資料全体を覆う**。`SHA256SUMS` は `handover.json` 自身も含める。中身が 1 バイトでも変われば `record` が止まる。
 - **上書きしない**。同じ日の資料が既にあれば作らない。途中で止まったときは作りかけを消す（渡した資料を同じ場所で黙って作り替えない）。
 
+## 追記（2026-09-26）浅い clone からは梱包しない
+
+Linux のクラウド作業環境（`npm` を別フォルダで起動できる）で、架空の顧客の `verify --deps ci --build build` を初めて通そうとしたところ、**バンドルから別フォルダへの clone で失敗した**（`fatal: remote did not send all necessary objects`）。その checkout が浅い clone（履歴 50 件）で、`git bundle` が親のコミットを欠いたバンドルを作っていた。`pack` はそれを通してしまい、封の段階まで気づけなかった。CI で封をする場合も、`actions/checkout` の既定は `fetch-depth: 1` なので同じことが起きる。
+
+`createBackup`（週次バックアップと `pack` が共通で使う）で `git rev-parse --is-shallow-repository` を確かめ、浅い clone なら**作る前に**止めて `git fetch --unshallow`（Actions では `fetch-depth: 0`）を案内する。週次バックアップのワークフローは既に `fetch-depth: 0`。回帰は `tests/ops-backup.test.ts`（浅い clone を拒否し、履歴をそろえると作れて復元できる）。
+
 ## 限界
 
 - **ビルドまでの再現確認は、この作業環境では実行できない**。サンドボックスが別フォルダでの `npm` の起動を許さない（`spawnSync npm EPERM`）。チェックサムの照合・別フォルダへの取り出し・目録との突き合わせ（528 ファイル・5,076,576 バイト）までは実機で通っている。封はオーナーの環境か CI で行う。
