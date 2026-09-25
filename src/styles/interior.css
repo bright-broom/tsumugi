@@ -6,10 +6,10 @@
   .interior-content > section {
     @apply py-interior-section-pc;
   }
+  /* 章の切り替えは罫線ではなく余白と面で示す。線が増えるほど、どれも同じ強さに見える。 */
+  .interior-content > section.dark,
+  .interior-content > section.dark + section,
   .interior-content > section + section {
-    @apply border-t border-line;
-  }
-  .interior-content > section.dark {
     @apply border-t-[0];
   }
   .interior-content .btn {
@@ -223,14 +223,20 @@
   .interior-content > .hero .btn {
     @apply min-w-[0];
   }
-  .interior-content > .hero .page-index {
-    @apply col-[1_/-1] mb-[0] border-muted-on-ink;
+  .interior-content > .hero .page-index,
+  .interior-content section.dark .page-index {
+    @apply col-[1_/-1] mb-[0] border-[var(--color-gold-soft)];
   }
-  .interior-content > .hero .page-index a {
+  .interior-content > .hero .page-index a,
+  .interior-content section.dark .page-index a {
     @apply text-main;
   }
-  .interior-content > .hero .page-index .ic {
-    @apply text-accent;
+  .interior-content > .hero .page-index .ic,
+  .interior-content section.dark .page-index .ic {
+    @apply text-gold;
+  }
+  .interior-content section.dark .page-index a:hover {
+    @apply text-gold;
   }
 
   /* Pricing: the starting plan stays dominant; ongoing support reads as a separate choice. */
@@ -557,5 +563,79 @@
     .page-index {
       @apply hidden;
     }
+  }
+
+  /* 濃い帯の導入に載る部品（問い合わせ・FAQ の索引）。 */
+  section.dark .contact-channel {
+    @apply border-[var(--color-gold-soft)] text-main;
+  }
+  section.dark .contact-channel-email {
+    @apply border border-[var(--color-gold-soft)];
+    border-top: 2px solid var(--color-accent);
+  }
+  section.dark .contact-channel .contact-hours,
+  section.dark .contact-channel > p:last-child {
+    @apply text-muted-on-ink;
+  }
+  section.dark .contact-email,
+  section.dark .contact-channel a {
+    @apply text-main;
+  }
+  section.dark .contact-email:hover {
+    @apply text-gold;
+  }
+  .interior-content section.dark .faq-index a {
+    @apply text-main;
+  }
+  .interior-content section.dark .faq-index a:hover {
+    @apply text-gold;
+  }
+
+  /* 料金の面が濃い帯の導入に載るとき。明るい面用の指定（この層）に同じ層で上書きする。 */
+  .interior-content section.dark .entry {
+    @apply border-[var(--color-gold-soft)] text-main;
+  }
+  .interior-content section.dark .entry > div:first-child {
+    @apply border-r-[var(--color-gold-soft)];
+  }
+  .interior-content section.dark .entry .pn,
+  .interior-content section.dark .entry .amt,
+  .interior-content section.dark .entry h3 {
+    @apply text-main;
+  }
+  .interior-content section.dark .entry .amt .u,
+  .interior-content section.dark .entry li,
+  .interior-content section.dark .entry p,
+  .interior-content section.dark .entry span {
+    @apply text-muted-on-ink;
+  }
+  .interior-content section.dark .entry .ic {
+    @apply text-gold;
+  }
+  .interior-content section.dark .catalog-hero-action p {
+    @apply text-muted-on-ink;
+  }
+
+  /* 明るい面のカード（.plan）が濃い帯に載るとき、章の白い文字を受け継ぐと読めなくなる。
+     面が明るいままのカードは文字も墨に戻す。面を持たないカード（支援プラン）は白のまま。 */
+  .interior-content section.dark .plan {
+    @apply text-ink;
+  }
+  .interior-content section.dark .support-plans .plan {
+    @apply text-white;
+  }
+  /* 明るいカードの中のリンクと副ボタンも、濃い面用の配色から戻す */
+  .interior-content section.dark .plan a:not(.btn) {
+    @apply text-[var(--accent-text)];
+  }
+  .interior-content section.dark .support-plans .plan a:not(.btn) {
+    @apply text-white;
+  }
+  .interior-content section.dark .plan .btn-2 {
+    @apply text-ink border-line-strong;
+  }
+  .interior-content section.dark .support-plans .plan .btn-2 {
+    @apply text-white;
+    border-color: color-mix(in srgb, var(--color-main) 45%, transparent);
   }
 }

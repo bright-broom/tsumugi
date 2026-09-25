@@ -528,4 +528,24 @@
       @apply w-full;
     }
   }
+
+  /* 濃い帯の導入に載るとき（ADR: 和モダンの面）。明るい面用の配色のままだと読めない。 */
+  section.dark .catalog-stages {
+    @apply border-[var(--color-gold-soft)];
+  }
+  section.dark .catalog-stage {
+    @apply text-main;
+  }
+  section.dark .catalog-stage + .catalog-stage {
+    @apply border-l-[var(--color-gold-soft)];
+  }
+  section.dark .catalog-stage > span {
+    @apply text-muted-on-ink;
+  }
+  section.dark .catalog-stage:hover {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_8%,_transparent)];
+  }
+  section.dark .catalog-principles li {
+    @apply text-main;
+  }
 }

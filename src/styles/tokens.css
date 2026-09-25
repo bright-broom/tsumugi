@@ -71,8 +71,8 @@
   --spacing-bp: 768px;
   --spacing-cq-4: 960px;  /* 配置領域がこれ以上なら4列 */
   --spacing-cq-2: 520px;  /* これ以上なら2列、未満は1列 */
-  --spacing-interior-section-pc: 72px;  /* 下層ページの章間（PC） */
-  --spacing-interior-section-mb: 44px;  /* 下層ページの章間（モバイル） */
+  --spacing-interior-section-pc: 96px;  /* 下層ページの章間（PC） */
+  --spacing-interior-section-mb: 56px;  /* 下層ページの章間（モバイル） */
   --spacing-intro-top-pc: 64px;  /* 下層ページ先頭の上余白 */
   --spacing-intro-bottom-pc: 48px;  /* 下層ページ先頭の下余白 */
   --spacing-intro-top-mb: 40px;  /* 下層ページ先頭の上余白（モバイル） */
