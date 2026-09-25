@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-24（引渡し資料の梱包に加え、リリースに不足していた機能を棚卸しして実装：文書の参照検査・監視の見張り・CSS 内の資産・日付境界の作り直し）
+- 最終更新：2026-09-26 JST（再開ポイントを main `0516d56` に合わせ、引渡しの封を初めて実際に通した。浅い clone でバックアップ・引渡し資料が壊れる不具合を修正）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -10,7 +10,32 @@
 
 ## 現状
 
-### 再開ポイント（2026-09-24確認）
+### 再開ポイント（2026-09-26 JST確認）
+
+- main は `0516d56`（#97 引渡し資料・#98 リリースに不足していた機能・#99 README まで統合済み）。下の 09-24 の再開ポイントにある `feat/handover-package` は #97 で統合済み。
+- この作業のブランチは `claude/sharp-carson-6byj7n`（main から作成）。修正コミットは `0902e42`、このあとに status 更新の文書コミットが続く。PR はこのブランチから main 向けに作る。
+- 作業環境：Linux のクラウド作業環境・Node 24.21.0・npm 12.0.2・Playwright 1.63.0。Playwright 1.63 が求める Chromium（1243）が無く、入っていた Chromium 141（1194）の headless shell を `PLAYWRIGHT_BROWSERS_PATH` で差し替えて使った。ダウンロードはしていない。**固定した版の Chromium での計測ではない**。
+- 検証：
+  - main `0516d56` のまま `npm run validate` が成功した（Vitest 765 件・静的検査 PASS 332 / WARN 1 / FAIL 0）。同じコミットで build → `verify --mode production` → build を通し、**PASS 600 / WARN 3 / FAIL 0**（`commit.dirty=false`）。
+  - 修正コミット `0902e42` では check・lint・Vitest **766 件**が成功し、build → `verify --mode production` → build も **PASS 600 / WARN 3 / FAIL 0**。WARN 3 件は従来どおり（ADR 0056）。
+- 証跡は `.artifacts/session-0925/`（Git 管理外）。validate.log・production.log・fix-checks.log・handover-rehearsal.log・引渡し資料一式。データはすべて架空で、実データの `.data/` には書いていない。
+
+**引渡しの封を初めて実際に通した**（09-24 の限界「封はこの環境では通せない」の解消）
+
+- 架空の顧客（sample-shop）で、相談から見積・契約・承認・納品チェック・名義の記録・`plan` → `pack` → `verify --deps ci --build build` → `record` → 引渡し済みまで、実 CLI で通した。
+- `verify` は別フォルダに取り出して展開し（履歴 213 件）、目録と照合した（542 ファイル・5,173,076 バイト）。そのうえで `npm ci`（15.7 秒）と `npm run build`（16.5 秒・HTML 22 件）を通し、封（`SHA256SUMS`）を付けた。検査の実績には、同じコミット・未コミットの変更なしの本番モードのレポートを使った（見本ではない）。
+- **最初の試行で不具合が見つかった。** この作業環境の checkout は浅い clone（履歴 50 件）だった。`git bundle` が親のコミットを欠いたバンドルを作り、`verify` の clone が `remote did not send all necessary objects` で失敗した。`pack` と週次バックアップの `backup` はこれを止めずに作っていた。CI で封をしようとしても、`actions/checkout` の既定（`fetch-depth: 1`）で同じことが起きる。
+- 修正：`createBackup` が浅い clone を作る前に拒否し、`git fetch --unshallow`（Actions では `fetch-depth: 0`）を案内するようにした。回帰テストは、修正前には失敗し修正後に通ることを確かめた（ADR 0082 の追記、operations.md、tools/ops/README.md）。週次バックアップのワークフローは既に `fetch-depth: 0` なので影響はない。
+- あわせて、tools/ops/README.md に残っていた「このリポジトリは Public」を現状（ADR 0070）に直した。
+- 公開しているサイトには影響しない（`src/`・`public/`・`config/` は変更していない）。
+
+**次の一手**
+
+1. このブランチの PR の CI（validate・本番モードの検査）と Vercel の結果を確かめて統合する。
+2. 最初の実案件は、全履歴の clone（浅くないもの）で `plan` → `pack` → `verify` → `record` を通す。Chromium を固定した版で計測し直す場合は、オーナーの環境か CI で行う。
+3. 残りの多くは、コードでは閉じない外部・オーナーの作業（下の「コードで閉じられないもの」の表と「残課題」）。
+
+### 再開ポイント（2026-09-24確認・履歴）
 
 - main は `9767540`（#92 統合後に dependabot の更新 #94〜#96 が入っている）。作業ブランチは `feat/handover-package`。
 - 請求書：実際の振込先を `.data/billing/profile.json` に記入済み（オーナー入力。Git 管理外）。架空の顧客で 1 枚発行し、宛名・金額・内訳・免税事業者の断り書き・振込先・実行時 JS 0・A4 の体裁を確認した（下記）。
@@ -370,9 +395,9 @@ GitHubの35件を再評価し、#14を旧方針のため終了、#37を対応済
 | 構成                   | ルート直下の `src/`：Next.js 16.3.5（Pages Router）・React 19.3.0・TypeScript 7.0.2（検査ツール用 API は公式互換パッケージ 6.0.3）。22ページを `out/` に静的書き出し                                                                            |
 | 実行時 JS              | 全22ページで 0（`postbuild` と `verify` で確認）                                                                                                                                                                                                |
 | 検査                   | 本番全項目 **PASS 600 / WARN 3 / FAIL 0**、静的プレビュー PASS 332 / WARN 1 / FAIL 0（対象なし 42 件）。本番 WARN は専門家確認 2 件・受入確認記録の未実施（ADR 0056）。全プランページ追加による検査対象の増加。しきい値の変更なし（ADR 0062）。 |
-| 型・依存・文言         | `npm run check` が通る。ESLint エラー・警告 0、Vitest 593 件・料金モデル 12 件合格                                                                                                                                                              |
+| 型・依存・文言         | `npm run check` が通る。ESLint エラー・警告 0、Vitest 766 件（2026-09-26）・料金モデル 12 件合格                                                                                                                                                |
 | 依存の健全性           | npm 12 のクリーンな `npm ci` 成功、`npm audit` 0 件。CLI の依存には修正版 override を指定。Dependabot は ESLint と Node 型定義のメジャー更新だけを除外し、既存の互換性方針を維持（ADR 0003）                                                    |
-| 動作を確かめた環境     | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一                                                                                                                                        |
+| 動作を確かめた環境     | macOS・Node 24.21.0・npm 12.0.2・Playwright 1.63.0（Chromium）。ローカル・CI・Vercel を Node 24 系へ統一。2026-09-26 に Linux（Chromium 141 で代用）でも本番モードの検査が同じ結果                                                              |
 | 文言とルート           | `i18n/locales/ja/` と `routing/registry.ts` に集約。Next の入口3枚と表示テンプレートを分離。電話は共通部品でアイコン＋番号だけを表示（ADR 0004）                                                                                                |
 | CSSの中央管理          | Tailwind CSS 4.3.3。99個のトークンから `@theme` を生成し、公開ページは `globals.css`、共有カード画像は `og.css` を入口にコンパイル。ページの静的インライン指定を解消、開発時の監視と中央管理の自動検査を追加（ADR 0009）                        |
 | 情報設計               | 所有の4項目とFAQ30問をi18nで共有。ホームはFAQ5問を抜粋、FAQは6カテゴリの目次付き。主要14ページの案内を共通の3グループに整理（ADR 0017・0062）                                                                                                   |
