@@ -1,6 +1,6 @@
 # 現状と残課題
 
-- 最終更新：2026-09-25（デザインを和モダンへ刷新：明暗の帯・明朝の見出し・金の罫・数字の主役化）
+- 最終更新：2026-09-26（デザイン刷新の PR #100 が CI 失敗のまま未解決。切り分け済みの範囲と次の手を下に記録）
 - **作業を終えたら、この文書を更新する。** 終わった課題は消さずに「完了した課題」へ移し、日付を入れる
 - 事業として決めること（運用の工数・集客経路・出張撮影の扱いなど）の順番は、[ビジネスガイドライン](business/紬_ビジネスガイドライン.md) の「12. 未決事項」が正本。法令まわりの未解決は同じ文書の「8.1」。ここには、**コードと公開作業に関わるもの**を書く
 
@@ -9,6 +9,41 @@
 ---
 
 ## 現状
+
+### 再開ポイント（2026-09-26確認）
+
+**main は `02f5f37`。開いている PR が 2 件ある。**
+
+| PR                                                       | 中身                                                                                                              | 状態                                                                 | 次の手                             |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------- |
+| [#99](https://github.com/bright-broom/tsumugi/pull/99)   | README を現状に合わせる（`docs/readme-update`、1 コミット）                                                       | open。CI の結果は未確認                                              | CI が通っていればマージする        |
+| [#100](https://github.com/bright-broom/tsumugi/pull/100) | デザインの和モダン刷新（`feat/design-wa-modern`、4 コミット。[ADR0085](architecture/0085-wa-modern-surfaces.md)） | open。**CI のジョブ `validate` が失敗**。Vercel のプレビューは Ready | 下記の「未解決」を読んでから進める |
+
+#### 未解決：PR #100 の CI `validate` が失敗している
+
+ジョブ `validate` は `audit:security` → `validate` → `verify --mode production` → `verify:locales --mode production` → `test:security-browser` の順に走る（[ci.yml](../.github/workflows/ci.yml)）。**どの段階で落ちたかは未確認**。作業環境から `gh` が使えずログを取得できなかった。
+
+作業環境で再現できる範囲は**すべて合格**で、退行は見つかっていない。
+
+| 確かめたこと                                                                       | 結果                                                                              |
+| ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `npm run validate`（静的部分）                                                     | 成功。本番モードの静的検査 PASS 347 / WARN 3 / FAIL 0                             |
+| `npm run audit:security` / `check:security`                                        | 合格（脆弱性 0）                                                                  |
+| コントラスト AA（22 ページ・14,163 要素、1280/390px）                              | 0 件                                                                              |
+| タップ領域 44px・文字の下限 14px・アイコンと文字の比・横あふれ（390px・22 ページ） | 0 件                                                                              |
+| 図の文字の実寸                                                                     | `origin/main` のビルドと**同値**（min 11.69px / 36 箇所）。刷新による退行ではない |
+
+**次の手**：失敗した行を取得して直す。オーナーの端末なら次の 1 行で出る。
+
+```sh
+gh run view --repo bright-broom/tsumugi $(gh run list --repo bright-broom/tsumugi --workflow ci.yml --branch feat/design-wa-modern --limit 1 --json databaseId --jq '.[0].databaseId') --log-failed | grep -E "FAIL|Error" | head -40
+```
+
+残る候補は、作業環境で動かせなかった検査だけ：**LCP・検査コード側のコントラスト実装・コンソールエラー・`test:security-browser`**。動かせない理由と代替の確かめ方は [handoff.md「ブラウザ検査を動かせない作業環境のとき」](handoff.md#ブラウザ検査を動かせない作業環境のとき)。オーナーはサンドボックスの許可（ローカル待受と Playwright の読み取り）に同意済みだが、**設定ファイルへの反映は未実施**（AI は設定を書き換えられない）。
+
+#### 設定済みのリポジトリ変数・シークレット（2026-09-24）
+
+`ALERT_ASSIGNEES`＝`bright-broom`（障害 issue の割り当て先）、`VERCEL_DEPLOY_HOOK`＝設定済み（日付境界の作り直し）。`SITE_URL` は**未設定**で、コードの `DOMAIN`（`tsumugi-six.vercel.app`）が監視先になる。`bright-broom` が User か Organization かは未確認で、Organization だと `gh issue create --assignee` が失敗する（`gh api users/bright-broom --jq .type` で確認できる）。
 
 ### 再開ポイント（2026-09-24確認）
 
