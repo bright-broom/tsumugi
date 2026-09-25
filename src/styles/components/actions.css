@@ -30,6 +30,6 @@
   }
   section.dark .btn-2:hover,
   .hero .btn-2:hover {
-    @apply bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)] border-white;
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)] border-gold;
   }
 }

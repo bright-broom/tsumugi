@@ -19,12 +19,18 @@
   .brand-hero-stage::after {
     content: '';
     @apply absolute inset-[0] pointer-events-none;
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--color-ink) 58%, transparent),
-      color-mix(in srgb, var(--color-ink) 34%, transparent) 55%,
-      transparent 80%
-    );
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-ink-deep) 72%, transparent),
+        color-mix(in srgb, var(--color-ink) 40%, transparent) 55%,
+        transparent 82%
+      ),
+      linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--color-ink-deep) 55%, transparent),
+        transparent 38%
+      );
   }
   .brand-hero-copy {
     --hero-inset: max(var(--spacing-pad-mb-head), 5cqw);
@@ -36,9 +42,15 @@
       0 0 0.9em color-mix(in srgb, var(--color-ink) 60%, transparent);
   }
   .brand-hero-copy h1 {
-    @apply leading-[1.36] m-[0];
+    @apply leading-[1.36] m-[0] relative;
     font-size: clamp(32px, 5.5cqw, 80px);
     margin-block-end: clamp(12px, 2cqw, 32px);
+    padding-block-start: clamp(16px, 2.4cqw, 32px);
+  }
+  .brand-hero-copy h1::before {
+    content: '';
+    @apply absolute top-[0] left-[0] h-[2px] w-rule;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-gold-soft));
   }
   .brand-hero-copy p {
     @apply leading-[1.65] m-[0];
@@ -399,8 +411,12 @@
   .comparison-assumptions {
     @apply text-fine leading-[1.9] text-muted-on-ink m-[0];
   }
+  .home-section.dark .fig {
+    @apply bg-main p-[28px] rounded-card;
+    border: 1px solid var(--color-gold-soft);
+  }
   .home-comparison .fig {
-    @apply bg-main p-[24px];
+    @apply p-[24px];
   }
   .home-comparison .acc {
     @apply mt-[28px];
@@ -599,31 +615,31 @@
   }
 }
 @layer overrides {
-  .home-section.home-contact {
-    @apply bg-accent text-sub;
-  }
   .home-contact h2,
-  .home-contact .sh .lede,
   .home-contact .sh .lede strong {
-    @apply text-sub;
+    @apply text-main;
+  }
+  .home-contact .sh .lede {
+    @apply text-muted-on-ink;
   }
   .home-contact .btn-1 {
-    @apply bg-sub text-main border-sub;
+    @apply bg-accent text-sub border-accent;
   }
   .home-contact .btn-2 {
-    @apply text-sub border-sub;
+    @apply text-main;
+    border-color: var(--color-gold-soft);
   }
   .home-contact .btn-2:hover {
-    @apply bg-main text-sub;
+    @apply border-gold bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)];
   }
   .home-contact .route-links,
   .home-contact .route-links a {
-    @apply text-sub border-[color-mix(in_srgb,_var(--color-sub)_30%,_transparent)];
+    @apply text-main border-[var(--color-gold-soft)];
   }
   .home-contact .route-links a:hover {
-    @apply underline underline-offset-[4px];
+    @apply text-gold underline underline-offset-[4px];
   }
   .home-section.home-contact :where(a, summary):focus-visible {
-    outline-color: var(--color-sub);
+    outline-color: var(--color-main);
   }
 }

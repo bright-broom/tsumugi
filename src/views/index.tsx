@@ -365,6 +365,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
 
         <Section
           navKey={href('subsidy')}
+          tone="dark"
           className="home-section home-subsidy"
           eyebrow={copy.eyebrow8}
           heading={copy.heading13}

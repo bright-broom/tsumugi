@@ -19,13 +19,13 @@
     @apply gap-[12px] mt-[28px];
   }
   .interior-content .sh {
-    @apply grid grid-cols-[1.1fr_1fr] gap-[16px_64px] items-start mb-[36px];
+    @apply grid grid-cols-[1.1fr_1fr] gap-[16px_64px] items-start mb-[44px];
   }
   .interior-content .sh .lab {
     @apply col-[1_/-1] text-fine mb-[0];
   }
   .interior-content .sh h2 {
-    @apply text-[clamp(26px,2.5vw,34px)] leading-[1.55] tracking-[.015em] text-balance;
+    @apply text-[clamp(28px,2.9vw,40px)] leading-[1.5] tracking-heading text-balance;
   }
   .interior-content .sh h1,
   .interior-content .sh h2 {
