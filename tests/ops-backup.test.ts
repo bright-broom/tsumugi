@@ -201,6 +201,35 @@ describe('バックアップと復元テスト', () => {
     );
   });
 
+  it('浅い clone からは作らない（親のコミットを欠いたバンドルは復元できない）', () => {
+    const repo = fixtureRepo();
+    writeFileSync(join(repo, 'docs/operations.md'), '# 2つ目のコミット\n');
+    run(repo, 'commit', '--quiet', '-am', 'second');
+    const shallow = join(tempDir('tsumugi-backup-shallow-'), 'repo');
+    run(
+      tempDir('tsumugi-backup-cwd-'),
+      'clone',
+      '--quiet',
+      '--depth',
+      '1',
+      `file://${repo}`,
+      shallow,
+    );
+    expect(() => createBackup({ root: shallow, outDir: tempDir('tsumugi-backup-out-') })).toThrow(
+      '浅い clone',
+    );
+    // 履歴をそろえれば作れて、復元もできる
+    run(shallow, 'fetch', '--quiet', '--unshallow');
+    const { dir } = createBackup({ root: shallow, outDir: tempDir('tsumugi-backup-out-') });
+    const report = restoreTest({
+      backupDir: dir,
+      workDir: tempDir('tsumugi-restore-'),
+      deps: 'none',
+      build: 'none',
+    });
+    expect(report.ok).toBe(true);
+  });
+
   it('node_modules のシンボリックリンクとビルドの組み合わせは始める前に拒否する', () => {
     expect(() =>
       restoreTest({ backupDir: '.', workDir: '.', deps: 'link', build: 'build' }),

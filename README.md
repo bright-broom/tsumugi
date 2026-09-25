@@ -12,7 +12,7 @@ Next.js・React・TypeScriptで構築し、22ページを静的HTMLとして配�
 
 自社サイトは [tsumugi-six.vercel.app](https://tsumugi-six.vercel.app/) で公開し、問い合わせは電話・メールで案内します。自社の問い合わせフォーム・オンライン決済・契約締結は設けていません。独自ドメイン取得は自社公開の前提にしません（[公開判断](docs/architecture/0056-owner-authorized-publication.md)）。
 
-CMS・追加言語などは準備中です。顧客向けフォームのコア実装や社内CLIがあることと、サービスを提供できることは区別します。機能ごとの不足は [機能監査](docs/product/feature-audit-2026-09-18.md)、Issueの判断は [再整理一覧](docs/product/issue-review-2026-09-18.md)、直近の検証・main反映状況は [現状と残課題](docs/status.md) を参照してください。
+CMS・追加言語などは**受付準備中**です。記事の取り込み（microCMS）・言語ごとのビルド・問い合わせ受付・請求と入金・引渡し資料の仕組みは実装済みですが、実サービスの契約と配備、実データでの確認が終わるまで商品としては提供しません。仕組みがあることと、サービスを提供できることは区別します。機能ごとの不足は [機能監査](docs/product/feature-audit-2026-09-18.md)、Issueの判断は [再整理一覧](docs/product/issue-review-2026-09-18.md)、直近の検証・main反映状況は [現状と残課題](docs/status.md) を参照してください。
 
 自社リポジトリは非公開です。顧客へのソース納品・閲覧招待は、自社サイトのソース公開とは別に扱います。
 
@@ -80,17 +80,17 @@ flowchart TD
 ├── public/                     配信素材と生成済みCSS・画像
 ├── tests/                      アプリと開発基盤のテスト
 ├── tools/
-│   ├── scripts/                起動・生成・構造検査
+│   ├── scripts/                起動・生成・構造と文書の検査
 │   ├── design/                 全ページの変更前後比較
 │   ├── verify/                 納品物の検査・ブラウザ実測
 │   ├── pricing/                事業の料金・工数モデル
-│   ├── ops/                    社内CLI・公開監視・バックアップ
+│   ├── ops/                    社内CLI・公開監視・バックアップ・引渡し資料
 │   ├── security/               静的配信とブラウザの安全性検査
 │   └── paths.ts                ルートと生成物の共通パス
 ├── services/inquiry/           顧客向け受付のコア（本番接続は未完了）
 ├── config/                     ESLint・Knip・Vitest・Prettierの設定
 ├── docs/                       開発・仕様・設計判断・事業資料
-├── .github/                    CI・Dependabot
+├── .github/                    CI・定期実行（監視・見張り・作り直し・配信照合・バックアップ）・Dependabot
 ├── .data/                      社内ツールの業務データ（Git管理外）
 ├── .artifacts/                 レポート・検査画像（Git管理外）
 ├── out/                        静的な納品物（Git管理外）
@@ -121,18 +121,18 @@ flowchart TD
 
 ページに同じ値を繰り返し書かず、まず正本を変更します。
 
-| 変更したいもの                     | 編集する場所                                                                         |
-| ---------------------------------- | ------------------------------------------------------------------------------------ |
-| 見出し・本文・SEO・図のラベル      | [src/i18n/locales/ja/](src/i18n/locales/ja/)                                         |
-| 金額・プラン・価格計算             | [src/content/prices.ts](src/content/prices.ts)                                       |
-| 連絡先・プロフィール               | [src/i18n/locales/ja/config.ts](src/i18n/locales/ja/config.ts)                       |
-| ドメイン・フォーム送信先・公開設定 | [src/content/config.ts](src/content/config.ts)                                       |
-| ページのURL・アイコン・ナビ分類    | [src/routing/registry.ts](src/routing/registry.ts)                                   |
-| ページの構造・共通部品             | [src/views/](src/views/)・[src/components/](src/components/)                         |
-| 色・書体・寸法                     | [src/styles/design.tokens.json](src/styles/design.tokens.json)                       |
-| レイアウト・装飾・レスポンシブ表示 | [src/styles/](src/styles/)                                                           |
-| SVG 図解の形・座標                 | [src/components/diagrams/](src/components/diagrams/)                                 |
-| ヒーローの元画像                   | [src/assets/hero/](src/assets/hero/)                                                 |
+| 変更したいもの                     | 編集する場所                                                                      |
+| ---------------------------------- | --------------------------------------------------------------------------------- |
+| 見出し・本文・SEO・図のラベル      | [src/i18n/locales/ja/](src/i18n/locales/ja/)                                      |
+| 金額・プラン・価格計算             | [src/content/prices.ts](src/content/prices.ts)                                    |
+| 連絡先・プロフィール               | [src/i18n/locales/ja/config.ts](src/i18n/locales/ja/config.ts)                    |
+| ドメイン・フォーム送信先・公開設定 | [src/content/config.ts](src/content/config.ts)                                    |
+| ページのURL・アイコン・ナビ分類    | [src/routing/registry.ts](src/routing/registry.ts)                                |
+| ページの構造・共通部品             | [src/views/](src/views/)・[src/components/](src/components/)                      |
+| 色・書体・寸法                     | [src/styles/design.tokens.json](src/styles/design.tokens.json)                    |
+| レイアウト・装飾・レスポンシブ表示 | [src/styles/](src/styles/)                                                        |
+| SVG 図解の形・座標                 | [src/components/diagrams/](src/components/diagrams/)                              |
+| ヒーローの元画像                   | [src/assets/hero/](src/assets/hero/)                                              |
 | 事業の工数・収支の仮定             | [tools/pricing/](tools/pricing/)・[料金設計](docs/business/pricing-2026-09-18.md) |
 
 [2026-09-18の採用料金](docs/business/pricing-2026-09-18.md)と[改定前の費用総点検](docs/business/cost-review-2026-09-18.md)に、採用料金と改定前の検討経緯、工数試算・外部費の確認事項をまとめています。
@@ -159,7 +159,7 @@ flowchart TD
   common --> html
 ```
 
-現在の対応言語は**日本語のみ**です。i18nは文言を中央管理する基盤であり、言語切り替え機能は未実装です。ヒーローも背景画と文字を分離し、見出し・本文をカタログからHTMLとして描画します。電話番号・メール・郵便番号もカタログに集約しています。金額・計算は `src/content/prices.ts`、URLはルート設定で管理します。
+公開しているのは**日本語のみ**です。言語ごとにビルドして追加言語を `/en/` のような配下へ出す仕組みと、翻訳の突き合わせ・言語ごとの検査は実装済みで（[ADR 0081](docs/architecture/0081-build-time-locales.md)）、実際の翻訳を受け取ってから公開します。ヒーローも背景画と文字を分離し、見出し・本文をカタログからHTMLとして描画します。電話番号・メール・郵便番号もカタログに集約しています。金額・計算は `src/content/prices.ts`、URLはルート設定で管理します。
 
 ### ページの地図
 
@@ -233,17 +233,17 @@ flowchart TD
   browser --> shots[".artifacts/screenshots/<br/>確認画像"]
 ```
 
-| コマンド               | 確認するもの                                             |
-| ---------------------- | -------------------------------------------------------- |
-| `npm run check`        | 型・依存方向・文言とURL・CSSの中央管理・未使用コード     |
-| `npm run check:unused` | 未使用のファイル・export・型・依存関係（`check` に含む） |
-| `npm run lint`         | コードの規約                                             |
-| `npm test`             | アプリと開発基盤の単体テスト                             |
-| `npm run test:pricing` | 事業の料金・工数モデル                                   |
-| `npm run validate`     | check・lint・両単体テスト → ビルド → 安全性・静的検査            |
-| `npm run verify`       | 生成済みの `out/` をブラウザ実測も含めて検査（既定はプレビュー） |
-| `npm run verify -- --mode production` | 本番の公開条件を含めた全項目検査 |
-| `npm run test:security-browser` | ブラウザでCSPの正常表示・攻撃遮断を検査 |
+| コマンド                              | 確認するもの                                                     |
+| ------------------------------------- | ---------------------------------------------------------------- |
+| `npm run check`                       | 型・依存方向・文言とURL・CSSの中央管理・文書の参照・未使用コード |
+| `npm run check:unused`                | 未使用のファイル・export・型・依存関係（`check` に含む）         |
+| `npm run lint`                        | コードの規約                                                     |
+| `npm test`                            | アプリと開発基盤の単体テスト                                     |
+| `npm run test:pricing`                | 事業の料金・工数モデル                                           |
+| `npm run validate`                    | check・lint・両単体テスト → ビルド → 安全性・静的検査            |
+| `npm run verify`                      | 生成済みの `out/` をブラウザ実測も含めて検査（既定はプレビュー） |
+| `npm run verify -- --mode production` | 本番の公開条件を含めた全項目検査                                 |
+| `npm run test:security-browser`       | ブラウザでCSPの正常表示・攻撃遮断を検査                          |
 
 変更を出す前は次の順で確認します。`verify` 自体はビルドを行いません。
 
@@ -279,15 +279,17 @@ VercelはRoot Directoryを未指定（リポジトリルート）とし、`npm r
 
 ## 公開後の運用と社内ツール
 
-| 用途 | コマンド・入口 |
-| --- | --- |
-| 公開先のページ・ヘッダー・直接参照するCSS/画像の確認 | `npm run check:live -- --url <公開URL>` |
-| 定期監視と同じ検査 | `npm run monitor -- --url <公開URL>` |
-| 公開に使った成果物と配信内容の照合 | `npm run check:release -- --url <公開URL> --dist <成果物のディレクトリ>` |
-| Gitのバックアップと復元リハーサル | `npm run backup` / `npm run backup:restore-test -- --backup <バックアップ先>` |
-| 見積・依頼/工数・CRM・指標・月次レポート・営業リスト・GBP | [社内CLIの使い方](tools/ops/README.md) |
+| 用途                                                                              | コマンド・入口                                                                |
+| --------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| 公開先のページ・ヘッダー・直接参照するCSS/画像の確認                              | `npm run check:live -- --url <公開URL>`                                       |
+| 定期監視と同じ検査（CSS の中から参照される書体・画像を含む）                      | `npm run monitor -- --url <公開URL>`                                          |
+| 監視そのものが止まっていないかの見張りと、復旧の連絡                              | `npm run watchdog`（Monitor watchdog が6時間ごとに実行）                      |
+| 日付で変わる案内（臨時休業・臨時の営業時間）の作り直し                            | `npm run refresh`（Daily refresh が毎日 0:10 に実行）                         |
+| 公開に使った成果物と配信内容の照合                                                | `npm run check:release -- --url <公開URL> --dist <成果物のディレクトリ>`      |
+| Gitのバックアップと復元リハーサル                                                 | `npm run backup` / `npm run backup:restore-test -- --backup <バックアップ先>` |
+| 見積・請求と入金・依頼/工数・CRM・引渡し資料・指標・月次レポート・営業リスト・GBP | [社内CLIの使い方](tools/ops/README.md)                                        |
 
-監視の実行先・通知到達、独立したバックアップ保管先、非公開業務データの保全は個別に確認します。Gitのバックアップだけで業務データまで復元できるとは扱いません。設定と復旧手順は [運用ガイド](docs/operations.md) を参照してください。
+監視が止まったこと自体は Monitor watchdog が検出し、障害の issue を立てて復旧で閉じます（[ADR 0083](docs/architecture/0083-monitor-watchdog.md)）。ただし同じ GitHub Actions の上で動くため、GitHub の外からの独立した監視は別に用意します。通知の到達、独立したバックアップ保管先、非公開業務データの保全は個別に確認します。Gitのバックアップだけで業務データまで復元できるとは扱いません。設定と復旧手順は [運用ガイド](docs/operations.md) を参照してください。
 
 社内CLIのデータは `.data/`、`.artifacts/` またはリポジトリ外に保存します。同じ保存先への操作は排他制御し、競合時は保存せず停止します。強制終了後のロックは自動削除せず、手順に従って実行元の停止を確認します。
 
