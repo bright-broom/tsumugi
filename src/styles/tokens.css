@@ -1,7 +1,7 @@
 /* 生成物。手で編集しない。
  * 出所: src/styles/design.tokens.json
  * 生成: npm run tokens
- * トークン数: 99
+ * トークン数: 111
  */
 @theme static {
   /* color */
@@ -31,6 +31,10 @@
   --color-ok-bg: #FFF8ED;
   --color-warn: #302820;
   --color-warn-bg: #FFF8ED;
+  --color-gold: color-mix(in srgb, var(--color-accent) 72%, var(--color-sub));  /* 濃い面で光る金の罫・小さな強調。琥珀をそのまま置くと強すぎる */
+  --color-gold-soft: color-mix(in srgb, var(--color-accent) 34%, var(--color-sub));  /* 濃い面のごく細い区切り */
+  --color-ink-deep: color-mix(in srgb, var(--color-sub) 88%, #000000);  /* 濃い面のグラデーションの底。色相はエスプレッソのまま */
+  --color-ink-veil: color-mix(in srgb, var(--color-sub) 6%, var(--color-main));  /* 明るい面のごく薄い沈み。罫線を減らして面で区切る */
 
   /* theme */
   --color-campaign-accent: #FFB000;
@@ -73,6 +77,9 @@
   --spacing-intro-bottom-pc: 48px;  /* 下層ページ先頭の下余白 */
   --spacing-intro-top-mb: 40px;  /* 下層ページ先頭の上余白（モバイル） */
   --spacing-intro-bottom-mb: 32px;  /* 下層ページ先頭の下余白（モバイル） */
+  --spacing-band-pc: 112px;  /* 章の帯（PC）。明暗の切り替えに十分な高さ */
+  --spacing-band-mb: 72px;  /* 章の帯（モバイル） */
+  --spacing-rule: 56px;  /* 見出しに添える金の罫の長さ */
 
   /* radius */
   --radius-media: 8px;
@@ -99,11 +106,16 @@
   --text-meta: 14px;  /* 補助文。旧 PC 13px・モバイル 14px を下限にそろえる */
   --text-compact: 15px;  /* カード本文・ボタン・説明の標準。本文より一段小さい文字 */
   --text-lead: 18px;  /* カード見出し・強調説明 */
+  --text-figure-pc: 104px;  /* 価格・年数など、主張する数字（PC） */
+  --text-figure-mb: 56px;  /* 同（モバイル） */
   --tracking-body: 0.04em;  /* 和文の字間。palt で詰まる字面を控えめに開く。空白の挿入で代用しない */
   --tracking-heading: 0.02em;  /* 見出し。大きい字は開きすぎない */
+  --tracking-label: 0.18em;  /* 小さなラベル。字間を大きく開けて和の間をつくる */
+  --tracking-display: -0.02em;  /* 特大の数字。字面が離れないよう詰める */
   --leading-hero: 1.5;
   --leading-heading: 1.5;
   --leading-body: 1.8;
+  --leading-display: 1.05;  /* 特大の数字 */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semi: 600;

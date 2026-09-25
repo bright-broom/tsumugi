@@ -11,10 +11,18 @@
     @apply text-white;
   }
   .sh .lab {
-    @apply flex items-center gap-[7px] mb-[16px] text-fine font-semi tracking-[.08em] text-muted;
+    @apply flex items-center gap-[10px] mb-[18px] text-fine font-semi tracking-label text-muted;
+  }
+  /* 章の始まりを示す短い罫。線を増やさず、見出しの位置だけを揃える役 */
+  .sh .lab::after {
+    content: '';
+    @apply block h-[1px] w-rule shrink-0 bg-[var(--color-line-strong)];
   }
   section.dark .sh .lab {
     @apply text-muted-on-ink;
+  }
+  section.dark .sh .lab::after {
+    @apply bg-gold;
   }
   .lede {
     @apply text-[17px] leading-body m-[14px_0_0];

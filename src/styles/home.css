@@ -63,44 +63,49 @@
   .home-content .btn-2 {
     @apply border-line-strong;
   }
+  /* ヒーローと濃い帯の間に挟まる索引。明るい面にすると世界観がここで切れる。 */
   .home-index {
-    @apply bg-main border-b border-line;
+    @apply bg-ink border-b border-[var(--color-gold-soft)];
   }
   .home-index .wrap {
     @apply grid grid-cols-4;
   }
   .home-index a {
-    @apply flex items-center gap-[12px] min-h-[68px] px-[20px] py-[16px] text-ink no-underline text-fine;
+    @apply flex items-center gap-[12px] min-h-[68px] px-[20px] py-[16px] text-white no-underline text-fine;
   }
   .home-index a + a {
-    @apply border-l border-line;
+    @apply border-l border-[var(--color-gold-soft)];
+  }
+  .home-index a .ic {
+    @apply text-gold;
   }
   .home-index a .ic:last-child {
     @apply ml-auto;
   }
   .home-index a:hover {
-    @apply bg-surface;
+    @apply bg-[var(--color-ink-deep)] text-gold;
   }
+  /* ヒーローの直後は濃い面のまま続ける。明るい面へ落とすと、世界観が1画面で終わる。 */
   .home-content .home-intro {
-    @apply bg-main text-ink py-[80px];
+    @apply py-band-pc;
   }
   .home-intro > .wrap {
     @apply grid grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] gap-[72px] items-center;
   }
   .home-intro .kick {
-    @apply text-muted text-fine mb-[24px];
+    @apply text-muted-on-ink text-fine tracking-label mb-[28px];
   }
   .home-intro .service-intro-title {
-    @apply text-[clamp(28px,3.4vw,46px)] leading-[1.5] tracking-[.015em] mb-[24px];
+    @apply text-[clamp(30px,3.9vw,54px)] leading-[1.45] tracking-heading mb-[28px];
   }
   .home-intro .sub {
-    @apply text-muted text-body leading-[2];
+    @apply text-muted-on-ink text-body leading-[2];
   }
   .home-intro .sub strong {
-    @apply text-ink;
+    @apply text-white;
   }
   .home-team {
-    @apply flex items-center gap-[12px] py-[16px] mt-[24px] border-y border-line text-fine text-ink no-underline;
+    @apply flex items-center gap-[12px] py-[16px] mt-[24px] border-y border-[var(--color-gold-soft)] text-fine text-white no-underline;
   }
   .home-team > .ic {
     @apply shrink-0;
@@ -115,49 +120,56 @@
     @apply mt-[24px] gap-[12px];
   }
   .home-intro .btn-2 {
-    @apply text-ink;
+    @apply text-white border-[var(--color-gold-soft)];
   }
+  .home-intro .btn-2:hover {
+    @apply border-gold;
+  }
+  /* 価格は商品の中心。箱で囲まず、金の罫と特大の数字そのもので見せる。 */
   .home-intro .pricebox {
-    @apply flex flex-col items-stretch gap-[0] p-[36px] bg-surface text-ink border border-line rounded-[6px] border-t-[4px] border-t-accent;
+    @apply flex flex-col items-stretch gap-[0] p-[0_0_0_32px] text-white rounded-[0] bg-transparent;
+    border: 0;
+    border-left: 1px solid var(--color-gold-soft);
   }
   .home-intro .pricebox .amtwrap {
     @apply flex flex-col items-start gap-[16px];
   }
   .home-intro .pricebox .pre {
-    @apply text-ink text-compact;
+    @apply text-muted-on-ink text-fine tracking-label;
   }
   .home-intro .pricebox .amt {
-    @apply text-[clamp(52px,5vw,72px)] leading-[1.1] tracking-[-.04em] font-medium;
+    @apply font-brand text-gold leading-display tracking-display font-semi;
+    font-size: clamp(var(--text-figure-mb), 7.4vw, var(--text-figure-pc));
   }
   .home-intro .pricebox .u {
-    @apply text-h3;
+    @apply text-h3 text-white ml-[.12em];
   }
   .home-price-tax {
-    @apply text-muted text-fine mt-[12px] mb-[24px];
+    @apply text-muted-on-ink text-fine mt-[12px] mb-[24px];
   }
   .home-price-points {
-    @apply list-none m-[0] p-[24px_0_0] border-t border-line grid gap-[14px];
+    @apply list-none m-[0] p-[24px_0_0] border-t border-[var(--color-gold-soft)] grid gap-[14px];
   }
   .home-price-points li {
     @apply flex items-start gap-[10px] text-compact leading-[1.8];
   }
   .home-price-points .ic {
-    @apply shrink-0 mt-[5px] text-[var(--accent-text)];
+    @apply shrink-0 mt-[5px] text-gold;
   }
   .home-price-note {
-    @apply text-fine text-muted leading-[1.9] mt-[24px] mb-[0];
+    @apply text-fine text-muted-on-ink leading-[1.9] mt-[24px] mb-[0];
   }
   .home-section {
-    @apply py-[80px];
+    @apply py-band-pc;
   }
   .home-section .sh {
-    @apply grid grid-cols-[1.1fr_1fr] gap-[16px_64px] items-start border-[0] p-[0] mb-[36px];
+    @apply grid grid-cols-[1.1fr_1fr] gap-[16px_64px] items-start border-[0] p-[0] mb-[48px];
   }
   .home-section .sh .lab {
     @apply col-[1_/-1] m-[0] text-fine text-muted tracking-[.08em];
   }
   .home-section .sh h2 {
-    @apply text-[clamp(27px,2.7vw,38px)] leading-[1.55] tracking-[.015em] text-balance;
+    @apply text-[clamp(30px,3.2vw,46px)] leading-[1.5] tracking-heading text-balance;
   }
   .home-section .sh h2 {
     word-break: auto-phrase;
@@ -190,19 +202,24 @@
     @apply p-[24px] border-warn;
   }
   .home-pricing {
-    @apply bg-surface border-t border-line;
+    @apply bg-main;
   }
+  /* 囲みを外し、沈んだ面と金の罫で組む。箱が並ぶと、どれも同じ強さに見えて階層が消える。 */
   .home-pricing .entry {
-    @apply grid-cols-[minmax(240px,.85fr)_minmax(0,1.15fr)] gap-[0] p-[0] overflow-hidden border border-line bg-main;
+    @apply grid-cols-[minmax(240px,.85fr)_minmax(0,1.15fr)] gap-[0] p-[0] overflow-hidden border-[0] rounded-[0] bg-[var(--color-ink-veil)];
+    border-top: 2px solid var(--color-accent);
   }
   .home-pricing .entry > div {
-    @apply p-[36px];
+    @apply p-[40px];
   }
   .home-pricing .entry > div:first-child {
     @apply border-r border-line;
   }
+  /* 金額は明朝の特大。琥珀の下線だけを添えて、色を増やさずに主役にする。 */
   .home-pricing .entry .amt {
-    @apply text-[64px] tracking-[-.04em] my-[20px];
+    @apply font-brand font-semi leading-display tracking-display my-[20px] inline-block;
+    font-size: clamp(var(--text-figure-mb), 5.4vw, 84px);
+    box-shadow: inset 0 -0.08em 0 var(--color-accent);
   }
   .home-pricing .entry .btns {
     @apply gap-[12px];
@@ -229,7 +246,7 @@
     @apply text-fine text-muted mt-[6px] mb-[0];
   }
   .home-plan-option strong {
-    @apply col-[2] text-[26px] font-medium tracking-[-.025em];
+    @apply col-[2] font-brand font-semi text-[30px] tracking-display;
   }
   .home-plan-option > .ic:last-child {
     @apply col-[3] row-[1] self-center;
@@ -244,7 +261,11 @@
     @apply grid-cols-4 gap-[0] border-y border-line-strong;
   }
   .home-industries .ind {
-    @apply relative flex flex-col gap-[14px] p-[28px_24px] rounded-none border-[0] bg-main;
+    @apply relative flex flex-col gap-[14px] p-[32px_24px] rounded-none border-[0] bg-transparent;
+    transition: background-color 150ms ease;
+  }
+  .home-industries .ind:hover {
+    @apply bg-[var(--color-ink-veil)];
   }
   .home-industries .ind + .ind {
     @apply border-l border-line;
@@ -257,6 +278,9 @@
   }
   .home-industries .ind .n .ic {
     @apply w-[22px] h-[22px] text-[var(--accent-text)];
+  }
+  .home-industries .ind:hover .n .ic {
+    @apply text-[var(--color-accent)];
   }
   .home-industries .ind .p {
     @apply text-fine leading-[1.9] max-w-[28em];
@@ -338,28 +362,27 @@
     @apply flex items-center gap-[8px] text-fine text-muted-on-ink mb-[20px];
   }
   .comparison-totals {
-    @apply grid grid-cols-2 border-y border-[var(--color-muted-on-ink)];
+    @apply grid grid-cols-2 border-y border-[var(--color-gold-soft)];
   }
   .comparison-totals > div {
-    @apply p-[28px];
+    @apply p-[32px];
   }
   .comparison-totals > div:last-child {
-    @apply bg-main text-sub border-t-[4px] border-t-accent;
+    @apply border-l border-[var(--color-gold-soft)];
+    border-top: 2px solid var(--color-accent);
   }
   .comparison-totals h3 {
     @apply flex gap-[12px] items-center text-[17px] mb-[20px];
   }
   .comparison-totals strong {
-    @apply block text-[clamp(30px,3.5vw,48px)] leading-[1.2] font-semi tracking-[-.025em];
+    @apply block font-brand font-semi leading-display tracking-display;
+    font-size: clamp(var(--text-figure-mb), 4.6vw, 72px);
+  }
+  .comparison-totals > div:last-child strong {
+    @apply text-gold;
   }
   .comparison-totals p {
     @apply text-fine text-muted-on-ink mt-[18px] mb-[0];
-  }
-  .comparison-totals > div:last-child h3 {
-    @apply text-sub;
-  }
-  .comparison-totals > div:last-child p {
-    @apply text-muted;
   }
   .comparison-difference {
     @apply flex items-start gap-[14px] py-[24px];
@@ -426,7 +449,7 @@
       @apply gap-[32px];
     }
     .home-intro .pricebox {
-      @apply p-[28px];
+      @apply p-[0_0_0_24px];
     }
     .home-intro .btns {
       @apply flex-col items-stretch;
@@ -446,7 +469,9 @@
     }
   }
   @media (max-width: 768px) {
-    .home-content .home-intro,
+    .home-content .home-intro {
+      @apply py-band-mb;
+    }
     .home-section {
       @apply py-[48px];
     }
@@ -461,10 +486,12 @@
       @apply text-body;
     }
     .home-intro .pricebox {
-      @apply p-[24px];
+      @apply p-[24px_0_0];
+      border: 0;
+      border-top: 1px solid var(--color-gold-soft);
     }
     .home-intro .pricebox .amt {
-      @apply text-[56px];
+      @apply text-figure-mb;
     }
     .home-price-tax {
       @apply mb-[18px];
@@ -547,6 +574,9 @@
     }
     .comparison-totals > div {
       @apply p-[24px];
+    }
+    .comparison-totals > div:last-child {
+      @apply border-l-[0];
     }
     .comparison-totals strong {
       @apply text-[36px];

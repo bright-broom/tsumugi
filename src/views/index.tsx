@@ -87,7 +87,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
             </a>
           </div>
         </nav>
-        <section className="hero home-intro">
+        <section className="hero home-intro dark">
           <div className="wrap">
             <div className="home-intro-copy">
               <p className="kick">
@@ -207,7 +207,6 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
         <Section
           id="ownership"
           className="home-section home-ownership"
-          tone="tint"
           navKey={href('owned')}
           eyebrow={copy.eyebrow}
           heading={copy.heading}

@@ -82,6 +82,22 @@
     },
     "warn-bg": {
       "$value": "{color.main}"
+    },
+    "gold": {
+      "$value": "color-mix(in srgb, var(--color-accent) 72%, var(--color-sub))",
+      "$description": "濃い面で光る金の罫・小さな強調。琥珀をそのまま置くと強すぎる"
+    },
+    "gold-soft": {
+      "$value": "color-mix(in srgb, var(--color-accent) 34%, var(--color-sub))",
+      "$description": "濃い面のごく細い区切り"
+    },
+    "ink-deep": {
+      "$value": "color-mix(in srgb, var(--color-sub) 88%, #000000)",
+      "$description": "濃い面のグラデーションの底。色相はエスプレッソのまま"
+    },
+    "ink-veil": {
+      "$value": "color-mix(in srgb, var(--color-sub) 6%, var(--color-main))",
+      "$description": "明るい面のごく薄い沈み。罫線を減らして面で区切る"
     }
   },
   "theme": {
@@ -227,6 +243,18 @@
     "intro-bottom-mb": {
       "$value": "32px",
       "$description": "下層ページ先頭の下余白（モバイル）"
+    },
+    "band-pc": {
+      "$value": "112px",
+      "$description": "章の帯（PC）。明暗の切り替えに十分な高さ"
+    },
+    "band-mb": {
+      "$value": "72px",
+      "$description": "章の帯（モバイル）"
+    },
+    "rule": {
+      "$value": "56px",
+      "$description": "見出しに添える金の罫の長さ"
     }
   },
   "radius": {
@@ -248,7 +276,13 @@
     "family": {
       "$type": "fontFamily",
       "brand": {
-        "$value": ["Hiragino Mincho ProN", "Yu Mincho", "YuMincho", "Noto Serif CJK JP", "serif"],
+        "$value": [
+          "Hiragino Mincho ProN",
+          "Yu Mincho",
+          "YuMincho",
+          "Noto Serif CJK JP",
+          "serif"
+        ],
         "$description": "屋号・ブランドコピー・ページ見出しに使う端末の明朝。外部フォント不要"
       },
       "ja": {
@@ -264,11 +298,22 @@
         ]
       },
       "display": {
-        "$value": ["League Gothic", "Haettenschweiler", "Arial Narrow", "sans-serif"],
+        "$value": [
+          "League Gothic",
+          "Haettenschweiler",
+          "Arial Narrow",
+          "sans-serif"
+        ],
         "$description": "短い欧文のみ。日本語本文・長い項目名には使わない"
       },
       "mono": {
-        "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"]
+        "$value": [
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Consolas",
+          "monospace"
+        ]
       }
     },
     "size": {
@@ -321,6 +366,14 @@
       "lead": {
         "$value": "18px",
         "$description": "カード見出し・強調説明"
+      },
+      "figure-pc": {
+        "$value": "104px",
+        "$description": "価格・年数など、主張する数字（PC）"
+      },
+      "figure-mb": {
+        "$value": "56px",
+        "$description": "同（モバイル）"
       }
     },
     "tracking": {
@@ -332,6 +385,14 @@
       "heading": {
         "$value": "0.02em",
         "$description": "見出し。大きい字は開きすぎない"
+      },
+      "label": {
+        "$value": "0.18em",
+        "$description": "小さなラベル。字間を大きく開けて和の間をつくる"
+      },
+      "display": {
+        "$value": "-0.02em",
+        "$description": "特大の数字。字面が離れないよう詰める"
       }
     },
     "leading": {
@@ -344,6 +405,10 @@
       },
       "body": {
         "$value": 1.8
+      },
+      "display": {
+        "$value": 1.05,
+        "$description": "特大の数字"
       }
     },
     "weight": {
