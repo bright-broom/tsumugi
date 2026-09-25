@@ -122,6 +122,14 @@ export function createBackup({
       `未コミットの変更はバックアップに入りません。コミットしてから実行してください:\n${dirty}`,
     );
 
+  // 浅い clone（CI の既定のチェックアウトなど）のバンドルは親のコミットを欠き、復元の clone で失敗する。
+  // 作ってから気づくのではなく、作る前に止める。
+  if (git(root, ['rev-parse', '--is-shallow-repository']).trim() === 'true')
+    throw new Error(
+      '浅い clone（履歴の一部しかないリポジトリ）では、全履歴のバンドルを作れません。' +
+        '`git fetch --unshallow` で履歴をそろえてから実行してください（GitHub Actions では checkout に fetch-depth: 0）',
+    );
+
   const paths = trackedFiles(root);
   const excluded = excludedPaths(paths);
   if (excluded.length)
