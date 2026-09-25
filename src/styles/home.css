@@ -412,8 +412,13 @@
     @apply text-fine leading-[1.9] text-muted-on-ink m-[0];
   }
   .home-section.dark .fig {
-    @apply bg-main p-[28px] rounded-card;
+    @apply bg-main p-[24px_0] rounded-card;
     border: 1px solid var(--color-gold-soft);
+  }
+  @media (min-width: 769px) {
+    .home-section.dark .fig {
+      @apply p-[28px];
+    }
   }
   .home-comparison .fig {
     @apply p-[24px];

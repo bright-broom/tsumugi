@@ -3,7 +3,7 @@
  * 形は src/lib/verification-report.ts のスキーマ。ページはこのレポートを zod で検証してから読む。
  */
 import { createHash } from 'node:crypto';
-import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { appendFileSync, existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import {
   REPORT_SCHEMA_VERSION,
@@ -28,7 +28,11 @@ export function artifactFingerprint(dist: string): VerificationReport['artifact'
   if (existsSync(dist)) walk(dist);
   const all = createHash('sha256');
   for (const f of files.sort()) {
-    all.update(`${f}\0${createHash('sha256').update(readFileSync(join(dist, f))).digest('hex')}\n`);
+    all.update(
+      `${f}\0${createHash('sha256')
+        .update(readFileSync(join(dist, f)))
+        .digest('hex')}\n`,
+    );
   }
   return { files: files.length, sha256: all.digest('hex') };
 }
@@ -55,8 +59,45 @@ export function buildReport(input: {
     verdict: counts.fail ? 'blocked' : 'deliverable',
     lcp: input.lcp,
     acceptance: input.acceptance,
-    results: input.results.map(({ level, check, page, detail }) => ({ level, check, page, detail })),
+    results: input.results.map(({ level, check, page, detail }) => ({
+      level,
+      check,
+      page,
+      detail,
+    })),
   };
+}
+
+/**
+ * GitHub Actions のジョブ要約に、不合格と警告だけを書く（`$GITHUB_STEP_SUMMARY`）。
+ * CI のログは 1 万行を超えることがあり、どの検査がどのページで落ちたのかを探しづらい。
+ * 要約に出しておけば、チェックの画面から 1 手で読める。ローカルでは何もしない。
+ */
+export function writeJobSummary(report: VerificationReport): void {
+  const file = process.env.GITHUB_STEP_SUMMARY;
+  if (!file) return;
+  const { pass, warn, fail, notApplicable } = report.counts;
+  const kind = report.kind === 'full' ? '全項目' : '静的検査のみ';
+  const mode = report.mode === 'production' ? '本番' : 'プレビュー';
+  const cell = (text: string) => text.replaceAll('|', '\\|').replace(/\r?\n/g, '<br>');
+  const lines = [
+    `### 納品物の検査（${kind}・${mode}モード）`,
+    '',
+    `PASS ${pass} / WARN ${warn} / FAIL ${fail}（対象なし ${notApplicable}）`,
+    '',
+  ];
+  const notable = report.results.filter((r) => r.level === 'FAIL' || r.level === 'WARN');
+  if (notable.length) {
+    lines.push('| 結果 | 検査 | ページ | 内容 |', '|---|---|---|---|');
+    // 不合格を先に出す。長い検査でも、直すべき行が先頭に来る。
+    for (const r of [...notable].sort((a, b) =>
+      a.level === b.level ? 0 : a.level === 'FAIL' ? -1 : 1,
+    ))
+      lines.push(`| ${r.level} | ${cell(r.check)} | ${cell(r.page)} | ${cell(r.detail)} |`);
+  } else {
+    lines.push('不合格・警告はありません。');
+  }
+  appendFileSync(file, `${lines.join('\n')}\n\n`);
 }
 
 export function printReport(report: VerificationReport): void {
@@ -69,10 +110,16 @@ export function printReport(report: VerificationReport): void {
     else by.set(r.check, [r]);
   }
   const rank = (rows: Result[]) =>
-    rows.some((r) => r.level === 'FAIL') ? 0
-      : rows.some((r) => r.level === 'WARN') ? 1
-        : rows.some((r) => r.level === 'PASS') ? 2 : 3;
-  const checks = [...by.keys()].sort((a, b) => rank(by.get(a)!) - rank(by.get(b)!) || (a < b ? -1 : a > b ? 1 : 0));
+    rows.some((r) => r.level === 'FAIL')
+      ? 0
+      : rows.some((r) => r.level === 'WARN')
+        ? 1
+        : rows.some((r) => r.level === 'PASS')
+          ? 2
+          : 3;
+  const checks = [...by.keys()].sort(
+    (a, b) => rank(by.get(a)!) - rank(by.get(b)!) || (a < b ? -1 : a > b ? 1 : 0),
+  );
 
   const rule = (c: string) => c.repeat(74);
   const kind = report.kind === 'full' ? '全項目（静的検査＋ブラウザ実測）' : '静的検査のみ';
@@ -85,7 +132,9 @@ export function printReport(report: VerificationReport): void {
   console.log('  標準仕様の自動検証レポート');
   console.log(`  種別: ${kind} / モード: ${mode}`);
   console.log(`  測定: ${report.measuredAt} / コミット: ${commit}`);
-  console.log(`  成果物: ${report.artifact.files}ファイル sha256 ${report.artifact.sha256.slice(0, 12)}`);
+  console.log(
+    `  成果物: ${report.artifact.files}ファイル sha256 ${report.artifact.sha256.slice(0, 12)}`,
+  );
   console.log(rule('='));
   for (const chk of checks) {
     const rows = by.get(chk)!;
@@ -108,7 +157,10 @@ export function printReport(report: VerificationReport): void {
   console.log('\n' + rule('-'));
   console.log(`  PASS ${pass}   WARN ${warn}   FAIL ${fail}   （対象なし ${notApplicable}）`);
   console.log(rule('-'));
-  console.log(`  判定: ${report.verdict === 'blocked' ? '納品不可' : '自動検査合格（未確認事項・公開条件は上記参照）'}`);
-  if (fail) console.log('  FAIL が1件でもあれば納品しません。上の指摘を直してから再実行してください。');
+  console.log(
+    `  判定: ${report.verdict === 'blocked' ? '納品不可' : '自動検査合格（未確認事項・公開条件は上記参照）'}`,
+  );
+  if (fail)
+    console.log('  FAIL が1件でもあれば納品しません。上の指摘を直してから再実行してください。');
   console.log(rule('=') + '\n');
 }
