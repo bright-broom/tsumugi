@@ -117,6 +117,7 @@ export const ACCEPTANCE_RECORDS = {
 
 ## 関連
 
+- 紬の自社サイトで項目ごとにどこを見るか・税理士と屋号・実機の確認：[確認の手順書](owner-checks.md)
 - 公開条件の判定：`tools/verify/publication.ts`、[ADR 0024](../architecture/0024-publication-gates.md)
 - オーナー判断による自社公開：`src/content/publication.ts`、[ADR 0056](../architecture/0056-owner-authorized-publication.md)
 - 受入の対応表：`tools/verify/acceptance.ts`、[ADR 0026](../architecture/0026-acceptance-mapping.md)
