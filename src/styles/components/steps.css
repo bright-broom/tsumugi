@@ -73,15 +73,13 @@
   .step-rail + .fine-note {
     @apply mt-[28px];
   }
+  /* アイコンの大きさは .ic の em（1.25em）に任せ、丸の文字の大きさで決める（verify 28 の比） */
   .step-rail-mark {
-    @apply relative inline-flex items-center justify-center w-[56px] h-[56px] mb-[6px] rounded-[50%] bg-surface text-[var(--accent-text)];
+    @apply relative inline-flex items-center justify-center w-[56px] h-[56px] mb-[6px] rounded-[50%] bg-surface text-lead text-[var(--accent-text)];
     border: 1px solid var(--color-line-strong);
   }
-  .step-rail-mark > .ic {
-    @apply w-[22px] h-[22px];
-  }
   .step-rail-num {
-    @apply absolute top-[-4px] right-[-6px] inline-flex items-center justify-center w-[22px] h-[22px] rounded-[50%] text-[12px] font-bold bg-[var(--accent)] text-[var(--accent-ink)];
+    @apply absolute top-[-4px] right-[-6px] inline-flex items-center justify-center w-[24px] h-[24px] rounded-[50%] text-fine leading-[1] font-bold bg-[var(--accent)] text-[var(--accent-ink)];
   }
   .step-rail b {
     @apply block text-compact leading-[1.5];

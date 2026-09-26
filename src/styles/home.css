@@ -231,8 +231,9 @@
   .home-plan-option:hover {
     @apply bg-[var(--color-ink-veil)];
   }
+  /* 大きさは .ic の em に任せる（文字との比、verify 28） */
   .home-plan-option > .ic {
-    @apply w-[22px] h-[22px] mb-[8px] text-[var(--accent-text)];
+    @apply mb-[8px] text-[var(--accent-text)];
   }
   .home-plan-option h3 {
     @apply text-lead m-[0];
@@ -394,9 +395,10 @@
   .comparison-assumptions {
     @apply text-fine leading-[1.9] text-muted-on-ink m-[0];
   }
-  /* 狭い画面でも図の文字が枠に触れないよう、左右にも余白を取る（以前は左右 0 で切れて見えた）。 */
+  /* 狭い画面でも図の文字が枠に触れないよう、左右にも少し余白を取る（以前は左右 0 で切れて見えた）。
+     広げすぎると図が縮み、図の文字が 14px を下回る（verify 27）。 */
   .home-section.dark .fig {
-    @apply bg-main p-[20px_14px] rounded-card;
+    @apply bg-main p-[20px_6px] rounded-card;
     border: 1px solid var(--color-gold-soft);
   }
   @media (min-width: 769px) {
