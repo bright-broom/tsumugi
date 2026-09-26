@@ -8,6 +8,7 @@
 - **顧客・見込み客・売上の実データをコミットしない。** リポジトリの公開範囲はオーナーが決める（2026-09-18 の確認では Private。ADR 0070）。Private でも、閲覧できる人・引渡し資料・バックアップに広がる。
 - 実データの既定の置き場所は `.data/`（git 管理外）。`--data <dir>` か `TSUMUGI_DATA_DIR` で変えられるが、リポジトリ内では `.data/`・`.artifacts/` 以外への書き込みを拒否する。
 - `tools/ops/fixtures/` には架空のサンプルだけを置く。
+- `.data/` はリポジトリの週次バックアップに入らない。`npm run backup:private` で暗号化した写しを作り、別の保管先へ置く（[docs/operations.md](../../docs/operations.md)「業務データ（`.data/`）の暗号化バックアップ」、ADR 0088）。
 - ツールは外部 API を呼ばず、メール・投稿などの送信もしない。
 
 ## 見積もり（`npm run ops:estimate`）
