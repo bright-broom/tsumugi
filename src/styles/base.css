@@ -236,7 +236,7 @@
   .ind,
   .plan,
   .fixbar a,
-  .menu > summary,
+  .menu-toggle,
   .acc > summary,
   .more {
     transition:
@@ -248,7 +248,7 @@
   .btn:active,
   .tel:active,
   .fixbar a:active,
-  .menu > summary:active {
+  .menu-toggle:active {
     @apply opacity-[.8];
   }
   .ind:active,

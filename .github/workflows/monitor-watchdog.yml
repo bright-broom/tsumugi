@@ -6,7 +6,7 @@
 name: Monitor watchdog
 on:
   schedule:
-    - cron: '37 */6 * * *' # 6 時間ごと。監視は毎時なので、3 時間止まれば次の実行で気づく
+    - cron: '37 */6 * * *' # 6 時間ごと。監視の実際の間隔は 2.4〜6.3 時間なので、12 時間止まれば気づく（ADR 0083）
   workflow_dispatch:
 permissions:
   contents: read
@@ -60,8 +60,9 @@ jobs:
             gh issue create "${args[@]}"
           fi
 
+      # 「止まっている」警報は失敗の実行を伴わないので recovered にならない。down 以外（recovered・none）なら閉じる。
       - name: Close the issue when recovered
-        if: steps.watchdog.outputs.alert == 'recovered'
+        if: steps.watchdog.outputs.alert == 'recovered' || steps.watchdog.outputs.alert == 'none'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

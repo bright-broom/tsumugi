@@ -89,11 +89,13 @@
   .menu {
     @apply flex-[none];
   }
-  .menu > summary {
-    @apply list-none list-outside cursor-pointer flex flex-col items-center justify-center gap-[9px] min-h-[52px] min-w-[56px] text-fine leading-[1] tracking-[.04em];
-  }
-  .menu > summary::-webkit-details-marker {
-    @apply hidden;
+  .menu-toggle {
+    @apply cursor-pointer flex flex-col items-center justify-center gap-[9px] min-h-[52px] min-w-[56px] text-fine leading-[1] tracking-[.04em];
+    @apply appearance-none bg-transparent border-0 p-[0];
+    color: inherit;
+    /* button は既定で書体を受け継がない。大きさと行の高さは上の text-fine のまま */
+    font-family: inherit;
+    font-weight: inherit;
   }
   .menu-lines {
     @apply relative block w-[26px] h-[12px];
@@ -111,22 +113,24 @@
   .menu-lines::after {
     @apply top-[10px] w-[19px];
   }
-  .menu[open] .menu-lines::before {
+  .menu:has(.menu-panel:popover-open) .menu-lines::before {
     transform: translateY(4px) rotate(45deg);
   }
-  .menu[open] .menu-lines::after {
+  .menu:has(.menu-panel:popover-open) .menu-lines::after {
     @apply w-[26px];
     transform: translateY(-4px) rotate(-45deg);
   }
   .menu-close,
-  .menu[open] .menu-open {
+  .menu:has(.menu-panel:popover-open) .menu-open {
     @apply hidden;
   }
-  .menu[open] .menu-close {
+  .menu:has(.menu-panel:popover-open) .menu-close {
     @apply inline;
   }
+  /* popover は最前面（top layer）に出る。ブラウザ既定の中央寄せを外し、ヘッダーの直下・右端に置く。 */
   .menu-panel {
-    @apply absolute right-pad-pc top-[100%] w-[min(480px,_calc(100vw_-_40px))] max-h-[calc(100dvh_-_var(--spacing-header-pc)_-_24px)];
+    @apply fixed inset-auto m-[0] right-pad-pc top-header-pc w-[min(480px,_calc(100vw_-_40px))] max-h-[calc(100dvh_-_var(--spacing-header-pc)_-_24px)];
+    color: inherit;
     overflow-y: auto;
     @apply p-[24px] bg-header-paper;
     border: 1px solid color-mix(in srgb, var(--color-header-brass) 28%, transparent);
@@ -166,5 +170,11 @@
   }
   .menu-phone p {
     @apply m-[0] text-fine;
+  }
+  /* popover に対応しないブラウザでは、ボタンを出さずパネルも隠す（全ページへの案内はフッターにある）。 */
+  @supports not selector(:popover-open) {
+    .menu {
+      @apply hidden;
+    }
   }
 }

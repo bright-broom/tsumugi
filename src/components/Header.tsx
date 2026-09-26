@@ -6,6 +6,8 @@ import * as C from '@/content/config';
 import { INDUSTRIES, NAV_MAIN } from '@/content/nav';
 import { href, pathForFile, ROUTES } from '@/routing/registry';
 
+const MENU_ID = 'site-menu';
+
 export default function Header({ file }: { file: string }) {
   const copy = useMessages('shell');
   const current = (url: string) => (url === file ? 'page' : undefined);
@@ -44,13 +46,15 @@ export default function Header({ file }: { file: string }) {
             <span className="contact-short">{copy.header.contactShort}</span>
             <Icon name="arrow-right" sm />
           </a>
-          <details className="menu">
-            <summary>
+          {/* ブラウザ標準の popover（ADR 0086）。外側のクリック・タップと Esc で閉じ、
+              外側のリンクやボタンは同じ 1 回の操作で動く。実行時の JavaScript は使わない。 */}
+          <div className="menu">
+            <button type="button" className="menu-toggle" popoverTarget={MENU_ID}>
               <span className="menu-lines" aria-hidden="true" />
               <span className="menu-open">{copy.header.menu}</span>
               <span className="menu-close">{copy.header.close}</span>
-            </summary>
-            <div className="menu-panel">
+            </button>
+            <div id={MENU_ID} className="menu-panel" popover="auto">
               <nav aria-label={copy.header.navigation}>
                 <NavigationGroups file={file} surface="menu" />
                 <p className="hd">{copy.hd2}</p>
@@ -70,7 +74,7 @@ export default function Header({ file }: { file: string }) {
                 <p>{`${copy.mk3} ${C.EMAIL_HOURS}`}</p>
               </div>
             </div>
-          </details>
+          </div>
         </div>
       </div>
     </header>
