@@ -395,11 +395,16 @@
   .comparison-assumptions {
     @apply text-fine leading-[1.9] text-muted-on-ink m-[0];
   }
-  /* 狭い画面でも図の文字が枠に触れないよう、左右にも少し余白を取る（以前は左右 0 で切れて見えた）。
-     広げすぎると図が縮み、図の文字が 14px を下回る（verify 27）。 */
   .home-section.dark .fig {
-    @apply bg-main p-[20px_6px] rounded-card;
+    @apply bg-main p-[20px_0] rounded-card;
     border: 1px solid var(--color-gold-soft);
+  }
+  /* 比較の図は端の文字が枠に触れていたので、左右にも少し余白を取る。
+     広げすぎると図が縮み、図の文字が 14px を下回る（verify 27）。 */
+  @media (max-width: 768px) {
+    .home-section.dark.home-comparison .fig {
+      @apply px-[6px];
+    }
   }
   @media (min-width: 769px) {
     .home-section.dark .fig {
