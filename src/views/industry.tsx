@@ -55,9 +55,9 @@ export default function IndustryPage({ copy, route }: PageProps<'industry'>) {
 
       <Section id="essentials" heading={copy.heading2}>
         <ul className="industry-needs">
-          {d.must.map(([t, dd]) => (
+          {d.must.map(([t, dd, icon]) => (
             <li key={t}>
-              <Icon name="check" />
+              <Icon name={icon} />
               <b dangerouslySetInnerHTML={raw(t)} />
               <div className="d" dangerouslySetInnerHTML={raw(dd)} />
             </li>

@@ -9,6 +9,8 @@ import Section from '@/components/Section';
 import Table from '@/components/Table';
 import Note from '@/components/Note';
 import Cta from '@/components/Cta';
+import StepRail from '@/components/StepRail';
+import { raw } from '@/lib/raw';
 import type { PageProps } from '@/content/page-props';
 
 export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
@@ -52,8 +54,8 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
             <strong>{copy.strong}</strong>
             {copy.p2}
             <strong>{copy.strong2}</strong>
+            {copy.p3}
           </p>
-          <p>{copy.p3}</p>
         </Note>
         <Note heading={copy.heading4} kind="warn">
           <p>
@@ -67,9 +69,6 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
         <p>
           {format(copy.p5, { pPORTALFEEDINNER: P.PORTAL_FEE_DINNER })}
           <strong>{copy.strong4}</strong>
-          {format(copy.p6, { pPORTALFEEDINNER: P.PORTAL_FEE_DINNER })}
-        </p>
-        <p>
           {format(copy.p7, { runStd: n(runStd) })}
           <strong>{format(copy.strong5, { people: people })}</strong>
           {copy.p8}
@@ -78,9 +77,8 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
 
       <Section eyebrow={copy.eyebrow3} heading={copy.heading6}>
         <Note heading={copy.heading7} kind="warn">
-          <p>{copy.p9}</p>
           <p>
-            {copy.p10}
+            {copy.p9}
             <strong>{copy.strong6}</strong>
           </p>
         </Note>
@@ -104,43 +102,12 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
           {copy.p13}
           <strong>{copy.strong10}</strong>
         </p>
-        <p>{copy.p14}</p>
       </Section>
 
       <Section id="approach" eyebrow={copy.eyebrow5} heading={copy.heading9}>
-        <ol className="steps">
-          <li>
-            <b>{copy.b}</b>
-            <div className="d">{copy.d}</div>
-          </li>
-          <li>
-            <b>{copy.b2}</b>
-            <div className="d">
-              {copy.d2}
-              <strong>{copy.strong11}</strong>
-            </div>
-          </li>
-          <li>
-            <b>{copy.b3}</b>
-            <div className="d">{copy.d3}</div>
-          </li>
-          <li>
-            <b>{copy.b4}</b>
-            <div className="d">
-              <strong>{copy.strong12}</strong>
-              {copy.d4}
-            </div>
-          </li>
-          <li>
-            <b>{copy.b5}</b>
-            <div className="d">
-              {copy.d5}
-              <strong>{copy.strong13}</strong>
-            </div>
-          </li>
-        </ol>
+        <StepRail label={copy.stepsLabel} steps={copy.steps} />
+        <p className="fine-note" dangerouslySetInnerHTML={raw(copy.stepsNote)} />
         <Note heading={copy.heading10} kind="bad">
-          <p>{copy.p15}</p>
           <ul className="plain">
             <li>{copy.li3}</li>
             <li>{copy.li4}</li>
@@ -149,7 +116,6 @@ export default function CostCutPage({ copy, route }: PageProps<'costCut'>) {
           </ul>
           <p>
             <strong>{copy.strong14}</strong>
-            {copy.p16}
           </p>
         </Note>
       </Section>
