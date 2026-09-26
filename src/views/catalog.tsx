@@ -283,13 +283,6 @@ export default function CatalogPage({ copy, route }: PageProps<'catalog'>) {
             <p className="catalog-caption">{copy.custom.paymentNote}</p>
           </div>
         </aside>
-        <div className="catalog-technology">
-          <Icon name="code-xml" />
-          <div>
-            <h3>{copy.custom.technologyTitle}</h3>
-            <p>{copy.custom.technology}</p>
-          </div>
-        </div>
       </Section>
 
       <Section
@@ -450,16 +443,6 @@ export default function CatalogPage({ copy, route }: PageProps<'catalog'>) {
           {copy.conditions.termsLink}
           <Icon name="arrow-right" sm />
         </a>
-        <div className="catalog-contact">
-          <div>
-            <h3>{copy.conditions.contactTitle}</h3>
-            <p>{copy.conditions.contactDetail}</p>
-          </div>
-          <ActionLink variant="primary" href={href('contact')}>
-            {copy.conditions.contactLink}
-            <Icon name="arrow-right" sm />
-          </ActionLink>
-        </div>
       </Section>
     </Base>
   );
