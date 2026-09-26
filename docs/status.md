@@ -17,7 +17,7 @@
 - 表示される文字：主要18ページで 30,274 字 → 24,125 字（−20.3%）。owned −36%・source −40%・cost-cut −34%・subsidy −33%・TOP −24%
 - 図・アイコン：短い手順の共通部品 `StepRail`（owned の移転・cost-cut の見直し）、アイコン付きカード（source の納品物・subsidy の注意3点・unlimited の運用・about の進め方）、業種ページの項目ごとのアイコン、TOP の料金3段
 - 残したもの：借地と所有の表・弁護士でない旨・比較の出典と負けている行・準備中の表示・保証しないことの境界。規約・特商法・個人情報のページは対象外
-- 検証：下の「検証」の行に記録（check・lint・Vitest・build・production の verify）。見た目は PC 1440px・モバイル 390px の画面で確認
+- 検証（Linux・Node 24.21.0・npm 12.0.2・Chromium 141 で代用）：check・lint・Vitest **784 件**・料金・build・セキュリティ・build → `verify --mode production` → build で **PASS 599 / WARN 3 / FAIL 0**。1 件減ったのはコントラストの検査の標本（index・price・owned・flow の色の組み合わせの数）で、検査項目・しきい値は同じ。途中の verify で出た FAIL 6 件（手順図の番号 12px、アイコンの比、TOP の図の文字 13.84px／13.51px）は直した。見た目は PC 1440px・モバイル 390px の画面で確認。証跡は `.artifacts/concise/`（Git 管理外）
 
 ### 再開ポイント（2026-09-26 Issue の見直し）
 
