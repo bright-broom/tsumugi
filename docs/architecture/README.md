@@ -190,3 +190,4 @@
 - [0085 — 明暗の帯・明朝の見出し・金の罫で、和の世界観を全ページに通す](0085-wa-modern-surfaces.md)
 - [0086 — メニューはブラウザ標準の popover で開閉し、閲覧者の書体切替は見送る](0086-popover-menu-and-font-choice.md)
 - [0087 — 装飾付きの本文は HTML 文字列のまま残し、許可リストで検査する](0087-raw-html-allowlist.md)
+- [0088 — 業務データ（.data/）を 1 つの暗号化ファイルにまとめてバックアップする](0088-private-data-backup.md)

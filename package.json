@@ -44,6 +44,7 @@
     "refresh": "tsx tools/ops/cli/refresh.ts",
     "backup": "tsx tools/ops/cli/backup.ts",
     "backup:restore-test": "tsx tools/ops/cli/restore-test.ts",
+    "backup:private": "tsx tools/ops/cli/private-backup.ts",
     "check:security": "tsx tools/security/check.ts",
     "audit:security": "npm audit --audit-level=moderate",
     "test:security-browser": "tsx tools/security/browser.ts",
