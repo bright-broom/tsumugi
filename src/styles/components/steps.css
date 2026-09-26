@@ -56,6 +56,69 @@
     @apply border-[color-mix(in_srgb,_var(--color-main)_24%,_transparent)];
   }
 
+  /* ══ 短い手順の横一列。文章で順番を説明する代わりの図。
+        丸の中のアイコンで「何をするか」、右上の番号で順番、線で流れを見せる。
+        820px 未満は縦に積み、線も縦に引く。 */
+  .step-rail {
+    @apply list-none list-outside m-[8px_0_0] p-[0] grid grid-flow-col auto-cols-fr gap-[12px];
+  }
+  .step-rail > li {
+    @apply relative m-[0] p-[0] flex flex-col items-center text-center gap-[6px];
+  }
+  .step-rail > li + li::before {
+    /* 前の丸からこの丸へつなぐ線 */
+    content: '';
+    @apply absolute top-[28px] right-[calc(50%_+_36px)] w-[calc(100%_-_60px)] h-[2px] bg-line-strong;
+  }
+  .step-rail + .fine-note {
+    @apply mt-[28px];
+  }
+  .step-rail-mark {
+    @apply relative inline-flex items-center justify-center w-[56px] h-[56px] mb-[6px] rounded-[50%] bg-surface text-[var(--accent-text)];
+    border: 1px solid var(--color-line-strong);
+  }
+  .step-rail-mark > .ic {
+    @apply w-[22px] h-[22px];
+  }
+  .step-rail-num {
+    @apply absolute top-[-4px] right-[-6px] inline-flex items-center justify-center w-[22px] h-[22px] rounded-[50%] text-[12px] font-bold bg-[var(--accent)] text-[var(--accent-ink)];
+  }
+  .step-rail b {
+    @apply block text-compact leading-[1.5];
+  }
+  .step-rail-who {
+    @apply text-fine leading-[1.6] text-muted;
+  }
+  section.dark .step-rail-mark {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_10%,_transparent)] text-[var(--accent)] border-[color-mix(in_srgb,_var(--color-main)_24%,_transparent)];
+  }
+  section.dark .step-rail > li + li::before {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_24%,_transparent)];
+  }
+  section.dark .step-rail-who {
+    @apply text-muted-on-ink;
+  }
+  @media (max-width: 819px) {
+    .step-rail {
+      @apply grid-flow-row auto-cols-auto gap-[0];
+    }
+    .step-rail > li {
+      @apply grid grid-cols-[56px_1fr] grid-rows-[auto_auto] items-center text-left gap-[0_16px] pb-[18px];
+    }
+    .step-rail-mark {
+      @apply row-[1_/_span_2] mb-[0];
+    }
+    .step-rail b {
+      @apply self-end;
+    }
+    .step-rail-who {
+      @apply self-start;
+    }
+    .step-rail > li + li::before {
+      @apply top-[-18px] left-[27px] right-[auto] w-[2px] h-[18px];
+    }
+  }
+
   /* 章の末尾に置く但し書き。本文より一段落として、幅も本文に合わせる */
   .fine-note {
     @apply mt-[14px] text-meta leading-[1.8] max-w-measure-read;

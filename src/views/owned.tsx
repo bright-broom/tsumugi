@@ -15,6 +15,8 @@ import Cards from '@/components/Cards';
 import Calc from '@/components/Calc';
 import Icon from '@/components/Icon';
 import Cta from '@/components/Cta';
+import StepRail from '@/components/StepRail';
+import { raw } from '@/lib/raw';
 import type { PageProps } from '@/content/page-props';
 
 export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
@@ -39,7 +41,6 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
           <p className="sub">
             {copy.sub}
             <strong className="ownership-emphasis">{copy.strong}</strong>
-            {copy.sub2}
           </p>
           <Cta />
           <PageIndex page="owned" />
@@ -95,16 +96,6 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
         lede={copy.lede3}
       >
         <Cards cls="g2" items={copy.ownership} />
-        <Table
-          headers={['', copy.headers5, format(copy.headers6, { cBRAND: C.BRAND })]}
-          rows={[
-            [copy.rows20, copy.rows21, copy.rows22],
-            [copy.rows23, copy.rows24, copy.rows25],
-            [copy.rows26, copy.rows27, copy.rows28],
-            [copy.rows29, copy.rows30, copy.rows31],
-          ]}
-          foot={copy.foot3}
-        />
       </Section>
 
       <Section eyebrow={copy.eyebrow4} heading={copy.heading5} lede={copy.lede4}>
@@ -114,16 +105,8 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
             [copy.rows32, copy.rows33, '—'],
             [copy.rows34, copy.rows35, copy.rows36],
           ]}
-          caption={copy.caption}
           foot={copy.foot4}
         />
-        <Note heading={copy.heading6} kind="good">
-          <p>
-            <strong>{copy.strong3}</strong>
-            {copy.p3}
-          </p>
-          <p>{copy.p4}</p>
-        </Note>
         <Note heading={copy.heading7}>
           <p>
             {copy.p5}
@@ -145,7 +128,7 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
         <Calc
           title={copy.title2}
           rows={[
-            { label: copy.rowsLabel, value: copy.rowsValue, cls: 'small', sub: copy.rowsSub },
+            { label: copy.rowsLabel, value: copy.rowsValue, cls: 'small' },
             { label: copy.rowsLabel2, value: copy.rowsValue2, cls: 'small', sub: copy.rowsSub2 },
             {
               label: copy.rowsLabel3,
@@ -164,8 +147,6 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
           <p>
             {copy.p8}
             <strong>{copy.strong5}</strong>
-          </p>
-          <p>
             {copy.p9}
             <strong>{copy.strong6}</strong>
             {copy.p10}
@@ -178,7 +159,6 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
           <p>
             {copy.p11}
             <strong>{copy.strong7}</strong>
-            {copy.p12}
           </p>
         </Acc>
         <Acc summary={copy.summary2}>
@@ -198,7 +178,6 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
           <p>
             {copy.p16}
             <strong>{copy.strong10}</strong>
-            {copy.p17}
           </p>
         </Acc>
         <Acc summary={copy.summary5}>
@@ -216,28 +195,16 @@ export default function OwnedPage({ copy, route }: PageProps<'owned'>) {
             <strong>{copy.strong13}</strong>
           </p>
         </Acc>
-        <Note heading={copy.heading11} kind="good">
-          <p>{copy.p22}</p>
-          <p>
-            {copy.p23}
-            <strong>{copy.strong14}</strong>
-            {copy.p24}
-          </p>
-        </Note>
+        <p className="fine-note">
+          {copy.p23}
+          <strong>{copy.strong14}</strong>
+          {copy.p24}
+        </p>
       </Section>
 
       <Section eyebrow={copy.eyebrow7} heading={copy.heading12} lede={copy.lede7}>
-        <Table
-          headers={[copy.headers10, copy.headers11, copy.headers12]}
-          rows={[
-            ['1', copy.rows37, copy.rows38],
-            ['2', copy.rows39, copy.rows40],
-            ['3', copy.rows41, copy.rows42],
-            ['4', copy.rows43, copy.rows42],
-            ['5', copy.rows44, copy.rows45],
-          ]}
-          foot={copy.foot5}
-        />
+        <StepRail label={copy.stepsLabel} steps={copy.steps} />
+        <p className="fine-note" dangerouslySetInnerHTML={raw(copy.foot5)} />
         <div className="btns">
           <ActionLink variant="secondary" href={href('flow')}>
             {copy.btn}
