@@ -96,6 +96,7 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 | TypeScript 7 で ESLint が動かない | typescript-eslint は TypeScript 6 の JavaScript API が必要 | `@typescript/native` の `tsc` は 7.0.2、`typescript` は公式互換パッケージの 6.0.3。併用を保つ（ADR 0003） |
 | `check:live`・`check:release`・`monitor` が全件「fetch failed」 | プロキシ経由でしか外へ出られない環境では、Node の fetch が既定でプロキシを使わない（curl は通る） | `NODE_USE_ENV_PROXY=1 npm run check:release -- …`。DNS・TLS の直接確認はその環境では再現できないため、未確認として記録する |
 | 検査で「ブラウザが無い」と言われる | Playwright のブラウザは Playwright の版ごとに入れる | `PLAYWRIGHT_SKIP_BROWSER_GC=1 npx playwright install chromium` |
+| `npm run verify`（ブラウザ実測）が `listen EPERM 127.0.0.1` で落ちる。Playwright が `icudtl.dat not found` で落ちる。`gh` が設定を読めない | サンドボックスがローカルの待受・ブラウザ本体の読み取り・`gh` の設定を禁じている作業環境がある | オーナーが許可すれば動く（設定の書き方は [handoff.md](docs/handoff.md)）。許可が無いときは、`tools/verify/in-page.ts` と `thresholds.ts` の**同じ関数・同じしきい値**を手元のブラウザから流して代替し、LCP・コンソールエラー・CSP のブラウザ確認は未確認として残す |
 
 ## 7. いまの状態と残課題
 

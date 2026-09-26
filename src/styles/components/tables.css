@@ -5,8 +5,9 @@
   }
   .tbl {
     @apply overflow-x-auto;
-    border: 1px solid var(--color-line);
-    @apply rounded-card;
+    border: 0;
+    border-top: 1px solid var(--color-line-strong);
+    @apply rounded-[0];
     /* 端まで来たら止まる位置を作って、指で弾いたときの行き過ぎを防ぐ */
     scroll-snap-type: x proximity;
   }
@@ -35,8 +36,14 @@
   section.dark .tbl td {
     @apply border-[color-mix(in_srgb,_var(--color-main)_12%,_transparent)];
   }
+  /* 見出し行は面で示し、下だけ琥珀の細線で締める（囲みを増やさない） */
   .tbl thead th {
-    @apply bg-surface text-fine font-bold whitespace-nowrap;
+    @apply bg-[var(--color-ink-veil)] text-fine font-bold whitespace-nowrap tracking-[.04em];
+    border-bottom: 2px solid color-mix(in srgb, var(--color-accent) 60%, var(--color-line-strong));
+  }
+  section.dark .tbl thead th {
+    @apply bg-[color-mix(in_srgb,_var(--color-main)_7%,_transparent)];
+    border-bottom: 2px solid var(--color-gold-soft);
   }
   section.dark .tbl thead th {
     @apply bg-[color-mix(in_srgb,_var(--color-main)_8%,_transparent)] text-white;

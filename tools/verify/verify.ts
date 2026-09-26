@@ -20,7 +20,7 @@ import { tokyoDate } from '@/lib/verification-report';
 import { acceptanceEntries, auditAcceptance } from './acceptance';
 import { checkBrowser } from './browser';
 import { resolveMode } from './publication';
-import { artifactFingerprint, buildReport, printReport } from './report';
+import { artifactFingerprint, buildReport, printReport, writeJobSummary } from './report';
 import { R, rec } from './results';
 import { checkStatic } from './static';
 import { BUILD_LOCALE, DEFAULT_LOCALE } from '@/lib/locale';
@@ -42,7 +42,12 @@ if (LANG_SUFFIX && argv.includes('--write')) {
 }
 
 const modeAt = argv.indexOf('--mode');
-const modeFlag = modeAt < 0 ? undefined : argv[modeAt + 1] && !argv[modeAt + 1]!.startsWith('--') ? argv[modeAt + 1]! : null;
+const modeFlag =
+  modeAt < 0
+    ? undefined
+    : argv[modeAt + 1] && !argv[modeAt + 1]!.startsWith('--')
+      ? argv[modeAt + 1]!
+      : null;
 const resolved = resolveMode(modeFlag, process.env);
 if ('error' in resolved) {
   console.error(`verify: ${resolved.error}`);
@@ -67,6 +72,7 @@ const report = buildReport({
   acceptance: acceptanceEntries(R, !STATIC_ONLY, tokyoDate(measuredAt)),
 });
 printReport(report);
+writeJobSummary(report);
 mkdirSync(VERIFICATION_DIR, { recursive: true });
 writeFileSync(join(VERIFICATION_DIR, REPORT), JSON.stringify(report, null, 2));
 process.exit(report.counts.fail ? 1 : 0);

@@ -59,6 +59,23 @@
     --accent-text: var(--color-campaign-accent-text);
     @apply bg-white text-ink font-ja text-body leading-body font-regular tracking-body;
     font-feature-settings: 'palt' 1;
+    /* 屋号（紬＝織物）の手ざわり。画像を足さず、2〜3% の濃さの織り目だけを敷く */
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-sub) 3%, transparent) 0 1px,
+        transparent 1px 4px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--color-sub) 2%, transparent) 0 1px,
+        transparent 1px 4px
+      );
+  }
+  /* 濃い面・画像の上では織り目を出さない（面の深さを濁らせない） */
+  section.dark,
+  .brand-hero {
+    background-image: none;
   }
   .nah-app[data-profile='main'] {
     --accent: var(--color-main-accent);
@@ -66,12 +83,18 @@
     --accent-text: var(--color-main-accent-text);
   }
 
-  /* ── 見出し。役割ごとに書体を分ける（原則D） */
+  /* ── 見出し。役割ごとに書体を分ける（原則D）
+        章の見出し（h1・h2）は明朝。屋号と同じ書体で、ヒーローの世界観を本文まで通す。
+        macOS では weight 600 が明朝 W6 に当たる。h3・h4 は情報の粒なのでゴシックのまま。 */
   h1,
   h2,
   h3,
   h4 {
     @apply m-[0] font-bold leading-heading tracking-heading;
+  }
+  h1,
+  h2 {
+    @apply font-brand font-semi;
   }
   h1 {
     @apply text-page-pc;
@@ -158,10 +181,36 @@
     @apply py-section-pc;
   }
   section.tint {
-    @apply bg-surface;
+    @apply bg-[var(--color-ink-veil)];
   }
   section.dark {
-    @apply bg-ink text-white;
+    @apply bg-ink text-white relative;
+    background-image: linear-gradient(
+      180deg,
+      var(--color-ink-deep) 0%,
+      var(--color-ink) 42%,
+      var(--color-ink) 100%
+    );
+  }
+  /* 帯の切り替わりに金の細線を一本だけ引く。罫線を増やすのではなく、面の境目を締める役 */
+  section.dark::before,
+  section.dark::after {
+    content: '';
+    @apply absolute inset-x-[0] h-[1px] pointer-events-none;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--color-gold-soft) 18%,
+      var(--color-gold) 50%,
+      var(--color-gold-soft) 82%,
+      transparent
+    );
+  }
+  section.dark::before {
+    @apply top-[0];
+  }
+  section.dark::after {
+    @apply bottom-[0];
   }
   section.dark a {
     @apply text-white;

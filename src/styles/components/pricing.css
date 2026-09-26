@@ -203,4 +203,37 @@
   .plan ul li .ic {
     @apply shrink-0 mt-[4px] text-muted;
   }
+
+  /* 濃い帯の導入に料金の面が載るとき。囲みは金の細線にし、数字は金で見せる。 */
+  section.dark .entry {
+    @apply border-[var(--color-gold-soft)] text-main;
+  }
+  section.dark .entry > div:first-child {
+    @apply border-r-[var(--color-gold-soft)];
+  }
+  section.dark .entry .pn,
+  section.dark .entry .amt {
+    @apply text-main;
+  }
+  section.dark .entry .amt .u {
+    @apply text-muted-on-ink;
+  }
+  section.dark .segnote {
+    @apply text-muted-on-ink;
+  }
+  section.dark .segnote > .ic {
+    @apply text-gold;
+  }
+  section.dark .entry li,
+  section.dark .entry p,
+  section.dark .entry span {
+    @apply text-muted-on-ink;
+  }
+  section.dark .entry .ic {
+    @apply text-gold;
+  }
+
+  section.dark .plan {
+    @apply text-ink;
+  }
 }
