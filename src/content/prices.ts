@@ -267,7 +267,7 @@ export const SUBS_MARKET = [
   { name: copy.comparisonName3, pages: 12, init: 5_000, monthly: 19_800 },
 ] as const;
 
-export const subsTotal = (m: (typeof SUBS_MARKET)[number], months = COMPARE_MONTHS) =>
+const subsTotal = (m: (typeof SUBS_MARKET)[number], months = COMPARE_MONTHS) =>
   m.init + m.monthly * months;
 
 export const oursTotal = (price: number, runKey: RunKey, months = COMPARE_MONTHS) =>

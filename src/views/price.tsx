@@ -38,11 +38,8 @@ export default function PricePage({ copy, route }: PageProps<'price'>) {
         </a>
 
         <div id="production">
-          <Entry full />
+          <Entry />
         </div>
-        <Note heading={copy.preparationTitle} kind="warn">
-          <p>{copy.availability}</p>
-        </Note>
         <h3 className="pricing-subheading">{copy.production}</h3>
         <Plans />
         <p>{copy.deliveryNote}</p>

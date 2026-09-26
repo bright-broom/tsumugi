@@ -1,7 +1,7 @@
 import PageIndex from '@/components/PageIndex';
 import { SubsidyBar } from '@/components/diagrams/SubsidyBar';
 import { SubsidyTimeline } from '@/components/diagrams/SubsidyTimeline';
-import { esc, raw } from '@/lib/raw';
+import { esc } from '@/lib/raw';
 import { ROUTES } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
@@ -10,7 +10,7 @@ import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Table from '@/components/Table';
 import Note from '@/components/Note';
-import Acc from '@/components/Acc';
+import Cards from '@/components/Cards';
 import Cta from '@/components/Cta';
 import type { PageProps } from '@/content/page-props';
 
@@ -56,81 +56,32 @@ export default function SubsidyPage({ copy, route }: PageProps<'subsidy'>) {
             {copy.p}
             <strong>{copy.strong}</strong>
             {copy.p2}
-            <strong>{copy.strong2}</strong>
           </p>
         </Note>
       </Section>
 
       <Section id="conditions" tone="tint" heading={copy.heading4}>
-        <Note heading={copy.heading5} kind="bad">
-          <p
-            dangerouslySetInnerHTML={raw(
-              format(copy.adoption, { rate: esc(S.adoption_rate), detail: esc(S.adoption_detail) }),
-            )}
-          />
-          <p>
-            <strong>{copy.strong3}</strong>
-            {copy.p5}
-          </p>
-        </Note>
-        <Note heading={copy.heading6} kind="warn">
-          <p>
-            {copy.p6}
-            <strong>{copy.strong4}</strong>
-            {copy.p7}
-          </p>
-        </Note>
-        <Note heading={copy.heading7}>
-          <p>
-            {copy.p8}
-            <strong>{copy.strong5}</strong>
-            {copy.p9}
-          </p>
-          <p>
-            {copy.p10}
-            <strong>{copy.strong6}</strong>
-            {copy.p11}
-            <strong>{copy.strong7}</strong>
-            {copy.p12}
-          </p>
-        </Note>
+        <Cards
+          items={copy.cautions.map((c, i) =>
+            i === 0
+              ? {
+                  ...c,
+                  desc: format(c.desc, {
+                    rate: esc(S.adoption_rate),
+                    detail: esc(S.adoption_detail),
+                  }),
+                }
+              : c,
+          )}
+        />
       </Section>
 
       <Section id="schedule" eyebrow={copy.eyebrow2} heading={copy.heading8}>
         <SubsidyTimeline form4={S.form4_deadline} deadline={S.deadline} />
-        <Acc summary={copy.summary}>
-          <ul className="plain">
-            <li>
-              <b>{copy.b}</b>
-              {copy.li}
-            </li>
-            <li>
-              <b>{copy.b2}</b>
-              {copy.li2}
-            </li>
-            <li>
-              <b>{copy.b3}</b>
-              {copy.li3}
-            </li>
-            <li>
-              <b>{copy.b4}</b>
-              {copy.li4}
-            </li>
-            <li>
-              <b>{copy.b5}</b>
-              {copy.li5}
-            </li>
-            <li>
-              <b>{copy.b6}</b>
-              {copy.li6}
-            </li>
-          </ul>
-        </Acc>
         <Note heading={copy.heading9}>
           <p>
             {copy.p13}
             <strong>{copy.strong8}</strong>
-            {copy.p14}
           </p>
         </Note>
       </Section>
@@ -141,7 +92,6 @@ export default function SubsidyPage({ copy, route }: PageProps<'subsidy'>) {
           <strong>{copy.strong9}</strong>
           {copy.p16}
         </p>
-        <p>{copy.p17}</p>
       </Section>
 
       <Section heading={copy.heading11}>

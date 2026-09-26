@@ -38,7 +38,8 @@ describe('トップページから詳細ページへの導線', () => {
     const links = [...main.matchAll(/<ul class="route-links">([\s\S]*?)<\/ul>/g)].flatMap(
       ([list]) => [...list.matchAll(/href="([^"]+)"[\s\S]*?<span>([^<]+)<\/span>/g)],
     );
-    expect(links.length).toBe(11);
+    // 各セクションの末尾に 1 行ずつ詳細への導線を置く（2026-09-26、ボタンと本文中のリンクを導線の行へ集約）
+    expect(links.length).toBe(14);
     for (const [, path, label] of links) expect(label).toBe(labels.get(path!));
   });
 });

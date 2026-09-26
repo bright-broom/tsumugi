@@ -232,18 +232,6 @@
   .catalog-payment strong {
     @apply text-lead;
   }
-  .catalog-technology {
-    @apply flex gap-[18px] mt-[32px] max-w-[980px];
-  }
-  .catalog-technology > .ic {
-    @apply shrink-0 text-inherit mt-[3px];
-  }
-  .catalog-technology h3 {
-    @apply text-lead mb-[12px];
-  }
-  .catalog-technology p {
-    @apply text-compact leading-[2] text-muted;
-  }
   .catalog-support-grid {
     @apply grid grid-cols-4 border-y border-line-strong;
   }
@@ -377,18 +365,6 @@
   .catalog-conditions .more {
     @apply inline-flex items-center gap-[12px] min-h-[44px] mt-[24px];
   }
-  .catalog-contact {
-    @apply flex items-center justify-between gap-[32px] bg-ink text-main p-[40px] mt-[48px] rounded-card;
-  }
-  .catalog-contact h3 {
-    @apply text-[25px] mb-[12px];
-  }
-  .catalog-contact p {
-    @apply text-compact text-muted-on-ink;
-  }
-  .catalog-contact a {
-    @apply shrink-0;
-  }
   @media (max-width: 1100px) {
     .catalog-hero-body {
       @apply gap-[28px];
@@ -480,9 +456,6 @@
     .catalog-cost-parts > div + div {
       @apply border-l-0 border-t border-line;
     }
-    .catalog-contact {
-      @apply flex-col items-start p-[28px];
-    }
   }
   @media (max-width: 520px) {
     .catalog-stage {
@@ -520,12 +493,6 @@
     }
     .catalog-payment li + li {
       @apply border-l-0 border-t border-line;
-    }
-    .catalog-contact h3 {
-      @apply text-[22px];
-    }
-    .catalog-contact .btn {
-      @apply w-full;
     }
   }
 

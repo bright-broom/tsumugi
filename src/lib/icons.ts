@@ -52,6 +52,7 @@ import {
   ScrollText,
   Shield,
   Landmark,
+  Layers,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -110,6 +111,7 @@ export const ICONS = {
   'scroll-text': ScrollText,
   shield: Shield,
   landmark: Landmark,
+  layers: Layers,
 } as const satisfies Record<string, LucideIcon>;
 
 export type IconName = keyof typeof ICONS;

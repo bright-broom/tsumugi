@@ -66,8 +66,8 @@ npm run verify    # 全項目の検査（ブラウザ計測を含む）
 
 1. `npm run check`・`npm run lint`・`npm test` が通る
 2. `npm run build` が通る（postbuild が「実行時の script 0件・区切りコメント 0件」を出す）
-3. `npm run verify -- --mode production` が **PASS 600 / WARN 3 / FAIL 0**（対象なし 42 件。WARN は自社公開で記録した専門家・受入確認の未実施。ADR 0056）
-   - 検査項目やページを増減すると 600 は変わる。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
+3. `npm run verify -- --mode production` が **PASS 599 / WARN 3 / FAIL 0**（対象なし 42 件。WARN は自社公開で記録した専門家・受入確認の未実施。ADR 0056）
+   - 検査項目やページを増減すると 599 は変わる。コントラストの検査は index・price・owned・flow の色の組み合わせごとに数えるため、本文の要素を増減しても変わる（ADR 0089 で 600 → 599）。そのときは `docs/spec.md` と `docs/status.md` の数字も直す
 4. 見た目を変えないはずの変更（リファクタリング）では、`out/` の全ファイルのハッシュが変更前と同じ。HTML/CSSの生成方式自体を変更する場合は、変更対象以外のハッシュ一致と、同じブラウザでのPC・モバイルの画面比較で確かめ、差分の理由をADRに記録する（[ADR 0009](docs/architecture/0009-global-tailwind.md)）
 
 ## 5. 進め方

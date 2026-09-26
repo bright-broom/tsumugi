@@ -17,6 +17,9 @@
     .cards .g3 {
       @apply grid-cols-[repeat(3,_1fr)];
     }
+    .cards .g4 {
+      @apply grid-cols-[repeat(4,_1fr)];
+    }
   }
   /* 既定は罫だけ。角丸の箱にすると全部が同じ強さになって階層が消える（原則F） */
   .card {

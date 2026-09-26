@@ -63,12 +63,6 @@
   .ownership-emphasis {
     @apply text-white;
   }
-  .home-pricing-subheading {
-    @apply m-[44px_0_18px];
-  }
-  .home-followup {
-    @apply mt-[18px];
-  }
 }
 
 @layer overrides {

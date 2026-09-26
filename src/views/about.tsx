@@ -1,13 +1,13 @@
 import PageIndex from '@/components/PageIndex';
 import { esc, raw } from '@/lib/raw';
 import { ROUTES } from '@/routing/registry';
-import { href } from '@/routing/registry';
 import { format } from '@/i18n/format';
 import * as C from '@/content/config';
 import Base from '@/layouts/Base';
 import Section from '@/components/Section';
 import Note from '@/components/Note';
 import Cta from '@/components/Cta';
+import Cards from '@/components/Cards';
 import { useMessages } from '@/components/ContentProvider';
 import StaffList from '@/components/storefront/StaffList';
 import StoreInfo from '@/components/storefront/StoreInfo';
@@ -82,46 +82,14 @@ export default function AboutPage({ copy, route }: PageProps<'about'>) {
         )}
         <Note heading={copy.heading4}>
           <p>
-            {copy.p4}
             <strong>{copy.strong3}</strong>
             {copy.p5}
-          </p>
-          <p>
-            {copy.p6}
-            <strong>{copy.strong4}</strong>
-            {copy.p7}
           </p>
         </Note>
       </Section>
 
       <Section id="principles" heading={copy.heading5}>
-        <ul className="plain">
-          <li>
-            <strong>{copy.strong5}</strong>
-            {copy.li}
-          </li>
-          <li>
-            <strong>{copy.strong6}</strong>
-            {copy.li2}
-          </li>
-          <li>
-            <strong>{copy.strong7}</strong>
-            <a href={href('spec')}>{copy.a}</a>
-            {copy.li3}
-          </li>
-          <li>
-            <strong>{copy.strong8}</strong>
-            {copy.li4}
-            <a href={href('owned')}>{copy.a2}</a>
-            {copy.li5}
-            <a href={href('source')}>{copy.a3}</a>
-            {copy.li6}
-          </li>
-          <li>
-            <strong>{copy.strong9}</strong>
-            {copy.li7}
-          </li>
-        </ul>
+        <Cards items={copy.principles} />
       </Section>
 
       {visitable && (
