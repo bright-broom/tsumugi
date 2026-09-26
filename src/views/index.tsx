@@ -18,7 +18,6 @@ import Note from '@/components/Note';
 import FaqList from '@/components/FaqList';
 import Cards from '@/components/Cards';
 import Calc from '@/components/Calc';
-import Entry from '@/components/Entry';
 import Icon from '@/components/Icon';
 import RouteLinks from '@/components/RouteLinks';
 import type { PageProps } from '@/content/page-props';
@@ -102,11 +101,6 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               <p className="sub">
                 {copy.sub}
                 <strong>{copy.strong}</strong>
-                {copy.sub2}
-                <br />
-                {copy.sub3}
-                <strong>{copy.strong2}</strong>
-                {copy.sub4}
               </p>
               <a className="home-team" href={href('about')}>
                 <Icon name="shield" />
@@ -152,30 +146,27 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           id="pricing"
           eyebrow={copy.eyebrow5}
           heading={copy.heading8}
-          lede={copy.lede4}
         >
-          <Entry />
-          <h3 className="home-pricing-subheading">{copy.h3}</h3>
+          {/* 入口の 1 ページと 2 つのプランを横並びにし、規模と価格だけで比べられるようにする。
+              中身の詳細は料金ページ（同じ金額を TOP で二度大きく出さない）。 */}
           <div className="home-plan-options">
-            {P.BUILD.map((plan) => (
+            {[
+              { ...P.SINGLE, icon: 'file-text' as const, preparing: false },
+              ...P.BUILD.map((plan) => ({
+                ...plan,
+                icon: plan.preparing ? ('layers' as const) : ('building-2' as const),
+              })),
+            ].map((plan) => (
               <a className="home-plan-option" href={href('price')} key={plan.key}>
-                <Icon name={plan.preparing ? 'file-text' : 'building-2'} />
-                <div>
-                  <h4>{plan.name}</h4>
-                  <p>{format(copy.layout.planMeta, { pages: plan.pages, weeks: plan.weeks })}</p>
-                  {plan.preparing && (
-                    <span className="home-plan-status">{copy.scope.preparing}</span>
-                  )}
-                </div>
+                <Icon name={plan.icon} />
+                <h3>{plan.name}</h3>
+                <p>{format(copy.layout.planMeta, { pages: plan.pages, weeks: plan.weeks })}</p>
                 <strong className="tnum">{P.yen(plan.price)}</strong>
-                <Icon name="arrow-right" sm />
+                {plan.preparing && <span className="home-plan-status">{copy.scope.preparing}</span>}
               </a>
             ))}
           </div>
-          <p className="dim fine-note">
-            {copy.dim2}
-            <a href={href('price')}>{copy.a}</a>
-          </p>
+          <p className="dim fine-note">{copy.dim2}</p>
           <RouteLinks ids={['price', 'plans']} />
         </Section>
 
@@ -215,18 +206,9 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           <LandVsOwn />
           <Acc summary={copy.heading2}>
             <Cards cls="g2" items={copy.ownership} />
-            <p>
-              {copy.p}
-              <strong>{copy.strong3}</strong>
-              {copy.p2}
-            </p>
+            <p>{copy.p}</p>
           </Acc>
-          <div className="btns">
-            <ActionLink variant="secondary" href={href('owned')}>
-              {copy.btn3}
-            </ActionLink>
-          </div>
-          <RouteLinks ids={['source', 'spec']} />
+          <RouteLinks ids={['owned', 'source', 'spec']} />
         </Section>
 
         {/* 比較の期間・外部費・更新範囲を明示し、条件を確認できるようにする。 */}
@@ -236,13 +218,14 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           className="home-section home-comparison"
           eyebrow={copy.eyebrow7}
           heading={copy.heading11}
-          lede={copy.lede6}
         >
+          <OwnershipClock
+            subMonthly={one.sub_monthly}
+            subTotal={one.sub_total}
+            ourPrice={one.our_price}
+            months={P.COMPARE_MONTHS}
+          />
           <div className="comparison-overview">
-            <p className="comparison-period">
-              <Icon name="calendar-days" sm />
-              {copy.comparisonUi.total}
-            </p>
             <div className="comparison-totals">
               <div>
                 <h3>
@@ -281,7 +264,6 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                         { difference: n(Math.abs(one.diff)) },
                       )}
                 </strong>
-                <p>{copy.rowsSub8}</p>
               </div>
             </div>
             <p className="comparison-assumptions">
@@ -290,12 +272,6 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               })}
             </p>
           </div>
-          <OwnershipClock
-            subMonthly={one.sub_monthly}
-            subTotal={one.sub_total}
-            ourPrice={one.our_price}
-            months={P.COMPARE_MONTHS}
-          />
           <Acc summary={copy.comparisonUi.detail}>
             <Table
               headers={[copy.headers, copy.headers2, C.BRAND]}
@@ -340,8 +316,6 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                   value: copy.rowsValue,
                   cls: 'small',
                 },
-                { icon: 'user-plus', label: copy.rowsLabel4, value: copy.rowsValue, cls: 'small' },
-                { icon: 'clock', label: copy.rowsLabel5, value: copy.rowsValue, cls: 'small' },
                 {
                   label: copy.rowsLabel6,
                   value: copy.rowsValue3,
@@ -354,13 +328,9 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               <Note heading={copy.heading6} kind="good">
                 <p>{copy.p4}</p>
               </Note>
-              <div className="btns">
-                <ActionLink variant="secondary" href={href('unlimited')}>
-                  {copy.btn5}
-                </ActionLink>
-              </div>
             </div>
           </div>
+          <RouteLinks ids={['unlimited']} />
         </Section>
 
         <Section
@@ -369,7 +339,7 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
           className="home-section home-subsidy"
           eyebrow={copy.eyebrow8}
           heading={copy.heading13}
-          lede={format(copy.lede7, { pSUBSIDYName: P.SUBSIDY.name, sdNet: P.yen(sd.net) })}
+          lede={format(copy.lede7, { pSUBSIDYName: P.SUBSIDY.name })}
         >
           <SubsidyBar total={sd.total} web={sd.web} pr={sd.pr} grant={sd.grant} net={sd.net} />
           <Note
@@ -385,9 +355,9 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
                 pSUBSIDYDeadline: P.SUBSIDY.deadline,
                 pSUBSIDYForm4Deadline: P.SUBSIDY.form4_deadline,
               })}
-              <a href={href('subsidy')}>{copy.a4}</a>
             </p>
           </Note>
+          <RouteLinks ids={['subsidy']} />
         </Section>
 
         <Section
@@ -423,11 +393,6 @@ export default function IndexPage({ copy, route }: PageProps<'home'>) {
               </li>
             ))}
           </ul>
-          <p className="home-followup">
-            {copy.p19}
-            <strong>{copy.strong9}</strong>
-            {copy.p20}
-          </p>
           <div className="btns">
             <PhoneLink variant="primary" />
             <ActionLink variant="secondary" href={C.EMAIL_LINK}>

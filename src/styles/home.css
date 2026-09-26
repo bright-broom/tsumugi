@@ -217,57 +217,43 @@
     @apply bg-main;
   }
   /* 囲みを外し、沈んだ面と金の罫で組む。箱が並ぶと、どれも同じ強さに見えて階層が消える。 */
-  .home-pricing .entry {
-    @apply grid-cols-[minmax(240px,.85fr)_minmax(0,1.15fr)] gap-[0] p-[0] overflow-hidden border-[0] rounded-[0] bg-[var(--color-ink-veil)];
-    border-top: 2px solid var(--color-accent);
-  }
-  .home-pricing .entry > div {
-    @apply p-[40px];
-  }
-  .home-pricing .entry > div:first-child {
-    @apply border-r border-line;
-  }
-  /* 金額は明朝の特大。琥珀の下線だけを添えて、色を増やさずに主役にする。 */
-  .home-pricing .entry .amt {
-    @apply font-brand font-semi leading-display tracking-display my-[20px] inline-block;
-    font-size: clamp(var(--text-figure-mb), 5.4vw, 84px);
-    box-shadow: inset 0 -0.08em 0 var(--color-accent);
-  }
-  .home-pricing .entry .btns {
-    @apply gap-[12px];
-  }
-  .home-pricing .entry .btn:first-child {
-    @apply bg-accent text-sub border-accent;
-  }
-  .home-pricing-subheading {
-    @apply text-lead mt-[36px] mb-[16px];
-  }
+  /* 3 つの規模を横並びに。業種の並びと同じく、囲まずに罫で区切り、金額だけを明朝で大きくする。 */
   .home-plan-options {
-    @apply grid grid-cols-2 border-y border-line-strong;
+    @apply grid grid-cols-3 border-y border-line-strong;
   }
   .home-plan-option {
-    @apply grid grid-cols-[24px_minmax(0,1fr)_auto] items-start gap-[12px] py-[24px] pr-[24px] text-ink no-underline;
+    @apply relative flex flex-col items-start gap-[10px] p-[32px_28px] text-ink no-underline;
+    transition: background-color 150ms ease;
   }
   .home-plan-option + .home-plan-option {
-    @apply border-l border-line pl-[24px] pr-[0];
+    @apply border-l border-line;
   }
-  .home-plan-option h4 {
+  .home-plan-option:hover {
+    @apply bg-[var(--color-ink-veil)];
+  }
+  .home-plan-option > .ic {
+    @apply w-[22px] h-[22px] mb-[8px] text-[var(--accent-text)];
+  }
+  .home-plan-option h3 {
     @apply text-lead m-[0];
   }
   .home-plan-option p {
-    @apply text-fine text-muted mt-[6px] mb-[0];
+    @apply text-fine text-muted m-[0];
   }
   .home-plan-option strong {
-    @apply col-[2] font-brand font-semi text-[30px] tracking-display;
+    @apply mt-auto pt-[14px] font-brand font-semi text-[34px] leading-display tracking-display;
   }
-  .home-plan-option > .ic:last-child {
-    @apply col-[3] row-[1] self-center;
+  .home-plan-option:first-child strong {
+    box-shadow: inset 0 -0.08em 0 var(--color-accent);
   }
-  .home-plan-option:hover h4 {
+  .home-plan-option:hover h3 {
     @apply underline underline-offset-[5px];
   }
   .home-plan-status {
-    @apply inline-block text-fine text-muted mt-[6px];
+    @apply absolute top-[32px] right-[28px] text-fine text-muted border border-line rounded-card px-[8px] py-[2px];
+  }
+  .home-pricing .fine-note {
+    @apply mt-[16px];
   }
   .home-industries .inds {
     @apply grid-cols-4 gap-[0] border-y border-line-strong;
@@ -370,9 +356,6 @@
   .comparison-overview {
     @apply mb-[32px];
   }
-  .comparison-period {
-    @apply flex items-center gap-[8px] text-fine text-muted-on-ink mb-[20px];
-  }
   .comparison-totals {
     @apply grid grid-cols-2 border-y border-[var(--color-gold-soft)];
   }
@@ -411,8 +394,9 @@
   .comparison-assumptions {
     @apply text-fine leading-[1.9] text-muted-on-ink m-[0];
   }
+  /* 狭い画面でも図の文字が枠に触れないよう、左右にも余白を取る（以前は左右 0 で切れて見えた）。 */
   .home-section.dark .fig {
-    @apply bg-main p-[24px_0] rounded-card;
+    @apply bg-main p-[20px_14px] rounded-card;
     border: 1px solid var(--color-gold-soft);
   }
   @media (min-width: 769px) {
@@ -461,9 +445,6 @@
   }
   .home-contact .sh h2 {
     @apply text-[clamp(30px,3vw,44px)] leading-[1.55];
-  }
-  .home-followup {
-    @apply text-body leading-[2] max-w-[50em];
   }
   @media (max-width: 1024px) {
     .home-intro > .wrap {
@@ -547,33 +528,30 @@
     .home-section .fig {
       @apply py-[16px] my-[24px];
     }
-    .home-pricing .entry {
-      @apply grid-cols-1;
-    }
-    .home-pricing .entry > div {
-      @apply p-[24px];
-    }
-    .home-pricing .entry > div:first-child {
-      @apply border-r-[0] border-b border-line;
-    }
-    .home-pricing .entry .amt {
-      @apply text-[56px] my-[16px];
-    }
-    .home-pricing .entry .btns {
-      @apply flex-col items-stretch;
-    }
+    /* 狭い画面では 1 行ずつ：アイコン・名前と規模・金額。縦に積むと 3 枚で 1 画面を使い切る。 */
     .home-plan-options {
       @apply grid-cols-1;
     }
-    .home-plan-option,
-    .home-plan-option + .home-plan-option {
-      @apply px-[0] py-[20px] border-l-[0];
+    .home-plan-option {
+      @apply grid grid-cols-[22px_minmax(0,1fr)_auto] gap-x-[12px] gap-y-[4px] items-center p-[18px_0];
     }
     .home-plan-option + .home-plan-option {
-      @apply border-t border-line;
+      @apply border-l-[0] border-t border-line;
+    }
+    .home-plan-option > .ic {
+      @apply row-[1_/_span_2] m-[0];
+    }
+    .home-plan-option h3 {
+      @apply col-[2] text-body font-semi;
+    }
+    .home-plan-option p {
+      @apply col-[2];
     }
     .home-plan-option strong {
-      @apply text-[26px];
+      @apply col-[3] row-[1_/_span_2] p-[0] text-[24px];
+    }
+    .home-plan-status {
+      @apply static col-[2] justify-self-start;
     }
     .home-industries .ind {
       @apply p-[22px_16px];
