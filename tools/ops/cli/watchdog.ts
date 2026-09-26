@@ -3,7 +3,7 @@
  *
  *     npm run watchdog                                    GitHub の実行履歴を見る（GH_TOKEN が要る）
  *     npm run watchdog -- --runs <実行履歴.json>          通信せずに判定を試す
- *     npm run watchdog -- --max-age-minutes 180 --json <file>
+ *     npm run watchdog -- --max-age-minutes 720 --json <file>
  *
  * FAIL が1件でもあれば終了コード 1。ワークフローはこの結果で issue を立て、復旧したら閉じる。
  */
@@ -13,18 +13,18 @@ import { parseArgs } from 'node:util';
 import { ROOT } from '../../paths';
 import { report } from '../results';
 import { monitorTarget } from '../site-expectations';
-import { alertBody, checkWatchdog, type WorkflowRun } from '../watchdog';
+import { alertBody, checkWatchdog, DEFAULT_MAX_AGE_MINUTES, type WorkflowRun } from '../watchdog';
 import { nonNegativeInteger } from './options';
 
 const USAGE =
-  '使い方: npm run watchdog -- [--repo owner/name] [--workflow site-monitor.yml] [--max-age-minutes 180] [--step Monitor] [--limit 10] [--runs <file>] [--json <file>] [--body <file>]';
+  '使い方: npm run watchdog -- [--repo owner/name] [--workflow site-monitor.yml] [--max-age-minutes 720] [--step Monitor] [--limit 10] [--runs <file>] [--json <file>] [--body <file>]';
 
 const { values } = parseArgs({
   options: {
     repo: { type: 'string', default: process.env.GITHUB_REPOSITORY ?? '' },
     workflow: { type: 'string', default: 'site-monitor.yml' },
     step: { type: 'string', default: 'Monitor' },
-    'max-age-minutes': { type: 'string', default: '180' },
+    'max-age-minutes': { type: 'string', default: String(DEFAULT_MAX_AGE_MINUTES) },
     limit: { type: 'string', default: '10' },
     runs: { type: 'string' },
     json: { type: 'string', default: join(ROOT, '.artifacts', 'ops', 'watchdog.json') },

@@ -98,11 +98,11 @@
     .contact-short {
       @apply inline;
     }
-    .menu > summary {
+    .menu-toggle {
       @apply min-w-tap;
     }
     .menu-panel {
-      @apply right-[20px] p-[18px_12px] max-h-[calc(100dvh_-_var(--spacing-header-mb)_-_80px)];
+      @apply right-[20px] top-header-mb p-[18px_12px] max-h-[calc(100dvh_-_var(--spacing-header-mb)_-_80px)];
     }
     .draft {
       @apply px-pad-mb-head text-fine;

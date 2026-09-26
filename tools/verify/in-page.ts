@@ -173,7 +173,7 @@ ${COLOR_READER}
                    '.btn-1', '.btn-2', '.card .meta', '.plan .why', '.plan .pmeta',
                    '.hero h1, .hero .service-intro-title', '.hero .sub', '.hero .kick', '.logo .n', '.logo .s',
                    '.brand-hero-copy h1', '.brand-hero-copy p',
-                   '.header-contact', '.logo .roman', '.menu > summary', '.header-phone',
+                   '.header-contact', '.logo .roman', '.menu-toggle', '.header-phone',
                    '.footer-email', '.footer-phone', '.footer-links a', '.footer-industries a', '.ftr-legal a', '.footer-top',
                    '.amt', '.pricebox .alt li', '.amtwrap .pre',
                    'thead th', '.ftr p', '.ftr .fine', '.sh .lab', '.calc .r .k em',

@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import {
   alertBody,
   checkWatchdog,
+  DEFAULT_MAX_AGE_MINUTES,
   type Alert,
   type WorkflowRun,
   type WatchdogReport,
@@ -52,6 +53,17 @@ describe('監視の見張り', () => {
     expect(report.results[0]?.detail).toContain('9 時間前');
     expect(report.results[0]?.detail).toContain('監視が止まっています');
     expect(report.alert).toBe<Alert>('down');
+  });
+
+  it('既定の閾値は、GitHub の schedule の実際の間隔（最大 6.3 時間）では警報を出さない', () => {
+    // #101：毎時指定の監視が 3〜6 時間おきにしか動かず、180 分の閾値で正常な運用に警報が出続けた。
+    const defaults = { ...options, maxAgeMinutes: DEFAULT_MAX_AGE_MINUTES };
+    const late = checkWatchdog([ok({ createdAt: '2026-09-24T05:42:00Z' })], defaults); // 6.3 時間前
+    expect(late.results[0]).toMatchObject({ status: 'PASS', name: '監視の実行' });
+    expect(late.alert).toBe<Alert>('none');
+    const stopped = checkWatchdog([ok({ createdAt: '2026-09-23T23:00:00Z' })], defaults); // 13 時間前
+    expect(stopped.results[0]).toMatchObject({ status: 'FAIL', name: '監視の実行' });
+    expect(stopped.alert).toBe<Alert>('down');
   });
 
   it('成功と表示されていても、監視の手順が飛ばされていれば失敗にする', () => {
@@ -102,6 +114,12 @@ describe('監視の見張り', () => {
     expect(body).toContain('対応：');
     const recovered = checkWatchdog([ok(), ok({ conclusion: 'failure' })], options);
     expect(alertBody(recovered, { workflow: 'w', target: 't' })).toContain('自動で閉じます');
+    // 実行が止まっているときは、失敗の中身ではなくワークフローの有効状態を見るよう案内する。
+    const stale = checkWatchdog([ok({ createdAt: '2026-09-24T03:00:00Z' })], options);
+    const staleBody = alertBody(stale, { workflow: 'w', target: 't' });
+    expect(staleBody).toContain('ワークフローが無効');
+    expect(staleBody).not.toContain('死活・証明書');
+    expect(body).not.toContain('ワークフローが無効');
   });
 });
 

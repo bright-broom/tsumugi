@@ -1,7 +1,7 @@
 /**
  * 監視そのものの見張り（監査 A07、ADR 0046 の続き）。
  *
- * 毎時の監視（Site monitor）は、失敗するとジョブが失敗して通知が届く。
+ * 監視（Site monitor、cron は毎時）は、失敗するとジョブが失敗して通知が届く。
  * しかし「動いていない」「成功と表示されているが中身が飛ばされている」「直ってもそれが伝わらない」は、
  * 監視の結果を見ているだけでは分からない。ここでは実行の履歴そのものを検査する。
  *
@@ -38,6 +38,16 @@ export interface WatchdogReport {
   /** 起票・連絡の本文に使う一行。 */
   headline: string;
 }
+
+/**
+ * 既定の「止まっている」とみなす経過時間。
+ *
+ * Site monitor の cron は毎時（`17 * * * *`）だが、GitHub Actions の schedule は混雑時に遅れ・間引かれる。
+ * 2026-09-19〜26 の実測では、実行の間隔は 2.4〜6.3 時間（約 60 回、すべて成功）で、毎時には一度も届いていない。
+ * 180 分の閾値では正常な運用でも警報が出続けた（#101）。実測の最大の約 2 倍の 12 時間を既定にする。
+ * 見張り自体は 6 時間ごとに動くので、本当に止まった場合も最長で約 18 時間で気づける。
+ */
+export const DEFAULT_MAX_AGE_MINUTES = 12 * 60;
 
 const COMPLETED = 'completed';
 const minutesBetween = (from: string, to: Date) =>
@@ -138,6 +148,10 @@ export function checkWatchdog(
   };
 }
 
+/** 実行そのものが止まっている（中身の失敗ではない）とき。対応の手順が違う。 */
+const stale = (report: WatchdogReport) =>
+  report.results.some((entry) => entry.name === '監視の実行' && entry.status === 'FAIL');
+
 /** 起票・復旧連絡の本文。受け取った人がそのまま次の手を取れる内容にする。 */
 export function alertBody(report: WatchdogReport, context: { workflow: string; target: string }) {
   const lines = [
@@ -152,9 +166,15 @@ export function alertBody(report: WatchdogReport, context: { workflow: string; t
       (entry) => `| ${entry.status} | ${entry.name} | ${entry.detail.replaceAll('|', '\\|')} |`,
     ),
     '',
-    report.alert === 'down'
-      ? '対応：ワークフローの実行履歴を開き、失敗の内容（死活・証明書・robots・sitemap・応答時間）を確認してください。サイトが実際に落ちている場合は、配信元の状態と直近の配備を確認します。'
-      : '復旧を確認しました。この issue は自動で閉じます。',
+    ...(report.alert !== 'down'
+      ? ['復旧を確認しました。この issue は自動で閉じます。']
+      : stale(report)
+        ? [
+            '対応：監視のワークフローが動いていません。Actions の画面でワークフローが無効になっていないか（60 日間リポジトリに動きがないと GitHub が schedule を止めます）、ワークフローのファイルが壊れていないかを確認し、手動で実行（Run workflow）して結果を見てください。',
+          ]
+        : [
+            '対応：ワークフローの実行履歴を開き、失敗の内容（死活・証明書・robots・sitemap・応答時間）を確認してください。サイトが実際に落ちている場合は、配信元の状態と直近の配備を確認します。',
+          ]),
   ];
   return lines.join('\n');
 }
